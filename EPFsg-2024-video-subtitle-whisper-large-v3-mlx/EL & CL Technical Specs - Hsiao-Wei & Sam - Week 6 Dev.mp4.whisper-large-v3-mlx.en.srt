@@ -1,0 +1,3080 @@
+1
+00:00:30,000 --> 00:00:50,260
+ Thank you.
+
+2
+00:01:00,000 --> 00:01:29,980
+ Thank you.
+
+3
+00:01:30,000 --> 00:01:59,000
+ ¶¶
+
+4
+00:02:00,000 --> 00:02:06,680
+ All right, welcome back to the Ethereum Protocol Fellowship study group.
+
+5
+00:02:07,280 --> 00:02:13,919
+ This is week six and the start of the distributed tracks here.
+
+6
+00:02:14,539 --> 00:02:20,680
+ So today we will be starting the development track with Xiaowei and Sam,
+
+7
+00:02:21,159 --> 00:02:27,379
+ creators and masters of the specs from the consensus layer and the execution layer.
+
+8
+00:02:27,379 --> 00:02:32,280
+ So yeah, I think we'll probably get started with xiaowei first.
+
+9
+00:02:32,280 --> 00:02:35,719
+ Mario, maybe you want to give xiaowei a quick introduction?
+
+10
+00:02:35,719 --> 00:02:37,780
+ Yeah, for sure.
+
+11
+00:02:37,780 --> 00:02:47,519
+ Yeah, so again, welcome everyone in the week six of our, in the second phase of our program.
+
+12
+00:02:47,519 --> 00:02:53,639
+ We will have another talk on research domain on Wednesday, but today's Monday and we have
+
+13
+00:02:53,639 --> 00:02:59,799
+ development track and uh very important topic that i believe that ethereum developers need to be
+
+14
+00:02:59,799 --> 00:03:05,399
+ familiar with and uh these are specifications so the consensus and the execution layer specification
+
+15
+00:03:05,959 --> 00:03:11,000
+ uh and we are lucky enough to have basically creators of these specifications in python
+
+16
+00:03:11,000 --> 00:03:16,759
+ here today xiaowei and sam and um one one important note to start with these are like
+
+17
+00:03:16,759 --> 00:03:21,399
+ two distinct projects like they they kind of evolved separately and the consensus layer
+
+18
+00:03:21,400 --> 00:03:29,480
+ it's the specs are older one or the python version is the uh what what came first uh because xiaowei
+
+19
+00:03:29,480 --> 00:03:35,640
+ have been working on uh the research team uh correct me if i'm wrong since like 2017 i think
+
+20
+00:03:36,200 --> 00:03:45,800
+ um basically creating um the design of the beacon chain itself way before it uh it launched uh
+
+21
+00:03:45,800 --> 00:03:51,480
+ before the merge and everything so she's been with us for for many years now and uh yeah it's
+
+22
+00:03:51,480 --> 00:03:58,120
+ an honor to have you here uh we will learn about the the technical side of the specs uh and i
+
+23
+00:03:58,120 --> 00:04:06,120
+ believe it shall we uh so uh we we have this call a bit earlier than normally because she's in the
+
+24
+00:04:06,120 --> 00:04:11,240
+ east asia and i believe that she's also hoping to have some maybe new colleagues or some new
+
+25
+00:04:11,240 --> 00:04:17,480
+ ethereum developers from from asia so i hope that uh our protocol fellowship follows here
+
+26
+00:04:17,480 --> 00:04:22,600
+ uh get inspired yeah uh yeah xiaowei it's uh the stage is yours please go ahead
+
+27
+00:04:27,160 --> 00:04:32,519
+ thank you mario for the present um introduction let me share my screen just now
+
+28
+00:04:32,519 --> 00:04:41,079
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+29
+00:04:41,079 --> 00:04:42,919
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+30
+00:04:45,159 --> 00:04:51,319
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+31
+00:04:51,319 --> 00:04:54,759
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+32
+00:04:54,759 --> 00:04:57,159
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+33
+00:04:57,159 --> 00:05:00,519
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+34
+00:05:00,519 --> 00:05:02,439
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+35
+00:05:02,519 --> 00:05:13,019
+ So it is totally open source, it's the most Ethereum core project.
+
+36
+00:05:13,019 --> 00:05:18,399
+ We have more than 100 contributors now.
+
+37
+00:05:18,399 --> 00:05:25,740
+ I think most of them are core devs that really need and use this space.
+
+38
+00:05:25,740 --> 00:05:30,220
+ And the license is totally it's CC0 open source Python project.
+
+39
+00:05:30,220 --> 00:05:39,960
+ So you can, if you see it on the GitHub category, then it is a Python project.
+
+40
+00:05:39,960 --> 00:05:40,960
+ Yes.
+
+41
+00:05:40,960 --> 00:05:52,340
+ Okay, so you can use this link to see what it is, what it looks like.
+
+42
+00:05:52,339 --> 00:05:57,339
+ So for the Python spec, the CL spec,
+
+43
+00:05:57,379 --> 00:06:00,500
+ it has three purposes here.
+
+44
+00:06:01,299 --> 00:06:03,539
+ So first, the most thing is,
+
+45
+00:06:03,539 --> 00:06:06,560
+ the most important thing is it's the center
+
+46
+00:06:06,560 --> 00:06:11,339
+ of the Ethereum core consensus applications,
+
+47
+00:06:11,339 --> 00:06:16,339
+ which means it defines the protocol in the files.
+
+48
+00:06:16,339 --> 00:06:31,299
+ it's the most interesting part is it is executable and verifiable it can be filled into a python
+
+49
+00:06:31,299 --> 00:06:40,539
+ program and then can be executed we will talk about it in details later and third it's also
+
+50
+00:06:40,540 --> 00:06:49,100
+ interesting is it is also the test vector generator for the CLKinds to test their implementations.
+
+51
+00:06:50,939 --> 00:07:01,820
+ All right, so whenever we want to add a new features, like a new patch to the current
+
+52
+00:07:01,819 --> 00:07:06,819
+ main net protocol, we will open,
+
+53
+00:07:07,099 --> 00:07:12,099
+ create a new feature markdown file in the space.
+
+54
+00:07:12,319 --> 00:07:17,319
+ And we will write it in markdown file.
+
+55
+00:07:18,459 --> 00:07:23,420
+ For example, the last half work it was the
+
+56
+00:07:23,420 --> 00:07:24,639
+ then app half work.
+
+57
+00:07:24,639 --> 00:07:27,459
+ So we are going to include like, for example,
+
+58
+00:07:27,459 --> 00:07:31,740
+ like EIP 6110, and then there'll be a file
+
+59
+00:07:31,819 --> 00:07:43,339
+ a folder called ip6110 and some files in it right so and the second um we will release the new
+
+60
+00:07:43,339 --> 00:07:51,180
+ pi spec with test vectors uh suits that so the test vectors would be generated with the pi high
+
+61
+00:07:51,180 --> 00:07:55,120
+ High-Spec Program Test Cases for Clientings to verify.
+
+62
+00:08:02,519 --> 00:08:05,340
+ And all this is an important and unique component
+
+63
+00:08:05,340 --> 00:08:09,319
+ of the current CLRMD process.
+
+64
+00:08:09,319 --> 00:08:12,480
+ It helps us to found the basic box
+
+65
+00:08:12,480 --> 00:08:14,259
+ before clientings implement,
+
+66
+00:08:14,259 --> 00:08:17,139
+ because at the stage of writing the spec,
+
+67
+00:08:17,139 --> 00:08:19,019
+ we can test it.
+
+68
+00:08:19,019 --> 00:08:22,519
+ the clienting program will be, I mean,
+
+69
+00:08:22,519 --> 00:08:25,379
+ they can also use it to double verify it.
+
+70
+00:08:25,379 --> 00:08:29,099
+ So it's pretty helpful tool for the ecosystem.
+
+71
+00:08:33,240 --> 00:08:38,039
+ So, so I think people would be wonder that
+
+72
+00:08:38,039 --> 00:08:39,659
+ why we use Python.
+
+73
+00:08:39,659 --> 00:08:44,659
+ So, so I think it is because the Python
+
+74
+00:08:44,659 --> 00:08:53,959
+ Because Python is one of the most readable language for developers.
+
+75
+00:08:53,959 --> 00:09:00,740
+ Because most pseudo-codes look like Python.
+
+76
+00:09:00,740 --> 00:09:09,480
+ We also try to write the spec code in the simplest way, instead of using some fancy,
+
+77
+00:09:09,480 --> 00:09:13,899
+ efficient Python magic.
+
+78
+00:09:13,899 --> 00:09:23,620
+ we do care about the readability and simplification first.
+
+79
+00:09:23,620 --> 00:09:38,460
+ So if you want to read it to understand one of the features and how you can browse it,
+
+80
+00:09:38,460 --> 00:09:47,879
+ So if you have the repository URL on your laptop, you can take a look that under the
+
+81
+00:09:47,879 --> 00:09:58,340
+ Specs folder, there are the main net hard forks, for example, like the
+
+82
+00:09:58,340 --> 00:10:02,500
+ Altaire, Beatrix, Capella, and Dennett.
+
+83
+00:10:02,500 --> 00:10:05,860
+ Those are the half of already happened
+
+84
+00:10:05,860 --> 00:10:08,080
+ and launched on the main net.
+
+85
+00:10:08,080 --> 00:10:13,080
+ And inside the features folder,
+
+86
+00:10:13,920 --> 00:10:17,639
+ you can see some work in progress research project in it.
+
+87
+00:10:20,120 --> 00:10:21,560
+ And so for example,
+
+88
+00:10:21,560 --> 00:10:24,780
+ if you want to read the base zero space,
+
+89
+00:10:24,779 --> 00:10:29,779
+ you can see there are different Markdown files in it.
+
+90
+00:10:30,399 --> 00:10:35,399
+ And the beacon-chain-markdown.nd
+
+91
+00:10:35,839 --> 00:10:40,839
+ is the entry of the beacon-chain consensus.
+
+92
+00:10:40,879 --> 00:10:43,240
+ So I would recommend if you want to read it,
+
+93
+00:10:43,240 --> 00:10:45,079
+ it starts from this file.
+
+94
+00:10:45,079 --> 00:10:50,079
+ And there are also other different components for the CL.
+
+95
+00:10:50,379 --> 00:10:52,980
+ For example, like folk choice,
+
+96
+00:10:52,980 --> 00:10:56,420
+ we defined the folk choice logic in this file.
+
+97
+00:10:56,420 --> 00:11:01,420
+ And about the networking it is in the P2P interface
+
+98
+00:11:01,539 --> 00:11:02,420
+ markdown file.
+
+99
+00:11:03,620 --> 00:11:04,440
+ Yup.
+
+100
+00:11:06,940 --> 00:11:09,399
+ And also for the future different folks,
+
+101
+00:11:10,320 --> 00:11:14,840
+ it could be more different component
+
+102
+00:11:14,840 --> 00:11:16,940
+ that we will add in the future.
+
+103
+00:11:16,940 --> 00:11:30,720
+ Okay, so if you started to read it, you can start with the type and value definitions.
+
+104
+00:11:30,720 --> 00:11:39,260
+ We define the, you can see that we define the constants and some configurations, values
+
+105
+00:11:39,259 --> 00:11:42,559
+ in the Markdown tables like this.
+
+106
+00:11:42,559 --> 00:11:44,799
+ So like, what's it at?
+
+107
+00:11:44,799 --> 00:11:49,799
+ The name of this basic custom type
+
+108
+00:11:50,879 --> 00:11:54,399
+ and what is it's SSE equivalent
+
+109
+00:11:54,399 --> 00:11:56,279
+ and also like some description.
+
+110
+00:11:56,279 --> 00:11:58,899
+ And beside that, you can see in the,
+
+111
+00:11:58,899 --> 00:12:01,039
+ we have the preset and configuration.
+
+112
+00:12:01,039 --> 00:12:06,039
+ They are basically like the configuration that we set,
+
+113
+00:12:06,039 --> 00:12:13,079
+ that we set but we will manage them in different ways so the values are defined in this markdown
+
+114
+00:12:13,079 --> 00:12:25,000
+ tables um and then you can also see we have defined the xyz containers in this markdown file
+
+115
+00:12:25,959 --> 00:12:34,599
+ the for example there's a beacon black body and the beacon block and the beacon black would use
+
+116
+00:12:34,600 --> 00:12:37,100
+ it can become black body.
+
+117
+00:12:37,100 --> 00:12:42,100
+ In, I can see in the last field it is body.
+
+118
+00:12:43,680 --> 00:12:48,680
+ Yeah, so the classes are the SSE containers.
+
+119
+00:12:50,480 --> 00:12:55,159
+ It is also the serialization schema
+
+120
+00:12:55,159 --> 00:12:56,840
+ for the consensus objects.
+
+121
+00:12:58,080 --> 00:13:01,800
+ Yeah, so if you want to understand more about SSE,
+
+122
+00:13:01,799 --> 00:13:06,799
+ you can also find the documents in the same repository.
+
+123
+00:13:07,019 --> 00:13:07,859
+ Yeah, here.
+
+124
+00:13:12,199 --> 00:13:13,139
+ And okay.
+
+125
+00:13:15,279 --> 00:13:20,259
+ So it could write Python function in code block
+
+126
+00:13:20,259 --> 00:13:22,059
+ to describe the consensus rule.
+
+127
+00:13:23,519 --> 00:13:26,439
+ Can see this is an example of the entry
+
+128
+00:13:26,439 --> 00:13:28,579
+ of the state transition functions.
+
+129
+00:13:28,579 --> 00:13:31,639
+ We, there are some assertions
+
+130
+00:13:31,799 --> 00:13:40,439
+ for example like assert verify block signature like um so it is the this condition that need
+
+131
+00:13:40,439 --> 00:13:48,439
+ to be satisfied in the consensus rules so um if this condition is not satisfied it's all
+
+132
+00:13:48,439 --> 00:13:57,240
+ it will store um exception oh that means the given input is considered as invalid input
+
+133
+00:13:57,240 --> 00:14:08,799
+ So you can use this assertion to see what the consensus verifications are.
+
+134
+00:14:08,799 --> 00:14:22,060
+ There are also some other valuable resources for you to learn the design and deeper rationales.
+
+135
+00:14:22,059 --> 00:14:30,619
+ I think I would recommend two resources. One is Vitalik's annotated spike, and another
+
+136
+00:14:30,619 --> 00:14:36,279
+ one is Ben Edgerton's Upgrading Ethereum book.
+
+137
+00:14:36,279 --> 00:14:51,479
+ Okay, so as I described, the spike's POC is, I mean, they are markdown files, but there's
+
+138
+00:14:51,480 --> 00:14:53,759
+ something, some magic inside it,
+
+139
+00:14:53,759 --> 00:14:58,100
+ it's a pattern, I call it the, like the spec ELF,
+
+140
+00:14:58,100 --> 00:15:02,060
+ like it basically, we do something in,
+
+141
+00:15:02,060 --> 00:15:04,420
+ under it and it needs to,
+
+142
+00:15:05,340 --> 00:15:08,039
+ to pass it the markdown file,
+
+143
+00:15:08,039 --> 00:15:11,519
+ to pass the markdown file and convert
+
+144
+00:15:11,519 --> 00:15:15,019
+ the markdown file content into a Python program.
+
+145
+00:15:16,120 --> 00:15:20,159
+ So this is the build spec,
+
+146
+00:15:21,480 --> 00:15:26,480
+ it will do something that the reader shouldn't know indeed.
+
+147
+00:15:37,320 --> 00:15:42,320
+ So, for example, the Phase Zero beacon chain
+
+148
+00:15:42,320 --> 00:16:01,000
+ The face zero will be passed to the spec builder, and it will become the face zero.
+
+149
+00:16:01,000 --> 00:16:04,659
+ Then for the next hard fork it's called Altair.
+
+150
+00:16:06,139 --> 00:16:11,139
+ It is actually like an extent of the previous hard forks.
+
+151
+00:16:12,039 --> 00:16:15,919
+ So the Altair hard fork will use
+
+152
+00:16:15,919 --> 00:16:19,799
+ the previous hard fork first zeros content
+
+153
+00:16:19,799 --> 00:16:24,679
+ and then add some extra modification into it.
+
+154
+00:16:24,679 --> 00:16:27,659
+ So it combines both files
+
+155
+00:16:27,659 --> 00:16:31,819
+ and convert it into one single Altair beacon chain spike.
+
+156
+00:16:33,679 --> 00:16:37,559
+ And yeah, and the Bellatrix and the other following spikes
+
+157
+00:16:37,559 --> 00:16:39,659
+ are doing the same thing similar.
+
+158
+00:16:42,419 --> 00:16:45,759
+ Yeah, so, and last, we want to introduce
+
+159
+00:16:45,759 --> 00:16:50,759
+ how to use PySpec, I mean it's a suitable program.
+
+160
+00:16:52,259 --> 00:16:57,259
+ So you can install it from the source code,
+
+161
+00:16:57,659 --> 00:17:10,039
+ code and run this make file commands easily to install the required testing packages and
+
+162
+00:17:10,039 --> 00:17:13,940
+ build the PySpec.
+
+163
+00:17:13,940 --> 00:17:23,619
+ So you can try to write your first PySpec program it is a hello world example you can
+
+164
+00:17:23,619 --> 00:17:28,619
+ it's called the basic spike of the basic fork.
+
+165
+00:17:29,359 --> 00:17:33,099
+ For in this example it is the Bellatrix fork.
+
+166
+00:17:33,099 --> 00:17:37,299
+ And then you can import the components,
+
+167
+00:17:37,299 --> 00:17:40,319
+ the containers of this spike.
+
+168
+00:17:40,319 --> 00:17:43,500
+ For example, this is the beacon black body
+
+169
+00:17:43,500 --> 00:17:46,579
+ and there's a field called graffiti.
+
+170
+00:17:46,579 --> 00:17:51,579
+ So it's some graffiti, like random string into it.
+
+171
+00:17:51,579 --> 00:18:01,299
+ And the block itself it is an SSE object, and you can print it out to your screen and
+
+172
+00:18:01,299 --> 00:18:08,980
+ see it put the string hello world into the block.
+
+173
+00:18:08,980 --> 00:18:19,419
+ And if you want to try something more interesting, you can also write your first PySpec test.
+
+174
+00:18:19,420 --> 00:18:23,460
+ So this is what the one test case looks like.
+
+175
+00:18:23,460 --> 00:18:25,980
+ So it's basically a pie test.
+
+176
+00:18:27,440 --> 00:18:28,279
+ Test.
+
+177
+00:18:29,460 --> 00:18:33,120
+ If you have written a pie test test,
+
+178
+00:18:33,120 --> 00:18:35,759
+ then it is simple.
+
+179
+00:18:37,720 --> 00:18:42,640
+ What we do here is to prepare the block.
+
+180
+00:18:42,640 --> 00:18:46,019
+ So this time, we build an empty block for the next step.
+
+181
+00:18:46,019 --> 00:18:57,359
+ So, two inputs of this test cases, one is the spike, another is the Genesis state.
+
+182
+00:18:57,359 --> 00:19:10,660
+ And after you write some test, you can also verify if the post state is correct as you
+
+183
+00:19:10,660 --> 00:19:11,660
+ estimated it.
+
+184
+00:19:11,660 --> 00:19:14,740
+ So, you can write the assertion here.
+
+185
+00:19:16,019 --> 00:19:28,900
+ in the last and so um in previous i talked about how to um it is the also it i mean the
+
+186
+00:19:28,900 --> 00:19:38,900
+ isek is also the test generator so um actually we can reuse the pi test cases to generate the pi
+
+187
+00:19:38,900 --> 00:19:53,700
+ the test vectors and the magical part is here is that we yelled certain data out to um so if
+
+188
+00:19:53,700 --> 00:20:04,500
+ i if i write your pre-state here it will output a file called pre that xz and it will be an encoded
+
+189
+00:20:04,500 --> 00:20:09,500
+ it will be encoded beacon state data in it.
+
+190
+00:20:15,380 --> 00:20:20,380
+ So in this case, we will yield one pre-state
+
+191
+00:20:22,960 --> 00:20:27,599
+ and the post-state, and then the series of blocks
+
+192
+00:20:27,599 --> 00:20:32,259
+ that we will put into the state transition function.
+
+193
+00:20:32,259 --> 00:20:35,500
+ So, you know, the client can get through all of them
+
+194
+00:20:35,500 --> 00:20:36,879
+ then they can verify it,
+
+195
+00:20:36,879 --> 00:20:40,740
+ that if their state transition function is correct.
+
+196
+00:20:42,200 --> 00:20:46,099
+ Yup, oh, right, and like this.
+
+197
+00:20:46,099 --> 00:20:51,099
+ This is the test vectors repository.
+
+198
+00:20:51,420 --> 00:20:56,119
+ So this is the example here, this are the output.
+
+199
+00:20:58,819 --> 00:21:00,539
+ Yeah, and if you are interested,
+
+200
+00:21:00,539 --> 00:21:08,700
+ can find some more details of how to run pySpec and what are the test formats look like
+
+201
+00:21:12,139 --> 00:21:19,579
+ oh and if you are interested in helping the CL research and development
+
+202
+00:21:19,579 --> 00:21:29,019
+ I think pySpec is a pretty good simple start to learn and then you can go move to contribute
+
+203
+00:21:30,539 --> 00:21:37,259
+ So I think there are different levels that you can participate in.
+
+204
+00:21:38,220 --> 00:21:53,279
+ So first you can look around and then maybe start with just a typo fix or like for the layout, anything you can do.
+
+205
+00:21:53,279 --> 00:21:58,720
+ um and the second is that you can probably help to refactor the code base
+
+206
+00:22:00,000 --> 00:22:06,480
+ and then the level three is that you might you can try to hack some new age test cases
+
+207
+00:22:06,480 --> 00:22:12,559
+ that we haven't covered yet i mean that would be really helpful to um the seal times
+
+208
+00:22:13,759 --> 00:22:20,319
+ and the fourth is that you can probably submit a bounty if you found the box in the sales day
+
+209
+00:22:20,319 --> 00:22:27,279
+ it comes right and thank you um this is the
+
+210
+00:22:28,879 --> 00:22:36,299
+ it is my introduction of I say thank you and
+
+211
+00:22:39,119 --> 00:22:46,279
+ Mario yeah thank you awesome thank you thank you so much our way yeah it was
+
+212
+00:22:46,279 --> 00:22:52,279
+ it was awesome um really appreciate it um great intro a lot of a lot of information
+
+213
+00:22:52,279 --> 00:22:56,920
+ uh people are still care processing it maybe there will be some questions um
+
+214
+00:22:58,119 --> 00:23:04,200
+ uh but yeah it's it's a really great um i
+
+215
+00:23:09,399 --> 00:23:15,960
+ yeah i want to uh want to maybe ask if you um if you can tell us maybe a bit about how uh
+
+216
+00:23:15,960 --> 00:23:20,120
+ the consensus specs interact with the execution side?
+
+217
+00:23:20,120 --> 00:23:23,720
+ For example, it was a question about the state transition function that you mentioned.
+
+218
+00:23:24,660 --> 00:23:27,299
+ Like, I suppose that
+
+219
+00:23:27,299 --> 00:23:32,420
+ consensus layer updates the execution of the work choice.
+
+220
+00:23:32,420 --> 00:23:36,059
+ But can you maybe elaborate more about the instruction there,
+
+221
+00:23:36,059 --> 00:23:40,600
+ how the state transition happens on CL and it's mapped to the EL?
+
+222
+00:23:42,660 --> 00:23:45,519
+ Yeah, okay, let me
+
+223
+00:23:45,519 --> 00:23:48,019
+ Okay, we have to share another screen.
+
+224
+00:24:02,680 --> 00:24:10,160
+ Okay, so this is the CL Specs index.
+
+225
+00:24:10,160 --> 00:24:15,119
+ So let's see the spec itself.
+
+226
+00:24:15,519 --> 00:24:28,519
+ So here it is the state transition of the beacon chain.
+
+227
+00:24:28,519 --> 00:24:38,799
+ So beacon chain it will, we have the pre-state and the snipe beacon block here, and then
+
+228
+00:24:38,799 --> 00:24:46,240
+ we don't have um output here but the state itself it will be mother modified during the
+
+229
+00:24:47,599 --> 00:24:48,399
+ state transition
+
+230
+00:24:51,119 --> 00:25:03,359
+ so after um we process slot and block and the result state then object will be updated and about
+
+231
+00:25:03,359 --> 00:25:11,279
+ the relationship between it and the folk choice, you can take a look at the folk choice markdown
+
+232
+00:25:11,279 --> 00:25:26,799
+ file. So it's very interesting. So it it's about defines like what are the correct behavior that
+
+233
+00:25:26,799 --> 00:25:35,919
+ client should do when they receive a new block or a new attestation yeah and so for example if
+
+234
+00:25:36,960 --> 00:25:45,440
+ on the time that um upon the time they receiving a block they will call this implementation so the
+
+235
+00:25:45,440 --> 00:25:52,960
+ client have different information i mean information to make more um efficient execution
+
+236
+00:25:52,960 --> 00:25:57,960
+ But PySpec is like, we just want to define the rule clearly.
+
+237
+00:25:58,640 --> 00:26:02,900
+ And I think we have called it state transition yes,
+
+238
+00:26:02,900 --> 00:26:04,920
+ inside the block function.
+
+239
+00:26:05,860 --> 00:26:09,000
+ So upon they receive the site block,
+
+240
+00:26:09,000 --> 00:26:14,000
+ they will do some verification for the folk choice.
+
+241
+00:26:14,559 --> 00:26:17,340
+ And if it's okay,
+
+242
+00:26:17,340 --> 00:26:20,380
+ then it will call the state transition here.
+
+243
+00:26:22,960 --> 00:26:30,519
+ Yeah, and then update the local database of the kind later.
+
+244
+00:26:30,519 --> 00:26:33,360
+ Yeah, I think.
+
+245
+00:26:33,360 --> 00:26:35,680
+ Yeah, did I answered your question?
+
+246
+00:26:40,779 --> 00:26:43,100
+ Yes, I believe it's pretty great.
+
+247
+00:26:43,100 --> 00:26:44,200
+ Yeah, thanks so much.
+
+248
+00:26:44,200 --> 00:26:48,120
+ I appreciate you going through the actual repo
+
+249
+00:26:48,120 --> 00:26:51,200
+ and showing us the dates.
+
+250
+00:26:51,200 --> 00:26:54,039
+ This is really great, yeah.
+
+251
+00:26:54,039 --> 00:26:55,799
+ Yeah, we have maybe five more minutes.
+
+252
+00:26:55,799 --> 00:26:59,759
+ Let's see if there are any more questions.
+
+253
+00:27:05,240 --> 00:27:07,559
+ What about testing reorganization issues?
+
+254
+00:27:07,559 --> 00:27:10,360
+ I suppose you mean chain reorgs?
+
+255
+00:27:15,759 --> 00:27:20,620
+ Yeah, whether there is some sort of testing for chain reorgs,
+
+256
+00:27:20,619 --> 00:27:25,619
+ whether how the consensus specs handle the orgs.
+
+257
+00:27:27,659 --> 00:27:32,659
+ Right, so in the Casper FFG implementation,
+
+258
+00:27:33,979 --> 00:27:38,979
+ so actually the prokchoice is the Casper FFG
+
+259
+00:27:38,980 --> 00:27:50,319
+ it's pretty deep.
+
+260
+00:27:50,319 --> 00:28:02,519
+ We can go back a bit to see the store.
+
+261
+00:28:02,519 --> 00:28:11,480
+ So we defined an abstract data class here.
+
+262
+00:28:11,480 --> 00:28:15,119
+ These are the fields that we want
+
+263
+00:28:15,119 --> 00:28:21,119
+ to describe what are the fields that
+
+264
+00:28:21,119 --> 00:28:27,680
+ could be used for handle the reorg and the state transition.
+
+265
+00:28:27,680 --> 00:28:32,440
+ So you can see we have stored the justified checkpoint
+
+266
+00:28:32,440 --> 00:28:36,420
+ of the local view, the current view of the client
+
+267
+00:28:36,420 --> 00:28:38,900
+ and the finalized checkpoint.
+
+268
+00:28:38,900 --> 00:28:41,500
+ And there are some, I think it will be
+
+269
+00:28:41,500 --> 00:28:44,000
+ some of the, maybe it's too detailed,
+
+270
+00:28:44,000 --> 00:28:47,820
+ is that the unrealized
+
+271
+00:28:49,840 --> 00:28:54,500
+ justified checkpoint, unrealized, finalized checkpoint.
+
+272
+00:28:54,500 --> 00:28:57,759
+ So, and also the blocks and the state.
+
+273
+00:28:57,759 --> 00:29:01,980
+ So the blocks are, it is actually a dictionary.
+
+274
+00:29:01,980 --> 00:29:05,900
+ So we use the root, the black root as the identifier.
+
+275
+00:29:05,900 --> 00:29:10,339
+ And so the state shared,
+
+276
+00:29:10,339 --> 00:29:13,980
+ the root is the black root,
+
+277
+00:29:13,980 --> 00:29:18,980
+ and then the content is the state of the given black root.
+
+278
+00:29:19,579 --> 00:29:23,579
+ So you can see, we have this kind of the fields.
+
+279
+00:29:25,480 --> 00:29:28,680
+ And then when we handle,
+
+280
+00:29:28,680 --> 00:29:30,720
+ where we handle the reorg,
+
+281
+00:29:31,980 --> 00:29:50,980
+ it's pretty easy it's pretty easy
+
+282
+00:29:50,980 --> 00:29:54,220
+ okay um
+
+283
+00:29:54,220 --> 00:30:20,299
+ So this helper will update the checkpoints, it includes the justified checkpoints and
+
+284
+00:30:20,299 --> 00:30:32,139
+ finalized trick point and so you can see uh you can search this function inside the this document
+
+285
+00:30:32,139 --> 00:30:39,899
+ and you can see where we update the where we update the checkpoints so basically the currently
+
+286
+00:30:39,900 --> 00:30:45,980
+ the the basic um stapled
+
+287
+00:30:48,540 --> 00:30:56,620
+ state we will use um we will use the justified um checkpoint state as the basic stable state
+
+288
+00:30:56,620 --> 00:30:59,019
+ but there's also the head of the
+
+289
+00:31:01,259 --> 00:31:03,740
+ the state so it will go through the
+
+290
+00:31:03,740 --> 00:31:15,079
+ a series of LND ghost book choice anxiety implications.
+
+291
+00:31:15,079 --> 00:31:24,160
+ And then in some certain cases, we all might have.
+
+292
+00:31:24,160 --> 00:31:28,900
+ So this is one of the cases here.
+
+293
+00:31:28,900 --> 00:31:33,160
+ So basically, you can follow the coding.
+
+294
+00:31:33,160 --> 00:31:42,040
+ you can see how we describe the whole LND ghost in this book choice document.
+
+295
+00:31:44,360 --> 00:31:53,480
+ Yeah, and if you have some more detailed questions, you can ask me in Discord or somewhere else.
+
+296
+00:31:54,759 --> 00:32:02,840
+ Thank you, Mario. Yeah, yeah, thank you, xiaowei. Yeah, it's awesome, it's amazing to see how you
+
+297
+00:32:02,839 --> 00:32:09,079
+ orient and explain the different parts it's it's it's it's it's really great appreciate it
+
+298
+00:32:09,079 --> 00:32:14,599
+ and uh maybe one last question we have from sam here uh what's what was the biggest
+
+299
+00:32:14,599 --> 00:32:19,959
+ challenge you faced uh when developing the cdl specs what do you find most challenging
+
+300
+00:32:22,759 --> 00:32:32,039
+ um so hello good question the most challenging uh i think
+
+301
+00:32:32,839 --> 00:32:41,679
+ So performance, I think it would be the shared challenge for all the Python projects.
+
+302
+00:32:41,679 --> 00:32:49,220
+ And the second thing for myself, maybe not for Phyllis, is that, as I say, that we have
+
+303
+00:32:49,220 --> 00:32:57,699
+ to convert the markdown file into the Python program.
+
+304
+00:32:57,700 --> 00:33:02,700
+ But so for the spec writer, you have two choices.
+
+305
+00:33:03,900 --> 00:33:08,680
+ One is that you can update the markdown file directly.
+
+306
+00:33:08,680 --> 00:33:10,580
+ And then every time you want to verify it,
+
+307
+00:33:10,580 --> 00:33:14,860
+ you have to build it into the Python program.
+
+308
+00:33:14,860 --> 00:33:17,580
+ And then the second one is that you can probably write
+
+309
+00:33:17,580 --> 00:33:20,360
+ it on the Python program,
+
+310
+00:33:20,360 --> 00:33:23,460
+ but eventually you will have to write it back
+
+311
+00:33:23,460 --> 00:33:25,019
+ to the markdown file.
+
+312
+00:33:25,019 --> 00:33:33,579
+ So I do feel it is a bit tiring if you have to do this conversion.
+
+313
+00:33:33,579 --> 00:33:37,619
+ But that's my word for now.
+
+314
+00:33:37,619 --> 00:33:38,980
+ Yeah.
+
+315
+00:33:38,980 --> 00:33:44,900
+ And yes, I hope I answered that question too.
+
+316
+00:33:44,900 --> 00:33:46,259
+ Yeah, yeah, of course.
+
+317
+00:33:46,259 --> 00:33:48,240
+ Yeah, thanks so much, Haowei.
+
+318
+00:33:48,240 --> 00:33:49,660
+ Yeah, it feels great.
+
+319
+00:33:49,660 --> 00:33:50,800
+ We are at half an hour.
+
+320
+00:33:51,940 --> 00:33:52,900
+ And yeah,
+
+321
+00:33:53,240 --> 00:33:56,200
+ really appreciate it.
+
+322
+00:33:56,820 --> 00:33:58,420
+ We have the Discord.
+
+323
+00:33:58,759 --> 00:33:59,820
+ I will share you the link
+
+324
+00:33:59,820 --> 00:34:01,320
+ so maybe there are some extra questions
+
+325
+00:34:01,320 --> 00:34:02,279
+ you can answer there.
+
+326
+00:34:02,420 --> 00:34:03,960
+ But it's been really great.
+
+327
+00:34:04,620 --> 00:34:07,019
+ I hope there might be some contributors
+
+328
+00:34:07,019 --> 00:34:08,559
+ to CLSpec or somebody
+
+329
+00:34:08,559 --> 00:34:10,599
+ who learned HighSpec from you.
+
+330
+00:34:11,200 --> 00:34:12,659
+ Yeah, I really appreciate it.
+
+331
+00:34:12,880 --> 00:34:13,860
+ Thank you so much.
+
+332
+00:34:14,019 --> 00:34:15,420
+ And especially thank you so much
+
+333
+00:34:15,420 --> 00:34:17,980
+ for staying up so late for us tonight
+
+334
+00:34:17,980 --> 00:34:19,440
+ or maybe too early.
+
+335
+00:34:19,659 --> 00:34:22,159
+ I'm not sure right now, but yeah, thanks so much, Shelley.
+
+336
+00:34:22,159 --> 00:34:23,159
+ Appreciate it so much.
+
+337
+00:34:23,159 --> 00:34:24,460
+ It was really great.
+
+338
+00:34:24,460 --> 00:34:27,420
+ Thank you, Mario.
+
+339
+00:34:27,420 --> 00:34:29,079
+ Yeah, and thank you, Josh.
+
+340
+00:34:29,079 --> 00:34:32,039
+ And let's see, Sam.
+
+341
+00:34:32,039 --> 00:34:33,879
+ Looking forward to Sam's presentation.
+
+342
+00:34:33,879 --> 00:34:34,879
+ Thank you.
+
+343
+00:34:34,879 --> 00:34:35,379
+ Yeah.
+
+344
+00:34:35,379 --> 00:34:35,879
+ Bye-bye.
+
+345
+00:34:35,879 --> 00:34:36,679
+ Sam, Mario, are you with us?
+
+346
+00:34:36,679 --> 00:34:39,420
+ Thanks so much, Shelley.
+
+347
+00:34:39,420 --> 00:34:41,679
+ Thank you so much again.
+
+348
+00:34:41,679 --> 00:34:43,920
+ Yeah, and Sam, if you are with us,
+
+349
+00:34:43,920 --> 00:34:45,039
+ please join us on the stage.
+
+350
+00:34:45,039 --> 00:34:46,099
+ Can you hear us?
+
+351
+00:34:46,099 --> 00:34:47,539
+ I can.
+
+352
+00:34:47,539 --> 00:34:48,299
+ Awesome, awesome.
+
+353
+00:34:48,299 --> 00:34:48,799
+ Yeah.
+
+354
+00:34:48,800 --> 00:34:53,420
+ So now we will move to the execution side of things with Sam here.
+
+355
+00:34:53,420 --> 00:35:00,140
+ And we are doing the execution second, because they are also kind of younger, these specs,
+
+356
+00:35:00,140 --> 00:35:03,760
+ because Sam has been working on these for, like, maybe the past three years or more.
+
+357
+00:35:03,760 --> 00:35:05,960
+ Correct me if I'm wrong.
+
+358
+00:35:05,960 --> 00:35:07,600
+ Yeah, about that.
+
+359
+00:35:07,600 --> 00:35:15,580
+ Yeah, Sam with his team, with all the other folks, have been developing the ELs, the executive
+
+360
+00:35:15,579 --> 00:35:23,179
+ execution layer specs uh which are uh similar to the pi spec you just saw um uh and uh sam
+
+361
+00:35:23,179 --> 00:35:29,340
+ actually you might know him from different places around the ethereum he's also very active eip editor
+
+362
+00:35:29,340 --> 00:35:37,739
+ uh helping to maintain the whole eip echo with uh osmium software and also running the um uh the
+
+363
+00:35:37,739 --> 00:35:45,899
+ all wallets helping to help you to standardize and develop the Ethereum wallets around the ecosystem.
+
+364
+00:35:45,899 --> 00:35:52,699
+ So it's really great to have you here, Sam. And yeah, we are eager to hear about the execution
+
+365
+00:35:52,699 --> 00:35:57,579
+ specs, it's a pretty set of things. So all right, let's see if my screen sharing works here.
+
+366
+00:35:57,579 --> 00:36:11,900
+ I want to share this one.
+
+367
+00:36:11,900 --> 00:36:12,460
+ All right.
+
+368
+00:36:13,219 --> 00:36:14,659
+ And let's make this.
+
+369
+00:36:16,619 --> 00:36:17,139
+ There.
+
+370
+00:36:17,779 --> 00:36:18,420
+ Can everybody see that?
+
+371
+00:36:19,599 --> 00:36:20,079
+ Yeah, awesome.
+
+372
+00:36:20,460 --> 00:36:20,699
+ Go ahead.
+
+373
+00:36:20,759 --> 00:36:21,000
+ Perfect.
+
+374
+00:36:21,699 --> 00:36:22,000
+ All right.
+
+375
+00:36:22,019 --> 00:36:27,059
+ So I'm here to talk about the Ethereum execution layer specification, or ELSE for short.
+
+376
+00:36:27,579 --> 00:36:32,239
+ I'd like to start off my presentations with a very quick summary.
+
+377
+00:36:32,239 --> 00:36:36,480
+ So if you're only going to watch 30 seconds of this presentation, these are the 30 seconds
+
+378
+00:36:36,480 --> 00:36:39,319
+ you really want to see.
+
+379
+00:36:39,319 --> 00:36:42,980
+ So we started off with the yellow paper.
+
+380
+00:36:42,980 --> 00:36:44,980
+ It's written like an academic paper.
+
+381
+00:36:44,980 --> 00:36:48,519
+ It uses very dense mathematic notation.
+
+382
+00:36:48,519 --> 00:36:52,739
+ A lot of non-English characters in there.
+
+383
+00:36:52,739 --> 00:37:01,019
+ And kind of where we're going and where we are right now is a fully executable Python implementation of the Ethereum execution layer.
+
+384
+00:37:02,699 --> 00:37:06,159
+ These kind of pictures here just highlight, you know, exactly what we can do.
+
+385
+00:37:06,699 --> 00:37:14,919
+ So on the left here, you can see kind of a diff between the preceding fork and the subsequent fork.
+
+386
+00:37:14,979 --> 00:37:18,739
+ And you can see all the differences there and kind of a similar thing on the right.
+
+387
+00:37:19,459 --> 00:37:21,099
+ So this is what the specs looks like.
+
+388
+00:37:21,099 --> 00:37:21,919
+ This is what we've built.
+
+389
+00:37:22,739 --> 00:37:29,459
+ it's a regular Python program. That's it for the summary, a little bit about me. I'm Sam Wilson,
+
+390
+00:37:30,259 --> 00:37:35,539
+ I'm an EIP editor, I work on a bunch of projects, you can find me on GitHub or on Mastodon.
+
+391
+00:37:37,219 --> 00:37:42,099
+ So what is an Ethereum execution layer specification? Well it's a Python reference
+
+392
+00:37:42,099 --> 00:37:46,259
+ implementation of most of an Ethereum client. We do leave out some pretty important parts,
+
+393
+00:37:46,260 --> 00:37:53,380
+ We don't do networking. We don't do fork choice. We don't do reorgs. But other than that, we pretty
+
+394
+00:37:53,380 --> 00:37:59,700
+ much built the entire executions layer. The other members of my team are Guru and Peter.
+
+395
+00:38:01,060 --> 00:38:05,060
+ If you ever have any questions about the spec, you want to contribute, you can reach out to
+
+396
+00:38:05,060 --> 00:38:09,940
+ myself or either of these two fine people, and we would be happy to help you.
+
+397
+00:38:09,940 --> 00:38:16,820
+ it. And just like the consensus layer specs, we've had contributors from everywhere, from
+
+398
+00:38:16,820 --> 00:38:23,000
+ all over the world. There's even a PO app if people like collecting those. So, yeah.
+
+399
+00:38:23,000 --> 00:38:28,619
+ So big thank you to all these people. And yeah. A little bit of history now. So the
+
+400
+00:38:28,619 --> 00:38:36,059
+ Yellow Paper was created in 2014. It's a little bit more restrictive license. It's attribution
+
+401
+00:38:36,059 --> 00:38:42,119
+ share-like, which means if you use it, you have to release your stuff under the same license,
+
+402
+00:38:42,940 --> 00:38:46,320
+ which is pretty decent for specification, but a little bit annoying for code.
+
+403
+00:38:48,659 --> 00:38:51,920
+ Here, I'm going to give you a really, really fast tour of the yellow paper.
+
+404
+00:38:52,940 --> 00:38:56,599
+ And the important thing here is I don't like the yellow paper, so I'm going to be a little
+
+405
+00:38:56,599 --> 00:39:01,960
+ bit biased in my tour. So to any appreciators of the yellow paper out there, I want to apologize.
+
+406
+00:39:01,960 --> 00:39:14,139
+ But let's get into that. So the yellow paper is mostly English text. It gives a lot of background, a lot of good rationale for why things are the way they are.
+
+407
+00:39:16,920 --> 00:39:26,699
+ It's also intermixed with very technical academic kind of notation here. So this snippet here is describing what a blockchain is.
+
+408
+00:39:26,699 --> 00:39:44,739
+ So, formula one here is saying that the state at time plus one is equivalent to the state at time with the state, sorry, applying the state transition function to the state at time and a set of transactions.
+
+409
+00:39:45,699 --> 00:39:49,399
+ And then that might sound familiar to any people familiar with blockchains.
+
+410
+00:39:49,579 --> 00:39:51,379
+ That's how they write it in the yellow paper.
+
+411
+00:39:51,380 --> 00:39:59,519
+ We also have a definition here of what proof of work is, and you can kind of see how all of that works.
+
+412
+00:40:00,680 --> 00:40:07,160
+ We also go into what the fork choice rule is, and you kind of describe how clients choose which fork to follow.
+
+413
+00:40:08,780 --> 00:40:11,200
+ And here we have a definition of the state.
+
+414
+00:40:11,340 --> 00:40:21,119
+ So this is probably one of my favorite examples of the yellow paper doing both an incredibly good job and an incredibly bad job at describing what the state is.
+
+415
+00:40:21,380 --> 00:40:23,920
+ So these English descriptions, they're amazing.
+
+416
+00:40:24,119 --> 00:40:25,420
+ They tell you what is in the state.
+
+417
+00:40:25,500 --> 00:40:30,880
+ You got the nonce, balance, storage, root, code, hash, all things that you're going to be familiar with if you're working with the EVM.
+
+418
+00:40:32,140 --> 00:40:41,700
+ But on the right-hand side, we have these incredibly dense notations that explain how the tri is encoded, which is number eight here.
+
+419
+00:40:42,320 --> 00:40:49,280
+ And you'll have how the contract's internal state, its key value pair mapping is encoded here.
+
+420
+00:40:49,280 --> 00:40:55,500
+ I don't know what those mean. I've implemented the Python version, and I still don't understand what these functions mean.
+
+421
+00:40:55,680 --> 00:40:59,220
+ So that's kind of why the inspiration for trying to replace the yellow paper.
+
+422
+00:41:02,280 --> 00:41:05,280
+ Again, here's an example of what the transaction looks like.
+
+423
+00:41:05,340 --> 00:41:08,980
+ So we have our English definitions here, and they're fairly understandable.
+
+424
+00:41:09,460 --> 00:41:12,740
+ And then you have this lovely blob over here.
+
+425
+00:41:12,739 --> 00:41:21,899
+ it's so transaction is a tuple of tntp tg tttv p tw tr and ts and if anybody can remember what
+
+426
+00:41:21,899 --> 00:41:30,479
+ any of those variables mean you guys deserve a prize um i don't um again the block great
+
+427
+00:41:30,479 --> 00:41:35,739
+ description of all of the things that are in it um super useful if you're implementing a client
+
+428
+00:41:35,739 --> 00:41:42,039
+ um and then you have the rest of the yellow paper gas the entire virtual machine how rlp works
+
+429
+00:41:42,039 --> 00:41:45,279
+ it's all defined in the yellow paper.
+
+430
+00:41:45,279 --> 00:41:48,179
+ It's a very dense document.
+
+431
+00:41:48,179 --> 00:41:48,679
+ Yeah.
+
+432
+00:41:48,679 --> 00:41:51,340
+ Now all of these formulas here are
+
+433
+00:41:51,340 --> 00:41:53,380
+ examples from the previous slides,
+
+434
+00:41:53,380 --> 00:41:56,259
+ and I've already forgotten what they mean,
+
+435
+00:41:56,259 --> 00:41:58,920
+ so that's kind of the biggest problem.
+
+436
+00:41:58,920 --> 00:42:01,199
+ I think with yellow paper is that
+
+437
+00:42:01,199 --> 00:42:03,800
+ these notations, while they are very
+
+438
+00:42:03,800 --> 00:42:07,420
+ succinct, are very difficult to understand.
+
+439
+00:42:07,420 --> 00:42:09,920
+ So why, like who's the yellow paper targeting?
+
+440
+00:42:09,920 --> 00:42:13,159
+ it's not targeting developers, and I think that's the biggest problem with it.
+
+441
+00:42:14,000 --> 00:42:16,900
+ Programmers are the people who need to understand it the most, the people who are actually writing
+
+442
+00:42:16,900 --> 00:42:24,180
+ clients. And then the other people who are using the yellow paper are EIP authors. So if you're
+
+443
+00:42:24,180 --> 00:42:28,760
+ trying to propose a change to Ethereum, you need to describe that change in some way.
+
+444
+00:42:30,559 --> 00:42:36,519
+ And none of these documents use the notation from the yellow paper. Half of any core EIP is
+
+445
+00:42:36,519 --> 00:42:41,960
+ is defining a language to describe the change. Oftentimes it's Python. So, we wanted to give
+
+446
+00:42:41,960 --> 00:42:48,440
+ a more formal notation for that. The yellow paper is English, so it's not testable. There's no way
+
+447
+00:42:48,440 --> 00:42:53,320
+ to write a test to make sure that a client conforms to the specification. And there's no way
+
+448
+00:42:53,320 --> 00:43:00,759
+ to use the yellow paper to fill tests. But to be fair, and, you know, I don't want to just rag on
+
+449
+00:43:00,760 --> 00:43:01,940
+ on the yellow paper the whole time.
+
+450
+00:43:02,780 --> 00:43:03,740
+ It's very succinct.
+
+451
+00:43:04,420 --> 00:43:06,300
+ So it's only a couple pages
+
+452
+00:43:06,300 --> 00:43:08,620
+ and it does a very good job
+
+453
+00:43:08,620 --> 00:43:10,240
+ of formally describing Ethereum
+
+454
+00:43:10,240 --> 00:43:12,100
+ if you understand that kind of notation.
+
+455
+00:43:12,620 --> 00:43:14,180
+ And I think the most important benefit
+
+456
+00:43:14,180 --> 00:43:15,300
+ as far as I'm concerned
+
+457
+00:43:15,300 --> 00:43:16,260
+ is that the yellow paper
+
+458
+00:43:16,260 --> 00:43:17,300
+ is algorithm independent.
+
+459
+00:43:17,920 --> 00:43:20,040
+ It doesn't specify how things work,
+
+460
+00:43:20,140 --> 00:43:23,080
+ only the observable behaviors of it.
+
+461
+00:43:23,180 --> 00:43:24,180
+ And I think that's a really
+
+462
+00:43:24,180 --> 00:43:25,740
+ underappreciated benefit
+
+463
+00:43:25,740 --> 00:43:26,420
+ of the yellow paper
+
+464
+00:43:26,420 --> 00:43:28,080
+ and something that we don't have
+
+465
+00:43:28,080 --> 00:43:28,540
+ with ELs.
+
+466
+00:43:28,539 --> 00:43:37,099
+ On that note, EELS was created in 2021 by ConsenSys' Quilt team.
+
+467
+00:43:37,099 --> 00:43:42,860
+ Maintainership has been moved to the EELS team at the Ethereum Foundation.
+
+468
+00:43:42,860 --> 00:43:44,820
+ We're under a more permissive license.
+
+469
+00:43:44,820 --> 00:43:46,840
+ We're basically public domain.
+
+470
+00:43:46,840 --> 00:43:52,320
+ So, you know, kind of why did we start making EELS?
+
+471
+00:43:52,320 --> 00:43:55,360
+ We wanted to escape the frustration of trying to understand the yellow paper.
+
+472
+00:43:55,360 --> 00:43:57,099
+ I've read it a dozen times.
+
+473
+00:43:57,099 --> 00:43:58,539
+ I have a hard time understanding it still.
+
+474
+00:43:59,779 --> 00:44:05,659
+ And I'm not an expert developer, so I kind of think I'm a reasonable representation of most people working on Ethereum.
+
+475
+00:44:06,719 --> 00:44:09,880
+ There's also no snapshot of the current state of Ethereum.
+
+476
+00:44:10,239 --> 00:44:14,099
+ So if you've ever read the yellow paper, you'll notice that it lags behind by a fork or two.
+
+477
+00:44:14,779 --> 00:44:18,299
+ Right now it's only been updated until Paris, if I remember correctly.
+
+478
+00:44:18,739 --> 00:44:23,639
+ So you have to take the Paris yellow paper, find all of the EIPs that have come out since then,
+
+479
+00:44:23,639 --> 00:44:27,199
+ and that is how you figure out what the current state of Ethereum is.
+
+480
+00:44:28,639 --> 00:44:31,900
+ Which is a little difficult, and we wanted something that is more up-to-date
+
+481
+00:44:31,900 --> 00:44:35,859
+ and provides kind of a snapshot of what Ethereum is right now.
+
+482
+00:44:36,639 --> 00:44:38,599
+ We want it to be more accessible to programmers.
+
+483
+00:44:40,579 --> 00:44:44,279
+ That's kind of like the number one goal, I guess.
+
+484
+00:44:44,279 --> 00:44:45,420
+ Python is very readable.
+
+485
+00:44:46,059 --> 00:44:48,239
+ The consensus layer specs were already written in Python.
+
+486
+00:44:49,099 --> 00:44:51,679
+ So we wanted to do that for us, too.
+
+487
+00:44:51,679 --> 00:44:57,599
+ And then our final big, you know, motivation for doing this is to be able to fill the automated tests.
+
+488
+00:44:58,659 --> 00:45:02,099
+ So Geth has been the reference client for a very, very long time.
+
+489
+00:45:02,779 --> 00:45:11,319
+ And we wanted to kind of have a simpler client that isn't cluttered with complexities of a real client.
+
+490
+00:45:11,559 --> 00:45:13,399
+ And that's kind of what we wanted to do here.
+
+491
+00:45:14,500 --> 00:45:18,679
+ So now it's time to kind of give you a tour of EELS.
+
+492
+00:45:18,679 --> 00:45:24,579
+ So I'm going to give you rough example or rough equivalent to the one I gave for the yellow paper.
+
+493
+00:45:24,919 --> 00:45:27,500
+ The first thing I want to show is our directory structure.
+
+494
+00:45:28,579 --> 00:45:30,599
+ So we have a folder.
+
+495
+00:45:30,859 --> 00:45:35,239
+ We have a bunch of utility stuff like integer types and implementation of ethash.
+
+496
+00:45:35,500 --> 00:45:38,399
+ But most importantly, we have a folder for each fork.
+
+497
+00:45:39,759 --> 00:45:44,319
+ And each of these folders contains a complete copy of the Ethereum specification.
+
+498
+00:45:44,320 --> 00:45:53,380
+ If you were to take, say, just Paras and delete everything else, you would have a working implementation of the Paras hard fork.
+
+499
+00:45:54,039 --> 00:46:03,000
+ And that's kind of one of the big differences between our client and, let's say, Geth or Nethermind, is that Paras stands alone.
+
+500
+00:46:03,360 --> 00:46:06,820
+ You can read the Paras folder and get a complete idea of what Paras is.
+
+501
+00:46:06,820 --> 00:46:13,920
+ So this is kind of like what the blockchain implementation looks like in ELSE compared
+
+502
+00:46:13,920 --> 00:46:17,140
+ to the ELO paper.
+
+503
+00:46:17,140 --> 00:46:23,360
+ We have regular classes that define what each data structure we need is, and then we have
+
+504
+00:46:23,360 --> 00:46:27,240
+ regular Python functions that define what the behavior is.
+
+505
+00:46:27,240 --> 00:46:32,539
+ So you can see, very similar to Xiaowei's presentation about the consensus layer specs,
+
+506
+00:46:32,539 --> 00:46:38,239
+ We have our assertions that show what we check to make sure that the state transition was
+
+507
+00:46:38,239 --> 00:46:40,699
+ performed successfully.
+
+508
+00:46:40,699 --> 00:46:46,119
+ We have Python functions that implement little chunks of the algorithms that we need.
+
+509
+00:46:46,119 --> 00:46:50,500
+ And then right here in 194, that's actually building the blockchain.
+
+510
+00:46:50,500 --> 00:46:55,239
+ So we try very hard to keep it very simple Python, very easy to understand.
+
+511
+00:46:55,239 --> 00:47:02,300
+ So similarly here is validating the proof of work for a particular block.
+
+512
+00:47:02,300 --> 00:47:05,720
+ it's not exactly fork choice, but it's what we have.
+
+513
+00:47:06,620 --> 00:47:10,240
+ We don't, we expect to receive only the correct blocks
+
+514
+00:47:10,240 --> 00:47:12,700
+ because we don't handle reorgs.
+
+515
+00:47:12,700 --> 00:47:15,360
+ That would be a whole extra complication in our database
+
+516
+00:47:15,360 --> 00:47:16,080
+ that we don't touch.
+
+517
+00:47:17,260 --> 00:47:19,480
+ But we do have a full state implementation.
+
+518
+00:47:21,420 --> 00:47:24,019
+ So all of the things you expect an Ethereum state
+
+519
+00:47:24,019 --> 00:47:25,180
+ to be able to do, we can do.
+
+520
+00:47:26,240 --> 00:47:28,500
+ And these are representations of our transactions.
+
+521
+00:47:28,500 --> 00:47:34,460
+ We try to have meaningful names for all of our classes and all of their values.
+
+522
+00:47:35,780 --> 00:47:36,380
+ Yeah.
+
+523
+00:47:37,559 --> 00:47:39,539
+ And here's a block just for completeness sake.
+
+524
+00:47:40,000 --> 00:47:41,699
+ It looks like a regular Python class.
+
+525
+00:47:43,340 --> 00:47:44,920
+ So the downside to EELS.
+
+526
+00:47:45,659 --> 00:47:47,719
+ Obviously it requires Python knowledge.
+
+527
+00:47:48,639 --> 00:47:49,619
+ It's written in Python.
+
+528
+00:47:49,800 --> 00:47:52,119
+ If you want to contribute, you have to use Python.
+
+529
+00:47:53,360 --> 00:47:54,820
+ Whereas Yellow Paper does.
+
+530
+00:47:55,539 --> 00:47:56,480
+ It is English.
+
+531
+00:47:56,480 --> 00:47:59,300
+ so you can just write text and have people understand you.
+
+532
+00:48:00,519 --> 00:48:02,860
+ We do require specific algorithm choices.
+
+533
+00:48:03,880 --> 00:48:07,980
+ So when the yellow paper can say, like, we expect X and Y to happen,
+
+534
+00:48:08,240 --> 00:48:12,400
+ we have to actually write a particular implementation of what X and Y is.
+
+535
+00:48:13,360 --> 00:48:16,260
+ And that can leak into downstream implementations.
+
+536
+00:48:16,460 --> 00:48:18,260
+ And that's something we have to be very careful about.
+
+537
+00:48:18,719 --> 00:48:19,860
+ It's also more verbose.
+
+538
+00:48:20,199 --> 00:48:26,240
+ We have easily an order of magnitude more code than there is text in the yellow paper.
+
+539
+00:48:26,480 --> 00:48:33,179
+ it's less accessible to people who are familiar with the yellow paper. On the other hand,
+
+540
+00:48:33,179 --> 00:48:37,380
+ the benefits of ELLs are it's super easy to identify these things. These signatures and
+
+541
+00:48:37,380 --> 00:48:44,179
+ class definitions are very understandable to anybody who can read Python. You know that
+
+542
+00:48:44,179 --> 00:48:49,659
+ the first one here is the state transition function. There's no tuple of T, subscript
+
+543
+00:48:49,659 --> 00:48:52,960
+ it's all very understandable.
+
+544
+00:48:52,960 --> 00:48:56,819
+ Understandable programmers, which is important.
+
+545
+00:48:56,819 --> 00:49:00,279
+ And we already match what people do in EIPs.
+
+546
+00:49:00,279 --> 00:49:02,659
+ You can use actual Python.
+
+547
+00:49:02,659 --> 00:49:05,899
+ We're also more well maintained.
+
+548
+00:49:05,899 --> 00:49:07,539
+ The three of us work full time.
+
+549
+00:49:07,539 --> 00:49:13,579
+ Well, two of us work full time, and I work most of my time on this.
+
+550
+00:49:13,579 --> 00:49:16,199
+ And it's very easy for anybody to contribute.
+
+551
+00:49:16,199 --> 00:49:20,019
+ We have people coming in and making drive-by pull requests pretty much all the time.
+
+552
+00:49:20,619 --> 00:49:22,759
+ And we're implemented all the way up to Cancun.
+
+553
+00:49:23,359 --> 00:49:27,279
+ So this is something I'm really excited about.
+
+554
+00:49:27,539 --> 00:49:29,480
+ And if I'm talking too fast, I have to apologize.
+
+555
+00:49:30,159 --> 00:49:32,039
+ But we can sync the chain.
+
+556
+00:49:32,419 --> 00:49:39,019
+ So you can take EELS, you can put it on a very, very powerful computer, and it will eventually sync mainnet.
+
+557
+00:49:39,739 --> 00:49:42,419
+ And that's something I think we're pretty proud of.
+
+558
+00:49:42,420 --> 00:49:46,079
+ It also passes the Ethereum test suite.
+
+559
+00:49:46,079 --> 00:49:52,280
+ So, every test that normal execution clients pass, we also pass those as well.
+
+560
+00:49:52,280 --> 00:49:53,280
+ And we can do the opposite.
+
+561
+00:49:53,280 --> 00:49:58,340
+ So, you can write, you can prototype your EIP in ELSE and use ELSE to generate tests
+
+562
+00:49:58,340 --> 00:50:01,659
+ for other clients.
+
+563
+00:50:01,659 --> 00:50:05,820
+ Some other cool things that I think would be interesting to talk about that we've been
+
+564
+00:50:05,820 --> 00:50:07,240
+ working on.
+
+565
+00:50:07,240 --> 00:50:09,139
+ So, diffs.
+
+566
+00:50:09,139 --> 00:50:10,700
+ This is, you know, my baby.
+
+567
+00:50:10,699 --> 00:50:15,980
+ been working on this for a while. Because each hard fork is a complete implementation of the
+
+568
+00:50:15,980 --> 00:50:20,219
+ Ethereum protocol it's very hard to tell the difference between like to see what's changed.
+
+569
+00:50:21,099 --> 00:50:27,659
+ So this one here is an example of the DAO fork. We've written custom documentation tooling to
+
+570
+00:50:27,659 --> 00:50:31,980
+ generate these diffs and you can see them on our website which will be linked at the end.
+
+571
+00:50:34,379 --> 00:50:38,139
+ What else? We also participate in fuzzing. So this is a very recent feature.
+
+572
+00:50:38,139 --> 00:50:40,799
+ I think as of last week, we got this in.
+
+573
+00:50:41,579 --> 00:50:45,500
+ So all of the current execution clients participate in fuzzing
+
+574
+00:50:45,500 --> 00:50:49,339
+ where random inputs are assembled and thrown at the client
+
+575
+00:50:49,339 --> 00:50:50,279
+ to see what happens.
+
+576
+00:50:51,139 --> 00:50:52,839
+ We participate in that now.
+
+577
+00:50:53,339 --> 00:50:57,139
+ So yeah, I think that's pretty neat.
+
+578
+00:50:57,299 --> 00:50:59,440
+ And it's already found a few bugs in our implementation
+
+579
+00:50:59,440 --> 00:51:01,259
+ and a few bugs in other clients.
+
+580
+00:51:01,819 --> 00:51:06,659
+ So yeah, that's about it for the formal presentation here.
+
+581
+00:51:06,659 --> 00:51:15,759
+ So I will stop at this point, take some questions, and then if there's still time at the end, I can do a demo of adding some stuff to ELs if people are interested.
+
+582
+00:51:22,019 --> 00:51:26,539
+ Awesome. Thank you so much, Sam. Yeah, it was great. I appreciate it. Thank you very much.
+
+583
+00:51:27,239 --> 00:51:32,039
+ Folks, if you have any questions, feel free to ask right now. It's the best time.
+
+584
+00:51:32,039 --> 00:51:37,079
+ Meanwhile, I wanted to say that I'm very surprised that you synced the chain.
+
+585
+00:51:37,159 --> 00:51:38,079
+ I didn't know about that.
+
+586
+00:51:38,179 --> 00:51:38,920
+ It's super cool.
+
+587
+00:51:39,900 --> 00:51:41,380
+ How long does it take?
+
+588
+00:51:42,619 --> 00:51:45,199
+ So we don't run it regularly.
+
+589
+00:51:46,000 --> 00:51:48,940
+ So I think the last time we synced it was two or three months ago,
+
+590
+00:51:49,059 --> 00:51:51,820
+ and it took two weeks or so.
+
+591
+00:51:53,800 --> 00:51:54,539
+ It's very slow.
+
+592
+00:51:56,079 --> 00:51:56,960
+ Yeah, yeah.
+
+593
+00:51:58,000 --> 00:52:00,079
+ And once you get up to recent blocks,
+
+594
+00:52:00,239 --> 00:52:01,900
+ it's like a block comes out every 12 seconds,
+
+595
+00:52:01,900 --> 00:52:03,700
+ and we complete a block every 10 seconds.
+
+596
+00:52:04,019 --> 00:52:07,280
+ So it's, yeah, very hard to catch up,
+
+597
+00:52:07,420 --> 00:52:08,380
+ but we can sync the chain.
+
+598
+00:52:09,660 --> 00:52:10,500
+ That's amazing.
+
+599
+00:52:10,740 --> 00:52:14,880
+ I mean, I didn't expect it that Python would be,
+
+600
+00:52:14,960 --> 00:52:16,440
+ Python client would be able to sync
+
+601
+00:52:16,440 --> 00:52:19,260
+ like the later, the modern Ethereum.
+
+602
+00:52:19,519 --> 00:52:21,860
+ I remember Trinity trying to do it years ago.
+
+603
+00:52:22,000 --> 00:52:23,760
+ I think they never managed to sync, so.
+
+604
+00:52:25,079 --> 00:52:27,200
+ Yeah, so there are some caveats here.
+
+605
+00:52:27,199 --> 00:52:35,659
+ we have a 128 gig RAM computer with very powerful processors. It's not an easy task. I wouldn't
+
+606
+00:52:35,659 --> 00:52:44,759
+ recommend anybody doing it, but it's possible. Awesome, awesome. Yeah, one question here.
+
+607
+00:52:45,219 --> 00:52:51,460
+ You mentioned that the ELs are up to date with Cancun, but in the repo, we just see Shanghai.
+
+608
+00:52:51,460 --> 00:52:54,699
+ So where can we find the specs post?
+
+609
+00:52:54,699 --> 00:53:02,280
+ Yeah, so there is a fork, a branch fork slash Cancun.
+
+610
+00:53:02,280 --> 00:53:03,679
+ We just haven't merged it into master yet.
+
+611
+00:53:03,679 --> 00:53:08,860
+ There's a few refactoring things you want to take care of, but it's all there.
+
+612
+00:53:08,860 --> 00:53:11,340
+ Okay, cool.
+
+613
+00:53:11,340 --> 00:53:15,000
+ So it's the branch.
+
+614
+00:53:15,000 --> 00:53:22,280
+ Yeah, and also you mentioned that, so there are things which are omitted from, which are missing
+
+615
+00:53:22,280 --> 00:53:28,440
+ from the exec fields, like the peer-to-peer or the fork choice. Can you maybe mention where you can
+
+616
+00:53:28,440 --> 00:53:33,800
+ find specification for these? I guess they're the execution API specs as well?
+
+617
+00:53:35,079 --> 00:53:40,920
+ Yeah, so the APIs are, like you said, in the execution APIs. There's the networking
+
+618
+00:53:40,920 --> 00:53:45,720
+ specification. I don't have it link candy for it, but it's under the Ethereum repository as well.
+
+619
+00:53:47,320 --> 00:53:52,360
+ And for the fork choice, we're just going to be adding English text describing how that works.
+
+620
+00:53:56,599 --> 00:54:02,599
+ It adds a lot of complexity being able to do rollbacks and switching between forks,
+
+621
+00:54:02,599 --> 00:54:07,240
+ and that's not something that we can really reasonably handle. Yeah.
+
+622
+00:54:10,920 --> 00:54:22,260
+ Thank you so much. Any other questions, folks?
+
+623
+00:54:22,260 --> 00:54:27,480
+ Actually, there's something I forgot to mention. So the consensus layer specs took the approach
+
+624
+00:54:27,480 --> 00:54:33,599
+ of starting in Markdown and rendering to Python, and we took the exact opposite approach. So
+
+625
+00:54:33,599 --> 00:54:35,880
+ start in Python and render it into HTML.
+
+626
+00:54:36,719 --> 00:54:40,380
+ So it's kind of a very opposite approach.
+
+627
+00:54:40,480 --> 00:54:43,819
+ We have a Python-first thing, and they have a Markdown-first.
+
+628
+00:54:44,099 --> 00:54:45,779
+ And, you know, we both end up with, I think,
+
+629
+00:54:45,839 --> 00:54:47,480
+ reasonable documents at the end.
+
+630
+00:54:47,679 --> 00:54:49,279
+ It's just an interesting fact.
+
+631
+00:54:55,039 --> 00:54:56,079
+ Okay, awesome, awesome.
+
+632
+00:54:56,159 --> 00:54:57,719
+ Yeah, it's an interesting comparison.
+
+633
+00:55:00,679 --> 00:55:01,000
+ Okay.
+
+634
+00:55:01,000 --> 00:55:12,199
+ I would repeat the question that you asked,
+
+635
+00:55:12,340 --> 00:55:14,000
+ what was the most challenging
+
+636
+00:55:14,000 --> 00:55:15,539
+ that you find? I mean, you mentioned
+
+637
+00:55:15,539 --> 00:55:18,320
+ issues with creating yellow paper and so on.
+
+638
+00:55:18,500 --> 00:55:19,360
+ What do you find
+
+639
+00:55:19,360 --> 00:55:20,920
+ the biggest challenge of it?
+
+640
+00:55:23,239 --> 00:55:23,840
+ So,
+
+641
+00:55:24,059 --> 00:55:25,820
+ kind of a similar problem.
+
+642
+00:55:26,500 --> 00:55:27,360
+ Writing Ethereum,
+
+643
+00:55:27,920 --> 00:55:29,780
+ the actual Python for it,
+
+644
+00:55:29,780 --> 00:55:35,060
+ isn't the hardest part of this project it's all of the associated tooling being able to render
+
+645
+00:55:35,060 --> 00:55:39,860
+ everything um we had to build a whole new rendering system a whole new documentation tool
+
+646
+00:55:39,860 --> 00:55:45,700
+ um that that's been the hardest part it's just making it presentable to people and accessible
+
+647
+00:55:50,180 --> 00:55:56,340
+ yeah it's it's been also a while like before you started it actually the specs was there but uh
+
+648
+00:55:56,340 --> 00:56:01,620
+ it got officially announced as the released version which is presentable, it took a while
+
+649
+00:56:01,620 --> 00:56:03,620
+ because it didn't work.
+
+650
+00:56:03,620 --> 00:56:05,620
+ So yeah.
+
+651
+00:56:09,539 --> 00:56:11,539
+ Okay, um...
+
+652
+00:56:18,579 --> 00:56:20,579
+ Let's...
+
+653
+00:56:20,579 --> 00:56:33,639
+ Yeah, I think we can wrap up. There are just a few questions we can answer later.
+
+654
+00:56:33,639 --> 00:56:39,179
+ And we are at almost the hour, so yeah, if you have anything else you would like to elaborate
+
+655
+00:56:39,179 --> 00:56:46,079
+ on, show us, also share the screen, and show us some of the repo or some more hands-on
+
+656
+00:56:46,079 --> 00:56:50,599
+ coding example or it would be very thankful.
+
+657
+00:56:50,599 --> 00:56:51,779
+ Yeah, it can definitely do that.
+
+658
+00:56:51,779 --> 00:56:56,319
+ So, just find the right window here.
+
+659
+00:56:56,319 --> 00:56:57,420
+ There we go.
+
+660
+00:56:57,420 --> 00:56:59,179
+ There we go.
+
+661
+00:56:59,179 --> 00:57:04,079
+ So this is kind of an unrehearsed live demo
+
+662
+00:57:04,079 --> 00:57:06,779
+ of adding an Opcode to EALS.
+
+663
+00:57:06,779 --> 00:57:09,360
+ So we're going to start off by just,
+
+664
+00:57:09,360 --> 00:57:11,619
+ let me just move this over here a little bit there.
+
+665
+00:57:11,619 --> 00:57:18,779
+ So you can get ELs.
+
+666
+00:57:18,779 --> 00:57:25,940
+ So we're starting from scratch.
+
+667
+00:57:25,940 --> 00:57:32,079
+ We're cloning the ELs repository and we're going to go right into that.
+
+668
+00:57:32,079 --> 00:57:36,779
+ So now we have the execution specs repository and we have to set up our virtual environment,
+
+669
+00:57:36,779 --> 00:57:39,779
+ which is the second step.
+
+670
+00:57:39,780 --> 00:57:45,620
+ So virtual environments, if you're not familiar with Python, are like a local package repository
+
+671
+00:57:45,620 --> 00:57:48,340
+ so you don't mess up your system Python.
+
+672
+00:57:48,340 --> 00:57:51,540
+ So let's turn that on.
+
+673
+00:57:51,540 --> 00:57:52,540
+ There we go.
+
+674
+00:57:52,540 --> 00:57:59,180
+ So now we're in our virtual environment, and you can see that our Python is also sandboxed
+
+675
+00:57:59,180 --> 00:58:03,340
+ inside the virtual environment.
+
+676
+00:58:03,340 --> 00:58:05,780
+ So let's add an opcode.
+
+677
+00:58:05,780 --> 00:58:12,680
+ My favorite up go to add is increment, pop a number off the stack and push one greater
+
+678
+00:58:12,680 --> 00:58:15,340
+ than that number back onto the stack.
+
+679
+00:58:15,340 --> 00:58:17,340
+ Let's do that.
+
+680
+00:58:17,340 --> 00:58:24,260
+ First step here is installing the project so that we can edit it.
+
+681
+00:58:24,260 --> 00:58:27,540
+ We use pip as our package management system.
+
+682
+00:58:27,540 --> 00:58:30,600
+ Should be pretty familiar to any Python developers.
+
+683
+00:58:30,599 --> 00:58:37,960
+ you're not a Python developer, all you need to know is pip install dash e dot. There we go.
+
+684
+00:58:38,599 --> 00:58:44,199
+ So that's installed all of our dependencies, gotten everything set up. We actually depend
+
+685
+00:58:44,199 --> 00:58:50,519
+ on the execution specs as well for their implementation of, I think it's kzg commitments.
+
+686
+00:58:50,519 --> 00:58:59,799
+ So yeah, we already share a bunch of code. So let's go and check out the Cancun branch,
+
+687
+00:58:59,800 --> 00:59:01,400
+ because that one's a fun one to start from.
+
+688
+00:59:09,640 --> 00:59:16,440
+ So this is going to be an arithmetic instruction. So everything to do with the EVM lives under the
+
+689
+00:59:16,440 --> 00:59:26,360
+ VM folder. Hopefully that's an obvious choice. So this is what, let me resize this a second, perfect.
+
+690
+00:59:29,800 --> 00:59:49,440
+ So here's the add opcode. This is the implementation. Every opcode is divided into the same four sections. We have stack manipulation, charging gas, the actual implementation of the opcode, and then incrementing or not incrementing the program counter.
+
+691
+00:59:49,440 --> 00:59:57,559
+ So let's copy the add instruction here and change it to ink.
+
+692
+00:59:58,460 --> 01:00:05,079
+ So let's delete the doc string here.
+
+693
+01:00:05,200 --> 01:00:05,599
+ There we go.
+
+694
+01:00:05,800 --> 01:00:09,720
+ So we're only going to pop one item off the stack, which is going to be the input number.
+
+695
+01:00:10,000 --> 01:00:13,300
+ We're going to charge the same amount of gas, which will be gas very low.
+
+696
+01:00:13,300 --> 01:00:19,580
+ and we will add 1 to the value we popped off the stack,
+
+697
+01:00:19,680 --> 01:00:21,480
+ and we will push it back onto the stack here.
+
+698
+01:00:22,160 --> 01:00:24,700
+ This only takes one byte to encode,
+
+699
+01:00:25,060 --> 01:00:28,460
+ so we'll leave the program counter at plus 1.
+
+700
+01:00:29,660 --> 01:00:34,240
+ Now, we have to actually tell the interpreter about our new opcode,
+
+701
+01:00:34,420 --> 01:00:35,440
+ so let's go and do that.
+
+702
+01:00:43,300 --> 01:00:46,600
+ That is in the init folder.
+
+703
+01:00:50,820 --> 01:01:01,940
+ So let's give it 0C as the numeric representation of it.
+
+704
+01:01:02,100 --> 01:01:04,900
+ So we have to add it to this enumeration of instructions here.
+
+705
+01:01:05,720 --> 01:01:11,180
+ And then we can go down and add it, add the implementation.
+
+706
+01:01:13,300 --> 01:01:15,519
+ Yeah, which would be right here.
+
+707
+01:01:16,180 --> 01:01:19,440
+ So instead of ops sign extend, we have ops ink.
+
+708
+01:01:20,400 --> 01:01:25,180
+ And then we will have the ink instruction.
+
+709
+01:01:25,820 --> 01:01:30,240
+ And that is the entirety of adding a new opcode to EELS.
+
+710
+01:01:31,180 --> 01:01:35,720
+ It is really a very simple Python program.
+
+711
+01:01:36,120 --> 01:01:38,800
+ There's no kind of weirdness to it.
+
+712
+01:01:38,800 --> 01:01:40,460
+ There's no performance considerations.
+
+713
+01:01:40,460 --> 01:01:46,000
+ Our version of the Cancun fork now has the increment instruction, and that's it.
+
+714
+01:01:46,000 --> 01:01:49,019
+ Yeah, so that's pretty much the demo.
+
+715
+01:01:49,019 --> 01:01:53,059
+ If you ever have any questions or want to work on this stuff, please reach out to me.
+
+716
+01:01:53,059 --> 01:01:59,199
+ I'm pretty available on Discord, Twitter, whatever you like.
+
+717
+01:01:59,199 --> 01:02:01,159
+ Thanks so much for letting me demo that.
+
+718
+01:02:01,159 --> 01:02:02,159
+ Awesome.
+
+719
+01:02:02,159 --> 01:02:05,280
+ Thanks so much, Sam, for doing the demo.
+
+720
+01:02:05,280 --> 01:02:07,100
+ So much for doing the demo.
+
+721
+01:02:07,100 --> 01:02:08,580
+ Thank you so much, Sam, for doing this.
+
+722
+01:02:08,580 --> 01:02:09,080
+ Thanks.
+
+723
+01:02:11,600 --> 01:02:13,000
+ Yeah, I appreciate it that you are
+
+724
+01:02:13,000 --> 01:02:15,360
+ able to just come and do the live session
+
+725
+01:02:15,360 --> 01:02:17,880
+ and show us code in ELs.
+
+726
+01:02:17,880 --> 01:02:19,500
+ It's pretty cool.
+
+727
+01:02:19,500 --> 01:02:25,160
+ And folks can try it themselves for the recording, I guess.
+
+728
+01:02:28,700 --> 01:02:29,720
+ Awesome.
+
+729
+01:02:29,720 --> 01:02:32,519
+ There was one question from Pooja here
+
+730
+01:02:32,519 --> 01:02:42,920
+ I wanted to ask as an EIP ELs person, before the ERC split, there was talk about proposing EIPs with ELs.
+
+731
+01:02:42,920 --> 01:02:46,199
+ Do we see that in the near future?
+
+732
+01:02:46,199 --> 01:02:52,400
+ That's a question that's kind of up in the air.
+
+733
+01:02:52,400 --> 01:02:57,679
+ So you can link to ELs from EIPs.
+
+734
+01:02:57,679 --> 01:03:02,119
+ So if you want to use code you've written in ELs in your document, you can.
+
+735
+01:03:02,119 --> 01:03:09,619
+ But the original vision of moving core EIPs into this repository is kind of dead.
+
+736
+01:03:09,619 --> 01:03:17,079
+ So think of ELs more as one of the many ways to express your change and not the only way to express your change.
+
+737
+01:03:17,079 --> 01:03:28,420
+ it's pretty cool um yeah
+
+738
+01:03:28,420 --> 01:03:38,840
+ okay i think i think we can wrap up um it's been it's been over an hour and we borrowed
+
+739
+01:03:38,840 --> 01:03:45,679
+ a lot today so uh yeah thank you so much again sam xiaowei if you're still here and sitting
+
+740
+01:03:45,679 --> 01:03:52,559
+ yous to both of you uh huge thanks for uh demonstrating and explaining the uh both
+
+741
+01:03:52,559 --> 01:03:59,039
+ sides of the specs uh so yeah um and thanks so much for all your all your hard work on the
+
+742
+01:03:59,039 --> 01:04:05,599
+ specs themselves like uh we have properly specified it here finally and it's it's there
+
+743
+01:04:05,599 --> 01:04:08,360
+ So it's it's really amazing to do that.
+
+744
+01:04:08,360 --> 01:04:12,279
+ So thank you all so much.
+
+745
+01:04:12,279 --> 01:04:16,940
+ Awesome.
+
+746
+01:04:16,940 --> 01:04:17,819
+ Great. Yeah.
+
+747
+01:04:17,819 --> 01:04:18,360
+ Thanks.
+
+748
+01:04:18,360 --> 01:04:19,559
+ Thanks, Sam and Syawei.
+
+749
+01:04:19,559 --> 01:04:23,519
+ And we will see you all
+
+750
+01:04:24,199 --> 01:04:28,880
+ in a couple of days for the first session
+
+751
+01:04:28,880 --> 01:04:32,480
+ with the research track, I believe it is
+
+752
+01:04:32,480 --> 01:04:35,420
+ on starting with
+
+753
+01:04:35,420 --> 01:04:36,199
+ Denkrad.
+
+754
+01:04:37,380 --> 01:04:38,059
+ It's
+
+755
+01:04:38,059 --> 01:04:40,780
+ Denkrad Inc. with Denkrad himself
+
+756
+01:04:40,780 --> 01:04:42,300
+ on Wednesday, 4pm.
+
+757
+01:04:42,880 --> 01:04:45,019
+ So we'll continue to week 6
+
+758
+01:04:45,019 --> 01:04:46,440
+ with the research track there.
+
+759
+01:04:47,019 --> 01:04:48,940
+ And yeah, guys, you've been the
+
+760
+01:04:48,940 --> 01:04:50,860
+ first to give a talk in our
+
+761
+01:04:50,860 --> 01:04:52,940
+ development track, so we really appreciate it
+
+762
+01:04:52,940 --> 01:04:54,719
+ for empowering the future
+
+763
+01:04:54,719 --> 01:04:55,699
+ Ethereum developers.
+
+764
+01:04:56,679 --> 01:04:58,019
+ And also, like, the
+
+765
+01:04:58,019 --> 01:05:00,760
+ current ones, I believe, many people can learn
+
+766
+01:05:00,760 --> 01:05:02,000
+ from the talk there, so
+
+767
+01:05:02,000 --> 01:05:10,239
+ it will be appreciated yeah yeah it's much and we'll see you Wednesday and
+
+768
+01:05:10,239 --> 01:05:13,159
+ it's me
+
+769
+01:05:13,340 --> 01:05:16,619
+ thanks everyone
+
+770
+01:06:02,000 --> 01:06:07,840
+ Thank you.
+

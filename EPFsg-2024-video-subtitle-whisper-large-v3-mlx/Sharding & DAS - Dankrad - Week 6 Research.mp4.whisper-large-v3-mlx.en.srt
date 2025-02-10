@@ -1,0 +1,3756 @@
+1
+00:00:30,000 --> 00:00:54,200
+ Thank you.
+
+2
+00:01:00,000 --> 00:01:29,980
+ Thank you.
+
+3
+00:01:30,000 --> 00:01:40,000
+ ¶¶
+
+4
+00:01:40,000 --> 00:01:50,000
+ ¶¶
+
+5
+00:01:50,000 --> 00:02:00,000
+ ¶¶
+
+6
+00:02:00,000 --> 00:02:10,000
+ ¶¶
+
+7
+00:02:10,000 --> 00:02:20,000
+ ¶¶
+
+8
+00:02:20,000 --> 00:02:30,000
+ ¶¶
+
+9
+00:02:30,000 --> 00:02:59,979
+ I love you.
+
+10
+00:03:00,000 --> 00:03:29,979
+ Thank you.
+
+11
+00:03:30,000 --> 00:03:59,979
+ Thank you.
+
+12
+00:04:30,000 --> 00:04:59,980
+ Thank you.
+
+13
+00:05:00,000 --> 00:05:19,620
+ All right.
+
+14
+00:05:19,620 --> 00:05:25,720
+ Welcome back to the Ethereum Protocol Fellowship study group.
+
+15
+00:05:25,720 --> 00:05:35,600
+ So, we are here today with our first session of the research track here with Dankrad to
+
+16
+00:05:35,600 --> 00:05:39,940
+ talk about some sharding and some data availability sampling.
+
+17
+00:05:39,940 --> 00:05:46,560
+ So, Mario, I'll go ahead and let you introduce Dankrad for us, and then you can take it away.
+
+18
+00:05:46,560 --> 00:05:51,780
+ If you have slides or a screen share, Dankrad, you can do that with the little present button
+
+19
+00:05:51,780 --> 00:05:52,780
+ down there.
+
+20
+00:05:52,779 --> 00:05:56,939
+ Awesome, welcome, Dancred, and welcome all the attendees.
+
+21
+00:05:56,939 --> 00:06:03,179
+ So it's a tough task to give introduction for Dancred, because it's a man who mostly
+
+22
+00:06:03,179 --> 00:06:08,039
+ needs no introduction, but I'll try anyway.
+
+23
+00:06:08,039 --> 00:06:14,219
+ So Dancred is joining us today, who is a researcher in Ethereum Foundation, as you probably know,
+
+24
+00:06:14,219 --> 00:06:20,699
+ which you might not know is that he is also, he's a background in theoretical physics from
+
+25
+00:06:20,699 --> 00:06:22,759
+ Cambridge, which is very impressive.
+
+26
+00:06:22,920 --> 00:06:28,860
+ And he's been doing great work on cryptography and Ethereum, most famously the Dankshard
+
+27
+00:06:28,860 --> 00:06:35,319
+ Inc. and the data availability sampling, but also NPC-friendly proof of custody, development
+
+28
+00:06:35,319 --> 00:06:41,620
+ of statelessness and related protocols for maybe like five years now.
+
+29
+00:06:42,099 --> 00:06:45,399
+ So it's a real pleasure to have you here, Dankshard.
+
+30
+00:06:45,399 --> 00:06:51,459
+ it's an honor to that you join our little study group and that we will hear
+
+31
+00:06:51,459 --> 00:06:52,560
+ about it
+
+32
+00:06:52,560 --> 00:06:56,739
+ thanks for being from dunkard himself it's it's really great man so yeah
+
+33
+00:06:56,739 --> 00:06:58,279
+ thank you so much for being here
+
+34
+00:06:58,279 --> 00:07:04,199
+ yeah it can you hear us well I can hear you thank you
+
+35
+00:07:04,199 --> 00:07:09,219
+ the only thing is I'm I can't see a button to present right now
+
+36
+00:07:09,220 --> 00:07:17,780
+ So, in the, under the video, in the middle it says present, right?
+
+37
+00:07:17,780 --> 00:07:26,380
+ No, I don't have a present button, I have mic, cam, chat, I don't have present.
+
+38
+00:07:26,380 --> 00:07:30,980
+ Is it maybe because I'm, yes I am, is it a problem?
+
+39
+00:07:30,980 --> 00:07:36,080
+ You probably need a desktop to be able to share the screen, but if you share your slides,
+
+40
+00:07:36,080 --> 00:07:37,080
+ I could.
+
+41
+00:07:37,079 --> 00:07:38,539
+ I'll do that, yeah.
+
+42
+00:07:38,539 --> 00:07:39,359
+ Yeah.
+
+43
+00:07:39,359 --> 00:07:40,199
+ Yeah.
+
+44
+00:07:48,839 --> 00:07:51,300
+ Okay, I'll just send them on Telegram.
+
+45
+00:08:01,899 --> 00:08:05,560
+ Okay, it just gave me a second please.
+
+46
+00:08:37,080 --> 00:08:48,420
+ So it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+47
+00:08:48,420 --> 00:08:49,420
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's
+
+48
+00:08:49,420 --> 00:08:50,420
+ pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty
+
+49
+00:08:50,420 --> 00:08:51,420
+ much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+50
+00:08:51,420 --> 00:08:52,420
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's
+
+51
+00:08:52,420 --> 00:08:53,420
+ pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty
+
+52
+00:08:53,420 --> 00:08:54,420
+ much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's
+
+53
+00:08:54,420 --> 00:08:55,420
+ pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty
+
+54
+00:08:55,420 --> 00:08:56,420
+ much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+55
+00:08:56,419 --> 00:08:58,699
+ Okay, perfect.
+
+56
+00:08:58,699 --> 00:09:01,699
+ Can you move them or...?
+
+57
+00:09:01,699 --> 00:09:04,979
+ Yeah, I can see them.
+
+58
+00:09:04,979 --> 00:09:05,979
+ Cool, cool.
+
+59
+00:09:05,979 --> 00:09:09,479
+ Cool, so move to the next one.
+
+60
+00:09:09,479 --> 00:09:18,799
+ Yeah, so just to what I'm talking about today, so I want to start from blockchain scalability
+
+61
+00:09:18,799 --> 00:09:22,860
+ to introduce why we have to care about data availability.
+
+62
+00:09:22,860 --> 00:09:29,379
+ I'll move on to the data availability problem, talk about the solution in the form of data
+
+63
+00:09:29,379 --> 00:09:35,580
+ will be something, and then we'll be going more concretely into the tank sharding construction
+
+64
+00:09:35,580 --> 00:09:41,659
+ and also talk a bit about the EIP4844 that was implemented on Ethereum a couple of weeks
+
+65
+00:09:41,659 --> 00:09:42,659
+ ago.
+
+66
+00:09:42,659 --> 00:09:43,659
+ Next slide, please.
+
+67
+00:09:43,659 --> 00:09:49,580
+ So, when we talk about blockchain scalability.
+
+68
+00:09:49,580 --> 00:10:16,980
+ So many years ago, Vitalik came up with the blockchain scalability trilemma.
+
+69
+00:10:19,580 --> 00:10:44,740
+ What it says is that it is difficult to design a block chain.
+
+70
+00:10:44,740 --> 00:10:48,899
+ it
+
+71
+00:10:48,899 --> 00:10:51,460
+ it
+
+72
+00:10:51,460 --> 00:10:55,419
+ provide
+
+73
+00:10:55,419 --> 00:10:59,940
+ it
+
+74
+00:10:59,940 --> 00:11:00,560
+ it
+
+75
+00:11:00,560 --> 00:11:02,019
+ it
+
+76
+00:11:02,019 --> 00:11:04,759
+ it
+
+77
+00:11:04,759 --> 00:11:08,680
+ it
+
+78
+00:11:08,680 --> 00:11:09,180
+ it
+
+79
+00:11:14,740 --> 00:11:43,740
+ Okay.
+
+80
+00:11:44,740 --> 00:11:50,580
+ Hello? Hello. All right. That sounds better. Is it better? Good. Okay. I changed my internet
+
+81
+00:11:50,580 --> 00:11:57,379
+ connection. Hopefully this will be better. Sorry for that. How far were you able to hear me?
+
+82
+00:11:59,460 --> 00:12:05,460
+ Last thing I heard was Vitalik came up with the scalability trilemma.
+
+83
+00:12:05,460 --> 00:12:18,420
+ Right, so the scalability trilemma says that it's difficult to design a blockchain that provides scalability, security and decentralization at the same time.
+
+84
+00:12:19,200 --> 00:12:23,180
+ And the important thing here is it doesn't say that it's impossible.
+
+85
+00:12:23,180 --> 00:12:33,060
+ Just back when Vitalik came up with this, we didn't really have all the constructions that were needed to make a scalable blockchain.
+
+86
+00:12:33,059 --> 00:12:39,199
+ But luckily, we do have them now, and I'll talk today about one of the important components of this solution.
+
+87
+00:12:40,339 --> 00:12:42,079
+ If you can go to the next slide.
+
+88
+00:12:44,819 --> 00:12:53,099
+ So let's talk about one of the parts here of the state trilemma, which is decentralization.
+
+89
+00:12:53,100 --> 00:13:01,540
+ So, when we talk about decentralization, what we mean is, importantly, one important thing
+
+90
+00:13:01,540 --> 00:13:07,560
+ that we want is that it is pretty easy for anyone to run a node.
+
+91
+00:13:07,560 --> 00:13:11,399
+ And this is what makes decentralization difficult.
+
+92
+00:13:11,399 --> 00:13:18,080
+ So, next slide.
+
+93
+00:13:18,080 --> 00:13:24,759
+ If we look at this node here, ideally, we want that someone can easily run a node in
+
+94
+00:13:24,759 --> 00:13:26,960
+ their own home.
+
+95
+00:13:26,960 --> 00:13:30,620
+ This importantly means that two factors are limited.
+
+96
+00:13:30,620 --> 00:13:32,400
+ One is execution.
+
+97
+00:13:32,400 --> 00:13:38,160
+ This little box that anyone can buy for ideally at most a few hundred dollars is limited in
+
+98
+00:13:38,160 --> 00:13:40,320
+ how much it can do.
+
+99
+00:13:40,320 --> 00:13:44,220
+ Also, we want the user potentially to still be able to use it for other things at the
+
+100
+00:13:44,220 --> 00:13:45,220
+ same time.
+
+101
+00:13:45,220 --> 00:13:48,879
+ So we don't even want to use the CPU full time.
+
+102
+00:13:48,879 --> 00:13:50,500
+ And the second thing is the bandwidth.
+
+103
+00:13:50,500 --> 00:13:53,980
+ So like the internet connection that a person can get
+
+104
+00:13:55,720 --> 00:13:57,399
+ in their home is typically limited
+
+105
+00:13:57,399 --> 00:13:58,420
+ depending on the country.
+
+106
+00:13:58,420 --> 00:14:03,420
+ And so we have to be happy with like what we can get there
+
+107
+00:14:04,139 --> 00:14:09,139
+ and that further limits how much one node can perform.
+
+108
+00:14:14,120 --> 00:14:15,040
+ Next slide.
+
+109
+00:14:15,220 --> 00:14:24,540
+ So if we look at the blockchain stack it's like from our modern understanding, we see
+
+110
+00:14:24,540 --> 00:14:31,340
+ it as having like four different layers and those layers are execution, settlement, data
+
+111
+00:14:31,340 --> 00:14:34,080
+ availability and consensus.
+
+112
+00:14:34,080 --> 00:14:42,080
+ So consensus is just like it's basically how do we know which one is the chain that we
+
+113
+00:14:42,080 --> 00:14:48,720
+ all agree on like how do we come come to agreement on what's the what is the latest block and um
+
+114
+00:14:48,720 --> 00:14:55,520
+ that's like things like proof of work and proof sake play a role here data availability um is the
+
+115
+00:14:55,520 --> 00:15:03,360
+ one as the part i'm talking about today which is like um how do we know that everything that um
+
+116
+00:15:04,639 --> 00:15:11,360
+ that was part of the blockchain is available to everyone settlement um is the layer is
+
+117
+00:15:11,360 --> 00:15:18,000
+ it's the settlement layer which means basically it's it's the it's the root layer of um all the
+
+118
+00:15:18,000 --> 00:15:22,960
+ for example assets on a chain so it's kind of the logic that everything goes back to and that
+
+119
+00:15:22,960 --> 00:15:31,840
+ tells you like okay this is um this is who this um eth or erc20 token belongs to right now and
+
+120
+00:15:31,840 --> 00:15:37,440
+ execution is the layer that decides which transactions are valid um so execution is
+
+121
+00:15:37,440 --> 00:15:42,880
+ is the layer that says, if you execute this transaction,
+
+122
+00:15:42,880 --> 00:15:45,780
+ then the accounts change in this way,
+
+123
+00:15:45,780 --> 00:15:49,780
+ or they don't change because it was an invalid transaction.
+
+124
+00:15:49,780 --> 00:15:58,300
+ And if we go to the next slide, so two of these layers
+
+125
+00:15:58,300 --> 00:16:02,260
+ are actually inherently settlement and consensus.
+
+126
+00:16:02,260 --> 00:16:05,140
+ They do not really depend on the number of transactions
+
+127
+00:16:05,140 --> 00:16:07,380
+ that our blockchain has to process.
+
+128
+00:16:07,379 --> 00:16:13,360
+ So consensus does not depend on it because consensus can come, we can come to consensus
+
+129
+00:16:13,360 --> 00:16:15,039
+ on things like hashes.
+
+130
+00:16:15,139 --> 00:16:20,059
+ So we can very highly compress the amount of data that we have to come consensus on.
+
+131
+00:16:20,259 --> 00:16:25,659
+ So actually consensus doesn't really care if we have one transaction per second or a
+
+132
+00:16:25,659 --> 00:16:25,939
+ million.
+
+133
+00:16:27,259 --> 00:16:31,220
+ And for settlement, this is true in a similar way.
+
+134
+00:16:32,019 --> 00:16:35,779
+ We don't always need to settle every single transaction immediately.
+
+135
+00:16:35,779 --> 00:16:40,319
+ We can basically net large numbers of transactions.
+
+136
+00:16:40,860 --> 00:16:46,360
+ And so settlement doesn't necessarily depend on the number of transactions either.
+
+137
+00:16:46,819 --> 00:16:51,199
+ But the two things that do absolutely depend on the number of transactions are data availability and execution.
+
+138
+00:16:51,379 --> 00:16:59,559
+ Data availability, because we need to have the data for every single transaction available to anyone who wants it,
+
+139
+00:16:59,559 --> 00:17:02,859
+ or at least anyone who needs it to know whether,
+
+140
+00:17:02,859 --> 00:17:04,460
+ whatever they're depending on, for example,
+
+141
+00:17:04,460 --> 00:17:06,539
+ the balance of their account is valid.
+
+142
+00:17:06,539 --> 00:17:11,179
+ And execution, similarly, like we need,
+
+143
+00:17:12,500 --> 00:17:15,039
+ yeah, we need currently, for example,
+
+144
+00:17:15,039 --> 00:17:18,240
+ on Ethereum to execute all the transactions,
+
+145
+00:17:18,240 --> 00:17:21,480
+ and so it also requires to scale
+
+146
+00:17:21,480 --> 00:17:23,079
+ with the number of transactions.
+
+147
+00:17:24,379 --> 00:17:25,220
+ Next slide.
+
+148
+00:17:25,220 --> 00:17:36,200
+ And so, a few years ago, we came up with the idea of so-called roll-ups.
+
+149
+00:17:36,200 --> 00:17:43,319
+ And this was finally, like previously, there were many different ideas for scaling blockchains
+
+150
+00:17:43,319 --> 00:17:49,860
+ like state channels, which are implemented on Bitcoin, for example, known as Lightning,
+
+151
+00:17:49,860 --> 00:17:51,519
+ Plasma, and others.
+
+152
+00:17:51,519 --> 00:17:57,019
+ But all of these have pretty severe limitations on what they can do, and they didn't really
+
+153
+00:17:57,019 --> 00:18:02,279
+ provide all the things that we want on Ethereum, especially universal computation.
+
+154
+00:18:02,279 --> 00:18:12,220
+ But with rollups, we finally came up with a way to universally scale computation.
+
+155
+00:18:12,220 --> 00:18:19,139
+ And they get their scalability from either fraud proofs or validity proofs, also colloquially
+
+156
+00:18:19,140 --> 00:18:27,780
+ known as zk and in this way they can prove to all the nodes that transactions were wallet
+
+157
+00:18:27,780 --> 00:18:32,259
+ valid without them actually having to verify every individual transaction so that's where
+
+158
+00:18:32,259 --> 00:18:37,620
+ the scaling comes from we need somehow to stop like every node having to execute all the transactions
+
+159
+00:18:38,580 --> 00:18:46,980
+ next slide and then the final part of this is how do we scale data availability and that's what i'm
+
+160
+00:18:46,980 --> 00:18:50,740
+ going to talk about today and the solution to that is data availability sampling.
+
+161
+00:18:52,500 --> 00:19:00,180
+ Okay let's talk a bit about the data availability problem. So the definition of the
+
+162
+00:19:00,180 --> 00:19:06,660
+ data will improve it means that no network participant and that includes a colluding
+
+163
+00:19:06,660 --> 00:19:16,660
+ super majority of full nodes has the ability to withhold data. So the important part is that
+
+164
+00:19:16,980 --> 00:19:19,259
+ This includes the colluding supermajority.
+
+165
+00:19:19,259 --> 00:19:24,559
+ So data availability is actually relatively easy to solve if, for example, you say, like,
+
+166
+00:19:25,079 --> 00:19:30,860
+ oh, I'm willing to trust that the majority of Ethereum validators are always honest.
+
+167
+00:19:31,940 --> 00:19:35,940
+ And in that case, you could simply, like, make them all vote on it.
+
+168
+00:19:36,140 --> 00:19:38,339
+ And if they vote for it, then the data is available.
+
+169
+00:19:38,759 --> 00:19:40,640
+ And that is always true as long as they are honest.
+
+170
+00:19:41,420 --> 00:19:45,279
+ But that's not enough for, like, blockchains like Ethereum.
+
+171
+00:19:45,279 --> 00:19:51,460
+ we want the type of security that goes beyond just trusting a majority.
+
+172
+00:19:51,460 --> 00:19:57,559
+ We want that things like the validity of all transactions on the chain can be independently verified
+
+173
+00:19:57,559 --> 00:20:00,819
+ and have nothing to do with whether the validators are honest.
+
+174
+00:20:00,980 --> 00:20:04,599
+ So the power of the validators in Ethereum is fairly limited,
+
+175
+00:20:05,160 --> 00:20:08,339
+ and this is an important property that we want to preserve.
+
+176
+00:20:09,480 --> 00:20:14,879
+ And this data availability is solved in current blockchains.
+
+177
+00:20:15,279 --> 00:20:22,799
+ including Ethereum, with so far only one exception, or two exceptions, by all full
+
+178
+00:20:22,799 --> 00:20:29,599
+ nodes downloading all the data. So currently, Ethereum nodes, whenever there's a new block,
+
+179
+00:20:29,599 --> 00:20:34,720
+ all the nodes receive the new block, and therefore, they know the block is available,
+
+180
+00:20:34,720 --> 00:20:36,879
+ because they've seen it. They've literally seen the whole block.
+
+181
+00:20:39,359 --> 00:20:43,519
+ And so the question is, how do we make this scalable? So scalable means that
+
+182
+00:20:43,519 --> 00:20:49,200
+ the work required should be less than downloading the full block. And more specifically, we want
+
+183
+00:20:49,200 --> 00:20:55,519
+ something like constant or maybe a logarithmic amount of work, like a square root tends to
+
+184
+00:20:55,519 --> 00:21:05,119
+ already be a lot. So that's kind of our goal. Next slide. And so I like to
+
+185
+00:21:05,119 --> 00:21:10,019
+ to talk a bit more about data availability
+
+186
+00:21:10,019 --> 00:21:12,639
+ because it's very often confused.
+
+187
+00:21:12,639 --> 00:21:15,739
+ So data availability, what it does mean is that
+
+188
+00:21:15,739 --> 00:21:18,979
+ the assurance that the data was not withheld.
+
+189
+00:21:18,979 --> 00:21:22,159
+ So it's the assurance that the data was published.
+
+190
+00:21:22,159 --> 00:21:24,219
+ This is the important part.
+
+191
+00:21:24,219 --> 00:21:25,059
+ Next slide.
+
+192
+00:21:26,419 --> 00:21:30,839
+ What it does not mean, what it's not data availability
+
+193
+00:21:30,839 --> 00:21:31,979
+ is data storage.
+
+194
+00:21:31,980 --> 00:21:37,740
+ Data storage is 10 years later, you can ask, hey, what was the data then?
+
+195
+00:21:38,360 --> 00:21:44,380
+ This is a separate property that you can also want, but importantly, it's not data availability.
+
+196
+00:21:45,279 --> 00:21:48,200
+ So this is data storage or continued availability.
+
+197
+00:21:48,200 --> 00:21:50,480
+ And I'm not talking about that.
+
+198
+00:21:50,579 --> 00:21:52,059
+ This is also something you might want.
+
+199
+00:21:52,539 --> 00:21:56,099
+ Luckily, it's actually much easier to achieve that data availability.
+
+200
+00:21:56,099 --> 00:22:06,679
+ This does not require as complicated constructions often, because as soon as the data is published, you only need one person in the world to preserve it.
+
+201
+00:22:07,659 --> 00:22:10,779
+ One person in the world is enough to always get that data.
+
+202
+00:22:11,319 --> 00:22:20,699
+ Whereas if the data wasn't published in the first place, then that honest person doesn't help you because they never receive the data.
+
+203
+00:22:20,699 --> 00:22:25,879
+ So that's why data availability is so much harder to achieve than data storage.
+
+204
+00:22:26,099 --> 00:22:35,599
+ Okay, so this data-valued problem, to many, when they first hear about it, it sounds like
+
+205
+00:22:35,599 --> 00:22:37,439
+ an unimportant detail.
+
+206
+00:22:37,439 --> 00:22:44,939
+ It's just some annoying detail in many scaling solutions, which we actually found many times.
+
+207
+00:22:44,939 --> 00:22:51,480
+ Often people thought about, for example, Plasma, it was for a long time thought of being the
+
+208
+00:22:51,480 --> 00:22:54,480
+ ultimate scaling solution.
+
+209
+00:22:54,480 --> 00:23:00,860
+ In the end it turned out it hits like big problems and this was part of it that it didn't
+
+210
+00:23:00,860 --> 00:23:02,640
+ have data availability.
+
+211
+00:23:02,640 --> 00:23:04,660
+ And so why is it so important?
+
+212
+00:23:04,660 --> 00:23:12,740
+ So we have two options for getting fully scalable universal execution.
+
+213
+00:23:12,740 --> 00:23:17,940
+ And one of them is optimistic roll-ups which use fraud proofs.
+
+214
+00:23:17,940 --> 00:23:27,840
+ So the way they work is you post batches and make a claim that a new stage route is the correct stage route after executing the transaction.
+
+215
+00:23:28,519 --> 00:23:34,920
+ And after that, anyone can submit a fraud proof claiming that this is not the correct result.
+
+216
+00:23:34,920 --> 00:23:42,519
+ And then they play out a little game which has the property that whoever's right can always win the game if they play the correct strategy.
+
+217
+00:23:43,900 --> 00:23:46,720
+ And this is really cool.
+
+218
+00:23:46,720 --> 00:23:54,559
+ it only has one catch what if whoever committed the fraud didn't publish the data they just
+
+219
+00:23:54,559 --> 00:23:59,000
+ managed to somehow get the state root on chain but without publishing the data
+
+220
+00:23:59,000 --> 00:24:05,920
+ well now you have the problem that you cannot create the fraud proof because people might know
+
+221
+00:24:05,920 --> 00:24:11,360
+ well no this can't be the correct result but they can't prove it so like for example like
+
+222
+00:24:11,360 --> 00:24:16,579
+ my example here is there could be like one tiny transaction there it could be literally like this
+
+223
+00:24:16,579 --> 00:24:22,899
+ why you can't even miss a tiny bit of data and it just like prints one trillion ether and
+
+224
+00:24:24,500 --> 00:24:30,819
+ if you can't uh like you can't prove the fraud then this would happen on the roll up
+
+225
+00:24:30,819 --> 00:24:35,699
+ obvious it wouldn't really affect ethereum itself because that would still be contained on that roll
+
+226
+00:24:35,699 --> 00:24:41,220
+ up um but like it would still be a huge problem for for the roll up and like everyone else would
+
+227
+00:24:41,220 --> 00:24:42,360
+ would now not be able,
+
+228
+00:24:42,360 --> 00:24:45,380
+ like someone just can exit all this ether
+
+229
+00:24:45,380 --> 00:24:47,059
+ or however much the rollup had locked up
+
+230
+00:24:47,059 --> 00:24:50,059
+ and everyone else would not get anything.
+
+231
+00:24:50,059 --> 00:24:53,720
+ So we need really all data to be available unconditionally,
+
+232
+00:24:53,720 --> 00:24:56,779
+ otherwise fraud proofs cannot be constructed.
+
+233
+00:24:56,779 --> 00:25:00,339
+ For zk-rollups it's more subtle than that.
+
+234
+00:25:00,339 --> 00:25:01,920
+ Like for rollups, for optimist rollups
+
+235
+00:25:01,920 --> 00:25:04,579
+ it's really obvious why you need that.
+
+236
+00:25:04,579 --> 00:25:06,039
+ For zk-rollups you could ask,
+
+237
+00:25:06,039 --> 00:25:07,620
+ well, I mean, even if the data's missing,
+
+238
+00:25:07,620 --> 00:25:10,380
+ nobody can ever really completely
+
+239
+00:25:11,220 --> 00:25:15,039
+ make fraudulent transaction because you always have to prove correctness
+
+240
+00:25:15,039 --> 00:25:22,519
+ but there's like this annoying thing which is like basically when you have money in your account
+
+241
+00:25:22,519 --> 00:25:29,900
+ um in order to access it you need to prove that you have that money
+
+242
+00:25:29,900 --> 00:25:37,180
+ and you cannot do that if you don't have the witness or maybe you don't even don't know how
+
+243
+00:25:37,180 --> 00:25:41,160
+ much money it is exactly because someone made a dust transaction into your account.
+
+244
+00:25:41,700 --> 00:25:44,580
+ And basically, yes, your money is there.
+
+245
+00:25:44,580 --> 00:25:49,140
+ Like nobody can steal it, so to speak, from your account, but they can kind of just lock
+
+246
+00:25:49,140 --> 00:25:51,160
+ it up there and then they can blackmail you.
+
+247
+00:25:51,299 --> 00:25:54,779
+ Obviously, I can say, well, I'll give you the witness, but you have to give me 50 percent
+
+248
+00:25:54,779 --> 00:25:55,279
+ of your money.
+
+249
+00:25:56,720 --> 00:26:03,820
+ So even for ZK rollups where you can never have invalid transactions on chain, you actually
+
+250
+00:26:03,820 --> 00:26:04,600
+ need data availability.
+
+251
+00:26:07,180 --> 00:26:10,920
+ And this brings us to data availability sampling.
+
+252
+00:26:13,560 --> 00:26:15,960
+ So the idea behind data availability sampling
+
+253
+00:26:15,960 --> 00:26:18,340
+ is as follows.
+
+254
+00:26:18,340 --> 00:26:20,880
+ Instead of, like, we took our data here
+
+255
+00:26:20,880 --> 00:26:23,759
+ and I've, like, basically chunked it up
+
+256
+00:26:23,759 --> 00:26:27,519
+ into these D0 to D9 little chunks.
+
+257
+00:26:27,519 --> 00:26:30,860
+ And the idea would be that what we want to do
+
+258
+00:26:30,860 --> 00:26:33,019
+ is instead of downloading all the data,
+
+259
+00:26:33,019 --> 00:26:35,320
+ we just select some random bits of it
+
+260
+00:26:35,320 --> 00:26:36,600
+ and just download those.
+
+261
+00:26:37,180 --> 00:26:47,519
+ And we could hope that, well, if all of those that we request are available, then all the data is hopefully available.
+
+262
+00:26:48,860 --> 00:26:51,039
+ Right. But, next slide, please.
+
+263
+00:26:51,720 --> 00:27:01,279
+ There's one little catch, which is that if any data is missing that we happen to not sample, we literally don't detect it.
+
+264
+00:27:01,279 --> 00:27:15,500
+ And the problem, as we discussed before, is that unfortunately, on blockchains, even a tiny bit of data missing can be completely catastrophic because we have this important financial information.
+
+265
+00:27:15,799 --> 00:27:20,259
+ And yeah, unfortunately, the missing transaction could be printing 1 trillion Ether.
+
+266
+00:27:20,440 --> 00:27:22,819
+ And if we miss that, then we're just fucked.
+
+267
+00:27:23,700 --> 00:27:27,619
+ And so we cannot afford even one bit of data missing.
+
+268
+00:27:28,099 --> 00:27:30,420
+ And so this simple idea doesn't directly work.
+
+269
+00:27:30,420 --> 00:27:32,920
+ We can't just split up the data into chunks.
+
+270
+00:27:35,320 --> 00:27:36,720
+ So here's an example.
+
+271
+00:27:37,300 --> 00:27:41,180
+ If we say our client samples 10% of the data,
+
+272
+00:27:41,759 --> 00:27:43,220
+ it's just quite a lot, right?
+
+273
+00:27:43,620 --> 00:27:48,279
+ Then the block producer could hide a single unavailable transaction.
+
+274
+00:27:49,340 --> 00:27:52,560
+ Now, we know that catching this one transaction,
+
+275
+00:27:52,759 --> 00:27:54,380
+ the probability for that is 10%,
+
+276
+00:27:54,380 --> 00:27:55,920
+ because that's how much data we're sampling.
+
+277
+00:27:55,920 --> 00:28:00,920
+ But that's not a great, those aren't great odds,
+
+278
+00:28:02,160 --> 00:28:05,140
+ it's just 10% of catching like an attacker
+
+279
+00:28:05,140 --> 00:28:07,259
+ who's trying to hide some important data.
+
+280
+00:28:07,259 --> 00:28:10,640
+ And we already like sampling 10% of the data.
+
+281
+00:28:10,640 --> 00:28:13,279
+ So the trade-off here doesn't really work.
+
+282
+00:28:16,620 --> 00:28:21,620
+ So this brings us to the idea of erasure coding the data.
+
+283
+00:28:22,300 --> 00:28:25,920
+ So what we do instead is we don't just
+
+284
+00:28:25,920 --> 00:28:28,039
+ take the original data.
+
+285
+00:28:28,039 --> 00:28:30,640
+ So like here, we have now four chunks of original data,
+
+286
+00:28:30,640 --> 00:28:35,640
+ D0 to D3, but instead we add some extra data to it.
+
+287
+00:28:36,740 --> 00:28:41,300
+ We like add a so-called erasure codes.
+
+288
+00:28:41,300 --> 00:28:44,500
+ And in this example it's specifically read Solomon code.
+
+289
+00:28:44,500 --> 00:28:47,259
+ What that means is we take the original data,
+
+290
+00:28:48,539 --> 00:28:53,160
+ we interpret the data as points on a polynomial,
+
+291
+00:28:53,160 --> 00:28:58,600
+ And then we can extend it, like if we have four points on a polynomial,
+
+292
+00:28:59,180 --> 00:29:03,920
+ we know that we can always interpolate it into a unique polynomial of degree 3.
+
+293
+00:29:04,759 --> 00:29:06,620
+ And we evaluate that at four more points.
+
+294
+00:29:06,720 --> 00:29:08,019
+ These are E0 to E3.
+
+295
+00:29:09,620 --> 00:29:14,400
+ And now we have this really cool property of polynomials that says
+
+296
+00:29:14,400 --> 00:29:20,880
+ if you have any D plus 1 points of a degree D polynomial,
+
+297
+00:29:20,880 --> 00:29:25,040
+ you can always interpolate the polynomial, and it's unique.
+
+298
+00:29:26,420 --> 00:29:32,640
+ So this means that if I have D0, D3, E1, and E2, for example,
+
+299
+00:29:33,260 --> 00:29:35,100
+ then from that I can reconstruct it,
+
+300
+00:29:35,260 --> 00:29:37,300
+ and I will get back all the same points.
+
+301
+00:29:37,840 --> 00:29:40,420
+ And this is no matter which subset of points I take.
+
+302
+00:29:42,280 --> 00:29:42,580
+ Right.
+
+303
+00:29:43,060 --> 00:29:44,180
+ And so this is really cool,
+
+304
+00:29:44,260 --> 00:29:48,880
+ because now this original idea of sampling actually becomes efficient.
+
+305
+00:29:48,880 --> 00:30:00,540
+ So as an example, if we take 30 random chunks, and all of those are available, then the probability
+
+306
+00:30:00,540 --> 00:30:07,440
+ that 50% of the data is unavailable is only two to the minus 30.
+
+307
+00:30:07,440 --> 00:30:08,480
+ That's one in a billion.
+
+308
+00:30:08,480 --> 00:30:10,720
+ So that's pretty low.
+
+309
+00:30:10,720 --> 00:30:16,820
+ So this is a huge difference to what we had before, right?
+
+310
+00:30:16,819 --> 00:30:22,259
+ We now just query 30 chunks, and that's a constant number.
+
+311
+00:30:22,259 --> 00:30:23,259
+ So it doesn't matter.
+
+312
+00:30:23,259 --> 00:30:25,279
+ It doesn't have to be 10% of the data.
+
+313
+00:30:25,279 --> 00:30:29,200
+ If we have 3,000 chunks, then it's 1% of the data.
+
+314
+00:30:29,200 --> 00:30:32,500
+ If we have 30,000 chunks, it's 0.1% of the data.
+
+315
+00:30:32,500 --> 00:30:34,480
+ So it's constant.
+
+316
+00:30:34,480 --> 00:30:37,339
+ And the probability is now really low, and we can make it lower.
+
+317
+00:30:37,339 --> 00:30:39,700
+ If we do 40, then we have $100 trillion.
+
+318
+00:30:39,700 --> 00:30:45,299
+ So it quickly becomes an extremely low statistical event.
+
+319
+00:30:45,299 --> 00:31:01,440
+ But there's one catch to this, which is that, quick correction, this is right.
+
+320
+00:31:01,440 --> 00:31:04,639
+ This should say degree three, not five.
+
+321
+00:31:04,639 --> 00:31:06,039
+ But that's fine.
+
+322
+00:31:06,039 --> 00:31:19,599
+ So basically what could happen is that these extension points were not computed correctly,
+
+323
+00:31:19,599 --> 00:31:25,579
+ that an attacker just makes up random points or whatever.
+
+324
+00:31:25,579 --> 00:31:30,859
+ And now what happens is that if you have any 50% of these points, you can interpolate it,
+
+325
+00:31:30,859 --> 00:31:33,759
+ but each of these interpolations will be different.
+
+326
+00:31:33,759 --> 00:31:39,039
+ And that's clearly bad because, I mean, the most important property of blockchain is always
+
+327
+00:31:39,039 --> 00:31:41,879
+ that everyone agrees on the same thing.
+
+328
+00:31:41,879 --> 00:31:43,319
+ So we cannot afford this.
+
+329
+00:31:43,319 --> 00:31:56,940
+ And so we need a way of ensuring that whatever is in a block is always a correct read Solomon
+
+330
+00:31:56,940 --> 00:32:03,640
+ code, or in other words, that the whole thing is a pretty normal of the correct degree.
+
+331
+00:32:03,640 --> 00:32:12,320
+ And this is where we use something really cool, which is so-called KCG commitments,
+
+332
+00:32:12,320 --> 00:32:15,600
+ which are a type of polynomial commitments.
+
+333
+00:32:15,600 --> 00:32:22,640
+ And KCG commitments have the property that they always commit to a polynomial, and you
+
+334
+00:32:22,640 --> 00:32:24,560
+ can limit the degree of that polynomial.
+
+335
+00:32:24,560 --> 00:32:32,840
+ So you can say, like, this root has to be a commitment to a polynomial of degree three.
+
+336
+00:32:33,640 --> 00:32:46,300
+ And what this means is that we automatically get the property that whatever anyone, whether it's an honest note or an attacker, commits to is always a polynomial of the given degree.
+
+337
+00:32:47,240 --> 00:32:52,880
+ And so it's not possible anymore to commit to an invalid root.
+
+338
+00:32:52,880 --> 00:32:56,180
+ And this is like this array nest discovery
+
+339
+00:32:56,180 --> 00:32:57,440
+ that we made a few years ago
+
+340
+00:32:57,440 --> 00:33:01,060
+ and that's finally made it possible to implement.
+
+341
+00:33:01,060 --> 00:33:03,880
+ And luckily it has become very efficient
+
+342
+00:33:03,880 --> 00:33:05,120
+ over the last few years.
+
+343
+00:33:06,840 --> 00:33:07,680
+ Cool.
+
+344
+00:33:09,520 --> 00:33:12,060
+ So let's go into the DAG charting construction
+
+345
+00:33:12,060 --> 00:33:16,420
+ that I came up with a little bit more than two years ago.
+
+346
+00:33:16,420 --> 00:33:27,759
+ So let's talk about what sharding originally looked like, or what many people imagine it
+
+347
+00:33:27,759 --> 00:33:30,779
+ as, what it would be like on Ethereum.
+
+348
+00:33:30,779 --> 00:33:37,580
+ So the idea was that, so we always had like this beacon chain plus later, like we added
+
+349
+00:33:37,580 --> 00:33:39,920
+ the execution blocks to that.
+
+350
+00:33:39,920 --> 00:33:44,300
+ And then the idea was that in parallel to that beacon chain, there would be many shards,
+
+351
+00:33:44,299 --> 00:33:50,059
+ originally it was like 1024 different shots all running in parallel and similar to the beacon
+
+352
+00:33:50,059 --> 00:33:57,659
+ chain each of them would have a proposer and then each of them would have a committee that votes on
+
+353
+00:33:58,460 --> 00:34:02,220
+ whether that proposer showed up and what block they proposed
+
+354
+00:34:04,220 --> 00:34:10,380
+ and um so the question is why why was that necessary why do we need all this like all
+
+355
+00:34:10,380 --> 00:34:12,059
+ all these committees in here.
+
+356
+00:34:12,059 --> 00:34:14,320
+ While the problem is that each of these proposals
+
+357
+00:34:14,320 --> 00:34:15,360
+ can do something bad.
+
+358
+00:34:15,360 --> 00:34:18,480
+ Each can like not publish their data
+
+359
+00:34:18,480 --> 00:34:22,500
+ or each of them can,
+
+360
+00:34:24,000 --> 00:34:26,440
+ each of them can like publish two different blocks
+
+361
+00:34:26,440 --> 00:34:27,280
+ at the same time.
+
+362
+00:34:28,960 --> 00:34:30,680
+ And that has important consequences
+
+363
+00:34:30,680 --> 00:34:33,260
+ because now the next problem is
+
+364
+00:34:33,260 --> 00:34:35,099
+ these committees can be split.
+
+365
+00:34:35,099 --> 00:34:37,460
+ Like what if, sorry, stayed the same idea.
+
+366
+00:34:37,460 --> 00:34:40,300
+ These committees could just be 50-50.
+
+367
+00:34:41,619 --> 00:34:44,099
+ And, well, then you have a problem.
+
+368
+00:34:44,340 --> 00:34:47,179
+ Then how do you decide which one was the right one?
+
+369
+00:34:47,800 --> 00:34:53,579
+ And so this meant that essentially we have to wait for a long time for these committees to confirm.
+
+370
+00:34:53,940 --> 00:34:59,420
+ And it could take several epochs until you knew what each chart block does.
+
+371
+00:35:00,019 --> 00:35:06,659
+ And when you start going through that design, you notice that that brings along with it a lot of problems in practice.
+
+372
+00:35:06,659 --> 00:35:17,599
+ Like, for example, I mean, just to mention one of them, imagine you are a roll up and you want to publish your blogs, but they don't get confirmed.
+
+373
+00:35:18,219 --> 00:35:26,639
+ And now what are you going to do? Are you going to publish the next blog? Are you going to republish it in case it doesn't get confirmed and so on?
+
+374
+00:35:26,639 --> 00:35:35,779
+ So it's actually really difficult. And I think until the end, there wasn't really a way to really figure out how to actually use this in an efficient way.
+
+375
+00:35:36,659 --> 00:35:48,420
+ So, what I said was, what if we, like, change the design such that we include, sorry, next
+
+376
+00:35:48,420 --> 00:35:50,799
+ slide, no, yeah.
+
+377
+00:35:50,799 --> 00:35:57,659
+ We let one proposer create all these shards and the beacon block.
+
+378
+00:35:57,659 --> 00:36:04,039
+ And then we only have one big committee that checks for all of these, whether this is valid
+
+379
+00:36:04,039 --> 00:36:05,339
+ or not.
+
+380
+00:36:05,340 --> 00:36:12,059
+ can do that because when you have one pro one proposer um then we can just like we can just
+
+381
+00:36:12,059 --> 00:36:17,579
+ look at all of them together and the reason for that is that if they fail to publish the data for
+
+382
+00:36:17,579 --> 00:36:23,019
+ one of the shards um then we can just let the block fail that's their responsibility they
+
+383
+00:36:23,019 --> 00:36:27,980
+ up whereas when you have many different proposals you can't be that harsh because you can't
+
+384
+00:36:28,620 --> 00:36:35,260
+ punish the proposer for shot one if the proposer for shot two did something bad um but when you're
+
+385
+00:36:35,260 --> 00:36:38,700
+ when you aggregate the responsibility like that, then you can do it.
+
+386
+00:36:40,300 --> 00:36:45,900
+ And the important reason why we figured out we could do that is because
+
+387
+00:36:49,260 --> 00:36:55,020
+ in the process of researching MEV, we noticed that the ultimate equilibrium was something
+
+388
+00:36:55,020 --> 00:37:03,180
+ like that anyway. It was very likely that blocks would be built quite centrally by some parties,
+
+389
+00:37:03,179 --> 00:37:08,219
+ and that our whole design would be around containing the problems with that anyway.
+
+390
+00:37:08,399 --> 00:37:14,339
+ So maintaining censorship resistance and making sure that they were honest and so on,
+
+391
+00:37:14,519 --> 00:37:17,139
+ that was already on the roadmap anyway due to MEV.
+
+392
+00:37:17,859 --> 00:37:23,839
+ And so it made sense to just say, well, we can get rid of all this complexity
+
+393
+00:37:23,839 --> 00:37:27,440
+ of having all these many proposals because in reality it will be one anyway.
+
+394
+00:37:28,119 --> 00:37:33,079
+ And we just need to contain the potential centralization vectors that come from that.
+
+395
+00:37:33,179 --> 00:37:38,179
+ Right, and so this is like the extension of that.
+
+396
+00:37:39,239 --> 00:37:44,239
+ So basically what happens is that in the world
+
+397
+00:37:44,279 --> 00:37:46,419
+ of proposal builder separation,
+
+398
+00:37:46,419 --> 00:37:48,919
+ you would always come get a,
+
+399
+00:37:48,919 --> 00:37:51,659
+ sorry, we are still on the previous slide.
+
+400
+00:37:51,659 --> 00:37:54,639
+ You would always get first a proposal block
+
+401
+00:37:54,639 --> 00:37:57,559
+ where a proposal selects a builder
+
+402
+00:37:57,559 --> 00:38:00,259
+ and that can be like just a small validator.
+
+403
+00:38:00,259 --> 00:38:03,159
+ They don't need a lot of hardware to compute that,
+
+404
+00:38:03,159 --> 00:38:06,659
+ but then the main block would be built by a builder
+
+405
+00:38:06,659 --> 00:38:09,339
+ who has more resources and is able to construct
+
+406
+00:38:09,339 --> 00:38:12,339
+ the beacon block and all the shard blocks at the same time.
+
+407
+00:38:15,940 --> 00:38:19,739
+ There's one more ingredients that's with
+
+408
+00:38:19,739 --> 00:38:22,259
+ the dank sharding design and that is the idea
+
+409
+00:38:22,259 --> 00:38:26,019
+ of having a two-dimensional polynomial extension.
+
+410
+00:38:26,019 --> 00:38:29,759
+ And so the idea here is that we can,
+
+411
+00:38:29,760 --> 00:38:39,720
+ So, we take the KZG commitments for the rows, and these are essentially the shards, or like
+
+412
+00:38:39,720 --> 00:38:46,220
+ I think in more modern speak, we would say blob, we would call them blobs, and each of
+
+413
+00:38:46,220 --> 00:38:52,520
+ them represents like a bit of data, but then it is extended as we discussed before.
+
+414
+00:38:52,520 --> 00:38:57,120
+ So each line will be essentially one polynomial with an extension.
+
+415
+00:38:57,119 --> 00:39:01,759
+ But what we do in addition, we also extend them on the vertical axis.
+
+416
+00:39:01,759 --> 00:39:11,739
+ So each cell here will be extended down as well.
+
+417
+00:39:11,739 --> 00:39:17,000
+ And the nice thing about KCG commitments is because they are linear, you can compute the
+
+418
+00:39:17,000 --> 00:39:23,259
+ additional KCG commitments just using a pretty normal extension as well.
+
+419
+00:39:23,260 --> 00:39:28,540
+ And doing this has some important advantages.
+
+420
+00:39:28,540 --> 00:39:40,820
+ So basically, the cool thing about that is that we can reconstruct the data if we have
+
+421
+00:39:40,820 --> 00:39:43,140
+ any 3 quarters of this whole square.
+
+422
+00:39:43,140 --> 00:39:47,880
+ It doesn't matter which one, but you can also do it in a distributed way.
+
+423
+00:39:47,880 --> 00:39:52,039
+ And so we basically have two layers of validation here.
+
+424
+00:39:52,039 --> 00:39:58,119
+ And one is first the validators will validate that the original.
+
+425
+00:39:59,640 --> 00:40:01,240
+ So you can use the next slide.
+
+426
+00:40:02,840 --> 00:40:07,480
+ With the validators will validate that the builder has done their work correctly.
+
+427
+00:40:07,619 --> 00:40:12,840
+ And they can do that by just downloading, in this example, two rows and two columns.
+
+428
+00:40:12,840 --> 00:40:27,300
+ And if they do that, then if the blocks are unavailable, so less than 75% of the data is available, they can never get more than 1 16th of the validators voting for it.
+
+429
+00:40:27,300 --> 00:40:33,680
+ So 1 16th of the attestations, which means that the block will basically be re-auged and ignored if it's not available.
+
+430
+00:40:34,440 --> 00:40:42,460
+ So as long as there's an honest majority, the validators would never vote for that block, which is always a good property to have.
+
+431
+00:40:42,840 --> 00:40:46,400
+ Although we do not want to rely on the honest majority
+
+432
+00:40:46,400 --> 00:40:49,539
+ it's the first step that someone needs to get past.
+
+433
+00:40:50,960 --> 00:40:51,900
+ Next slide.
+
+434
+00:40:54,980 --> 00:40:58,620
+ What is like a nice additional property of that
+
+435
+00:40:58,620 --> 00:41:02,039
+ is that because each row and each column individually
+
+436
+00:41:02,039 --> 00:41:05,260
+ is a Reed-Solomon code or a polynomial,
+
+437
+00:41:05,260 --> 00:41:07,360
+ they can be individually reconstructed.
+
+438
+00:41:07,360 --> 00:41:10,640
+ So as soon as you have 50% of one row or one column,
+
+439
+00:41:10,640 --> 00:41:12,660
+ you can reconstruct that row or column.
+
+440
+00:41:12,840 --> 00:41:19,160
+ And so this can happen completely in a completely distributed way.
+
+441
+00:41:21,000 --> 00:41:25,320
+ There has to be no super node or anything to reconstruct all the data.
+
+442
+00:41:25,320 --> 00:41:27,720
+ This can happen in a very distributed way.
+
+443
+00:41:31,079 --> 00:41:31,640
+ Next slide.
+
+444
+00:41:34,120 --> 00:41:41,800
+ And then the last step is, obviously, we want safety in the face of even a malicious majority.
+
+445
+00:41:42,840 --> 00:41:47,600
+ And so this works using the, using data will be sampling.
+
+446
+00:41:47,600 --> 00:41:51,400
+ And what each node, each node will do
+
+447
+00:41:51,400 --> 00:41:56,400
+ is they will choose like 75 random samples in the square
+
+448
+00:41:57,660 --> 00:42:00,460
+ and they will don't know them.
+
+449
+00:42:00,460 --> 00:42:03,600
+ And only if they find all of these samples,
+
+450
+00:42:03,600 --> 00:42:08,000
+ will they say that it's all 75
+
+451
+00:42:08,000 --> 00:42:12,480
+ because we actually need 75% of the samples
+
+452
+00:42:12,480 --> 00:42:13,940
+ in order to reconstruct the data,
+
+453
+00:42:13,940 --> 00:42:16,639
+ which is higher than our one-deal threshold.
+
+454
+00:42:16,639 --> 00:42:20,659
+ And so this again assures that it's available.
+
+455
+00:42:21,719 --> 00:42:24,039
+ The probability of an unavailable block passing
+
+456
+00:42:24,039 --> 00:42:25,840
+ is less than two to the minus 30.
+
+457
+00:42:28,639 --> 00:42:29,840
+ Cool.
+
+458
+00:42:29,840 --> 00:42:33,119
+ So let's quickly talk about how EIP-4844,
+
+459
+00:42:33,119 --> 00:42:35,139
+ which you hopefully have heard about,
+
+460
+00:42:35,139 --> 00:42:36,740
+ upgrade a couple of weeks ago,
+
+461
+00:42:36,740 --> 00:42:39,519
+ I think it's interesting to this.
+
+462
+00:42:39,519 --> 00:42:41,900
+ So if you look at Ethereum's data availability,
+
+463
+00:42:42,480 --> 00:42:52,800
+ roll up so yesterday as in before yeah before it for for roll-ups got got data
+
+464
+00:42:52,800 --> 00:42:58,820
+ will be through call data which it was really expensive and really annoying and
+
+465
+00:42:58,820 --> 00:43:09,079
+ since the 13th of March and we added blobs and so far only three blobs to the
+
+466
+00:43:09,079 --> 00:43:12,940
+ to the blockchain that now roll-ups can use
+
+467
+00:43:12,940 --> 00:43:16,940
+ in order to get cheaper data available on Ethereum.
+
+468
+00:43:18,039 --> 00:43:20,759
+ And then in the future, we will further extend this,
+
+469
+00:43:20,759 --> 00:43:23,239
+ so there will probably be some extensions
+
+470
+00:43:23,239 --> 00:43:25,980
+ to AP-44 coming end of this year,
+
+471
+00:43:25,980 --> 00:43:28,400
+ or maybe sometime next year,
+
+472
+00:43:28,400 --> 00:43:32,059
+ and then hopefully within the next two years or so,
+
+473
+00:43:32,059 --> 00:43:33,279
+ we will get full sharding
+
+474
+00:43:33,279 --> 00:43:36,319
+ with lots of data availability on Ethereum.
+
+475
+00:43:39,079 --> 00:43:43,079
+ So the EIP-4844 design is very simple.
+
+476
+00:43:43,079 --> 00:43:48,079
+ We added to each block some KCG commitments to data,
+
+477
+00:43:49,420 --> 00:43:53,159
+ and the actual data to these KCG commitments
+
+478
+00:43:53,159 --> 00:43:57,239
+ is the block data, and that is just separately distributed
+
+479
+00:43:57,239 --> 00:43:59,779
+ on the network, which means we can be
+
+480
+00:43:59,779 --> 00:44:02,940
+ a little bit more efficient, it can work in parallel,
+
+481
+00:44:02,940 --> 00:44:04,639
+ but everyone still gets all the data.
+
+482
+00:44:04,639 --> 00:44:07,000
+ So it's not scalable yet, it's just like some
+
+483
+00:44:07,000 --> 00:44:09,219
+ efficiency improvements around scooting data,
+
+484
+00:44:09,219 --> 00:44:11,840
+ and in particular it starts a new data market.
+
+485
+00:44:16,019 --> 00:44:17,219
+ So like the main thing is,
+
+486
+00:44:17,219 --> 00:44:19,980
+ they are now priced independently from execution.
+
+487
+00:44:19,980 --> 00:44:21,420
+ It's a new gas type, which is cool,
+
+488
+00:44:21,420 --> 00:44:25,739
+ because so far the ROABs always had to compete
+
+489
+00:44:25,739 --> 00:44:28,599
+ with the layer one transactions,
+
+490
+00:44:28,599 --> 00:44:31,880
+ and that unfortunately often made it very expensive,
+
+491
+00:44:31,880 --> 00:44:34,639
+ because the price for those tended to be quite high,
+
+492
+00:44:34,639 --> 00:44:36,920
+ and gas had to be priced,
+
+493
+00:44:36,920 --> 00:44:41,920
+ sorry, data has to be priced in a very pessimistic way.
+
+494
+00:44:42,039 --> 00:44:45,980
+ That meant, yeah, that we were quite limited.
+
+495
+00:44:45,980 --> 00:44:49,139
+ And so you can see if you look at like L2 fees or something,
+
+496
+00:44:49,139 --> 00:44:52,299
+ now we have massively reduced the fees for roll-ups,
+
+497
+00:44:52,299 --> 00:44:54,000
+ which is like a great achievement.
+
+498
+00:44:55,440 --> 00:44:57,980
+ Blobs are never required to compute the state updates.
+
+499
+00:44:57,980 --> 00:44:59,980
+ So in order to like see what the latest state
+
+500
+00:44:59,980 --> 00:45:00,859
+ of the Ethereum chain is,
+
+501
+00:45:00,859 --> 00:45:03,239
+ you do not need the actual blob data.
+
+502
+00:45:03,239 --> 00:45:06,539
+ only need that to know that they exist.
+
+503
+00:45:06,539 --> 00:45:11,599
+ And so the whole idea is that we designed this so that we can make all our future upgrades
+
+504
+00:45:11,599 --> 00:45:13,000
+ quite easily.
+
+505
+00:45:13,000 --> 00:45:19,379
+ So in particular, we already use KCG commitments, and this means that we can directly upgrade
+
+506
+00:45:19,379 --> 00:45:21,259
+ this to use erasure coding.
+
+507
+00:45:21,259 --> 00:45:26,519
+ Like right now, we don't use erasure coding in any way, but it's very easily possible
+
+508
+00:45:26,519 --> 00:45:28,299
+ to add this.
+
+509
+00:45:28,299 --> 00:45:32,759
+ So almost all the work that we need to do can be done without consensus changes.
+
+510
+00:45:32,760 --> 00:45:36,520
+ The only thing that really ConsenSys needs to do in the future is update the number of
+
+511
+00:45:36,520 --> 00:45:39,200
+ blobs that we can support.
+
+512
+00:45:39,200 --> 00:45:44,260
+ And so that's really nice, because it really decouples this, and basically we can start
+
+513
+00:45:44,260 --> 00:45:48,880
+ working on the whole networking and DAS and so on, without having to make lots of more
+
+514
+00:45:48,880 --> 00:45:51,560
+ upgrades to Ethereum.
+
+515
+00:45:51,560 --> 00:45:56,180
+ And the last cool thing is that rollups will not have to upgrade again to benefit.
+
+516
+00:45:56,180 --> 00:46:02,220
+ So the interface to 4844 will stay completely the same through all the sharding upgrades.
+
+517
+00:46:02,219 --> 00:46:11,779
+ So if they start using blobs now, then hopefully a couple of years from now, they will have massive data availability from full-dank sharding.
+
+518
+00:46:12,799 --> 00:46:13,379
+ All right.
+
+519
+00:46:14,899 --> 00:46:15,519
+ Thank you.
+
+520
+00:46:15,959 --> 00:46:17,859
+ And yeah, let me know if you have any questions.
+
+521
+00:46:21,579 --> 00:46:21,980
+ Awesome.
+
+522
+00:46:22,239 --> 00:46:23,419
+ Thank you so much, Dankorat.
+
+523
+00:46:24,319 --> 00:46:24,719
+ Amazing.
+
+524
+00:46:27,039 --> 00:46:28,139
+ Yeah, very well.
+
+525
+00:46:28,759 --> 00:46:29,919
+ Yeah, thank you so much for your talk.
+
+526
+00:46:30,219 --> 00:46:31,159
+ I really appreciate it.
+
+527
+00:46:31,159 --> 00:46:38,440
+ it was very insightful. I believe that we learned a lot. And folks, if you have any
+
+528
+00:46:38,440 --> 00:46:43,079
+ questions for DynCraft, please write it in the Discord thread and we will ask shortly.
+
+529
+00:46:45,159 --> 00:46:52,119
+ Yeah, I wanted to ask, yeah, there's a question, if you can elaborate a bit more about the current
+
+530
+00:46:52,119 --> 00:46:57,960
+ state, the current steps and challenges. So you mentioned there are some upgrades to be done on
+
+531
+00:46:57,960 --> 00:47:03,800
+ for it before, like the average recording and then the path to the full sharding.
+
+532
+00:47:03,800 --> 00:47:11,840
+ So yeah, what are the problems, the challenges being solved right now to achieve that?
+
+533
+00:47:11,840 --> 00:47:18,940
+ So with 4844, I mean, there are some things we would like to do.
+
+534
+00:47:18,940 --> 00:47:25,280
+ I'm not actually fully looking at these at the moment.
+
+535
+00:47:25,280 --> 00:47:29,100
+ I think currently we're mainly seeing how it all works.
+
+536
+00:47:29,100 --> 00:47:32,440
+ I think there were some very minor problems,
+
+537
+00:47:33,640 --> 00:47:37,000
+ but I think mainly it's the idea of watching it
+
+538
+00:47:37,000 --> 00:47:38,660
+ and over the next year,
+
+539
+00:47:38,660 --> 00:47:41,900
+ hopefully we can just increase the number of blobs on it.
+
+540
+00:47:43,780 --> 00:47:45,160
+ I think when it comes to sharding,
+
+541
+00:47:45,160 --> 00:47:49,720
+ there are definitely some pretty big hurdles
+
+542
+00:47:49,720 --> 00:47:50,660
+ that we still need to take.
+
+543
+00:47:50,659 --> 00:47:55,659
+ So, pool DAS is a departure from basically
+
+544
+00:47:56,980 --> 00:48:00,259
+ the networking model that currently all blockchains use.
+
+545
+00:48:00,259 --> 00:48:04,879
+ Currently blockchains typically operate on broadcasting.
+
+546
+00:48:05,960 --> 00:48:09,119
+ Like basically it's like everyone sees everything,
+
+547
+00:48:09,119 --> 00:48:11,359
+ all the messages on the network.
+
+548
+00:48:11,359 --> 00:48:14,299
+ And with DAS, we want a much thinner network.
+
+549
+00:48:14,299 --> 00:48:15,980
+ We want to be able to like,
+
+550
+00:48:15,980 --> 00:48:19,659
+ have only a very small number of nodes store each sample.
+
+551
+00:48:20,659 --> 00:48:26,059
+ And that prevents a big challenge in the face of, yeah, possible attacks and so on.
+
+552
+00:48:26,119 --> 00:48:28,299
+ So, like, the possible networking constructions.
+
+553
+00:48:28,699 --> 00:48:35,500
+ We do have some, like, we do have a pretty good idea on how to get, like, a medium amount of scaling.
+
+554
+00:48:36,039 --> 00:48:41,980
+ So, basically, there's a construction that we already worked on, which is called PeerDAS.
+
+555
+00:48:42,480 --> 00:48:47,659
+ So, if you scale it to the extent that pretty much all samples are still in your networking vicinity,
+
+556
+00:48:47,659 --> 00:48:49,839
+ as in like within one hop of your node,
+
+557
+00:48:50,159 --> 00:48:52,379
+ then you can still be pretty safe
+
+558
+00:48:52,379 --> 00:48:55,079
+ and everything kind of works as it does now.
+
+559
+00:48:55,179 --> 00:48:56,000
+ So that's pretty nice.
+
+560
+00:48:56,699 --> 00:48:57,940
+ So this will be our first step.
+
+561
+00:48:58,059 --> 00:49:00,399
+ And I think like the next step going to full sharding,
+
+562
+00:49:00,719 --> 00:49:03,599
+ that's still somewhat of a bigger question.
+
+563
+00:49:03,599 --> 00:49:07,639
+ Well, I mean, you basically, it is quite achievable
+
+564
+00:49:07,639 --> 00:49:12,059
+ if you're on board another security assumption
+
+565
+00:49:12,059 --> 00:49:14,639
+ where you basically say, hey, I'm happy to trust that
+
+566
+00:49:14,639 --> 00:49:23,199
+ There will be some super nodes who always keep all the samples, and as long as one of
+
+567
+00:49:23,199 --> 00:49:26,879
+ those super nodes is honest, everything will work fine.
+
+568
+00:49:26,879 --> 00:49:34,400
+ And I think that's a relatively okay assumption to make, but many people are not too comfortable
+
+569
+00:49:34,400 --> 00:49:35,400
+ with it.
+
+570
+00:49:35,400 --> 00:49:39,099
+ But yeah, with that assumption, you can relatively work.
+
+571
+00:49:39,099 --> 00:49:41,960
+ That's what basically Celestia is doing.
+
+572
+00:49:41,960 --> 00:49:44,379
+ It works for them.
+
+573
+00:49:44,380 --> 00:49:48,420
+ I think once you go to a fully distributed system
+
+574
+00:49:48,420 --> 00:49:51,260
+ and also DHT, there's still actual research
+
+575
+00:49:51,260 --> 00:49:52,720
+ to be done at the moment.
+
+576
+00:49:56,140 --> 00:49:58,119
+ Interesting, thank you very much.
+
+577
+00:49:58,119 --> 00:49:59,180
+ Awesome.
+
+578
+00:49:59,180 --> 00:50:03,760
+ Yeah, there's a question about the 2d KZG.
+
+579
+00:50:03,760 --> 00:50:06,940
+ Where the number 75% is coming from,
+
+580
+00:50:06,940 --> 00:50:10,440
+ whether it's 50% of the data for polimodal reconstruction
+
+581
+00:50:10,440 --> 00:50:13,240
+ but multiplied by two, or?
+
+582
+00:50:13,239 --> 00:50:21,000
+ No it's it simply comes if you solve so you want you you want 75 percent of the samples to be
+
+583
+00:50:21,000 --> 00:50:34,759
+ available so you need 0.75 to the power of n to be 2 to the minus 30 and then you get 75 roughly.
+
+584
+00:50:34,760 --> 00:50:38,000
+ Cool, cool, cool.
+
+585
+00:50:38,000 --> 00:50:46,100
+ Yeah, Fox, if you have more questions, please go ahead and ask.
+
+586
+00:50:46,100 --> 00:50:57,880
+ Are there any drawbacks for the insurance, from a security perspective or protocol perspective,
+
+587
+00:50:57,880 --> 00:51:03,700
+ any trade-offs that you think there are?
+
+588
+00:51:03,699 --> 00:51:09,659
+ terms of usage, in terms of like for the roll-ups? For the protocol, for
+
+589
+00:51:09,659 --> 00:51:15,039
+ like the security, like for example, there was a lot of chat about issues with
+
+590
+00:51:15,039 --> 00:51:21,579
+ bandwidth. Right, yeah, I mean, bandwidth has increased, so this is true it's
+
+591
+00:51:21,579 --> 00:51:28,239
+ actually still, I think it's it's an interesting issue, because yeah, there
+
+592
+00:51:28,239 --> 00:51:31,019
+ were some other issues with Tenkuun, where like, there were some
+
+593
+00:51:31,019 --> 00:51:37,259
+ bugs in the client software that increased bandwidth for completely different reasons.
+
+594
+00:51:37,259 --> 00:51:43,420
+ So I think a lot of validators saw a high bandwidth increase that actually is not caused
+
+595
+00:51:43,420 --> 00:51:47,639
+ by the blobs, but by the attestation aggregation gossip.
+
+596
+00:51:50,380 --> 00:51:56,519
+ Yeah, I mean, I think, yes, it is a bandwidth increase.
+
+597
+00:51:56,519 --> 00:52:09,259
+ I think, yeah, to an extent, yeah, we need to figure out what we're comfortable with.
+
+598
+00:52:09,400 --> 00:52:14,300
+ I think, yes, there will always be a trade-off where some people will say, well, this is now too much for me.
+
+599
+00:52:14,480 --> 00:52:21,079
+ I think, I hope very soon we will have constructions that will reduce the bandwidth a bit that you need.
+
+600
+00:52:21,079 --> 00:52:28,179
+ But there is also, yeah, there are ways to reduce the networking itself.
+
+601
+00:52:28,480 --> 00:52:31,079
+ So there's lots of optimizations that can be done at the moment.
+
+602
+00:52:33,119 --> 00:52:34,500
+ Cool, cool. Thank you so much.
+
+603
+00:52:35,400 --> 00:52:47,779
+ Yeah, there's a question about the data availability sampling, specifically the mechanism for identifying whether the node is storing the data honestly and how they will be slashed.
+
+604
+00:52:47,780 --> 00:52:52,780
+ So if, I assume there's some kind of challenge,
+
+605
+00:52:54,420 --> 00:52:55,940
+ but what if the node is, for example,
+
+606
+00:52:55,940 --> 00:52:58,640
+ offline and acting honestly,
+
+607
+00:52:58,640 --> 00:53:01,740
+ just whether we have some mechanism for this, yeah.
+
+608
+00:53:02,780 --> 00:53:06,080
+ Right, so you cannot slash nodes, right?
+
+609
+00:53:06,080 --> 00:53:08,620
+ Nodes are not bonded, so there's nothing really
+
+610
+00:53:08,620 --> 00:53:09,540
+ that you can do.
+
+611
+00:53:10,440 --> 00:53:13,640
+ So nodes can just store the data or not.
+
+612
+00:53:14,780 --> 00:53:17,120
+ You can, if it's one of your peers,
+
+613
+00:53:17,119 --> 00:53:20,420
+ So that's one of the advantages if you have a very local system
+
+614
+00:53:20,420 --> 00:53:24,639
+ and it's on VPS, then you can downscore them.
+
+615
+00:53:24,639 --> 00:53:28,299
+ You can say, if you don't have a sample that I think you're supposed to have,
+
+616
+00:53:28,460 --> 00:53:30,319
+ then you're not a great peer.
+
+617
+00:53:30,480 --> 00:53:35,940
+ So I might downscore you, and if your score is too low,
+
+618
+00:53:35,980 --> 00:53:37,119
+ I'm going to disconnect it from you.
+
+619
+00:53:38,239 --> 00:53:46,159
+ So this is a possibility for storage.
+
+620
+00:53:46,159 --> 00:53:52,219
+ So currently, we don't really have any expert storage mechanisms.
+
+621
+00:53:52,679 --> 00:53:54,619
+ And this is, by the way, not a change in Ethereum.
+
+622
+00:53:54,759 --> 00:53:55,739
+ This has also been the case.
+
+623
+00:53:56,239 --> 00:54:02,519
+ Nobody guarantees that past Ethereum blocks are kept as storage.
+
+624
+00:54:02,699 --> 00:54:04,839
+ It just happens to be the default node implementation.
+
+625
+00:54:06,199 --> 00:54:11,079
+ We will, in the future, probably include a construction that is called a proof custody.
+
+626
+00:54:11,079 --> 00:54:17,360
+ That basically means that validators at least have to store it for a while in order not to be slashed.
+
+627
+00:54:17,900 --> 00:54:19,079
+ This is a future upgrade.
+
+628
+00:54:19,179 --> 00:54:24,219
+ That's probably a few years from now because it's not the highest priority at the moment.
+
+629
+00:54:25,759 --> 00:54:28,559
+ This will not directly help if data will be sampling.
+
+630
+00:54:28,900 --> 00:54:33,840
+ Like, individual samples, because, like, you can't really, like, yes,
+
+631
+00:54:33,920 --> 00:54:36,699
+ Ethereum doesn't really want slashing conditions that are really short-term.
+
+632
+00:54:36,699 --> 00:54:39,599
+ Like if you don't answer within 10 seconds, you get slashed.
+
+633
+00:54:39,819 --> 00:54:42,579
+ Like that's pretty anti-Ethereum.
+
+634
+00:54:44,159 --> 00:54:47,799
+ Like it doesn't really work because like, for example,
+
+635
+00:54:47,799 --> 00:54:51,939
+ validators, we want that you're able to run them from home.
+
+636
+00:54:52,039 --> 00:54:53,859
+ You can have a bad internet connection and so on.
+
+637
+00:54:54,119 --> 00:54:55,919
+ So all these things are pretty long-term
+
+638
+00:54:55,919 --> 00:54:57,779
+ and aren't really like to do with,
+
+639
+00:54:57,859 --> 00:54:59,199
+ can I get my samples right now?
+
+640
+00:54:59,299 --> 00:55:00,899
+ So you really need like, yeah,
+
+641
+00:55:00,899 --> 00:55:03,899
+ this is one of the difficult things that you really need
+
+642
+00:55:03,899 --> 00:55:05,719
+ to rely on honest nodes a lot.
+
+643
+00:55:05,719 --> 00:55:09,879
+ and that's what makes sampling itself difficult.
+
+644
+00:55:12,879 --> 00:55:14,279
+ Awesome, it's very interesting.
+
+645
+00:55:14,279 --> 00:55:16,819
+ I didn't realize that you can use DAS
+
+646
+00:55:16,819 --> 00:55:18,480
+ to score your peers.
+
+647
+00:55:18,480 --> 00:55:21,019
+ That can be very effective.
+
+648
+00:55:21,019 --> 00:55:23,559
+ Yeah, it's interesting.
+
+649
+00:55:23,559 --> 00:55:26,279
+ Yeah, folks, please feel free to ask more questions.
+
+650
+00:55:26,279 --> 00:55:28,119
+ We have some more time with Dan Kradt,
+
+651
+00:55:28,119 --> 00:55:32,619
+ so it's an opportunity to pick his brain.
+
+652
+00:55:32,619 --> 00:55:35,319
+ I would maybe ask something more general
+
+653
+00:55:35,320 --> 00:55:37,600
+ outside of the, even outside of, like, the sharding
+
+654
+00:55:37,600 --> 00:55:39,360
+ is a very, very exciting topic,
+
+655
+00:55:39,480 --> 00:55:41,500
+ of course. Are there any other domains
+
+656
+00:55:41,500 --> 00:55:43,440
+ that you find interesting, exciting, which
+
+657
+00:55:43,440 --> 00:55:45,480
+ you've been working on recently, maybe even outside
+
+658
+00:55:45,480 --> 00:55:45,960
+ of Ethereum?
+
+659
+00:55:48,260 --> 00:55:48,700
+ Right.
+
+660
+00:55:49,539 --> 00:55:51,220
+ I mean, inside Ethereum,
+
+661
+00:55:51,440 --> 00:55:53,559
+ I think, like, one of the big
+
+662
+00:55:53,559 --> 00:55:54,400
+ things that,
+
+663
+00:55:54,660 --> 00:55:57,640
+ yeah, like, currently
+
+664
+00:55:57,640 --> 00:55:59,440
+ I think a lot of people are thinking about
+
+665
+00:55:59,440 --> 00:56:01,140
+ is the economics, so
+
+666
+00:56:01,140 --> 00:56:03,800
+ it's, like, a pretty big topic.
+
+667
+00:56:03,800 --> 00:56:04,580
+ I think, like,
+
+668
+00:56:04,579 --> 00:56:08,519
+ everyone is trying to wrap their head around
+
+669
+00:56:08,519 --> 00:56:11,980
+ what staking could look like in the future.
+
+670
+00:56:12,920 --> 00:56:16,799
+ I think it doesn't
+
+671
+00:56:16,799 --> 00:56:20,699
+ seem ideal that all the stake is grabbed by liquid staking tokens, and so we're trying
+
+672
+00:56:20,699 --> 00:56:24,599
+ to figure out if there is any way in which
+
+673
+00:56:24,599 --> 00:56:25,739
+ that is not the case.
+
+674
+00:56:28,119 --> 00:56:30,840
+ Yeah, so a lot of thoughts around that.
+
+675
+00:56:30,840 --> 00:56:33,280
+ otherwise
+
+676
+00:56:33,280 --> 00:56:35,200
+ yeah, I mean
+
+677
+00:56:35,200 --> 00:56:37,720
+ no, I don't have any
+
+678
+00:56:37,720 --> 00:56:39,000
+ like
+
+679
+00:56:39,000 --> 00:56:42,000
+ I mean, many of my
+
+680
+00:56:42,000 --> 00:56:44,100
+ much of my research at the moment
+
+681
+00:56:44,100 --> 00:56:45,059
+ is trying to get
+
+682
+00:56:45,059 --> 00:56:48,240
+ sharding implemented and working all around those
+
+683
+00:56:48,240 --> 00:56:51,140
+ Awesome
+
+684
+00:56:51,140 --> 00:56:53,980
+ maybe you kind of
+
+685
+00:56:53,980 --> 00:56:56,180
+ mentioned the staking there and you had a bit
+
+686
+00:56:56,180 --> 00:56:57,820
+ on the staking maximalism
+
+687
+00:56:57,820 --> 00:56:59,320
+ liquid staking maximalism
+
+688
+00:56:59,320 --> 00:57:01,600
+ Maybe if you can talk a bit about that.
+
+689
+00:57:01,600 --> 00:57:10,000
+ Right, I mean, I think, so this was something I posted on Twitter, I think, sometime last year.
+
+690
+00:57:10,000 --> 00:57:22,320
+ It was really, I think, a very, try to think, very blue sky thinking, and I don't think it's a great idea.
+
+691
+00:57:22,320 --> 00:57:29,800
+ But the idea was that what's, I think, like, especially in the Cosmos Solana ecosystems,
+
+692
+00:57:30,080 --> 00:57:37,240
+ a lot of people think of, oh, staking doesn't really, like, issuance to stakers is not really
+
+693
+00:57:37,240 --> 00:57:39,300
+ real issuance, because everyone can stake.
+
+694
+00:57:39,519 --> 00:57:44,160
+ So you, like, essentially, in the end, it becomes just, like, everyone stakes, and then
+
+695
+00:57:44,160 --> 00:57:45,519
+ everyone is rewarded for it.
+
+696
+00:57:45,539 --> 00:57:47,140
+ So it's like a complete zero-sum game.
+
+697
+00:57:47,139 --> 00:57:50,299
+ and obviously
+
+698
+00:57:50,299 --> 00:57:52,519
+ like in all of these they are based on
+
+699
+00:57:52,519 --> 00:57:53,839
+ delegated proof of stake
+
+700
+00:57:53,839 --> 00:57:56,539
+ and I mean in a certain way
+
+701
+00:57:56,539 --> 00:57:58,259
+ it is like an appealing thing to think
+
+702
+00:57:58,259 --> 00:58:00,199
+ like oh like maybe that solves all of
+
+703
+00:58:00,199 --> 00:58:01,859
+ our problems if we could just like
+
+704
+00:58:01,859 --> 00:58:04,179
+ just make delegation the primary
+
+705
+00:58:04,179 --> 00:58:05,379
+ way to stake and
+
+706
+00:58:05,379 --> 00:58:11,900
+ I try to think about that
+
+707
+00:58:11,900 --> 00:58:14,299
+ I think like
+
+708
+00:58:14,299 --> 00:58:16,199
+ Vitalik first like basically
+
+709
+00:58:16,199 --> 00:58:20,239
+ the end result is always like, why?
+
+710
+00:58:20,239 --> 00:58:21,579
+ What do we get out of it?
+
+711
+00:58:21,579 --> 00:58:24,679
+ Like, how do these stakers help us?
+
+712
+00:58:24,679 --> 00:58:27,539
+ And it's not really clear.
+
+713
+00:58:27,539 --> 00:58:30,739
+ Unfortunately it's hard.
+
+714
+00:58:30,739 --> 00:58:34,219
+ In many of these cases it feels like staking simply
+
+715
+00:58:34,219 --> 00:58:37,059
+ becomes just like a pure money game,
+
+716
+00:58:37,059 --> 00:58:40,279
+ and there's nothing actually in it for the protocol.
+
+717
+00:58:40,279 --> 00:58:43,919
+ So then why are we even doing it?
+
+718
+00:58:43,919 --> 00:58:45,619
+ So yeah, currently.
+
+719
+00:58:46,199 --> 00:58:48,019
+ I don't completely know.
+
+720
+00:58:48,019 --> 00:58:52,500
+ I think it is interesting to think about all these proposals.
+
+721
+00:58:53,480 --> 00:58:58,939
+ I'm not currently very strongly leaning in any direction.
+
+722
+00:58:59,259 --> 00:59:09,419
+ I think what I mainly feel these days is that we need to just keep staking more limited.
+
+723
+00:59:09,420 --> 00:59:17,980
+ it. I think the most dangerous scenario I see these days is if all of all Ether is staked.
+
+724
+00:59:17,980 --> 00:59:25,240
+ I feel like that's very hard to reverse. We end up in a world where everyone is suddenly
+
+725
+00:59:25,240 --> 00:59:32,360
+ literally a stakeholder, and so nobody wants their income reduced. Obviously, that influences
+
+726
+00:59:32,360 --> 00:59:37,139
+ people's decision making. All of Ethereum governance would now be about, oh, how many
+
+727
+00:59:37,139 --> 00:59:43,299
+ percent that I'm making on this and so on. So that seems pretty dangerous and dystopian world. So
+
+728
+00:59:46,739 --> 00:59:52,659
+ I think along those lines, but yes, we don't have the solution yet, unfortunately.
+
+729
+00:59:55,379 --> 01:00:00,259
+ Thank you. That's very interesting though. Thanks for sharing that.
+
+730
+01:00:00,260 --> 01:00:07,600
+ it. And yeah, maybe also on the topic of staking, what's your feeling on when a protocol has
+
+731
+01:00:07,600 --> 01:00:11,600
+ enough economic security?
+
+732
+01:00:11,600 --> 01:00:18,900
+ Right, I'm actually a fairly a minimalist on economic security. I don't believe that.
+
+733
+01:00:18,900 --> 01:00:25,380
+ I think honestly, between one and 10 billion or so, it's all the economic security you'll
+
+734
+01:00:25,380 --> 01:00:33,140
+ ever need. I think we have way more than is necessary already. I don't think that an attacker,
+
+735
+01:00:33,140 --> 01:00:41,619
+ this is basically the front door. I think the front door, acquiring enough stake to do something
+
+736
+01:00:41,619 --> 01:00:48,579
+ bad to Ethereum is already so secure that no attacker will try to attack it. If I had a billion
+
+737
+01:00:48,579 --> 01:00:56,340
+ dollars or it let's rather say yes like assume that ethereum's economic security was only in
+
+738
+01:00:56,340 --> 01:01:03,699
+ quotation marks 10 billion dollars now in order to attack you realistically say would need i don't
+
+739
+01:01:03,699 --> 01:01:09,799
+ know let's say it's three billion dollars or five let's say it's five to get one third so not really
+
+740
+01:01:09,799 --> 01:01:15,960
+ like that but like let's say where this is not how it would use five billion dollars to attack
+
+741
+01:01:15,960 --> 01:01:21,000
+ Ethereum for sure, just in order to basically perform one double finalization.
+
+742
+01:01:23,000 --> 01:01:27,720
+ That seems, I do not think that the double finalization will do that much damage
+
+743
+01:01:28,760 --> 01:01:33,880
+ and I believe also that there are other potential vectors that are much, much cheaper.
+
+744
+01:01:35,400 --> 01:01:40,199
+ Think about how many zero days you can purchase for five million dollars.
+
+745
+01:01:40,199 --> 01:01:48,179
+ So I think like, yeah, I think we are far beyond the point where we need more economic security.
+
+746
+01:01:48,179 --> 01:01:56,719
+ That's really cool. Yeah, it's this really great point about that basically other bottlenecks when
+
+747
+01:01:56,719 --> 01:01:59,000
+ when the economy security is growing.
+
+748
+01:01:59,000 --> 01:02:02,000
+ That's a good point there.
+
+749
+01:02:03,399 --> 01:02:04,939
+ Yeah, thank you so much.
+
+750
+01:02:08,319 --> 01:02:09,319
+ Okay.
+
+751
+01:02:11,439 --> 01:02:14,119
+ I'm curious if you can elaborate a little bit
+
+752
+01:02:14,119 --> 01:02:19,119
+ on what it looks like in a world where all ether is staked.
+
+753
+01:02:22,019 --> 01:02:23,000
+ What?
+
+754
+01:02:23,000 --> 01:02:27,159
+ Like what are the conditions that like bring this into being?
+
+755
+01:02:27,159 --> 01:02:28,159
+ Right.
+
+756
+01:02:28,159 --> 01:02:29,159
+ So, right.
+
+757
+01:02:29,159 --> 01:02:35,920
+ So basically, I mean, the main thing is so like, for, to understand that we have to think
+
+758
+01:02:35,920 --> 01:02:39,280
+ about like what happens with liquid staking tokens, right?
+
+759
+01:02:39,280 --> 01:02:45,320
+ So, so people like originally people stake because like they want, um, a certain amount
+
+760
+01:02:45,320 --> 01:02:50,380
+ of, like, they get a certain amount of reward for, um, essentially two things, like they
+
+761
+01:02:50,380 --> 01:02:57,019
+ lock up their money as a security so they lock up ether which means they can't use it like immediately
+
+762
+01:02:57,900 --> 01:03:06,860
+ um and uh and they have to like run a ballot or something and so liquid staking in a way like
+
+763
+01:03:08,140 --> 01:03:12,140
+ um gets rid of that to a certain extent so you don't need to run your invalid it
+
+764
+01:03:12,140 --> 01:03:14,860
+ anymore you get a little bit less reward and someone else runs it
+
+765
+01:03:14,860 --> 01:03:23,099
+ it. And it does a few things. So it gets rid of the capital bottleneck. So like, okay.
+
+766
+01:03:23,099 --> 01:03:30,160
+ And yeah, the other thing it does is that it allows you to get out immediately as long
+
+767
+01:03:30,160 --> 01:03:39,800
+ as there's enough liquidity. Well, and this is the third thing, like you can also, yeah,
+
+768
+01:03:39,800 --> 01:03:44,780
+ it is that that's kind of a function of liquidity as well, but yeah, you can also use it. Like,
+
+769
+01:03:44,780 --> 01:03:53,660
+ example in DeFi you can lock it up to do other things and so on and what can happen is like
+
+770
+01:03:53,660 --> 01:04:01,560
+ at a certain point if there is like enough liquid liquidity in liquid staking tokens
+
+771
+01:04:01,560 --> 01:04:08,860
+ they could become so attractive that the reward is almost irrelevant like let's say
+
+772
+01:04:08,860 --> 01:04:10,920
+ Lido staked Ether
+
+773
+01:04:10,920 --> 01:04:14,079
+ had all the same functions
+
+774
+01:04:14,079 --> 01:04:15,240
+ as Ethereum itself.
+
+775
+01:04:15,620 --> 01:04:16,380
+ And people literally
+
+776
+01:04:16,380 --> 01:04:17,500
+ on exchanges
+
+777
+01:04:17,500 --> 01:04:19,180
+ started trading
+
+778
+01:04:19,180 --> 01:04:21,300
+ like LS Ether
+
+779
+01:04:21,300 --> 01:04:22,099
+ instead of Ether.
+
+780
+01:04:22,820 --> 01:04:22,960
+ Right?
+
+781
+01:04:23,539 --> 01:04:23,860
+ So,
+
+782
+01:04:24,360 --> 01:04:25,640
+ sorry, Steve.
+
+783
+01:04:26,360 --> 01:04:27,320
+ And so,
+
+784
+01:04:27,599 --> 01:04:29,500
+ what's the difference now?
+
+785
+01:04:29,800 --> 01:04:30,880
+ Well, the difference is that
+
+786
+01:04:30,880 --> 01:04:32,980
+ like Lido staked Ether
+
+787
+01:04:32,980 --> 01:04:34,160
+ still has like a yield
+
+788
+01:04:34,160 --> 01:04:35,079
+ compared to Ethereum.
+
+789
+01:04:35,079 --> 01:04:36,019
+ So it would always be
+
+790
+01:04:36,019 --> 01:04:37,620
+ like if everything else
+
+791
+01:04:37,620 --> 01:04:38,099
+ is the same,
+
+792
+01:04:38,099 --> 01:04:39,559
+ it will always be more attractive.
+
+793
+01:04:39,559 --> 01:04:45,960
+ And that's then even true if the rewards go down to 1% or 0.5% or less.
+
+794
+01:04:47,159 --> 01:04:49,860
+ So there's a potential runaway scenario here
+
+795
+01:04:49,860 --> 01:04:52,139
+ where even with extremely low yields,
+
+796
+01:04:52,819 --> 01:04:55,860
+ they could basically eat up everything.
+
+797
+01:04:56,400 --> 01:04:59,400
+ And the only thing that Ether would still be used on
+
+798
+01:04:59,400 --> 01:05:02,360
+ would be directly paying for gas.
+
+799
+01:05:02,559 --> 01:05:03,420
+ That's still true.
+
+800
+01:05:03,639 --> 01:05:07,880
+ You have to ultimately change to Ether in order to pay gas.
+
+801
+01:05:08,099 --> 01:05:19,099
+ But, I mean, probably, like, a reserve of a few percent of that is enough, like, as long as that's all allocated to DEXs where you can efficiently buy it exactly when you need it.
+
+802
+01:05:20,239 --> 01:05:24,239
+ So, yeah, that's a scenario where it could be that, like, basically all ETH becomes staked.
+
+803
+01:05:24,599 --> 01:05:25,639
+ We're currently not there yet.
+
+804
+01:05:25,679 --> 01:05:32,099
+ We clearly, like, are not seeing the extreme, like, staking pressures that we saw last year.
+
+805
+01:05:32,239 --> 01:05:33,519
+ It stopped at some point.
+
+806
+01:05:33,519 --> 01:05:37,920
+ I think we're seeing a little bit more staking again, but we're still not in a runaway scenario.
+
+807
+01:05:37,920 --> 01:05:43,139
+ So people still want something like 3% to 4% yield on their staked ETH.
+
+808
+01:05:43,460 --> 01:05:46,680
+ And it makes sense because right now the main liquid token is still Ether.
+
+809
+01:05:47,220 --> 01:05:50,840
+ Like if, for example, you're thinking about cashing out during the bull market,
+
+810
+01:05:51,400 --> 01:05:54,380
+ you probably think about, okay, at some point I want Ether.
+
+811
+01:05:54,940 --> 01:06:01,260
+ And what if at that point staked Ether trades at a discount,
+
+812
+01:06:01,400 --> 01:06:03,019
+ then I would have to take that discount.
+
+813
+01:06:03,240 --> 01:06:04,940
+ That might not be worth the risk, right?
+
+814
+01:06:04,940 --> 01:06:14,360
+ So currently, we're still not at a point where people would be happy with a very small yield,
+
+815
+01:06:14,500 --> 01:06:15,700
+ like less than 1%.
+
+816
+01:06:15,700 --> 01:06:18,960
+ But yeah, I can see that it could eventually happen.
+
+817
+01:06:18,960 --> 01:06:21,960
+ I think that's what we are quite scared of.
+
+818
+01:06:28,480 --> 01:06:30,099
+ Awesome. Thank you.
+
+819
+01:06:30,920 --> 01:06:31,980
+ Yeah, thank you.
+
+820
+01:06:31,980 --> 01:06:38,740
+ Um, okay, uh, if we can, if we can hold you for a minute longer, maybe, maybe a few more
+
+821
+01:06:38,740 --> 01:06:39,260
+ questions.
+
+822
+01:06:39,260 --> 01:06:45,179
+ Uh, there is, um, yeah, there's one about what are the common misconceptions about sharding?
+
+823
+01:06:45,340 --> 01:06:51,860
+ What would be like some, you know, top misunderstanding that people often, uh, if you would like to
+
+824
+01:06:51,860 --> 01:06:52,260
+ debunk?
+
+825
+01:06:52,260 --> 01:07:07,520
+ So I think one fun thing is that sharding, or rather our modern version of sharding,
+
+826
+01:07:07,520 --> 01:07:14,080
+ which is data sharding with rollups, necessarily means that there will be no more composability.
+
+827
+01:07:14,080 --> 01:07:21,200
+ So one cool thing is that rollups, and so back when we designed execution sharding,
+
+828
+01:07:21,199 --> 01:07:24,439
+ yes, this was one of the huge problems we had with sharding.
+
+829
+01:07:24,439 --> 01:07:28,359
+ We're like, OK, every shard is its own little ecosystem.
+
+830
+01:07:28,359 --> 01:07:35,419
+ And moving between shards would be definitely not synchronous.
+
+831
+01:07:35,419 --> 01:07:37,539
+ But with rollups, the case is actually a bit different
+
+832
+01:07:37,539 --> 01:07:40,000
+ because you can design very big rollups.
+
+833
+01:07:40,000 --> 01:07:43,659
+ I mean, Jesse from Bayes posted the other day,
+
+834
+01:07:43,659 --> 01:07:47,419
+ they want to scale to 1 giga gas per second, which is amazing,
+
+835
+01:07:47,419 --> 01:07:49,879
+ which is exactly what rollups should do.
+
+836
+01:07:49,880 --> 01:07:52,039
+ And the cool thing is that it's okay for rollups to do that
+
+837
+01:07:52,039 --> 01:07:55,160
+ because they do not have to be as decentralized as the base layer
+
+838
+01:07:55,160 --> 01:07:58,160
+ because they can be held accountable by the base layer.
+
+839
+01:07:58,360 --> 01:08:00,300
+ Like, we can maintain their security
+
+840
+01:08:00,300 --> 01:08:02,760
+ and maintain their censorship resistance,
+
+841
+01:08:03,019 --> 01:08:05,940
+ even if they don't, if they are built correctly.
+
+842
+01:08:05,940 --> 01:08:08,880
+ Like, if their smart contracts have, like,
+
+843
+01:08:09,300 --> 01:08:12,160
+ forced transactions with mechanisms, et cetera.
+
+844
+01:08:13,420 --> 01:08:17,960
+ So what is really cool is that within this rollup,
+
+845
+01:08:17,960 --> 01:08:21,619
+ you can have massive ecosystems that internally
+
+846
+01:08:21,619 --> 01:08:23,260
+ have full composability.
+
+847
+01:08:24,520 --> 01:08:28,359
+ To some extent, if you are willing to integrate
+
+848
+01:08:30,579 --> 01:08:32,279
+ with the base layer proposals,
+
+849
+01:08:32,279 --> 01:08:35,319
+ you can even have composability with the base layer
+
+850
+01:08:35,319 --> 01:08:36,420
+ honestly care about it.
+
+851
+01:08:39,720 --> 01:08:42,779
+ Right, awesome, thank you, thank you.
+
+852
+01:08:42,779 --> 01:08:53,179
+ Okay, we've, yeah, one question about more, so if you can give us some maybe more specific
+
+853
+01:08:53,179 --> 01:09:02,159
+ open R&D problems around the data availability sampling and data development in general,
+
+854
+01:09:02,159 --> 01:09:06,319
+ maybe something that, you know, people can learn about, start contributing to, yeah,
+
+855
+01:09:06,319 --> 01:09:09,000
+ many eager contributors here.
+
+856
+01:09:09,000 --> 01:09:20,340
+ Right, yeah, concretely, the biggest open question is how to build a robust distributed
+
+857
+01:09:20,340 --> 01:09:22,920
+ hash table or DHT.
+
+858
+01:09:22,920 --> 01:09:28,880
+ So if anyone is interested in working on that, this is like one really interesting, really
+
+859
+01:09:28,880 --> 01:09:29,880
+ cool topic.
+
+860
+01:09:29,880 --> 01:09:36,899
+ So one of the big problems with DHTs is like traditionally peer-to-peer networks have no
+
+861
+01:09:36,899 --> 01:09:38,920
+ limitation on who can join as a node.
+
+862
+01:09:40,139 --> 01:09:45,379
+ And that is somewhat contained in, like, I mean, I mentioned this before,
+
+863
+01:09:45,599 --> 01:09:52,279
+ that for our usual blockchains like Ethereum, Bitcoin, everything is broadcast.
+
+864
+01:09:52,879 --> 01:09:57,199
+ And if you rely on that, the cool thing is that you only have to assume
+
+865
+01:09:57,199 --> 01:09:59,279
+ that you're connected to one honest node.
+
+866
+01:10:00,039 --> 01:10:02,859
+ And that's, like, a fairly acceptable assumption
+
+867
+01:10:02,859 --> 01:10:04,920
+ that people are relatively comfortable with.
+
+868
+01:10:04,920 --> 01:10:06,699
+ and that makes it pretty hard,
+
+869
+01:10:06,699 --> 01:10:09,619
+ even though you have this free joining mechanism,
+
+870
+01:10:09,760 --> 01:10:10,460
+ anyone can join.
+
+871
+01:10:11,859 --> 01:10:13,100
+ It's quite hard.
+
+872
+01:10:13,800 --> 01:10:17,159
+ You can potentially trick new nodes.
+
+873
+01:10:17,340 --> 01:10:19,380
+ It's very hard to trick nodes
+
+874
+01:10:19,380 --> 01:10:21,260
+ that are already well-connected in the network.
+
+875
+01:10:23,920 --> 01:10:28,039
+ And so the problem with DHTs
+
+876
+01:10:28,039 --> 01:10:31,720
+ is that their security assumptions are much harder,
+
+877
+01:10:31,720 --> 01:10:37,000
+ and they break down even with relatively minor fractions
+
+878
+01:10:37,000 --> 01:10:40,280
+ of malicious nodes, which we can't really guarantee
+
+879
+01:10:40,280 --> 01:10:42,560
+ because an attacker could literally just add
+
+880
+01:10:42,560 --> 01:10:44,720
+ a million malicious nodes to the film network
+
+881
+01:10:44,720 --> 01:10:47,220
+ and we would have nothing we could do about it.
+
+882
+01:10:48,220 --> 01:10:51,440
+ So yeah, that's currently a problem that we have.
+
+883
+01:10:52,300 --> 01:10:54,380
+ If people want to work on this,
+
+884
+01:10:55,260 --> 01:10:58,560
+ nobody has really found a great design yet
+
+885
+01:10:58,560 --> 01:10:59,960
+ that works in the face.
+
+886
+01:10:59,960 --> 01:11:04,119
+ it can work on similar assumptions as current P2P networks.
+
+887
+01:11:04,119 --> 01:11:07,119
+ That's very interesting.
+
+888
+01:11:07,119 --> 01:11:13,159
+ Yeah, I hope some folks from the study group will look into that.
+
+889
+01:11:13,159 --> 01:11:14,920
+ And yeah, we are at 70-minute mark.
+
+890
+01:11:14,920 --> 01:11:17,359
+ I think we can slowly be wrapping up.
+
+891
+01:11:17,359 --> 01:11:20,659
+ Josh, do we have any more questions?
+
+892
+01:11:20,659 --> 01:11:28,899
+ Yeah, I'm curious if execution sharding is something that is on the roadmap at some
+
+893
+01:11:28,899 --> 01:11:33,420
+ point and how that will differ from the data sharding.
+
+894
+01:11:33,420 --> 01:11:39,159
+ Yeah, I think nowadays I view execution sharding very differently.
+
+895
+01:11:39,159 --> 01:11:47,059
+ I think a lot of things have changed in the landscape in the last five years, and I would
+
+896
+01:11:47,059 --> 01:11:56,019
+ say the way I see some form of execution sharding come back into Ethereum would be that we start
+
+897
+01:11:56,020 --> 01:12:04,500
+ increasing the gas limit of the execution layer. The way we do that is by putting the execution
+
+898
+01:12:04,500 --> 01:12:14,900
+ layer itself onto our data layer and add proving through a zkv-evm to it. What we would have would
+
+899
+01:12:14,900 --> 01:12:21,940
+ be basically the base layer would itself become a roll-up in that full nodes don't have to verify it
+
+900
+01:12:21,939 --> 01:12:23,479
+ it anymore.
+
+901
+01:12:23,479 --> 01:12:26,739
+ And at that point, I think we can get to a point
+
+902
+01:12:26,739 --> 01:12:29,279
+ where we can start scaling it itself.
+
+903
+01:12:29,279 --> 01:12:32,619
+ It's probably not going to be as aggressive as roll-ups will.
+
+904
+01:12:32,619 --> 01:12:36,279
+ We will probably be a little bit more conservative.
+
+905
+01:12:36,279 --> 01:12:42,539
+ But I can see that we can get 100 or 1,000 x eventually
+
+906
+01:12:42,539 --> 01:12:43,879
+ out of the base layer as well.
+
+907
+01:12:48,719 --> 01:12:49,219
+ Great.
+
+908
+01:12:49,220 --> 01:12:52,199
+ And yeah, the cool thing is it will remain fully composable
+
+909
+01:12:52,199 --> 01:12:56,060
+ because it's still just like one logical chart.
+
+910
+01:13:03,300 --> 01:13:06,520
+ Well, yeah, I think that's all the questions
+
+911
+01:13:06,520 --> 01:13:08,760
+ that I see in here.
+
+912
+01:13:11,340 --> 01:13:14,780
+ Yeah, yeah, I think we are the questions already
+
+913
+01:13:14,780 --> 01:13:18,980
+ and we are at more than 70 minutes.
+
+914
+01:13:18,979 --> 01:13:22,419
+ So yeah, it's enough of your time, Dankrat.
+
+915
+01:13:22,419 --> 01:13:23,259
+ I know it's precious,
+
+916
+01:13:23,259 --> 01:13:25,559
+ and we really appreciate having you here.
+
+917
+01:13:25,559 --> 01:13:27,739
+ It's been an honor.
+
+918
+01:13:27,739 --> 01:13:29,199
+ Yeah, it's been a pleasure.
+
+919
+01:13:29,199 --> 01:13:30,319
+ Yep.
+
+920
+01:13:30,319 --> 01:13:32,359
+ Thank you for having me.
+
+921
+01:13:32,359 --> 01:13:33,939
+ Thank you so much, Dankrat.
+
+922
+01:13:33,939 --> 01:13:35,859
+ Yeah, we appreciate having you in the study group.
+
+923
+01:13:35,859 --> 01:13:36,699
+ We learned a lot,
+
+924
+01:13:36,699 --> 01:13:40,059
+ and I hope some folks will write a great documentation
+
+925
+01:13:40,059 --> 01:13:42,519
+ on our wiki and start talking
+
+926
+01:13:42,519 --> 01:13:45,579
+ into the data availability sampling
+
+927
+01:13:45,579 --> 01:13:47,219
+ and the related problems, yeah.
+
+928
+01:13:47,220 --> 01:13:50,460
+ yeah it would be great yeah thank you
+
+929
+01:13:50,460 --> 01:13:53,820
+ yes it's my yeah have a great day
+
+930
+01:13:53,820 --> 01:13:57,360
+ bye-bye yeah you too but everyone and
+
+931
+01:13:57,360 --> 01:13:58,640
+ we'll see you on Monday
+
+932
+01:13:58,640 --> 01:14:02,920
+ well uh yes see you on Monday for
+
+933
+01:14:02,920 --> 01:14:05,600
+ another development track course with
+
+934
+01:14:05,600 --> 01:14:10,199
+ dragon I believe looking at execution
+
+935
+01:14:10,199 --> 01:14:15,119
+ client deep dive it's we will see will
+
+936
+01:14:15,119 --> 01:14:22,399
+ have Dragan, the developer, the lead developer of Red, if I'm not wrong, explaining the architecture
+
+937
+01:14:22,399 --> 01:14:27,680
+ of Red moving into the database. And if anybody's interested in Rust, in execution clients,
+
+938
+01:14:27,680 --> 01:14:34,399
+ in Red specifically, this will be a great learning opportunity for you. Yeah. Awesome.
+
+939
+01:14:34,399 --> 01:14:39,760
+ See you then. Cool. Thank you, everybody. Bye.
+

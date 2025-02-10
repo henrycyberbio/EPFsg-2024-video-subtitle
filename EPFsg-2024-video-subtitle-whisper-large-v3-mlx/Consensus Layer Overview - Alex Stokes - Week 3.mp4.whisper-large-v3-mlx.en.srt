@@ -1,0 +1,6412 @@
+1
+00:00:00,000 --> 00:00:02,839
+ to talk about the consensus layer.
+
+2
+00:00:04,040 --> 00:00:08,380
+ I will give Mario a little chance to give Alex a quick interview,
+
+3
+00:00:08,560 --> 00:00:09,540
+ and then we'll jump right in.
+
+4
+00:00:09,660 --> 00:00:11,500
+ Or sorry, introduction, not interview.
+
+5
+00:00:13,000 --> 00:00:14,320
+ Yeah, thanks so much, Josh.
+
+6
+00:00:14,320 --> 00:00:15,919
+ And thanks, Alex, for being here.
+
+7
+00:00:16,580 --> 00:00:19,160
+ Yeah, so last week, we had Matt, light client,
+
+8
+00:00:19,460 --> 00:00:21,660
+ explaining the execution layer of Ethereum.
+
+9
+00:00:22,019 --> 00:00:26,780
+ And this week, we have the other half Ethereum covered by Alex here,
+
+10
+00:00:26,780 --> 00:00:30,440
+ completing the whole big picture of how it works.
+
+11
+00:00:30,440 --> 00:00:36,579
+ So yeah, we are very excited to have you here, Alex, because so Alex is part of Ethereum Foundation.
+
+12
+00:00:36,579 --> 00:00:43,600
+ He's an expert in many important topics that are being worked on these days, like mainly MEV,
+
+13
+00:00:44,180 --> 00:00:54,780
+ all the current proposals about PBS, burning MEV, you might heard of are being worked on by Alex.
+
+14
+00:00:54,780 --> 00:01:01,020
+ to some extent he works on a bunch of rust software there are many rust people in the
+
+15
+00:01:01,020 --> 00:01:07,420
+ study group so uh you might be interested to hear that uh alex uh contributes to many rust projects
+
+16
+00:01:07,420 --> 00:01:13,819
+ and uh most importantly for today he's an expert on the consensus layer of ethereum so uh i hope to
+
+17
+00:01:13,819 --> 00:01:19,340
+ learn a lot from you today alex thank you so much for being here again yeah yeah i think yeah i
+
+18
+00:01:19,340 --> 00:01:23,000
+ I think we can check right in and the stage is yours.
+
+19
+00:01:24,500 --> 00:01:27,680
+ So before we get started, just want to remind everybody that
+
+20
+00:01:28,100 --> 00:01:31,700
+ if you have conversation or comments, questions, please
+
+21
+00:01:32,340 --> 00:01:36,080
+ post them in the Discord thread, the week three Discord thread.
+
+22
+00:01:36,640 --> 00:01:37,640
+ Go ahead, Alex. Thanks.
+
+23
+00:01:40,100 --> 00:01:40,680
+ Great.
+
+24
+00:01:40,680 --> 00:01:42,140
+ Thank you for having me.
+
+25
+00:01:42,140 --> 00:01:42,879
+ Can you hear me okay?
+
+26
+00:01:46,939 --> 00:01:47,540
+ Hello.
+
+27
+00:01:49,340 --> 00:01:55,820
+ it's all good here you go okay thanks sometimes I have uh AV issues anyway
+
+28
+00:01:57,439 --> 00:02:03,560
+ um great okay uh yeah I'm Alex Stokes I'm a researcher at the ethereum Foundation uh
+
+29
+00:02:03,560 --> 00:02:11,659
+ today we'll be looking at ethereum's consensus layer so yeah I think let's see so I'm pretty
+
+30
+00:02:11,659 --> 00:02:21,199
+ I can see, let me do this. What? Okay. Well, I think I can at least see questions in the chat.
+
+31
+00:02:21,379 --> 00:02:25,359
+ So if you have them, just drop them here and we'll try to get to them as we go.
+
+32
+00:02:28,000 --> 00:02:33,900
+ What I'll try to do is go through some slides just to frame what does consensus even mean?
+
+33
+00:02:34,079 --> 00:02:39,500
+ Why do we care about it? And these blockchain contexts. And then I should be able to take
+
+34
+00:02:39,500 --> 00:02:45,099
+ some sort of live notes to, you know, draw some diagrams and give you a little better intuition
+
+35
+00:02:45,099 --> 00:02:53,539
+ for the different things I'm talking about. So yeah, we will jump in. And let's see here,
+
+36
+00:02:53,719 --> 00:03:01,280
+ I believe you can see this. So I guess somebody speak up if you can't. But yeah,
+
+37
+00:03:01,400 --> 00:03:06,420
+ theorem consensus. So let's dive in. So yeah, I mean, I kind of want to start from the
+
+38
+00:03:06,419 --> 00:03:10,659
+ very very beginning and like you know why do we even care about these blockchains in the first
+
+39
+00:03:10,659 --> 00:03:17,619
+ place um i think like ultimately like the really fundamental thing that they do is they manufacture
+
+40
+00:03:17,619 --> 00:03:23,719
+ digital scarcity right so like you have this notion in the real world of um you know like
+
+41
+00:03:23,719 --> 00:03:29,139
+ if there's i have this example later but let's say i go to the grocery store right and they only have
+
+42
+00:03:29,139 --> 00:03:34,739
+ like you know 10 apples like they can't magically make more apples if they like give five apples
+
+43
+00:03:34,740 --> 00:03:40,439
+ way, they still only have five. And it turns out that like, having this notion of like scarcity in
+
+44
+00:03:40,439 --> 00:03:45,939
+ the physical world, there's a lot we can do with it to like, create a lot of value, like at the
+
+45
+00:03:45,939 --> 00:03:50,900
+ bottom line, right? So the question then is like, how can we do this in this digital realm that's
+
+46
+00:03:50,900 --> 00:03:55,260
+ like kind of taken over all of our lives, and is only becoming more and more important as we go?
+
+47
+00:03:57,160 --> 00:04:01,240
+ Yeah, so like the place to start, right, is that we figured out how to make like digital goods,
+
+48
+00:04:01,240 --> 00:04:05,400
+ So all these cat photos on the internet,
+
+49
+00:04:05,400 --> 00:04:07,620
+ digital textbooks that you might see,
+
+50
+00:04:07,620 --> 00:04:10,439
+ and yeah, more and more of our world today.
+
+51
+00:04:10,439 --> 00:04:12,180
+ The thing is, is that you can basically
+
+52
+00:04:12,180 --> 00:04:13,740
+ copy all of these things.
+
+53
+00:04:13,740 --> 00:04:16,800
+ If I give you, again, one of these CAD JPEGs,
+
+54
+00:04:16,800 --> 00:04:19,240
+ you can just copy it as much as you want.
+
+55
+00:04:19,240 --> 00:04:21,120
+ There's no way to represent scarcity
+
+56
+00:04:21,120 --> 00:04:22,220
+ in this digital world.
+
+57
+00:04:23,519 --> 00:04:25,879
+ And yeah, there's been a huge history
+
+58
+00:04:25,879 --> 00:04:27,120
+ of this being an issue, right?
+
+59
+00:04:27,120 --> 00:04:31,220
+ So if I have a movie that someone wants to protect,
+
+60
+00:04:31,240 --> 00:04:36,439
+ terms of intellectual property once the movie's out and sort of the internet it can easily be
+
+61
+00:04:36,439 --> 00:04:41,139
+ copied there's file sharing with bittorrent and all this and yeah it's kind of a mess
+
+62
+00:04:41,139 --> 00:04:48,400
+ and you know the reason people care about these blockchains is because they generate this digital
+
+63
+00:04:48,400 --> 00:04:54,540
+ scarcity and i'll kind of explain why so the reason this is important is because again you can
+
+64
+00:04:54,540 --> 00:04:59,360
+ use this property to like represent all these things in the physical realm and like our
+
+65
+00:04:59,360 --> 00:05:03,400
+ intuitions around them being scarce in this digital space, right?
+
+66
+00:05:03,400 --> 00:05:06,920
+ And you can use this for all sorts of things, like money, like tokens.
+
+67
+00:05:07,620 --> 00:05:12,740
+ These are pretty familiar examples if you're in the blockchain context, but then more generally
+
+68
+00:05:12,740 --> 00:05:14,020
+ like property rights.
+
+69
+00:05:14,020 --> 00:05:19,080
+ So one day you'll probably be able to put the deed to a house on the blockchain.
+
+70
+00:05:20,300 --> 00:05:25,060
+ And the exciting thing beyond this is that I think there's still a lot more that will
+
+71
+00:05:25,060 --> 00:05:27,180
+ kind of come out of this, and we're still figuring out what's possible.
+
+72
+00:05:27,180 --> 00:05:30,480
+ So if anything, I think this is a very exciting space to be in.
+
+73
+00:05:31,120 --> 00:05:34,699
+ And yeah, it's kind of this fun adventure and we'll see where it goes.
+
+74
+00:05:35,740 --> 00:05:43,720
+ The important thing here is that without this blockchain technology, you couldn't have this thing where you could make these like unique digital objects.
+
+75
+00:05:44,259 --> 00:05:47,399
+ Again, because you could trivially copy like anything before that.
+
+76
+00:05:47,600 --> 00:05:50,139
+ So and this just like wasn't possible without blockchains.
+
+77
+00:05:50,399 --> 00:05:51,439
+ This is why people care about them.
+
+78
+00:05:55,060 --> 00:05:55,920
+ Let's see.
+
+79
+00:05:55,920 --> 00:06:05,840
+ Okay it seems like that's working. Yeah so okay we have these blockchains that give us this like
+
+80
+00:06:05,840 --> 00:06:11,740
+ property of digital scarcity and like let's now try to like think about how we might do this.
+
+81
+00:06:12,660 --> 00:06:17,819
+ So you know let's just zoom into like one use case again this kind of generalizes to any of
+
+82
+00:06:17,819 --> 00:06:22,319
+ these notions of like scarce objects we want to think about but let's say we want to talk about
+
+83
+00:06:22,319 --> 00:06:27,599
+ digital money right so we have money let's say like it's like there's units of money which are
+
+84
+00:06:27,599 --> 00:06:33,360
+ coins right so imagine like i can have coins i can like spend coins um you know it really should
+
+85
+00:06:33,360 --> 00:06:40,319
+ fire your intuition of like having money in you know the physical space when we say scarcity here
+
+86
+00:06:40,319 --> 00:06:45,519
+ we mean they're only ever like say end coins at one time right so like if i have 100 coins i can't
+
+87
+00:06:45,519 --> 00:06:51,519
+ like spend 200 for example there's like a fixed number at any point in time so
+
+88
+00:06:53,439 --> 00:06:59,599
+ you know i'm not sure what everyone's background is but um either way let's just assume that the
+
+89
+00:06:59,599 --> 00:07:03,680
+ following things make sense uh and again if you have questions just drop them in the chat
+
+90
+00:07:05,439 --> 00:07:12,959
+ so right okay so you know we'll we'll kind of have this like straw man example right so like
+
+91
+00:07:12,959 --> 00:07:18,239
+ you might be familiar with like a web server running in like you know what we call web2 so
+
+92
+00:07:18,239 --> 00:07:23,519
+ i don't know something like facebook meta or like uh you know instagram all these different social
+
+93
+00:07:23,519 --> 00:07:29,519
+ media platforms twitter which i guess we now call x either way you just imagine that you have some
+
+94
+00:07:29,519 --> 00:07:33,519
+ money protocol you can like write software to implement the rules of this protocol and it just
+
+95
+00:07:33,519 --> 00:07:39,039
+ runs on someone's web server and the big thing here is that whoever's operating the server you
+
+96
+00:07:39,040 --> 00:07:42,220
+ you trust them to make sure that there are no double spins.
+
+97
+00:07:42,220 --> 00:07:44,319
+ And this is again, kind of the core property
+
+98
+00:07:44,319 --> 00:07:47,360
+ that we wanna get out of our blockchains.
+
+99
+00:07:47,360 --> 00:07:48,860
+ And I have these examples here,
+
+100
+00:07:50,540 --> 00:07:53,420
+ again it should really mirror your intuition
+
+101
+00:07:53,420 --> 00:07:56,600
+ from the physical world, right?
+
+102
+00:07:56,600 --> 00:07:58,200
+ So if I'm at the grocery store,
+
+103
+00:07:58,200 --> 00:08:00,660
+ let's say the grocery store has like 100 apples,
+
+104
+00:08:00,660 --> 00:08:03,980
+ if they sell me one apple, then they only have 99 left.
+
+105
+00:08:03,980 --> 00:08:07,320
+ They can't go make like 200 apples, 300 apples, right?
+
+106
+00:08:07,319 --> 00:08:13,079
+ can't um i mean yeah they can't just magically make apples they have a certain number and if they
+
+107
+00:08:13,719 --> 00:08:19,159
+ give some away then that's that now in our money protocol you can imagine it's a similar thing
+
+108
+00:08:19,159 --> 00:08:24,279
+ where you know if i only have 100 coins in the protocol and i send you five i only have 95 left
+
+109
+00:08:25,240 --> 00:08:31,560
+ when we say double spend we kind of mean this thing where out of my 100 if i send you five
+
+110
+00:08:31,560 --> 00:08:35,720
+ I should definitely have 95. I can't send you five, you know, like I can't send
+
+111
+00:08:36,279 --> 00:08:40,759
+ more than two people 50 coins each, right? Because I would just not have that many points.
+
+112
+00:08:41,879 --> 00:08:44,600
+ And the important word here is that you're trusting the operator, right?
+
+113
+00:08:45,159 --> 00:08:51,559
+ And historically, we've never been able to like trust an operator to like uphold this sort of
+
+114
+00:08:51,559 --> 00:08:56,039
+ protocol. And in particular it's like double spin property. So there's like a number of ways this
+
+115
+00:08:56,039 --> 00:09:01,480
+ can happen. One of them is just like a bug in the software that's implementing our money protocol.
+
+116
+00:09:01,559 --> 00:09:07,099
+ And, you know, what it's going to look like is the server like accidentally makes extra
+
+117
+00:09:07,099 --> 00:09:08,159
+ coins, right?
+
+118
+00:09:08,159 --> 00:09:12,139
+ So let's say they commit to only being like 1000 coins.
+
+119
+00:09:12,139 --> 00:09:17,019
+ And you know, there's some bug and suddenly there's like 1001 coins, right?
+
+120
+00:09:17,019 --> 00:09:21,559
+ For us using this protocol, that's like not quite fair.
+
+121
+00:09:21,559 --> 00:09:25,839
+ We want there to only be the number that they claim.
+
+122
+00:09:25,839 --> 00:09:30,699
+ And it's, you know, again, a bug if somehow there's more.
+
+123
+00:09:30,700 --> 00:09:37,300
+ The fact that there's a single operator, central server that's coordinating all this, it's
+
+124
+00:09:37,300 --> 00:09:41,280
+ also an issue on the security front, because it could simply be an active attack.
+
+125
+00:09:41,280 --> 00:09:46,940
+ So maybe there is a bug, maybe the operator themselves is not in a position to exploit
+
+126
+00:09:46,940 --> 00:09:50,040
+ the bug, for example, because they don't want to.
+
+127
+00:09:50,040 --> 00:09:53,700
+ They want people to believe that their money protocol is good.
+
+128
+00:09:53,700 --> 00:09:57,460
+ But an attacker could compromise the server and then trigger the bug in their own way
+
+129
+00:09:57,460 --> 00:10:00,800
+ way, and make these extra coins for themselves.
+
+130
+00:10:00,800 --> 00:10:04,500
+ And if we've all believed that these coins are useful for some reason, this is directly
+
+131
+00:10:04,500 --> 00:10:08,800
+ profitable for the attacker, so they're incentivized to do it.
+
+132
+00:10:08,800 --> 00:10:12,000
+ You could even have another scenario where the operator themselves is just simply not
+
+133
+00:10:12,000 --> 00:10:13,000
+ honest, right?
+
+134
+00:10:13,000 --> 00:10:18,980
+ So if I control this money protocol, and people like the money protocol, maybe I'm just making
+
+135
+00:10:18,980 --> 00:10:24,780
+ a few extra coins on the side, because again, it's profitable for me to do so.
+
+136
+00:10:24,779 --> 00:10:29,019
+ particular like this is the key point here is that if you ever make one of these protocols
+
+137
+00:10:29,019 --> 00:10:33,659
+ where someone is incentivized to um you know if there's a way for them to profit from this
+
+138
+00:10:33,659 --> 00:10:38,459
+ like basically they will just it's a matter of time um and yeah the reason we're using this in
+
+139
+00:10:38,459 --> 00:10:41,659
+ the first place is because these coins are valuable for some reason and so again it's
+
+140
+00:10:41,659 --> 00:10:45,419
+ like there's this direct financial incentive for people to actually attack this thing
+
+141
+00:10:47,100 --> 00:10:53,899
+ so okay because of all this you know we kind of get to this problem where this trusted operator's
+
+142
+00:10:53,899 --> 00:11:01,819
+ not great um so what can we do well try to get rid of it very simple solution uh as we'll see
+
+143
+00:11:01,819 --> 00:11:06,539
+ this has led to like decades of research into like how to actually do this uh it's actually
+
+144
+00:11:06,539 --> 00:11:16,220
+ quite tricky so let me just check the chat to see okay i guess everyone's still following so okay
+
+145
+00:11:16,220 --> 00:11:27,639
+ A key point here is that, to the extent that you can make a credible protocol that everyone
+
+146
+00:11:27,639 --> 00:11:30,440
+ can trust, the more useful it will be.
+
+147
+00:11:30,440 --> 00:11:41,180
+ I'm speaking very broadly or abstractly, because it's a key point to get across that if you
+
+148
+00:11:41,179 --> 00:11:47,819
+ want to make something that's maximally useful, it needs to be minimally trusted.
+
+149
+00:11:49,659 --> 00:11:54,859
+ Let's say we have two operators and one of them is pretty good but sometimes has issues.
+
+150
+00:11:56,620 --> 00:12:00,219
+ Their money is just not as good as another operator who never has any of these bugs
+
+151
+00:12:00,219 --> 00:12:07,099
+ I listed above. So to the extent that we can drive towards this trust minimized setting,
+
+152
+00:12:07,100 --> 00:12:15,279
+ the more useful our abstraction of this digital scarcity will be, and the better this will be in terms of creating value for people.
+
+153
+00:12:15,980 --> 00:12:22,779
+ And we should care about this because, you know, there's so much value we see in the world by having structures to handle physical scarcity
+
+154
+00:12:22,779 --> 00:12:26,320
+ that you would expect we could do a similar thing for digital scarcity, right?
+
+155
+00:12:27,060 --> 00:12:32,720
+ And as you've seen with the growth of Bitcoin, Ethereum, and everything else, right, a lot of people care.
+
+156
+00:12:32,720 --> 00:12:37,680
+ There's a lot of value that will come out of this. There could be applications we haven't thought of
+
+157
+00:12:37,680 --> 00:12:46,800
+ yet that would do it more. So it's a very worthy goal. So let's try to think about how would we
+
+158
+00:12:46,800 --> 00:12:53,440
+ remove this strong man protocol with this single trusted operator. It turns out it's pretty hard.
+
+159
+00:12:54,560 --> 00:13:01,120
+ So again, sort of the obvious thing is you're like, hey, I have this thing. There's one single
+
+160
+00:13:01,120 --> 00:13:08,639
+ party, that is a point of failure. Obviously, it's a very direct thing to say, get rid of the single
+
+161
+00:13:08,639 --> 00:13:14,320
+ leader here, the single operator. The way you would think about doing this, rather than having
+
+162
+00:13:14,320 --> 00:13:19,039
+ one node in the system that controls everything, you distribute the protocol across all the nodes.
+
+163
+00:13:20,639 --> 00:13:24,320
+ Luckily, there's a very rich academic literature on distributed computation,
+
+164
+00:13:24,320 --> 00:13:28,560
+ and maybe from there we can learn some things about how to do this
+
+165
+00:13:28,560 --> 00:13:31,140
+ for the context we care about.
+
+166
+00:13:32,340 --> 00:13:34,720
+ And generally how people have thought about this is
+
+167
+00:13:34,720 --> 00:13:37,320
+ rather than just have one node in the system,
+
+168
+00:13:37,800 --> 00:13:40,300
+ you now have end nodes, which all compute the same thing.
+
+169
+00:13:41,340 --> 00:13:44,560
+ So if you think about it, if we have this money protocol,
+
+170
+00:13:45,020 --> 00:13:46,000
+ what are we actually doing?
+
+171
+00:13:46,000 --> 00:13:48,400
+ People can mince money in the protocol.
+
+172
+00:13:49,480 --> 00:13:51,480
+ Let's say I want to buy 100 coins.
+
+173
+00:13:52,320 --> 00:13:54,240
+ Then also you can transfer things in the protocol.
+
+174
+00:13:54,320 --> 00:13:57,160
+ Let's say I want to send five coins from me to you.
+
+175
+00:13:57,160 --> 00:13:58,840
+ Okay?
+
+176
+00:13:58,840 --> 00:14:03,840
+ From there, you can think about this as all of the,
+
+177
+00:14:04,340 --> 00:14:07,080
+ like the way that we're gonna structure this now
+
+178
+00:14:07,080 --> 00:14:09,960
+ so that we can have everyone sort of join the system,
+
+179
+00:14:09,960 --> 00:14:12,320
+ these end nodes I'm talking about join the system
+
+180
+00:14:12,320 --> 00:14:14,900
+ and work together, you structure them in a way
+
+181
+00:14:14,900 --> 00:14:17,200
+ that they compute the same thing
+
+182
+00:14:17,200 --> 00:14:18,400
+ given all these inputs, right?
+
+183
+00:14:18,400 --> 00:14:20,540
+ So we assume that everyone has all the same inputs
+
+184
+00:14:20,540 --> 00:14:23,080
+ to the protocol, which if you think about it,
+
+185
+00:14:23,080 --> 00:14:28,000
+ it's just a record of all the transactions. Like when we mint coins, you could also imagine like
+
+186
+00:14:28,000 --> 00:14:32,420
+ burning coins or something to withdraw. But either way, there's ways to like get in and out of the
+
+187
+00:14:32,420 --> 00:14:36,860
+ system. And there's ways to like transfer these coins within the system, right? And if you take
+
+188
+00:14:36,860 --> 00:14:41,340
+ the entire list of the entire history of this whole sort of economy we're building, you can
+
+189
+00:14:41,340 --> 00:14:46,500
+ imagine if you just like sort of sum these inputs in the same way, you'll get a single output,
+
+190
+00:14:46,759 --> 00:14:50,500
+ right? In this case, a single output would just be our current ledger of everyone's balance.
+
+191
+00:14:50,500 --> 00:14:59,279
+ So at any point in time, we can ask the end nodes, like, hey, you know, what are everyone's balances in the system, right?
+
+192
+00:14:59,279 --> 00:15:03,200
+ If I started with 100 coins, I spent five to you.
+
+193
+00:15:03,559 --> 00:15:06,179
+ Now suddenly it says I have 95 and you have five points.
+
+194
+00:15:07,080 --> 00:15:11,440
+ And if you think about it, you could do this for, you know, any sequence of transactions we make.
+
+195
+00:15:12,399 --> 00:15:15,840
+ At any point in time, you can look at the sort of summary, which is this output.
+
+196
+00:15:15,840 --> 00:15:20,920
+ it. So going back to this, like academic literature and all the work that's been put into this, you
+
+197
+00:15:20,920 --> 00:15:25,300
+ know, over the past couple of decades, this concept is called state machine replication.
+
+198
+00:15:26,420 --> 00:15:30,940
+ The replication here is referring to the fact that, you know, we have multiple nodes in the
+
+199
+00:15:30,940 --> 00:15:36,080
+ system. They essentially all duplicate, you know, the same work, this like input log to get the
+
+200
+00:15:36,080 --> 00:15:41,540
+ same output. And in particular, this is what we mean by consensus is that every node in the system
+
+201
+00:15:41,539 --> 00:15:43,759
+ should eventually agree on the outputs.
+
+202
+00:15:44,699 --> 00:15:47,379
+ So again, you write your program, your protocol
+
+203
+00:15:47,379 --> 00:15:49,519
+ as this like deterministic function of the inputs.
+
+204
+00:15:49,919 --> 00:15:52,719
+ You imagine then that if you have an honest node,
+
+205
+00:15:52,799 --> 00:15:55,099
+ they're going to run the same function on the same inputs.
+
+206
+00:15:55,279 --> 00:15:56,879
+ They have to get the same output, right?
+
+207
+00:15:56,919 --> 00:15:59,199
+ Like assuming there are no bugs or anything in the protocol
+
+208
+00:15:59,199 --> 00:16:02,099
+ for the same set of inputs, you get the same output.
+
+209
+00:16:03,959 --> 00:16:06,519
+ This is useful to get rid of our single trusted operator
+
+210
+00:16:06,519 --> 00:16:08,399
+ because as the number of nodes increases,
+
+211
+00:16:08,579 --> 00:16:10,019
+ the system becomes harder to attack.
+
+212
+00:16:10,019 --> 00:16:18,579
+ Rather than exploiting a bug, say, on one node and taking down the whole system, you now have to say maybe attack two or three or maybe all of them.
+
+213
+00:16:18,579 --> 00:16:32,579
+ There's this notion of a majority in the system, and this is really what I mean when we say consensus, is that at any point in time, there should be some majority of nodes that all have the same view or the same output, the same state.
+
+214
+00:16:32,580 --> 00:16:41,759
+ So when they do this, then even if some of the nodes are faulty, you still have a majority of them saying, like, this is the state of the world, right?
+
+215
+00:16:41,860 --> 00:16:48,560
+ And so this is the idea is that it becomes much harder now to attack our system as we have more nodes who are doing the same thing.
+
+216
+00:16:53,740 --> 00:16:54,139
+ Okay.
+
+217
+00:16:54,480 --> 00:16:55,240
+ Very little chat.
+
+218
+00:16:56,259 --> 00:16:57,879
+ I'll assume everyone's following along.
+
+219
+00:16:59,960 --> 00:17:01,220
+ Let's see here.
+
+220
+00:17:01,580 --> 00:17:02,180
+ One second.
+
+221
+00:17:02,580 --> 00:17:13,840
+ Yeah, just to be clear, Alex, that a lot of the chat is happening in Discord, so there's not much YouTube chatter or chat in this particular platform.
+
+222
+00:17:14,240 --> 00:17:19,640
+ So Mario and I will chime in if there are any important questions or comments to be said since you're not looking at it.
+
+223
+00:17:19,640 --> 00:17:20,620
+ Okay, great. Thank you.
+
+224
+00:17:20,880 --> 00:17:25,759
+ Yeah, I can also try to find the Discord, but that might be a side quest for me.
+
+225
+00:17:25,880 --> 00:17:28,559
+ So anyway, yeah, just let me know if there's something I should address.
+
+226
+00:17:28,559 --> 00:17:33,359
+ And okay, let's jump back in.
+
+227
+00:17:33,359 --> 00:17:39,119
+ So the point here is that we want to increase the number of nodes in the system.
+
+228
+00:17:39,119 --> 00:17:45,679
+ And if all of our software is cracked and our variants hold, then it becomes much harder to
+
+229
+00:17:45,679 --> 00:17:52,960
+ attack. So this notion that I'm circling around in the literature around consensus, this is referred
+
+230
+00:17:52,960 --> 00:17:55,759
+ referred to as Byzantine fault tolerance.
+
+231
+00:17:55,759 --> 00:18:01,519
+ So the logic goes, okay, if more nodes in the system means it's more secure, then we
+
+232
+00:18:01,519 --> 00:18:04,100
+ want a very high number of nodes.
+
+233
+00:18:04,100 --> 00:18:07,279
+ I'm calling it in here, it's a very high number.
+
+234
+00:18:07,279 --> 00:18:11,259
+ And you can imagine the limit, this is like every node on the Internet, right?
+
+235
+00:18:11,259 --> 00:18:16,519
+ Like your refrigerator could participate, your computers at home, all the computers
+
+236
+00:18:16,519 --> 00:18:21,039
+ in these data centers, I don't know, your car driving down the highway, you can imagine
+
+237
+00:18:21,039 --> 00:18:23,639
+ everything connected to the internet can like participate in this protocol.
+
+238
+00:18:24,519 --> 00:18:27,559
+ And then you have an incredibly high number of nodes it becomes
+
+239
+00:18:27,559 --> 00:18:29,019
+ incredibly hard to attack the system.
+
+240
+00:18:30,339 --> 00:18:34,180
+ So the thing is, is though, as you move to this setting on the public internet,
+
+241
+00:18:35,159 --> 00:18:38,259
+ the internet is this like, again, permissionless open system, people
+
+242
+00:18:38,259 --> 00:18:43,700
+ can join and leave and, and doing so things can start going awry.
+
+243
+00:18:44,720 --> 00:18:48,720
+ So to give some examples, you know, let's say we have like 20 nodes on the internet.
+
+244
+00:18:48,720 --> 00:18:54,779
+ the internet is a faulty system. And so, for example, some nodes could simply miss messages
+
+245
+00:18:54,779 --> 00:19:02,819
+ from other nodes. If I go to my local node at home and I send it, hey, transfer some coins
+
+246
+00:19:02,819 --> 00:19:09,600
+ from me to you, it could just be the case that for no reason other than chaos on the internet,
+
+247
+00:19:09,839 --> 00:19:14,100
+ my transaction doesn't end up getting to enough nodes to be part of the consensus.
+
+248
+00:19:14,099 --> 00:19:17,339
+ There could be bugs implementation.
+
+249
+00:19:17,339 --> 00:19:18,879
+ So you can imagine that, you know,
+
+250
+00:19:18,879 --> 00:19:20,099
+ we have all these nodes out there
+
+251
+00:19:20,099 --> 00:19:21,659
+ and they have like different implementations
+
+252
+00:19:21,659 --> 00:19:23,099
+ in the same software.
+
+253
+00:19:23,099 --> 00:19:25,719
+ And again, as long as there's a correct implementation,
+
+254
+00:19:25,719 --> 00:19:28,980
+ right, they'll compute the same output, everything's good,
+
+255
+00:19:28,980 --> 00:19:30,139
+ but there could be a bug.
+
+256
+00:19:30,139 --> 00:19:32,839
+ And so maybe some nodes kind of fall off the network
+
+257
+00:19:32,839 --> 00:19:34,199
+ or see a different view.
+
+258
+00:19:35,240 --> 00:19:36,659
+ There can also be hardware failures.
+
+259
+00:19:36,659 --> 00:19:39,059
+ So this is kind of similar to like a failure
+
+260
+00:19:39,059 --> 00:19:40,619
+ just in like the transport of the internet,
+
+261
+00:19:40,619 --> 00:19:47,079
+ you could imagine, you know, I'm running the money protocol on my toaster and my toaster goes down
+
+262
+00:19:47,079 --> 00:19:50,619
+ because I'm like making toasts and it doesn't have enough resources to also process the
+
+263
+00:19:50,619 --> 00:19:56,699
+ transactions, right? And so for maybe some short period of time, this node would go off offline.
+
+264
+00:19:57,719 --> 00:20:01,559
+ Or there could be an active attack. Again, going back to the previous thing where, you know,
+
+265
+00:20:01,679 --> 00:20:06,279
+ if this is a useful or valuable protocol, people then are directly incentivized to like try and
+
+266
+00:20:06,279 --> 00:20:11,279
+ break it. So someone could be actually actively attacking some subset of nodes in the network.
+
+267
+00:20:12,799 --> 00:20:17,319
+ And all of these types of things, we want to call this Byzantine fault. And again,
+
+268
+00:20:17,339 --> 00:20:21,460
+ this is coming out of the academic literature, but the idea is that if we have one of these
+
+269
+00:20:21,460 --> 00:20:26,039
+ consistent protocols running, we want to make sure that it's tolerant to any arbitrary failure
+
+270
+00:20:26,039 --> 00:20:30,559
+ that could happen, right? So again, there could be a bug, a node could be acting incorrectly or
+
+271
+00:20:30,559 --> 00:20:35,819
+ dishonestly, whatever happens, we want to be sure that, you know, at least on some time scale,
+
+272
+00:20:35,819 --> 00:20:41,259
+ eventually you get to the place where a majority of nodes have the same view.
+
+273
+00:20:42,139 --> 00:20:45,819
+ If not, then there's a consensus failure and yeah, our protocol's broken.
+
+274
+00:20:46,939 --> 00:20:52,700
+ So yeah, if you want to really dig into this go look up Byzantine fault tolerance. Again,
+
+275
+00:20:52,700 --> 00:20:56,460
+ there's like a lot of literature out there about this, even, you know, pre-crypto,
+
+276
+00:20:57,179 --> 00:21:01,980
+ but the idea is that basically, okay, we assume some nodes are actually just faulty in this way.
+
+277
+00:21:01,980 --> 00:21:07,980
+ some fraction f are faulty we still want to make a consensus vertical such that we can agree on the
+
+278
+00:21:07,980 --> 00:21:15,500
+ outputs uh even in the presence of this faulty fraction and again there's there's a lot we can
+
+279
+00:21:15,500 --> 00:21:22,299
+ go into here um we'll kind of focus on ethereum so i'll just briefly touch on these but at a high
+
+280
+00:21:22,299 --> 00:21:28,299
+ level um the general way to think about this is what they call two-phase commit so what this means
+
+281
+00:21:28,299 --> 00:21:36,599
+ is that assume we have our end nodes in the network, and then basically, you know, one or
+
+282
+00:21:36,599 --> 00:21:41,480
+ some number of the nodes says, hey, I think the next state of our protocol is, you know, x, I
+
+283
+00:21:41,480 --> 00:21:46,299
+ don't know, some random state, say, incorporating our, you know, the most recent transfers in the
+
+284
+00:21:46,299 --> 00:21:52,259
+ system, those most recent transfers would then take the balance at time t to a different set
+
+285
+00:21:52,259 --> 00:21:57,720
+ of balances at time t plus one. And the way this two-phase commit works, there's again two phases,
+
+286
+00:21:58,299 --> 00:22:03,399
+ The first phase is, you know, let's say there's some node in the system that says, hey, I think the next day is this.
+
+287
+00:22:03,700 --> 00:22:08,119
+ They kind of send the state to everyone, meaning all the other nodes in the network.
+
+288
+00:22:08,119 --> 00:22:10,579
+ All the other nodes then have to acknowledge that.
+
+289
+00:22:10,899 --> 00:22:23,359
+ And then once you've seen a Byzantine fault tolerant fraction, say two thirds, you end up in this place where I know that I'm going to have a majority agree with me because they've already done so.
+
+290
+00:22:24,259 --> 00:22:25,019
+ So that's phase one.
+
+291
+00:22:25,019 --> 00:22:30,259
+ And then phase two then is saying, basically, I just accept that this is the new state of the protocol.
+
+292
+00:22:31,079 --> 00:22:43,480
+ And the way this works is that, again, assuming that I've reached my fault tolerant threshold, say, you know, two thirds, then there's no way that like there could be another majority view anywhere else in the system.
+
+293
+00:22:45,539 --> 00:22:49,839
+ And again, there are many examples of this that people have actually built out.
+
+294
+00:22:49,839 --> 00:22:54,000
+ This is a problem people had long even before crypto, just as we tried to scale the internet
+
+295
+00:22:54,000 --> 00:22:58,399
+ doing this exact same thing, you'd have many nodes out there and you wanted them to be tolerant
+
+296
+00:22:58,399 --> 00:23:04,639
+ these types of failures. In particular culminating in PBFT, this stands for practical Byzantine fault
+
+297
+00:23:04,639 --> 00:23:11,599
+ tolerance. And it's a protocol that basically lets you do this. The issue though is that
+
+298
+00:23:11,599 --> 00:23:19,439
+ with PBFT and many of these more classical BFT protocols, they kind of were limited in node count
+
+299
+00:23:19,440 --> 00:23:23,759
+ In particular, you get this quadratic message passing a PBFT, in part because it's a two-phase
+
+300
+00:23:23,759 --> 00:23:30,400
+ commit. What we mean here is that if there's say, like, you know, ten nodes in the network,
+
+301
+00:23:30,400 --> 00:23:35,519
+ they have to exchange say, 100 messages to actually agree that this is the state and that
+
+302
+00:23:35,519 --> 00:23:40,960
+ also everyone else sees this as the same state. What this means is that these systems are kind
+
+303
+00:23:40,960 --> 00:23:46,640
+ of limited in how many nodes you can have. The point I was trying to get across a second ago is,
+
+304
+00:23:46,640 --> 00:23:52,160
+ especially for these things like you know making uh these systems that represent digital scarcity
+
+305
+00:23:52,160 --> 00:23:56,880
+ in like a very secure way you actually want the node count to go much higher than what we could
+
+306
+00:23:56,880 --> 00:24:03,440
+ practically get with these types of protocols and again if you want to dig more into this uh this
+
+307
+00:24:03,440 --> 00:24:08,160
+ general problem is the byzantine generals problem where they're trying to get are they're trying to
+
+308
+00:24:08,160 --> 00:24:12,160
+ like solve this right we want to be able to come to consensus with like a very high number of nodes
+
+309
+00:24:12,160 --> 00:24:15,360
+ even in the presence of some malicious or some Byzantine fraction.
+
+310
+00:24:16,320 --> 00:24:21,680
+ And for a while, this is kind of the state of the research, and that was the best we could do.
+
+311
+00:24:22,320 --> 00:24:27,600
+ People were researching this, but ultimately, yeah, we're kind of just moving along until
+
+312
+00:24:27,600 --> 00:24:35,440
+ the advent of Bitcoin. So I'll talk a bit now about, you know, we're moving into the crypto
+
+313
+00:24:35,440 --> 00:24:46,720
+ context before we go on alex um we got a question here uh nana is asking does the uh does the pbft
+
+314
+00:24:46,720 --> 00:24:53,360
+ protocols have like an upper bound and if yes what is that practically speaking yeah good question
+
+315
+00:24:53,360 --> 00:24:58,240
+ so it's not that there's like a hard upper bound it's more that the more nodes you would add the
+
+316
+00:24:58,240 --> 00:25:04,799
+ more overhead and so uh for example the system would be slower right like if you have 10 nodes
+
+317
+00:25:04,799 --> 00:25:10,379
+ joining the protocol, then you can say, you know, process messages with, like, I don't know,
+
+318
+00:25:10,500 --> 00:25:15,399
+ for example, let's say, like, you know, a couple hundred milliseconds of latency. As you went to,
+
+319
+00:25:15,519 --> 00:25:19,419
+ like, 100 nodes, then you can imagine, you know, there's this, like, much bigger scaling of the
+
+320
+00:25:19,419 --> 00:25:23,099
+ overheads. And then at a certain point, you know, if it's going to take us, like, minutes to agree
+
+321
+00:25:23,099 --> 00:25:29,359
+ on the next state of our, like, all of our transactions, then the system starts to become
+
+322
+00:25:29,359 --> 00:25:34,519
+ less useful. And, you know, this is a problem, for example, if we want to do something, like,
+
+323
+00:25:34,519 --> 00:25:39,720
+ okay let's do like visa which is this like credit you know credit card network they process like you
+
+324
+00:25:39,720 --> 00:25:45,940
+ know i don't know thousands if not more of transactions per second um and you get to a
+
+325
+00:25:45,940 --> 00:25:50,019
+ place where if you want that same level of throughput your consensus protocol for like a
+
+326
+00:25:50,019 --> 00:25:56,019
+ high number of nodes beyond just like the few you know trusted visa servers uh it takes too long
+
+327
+00:25:56,019 --> 00:25:59,859
+ um and in general there's this like trade-off basically between like throughput and latency
+
+328
+00:25:59,859 --> 00:26:05,699
+ and you know um these consensus protocols are not magic they're bound by the laws of physics
+
+329
+00:26:05,699 --> 00:26:09,799
+ and so they you know have to follow the same same constraints right
+
+330
+00:26:09,799 --> 00:26:21,240
+ um yeah hopefully that was helpful yeah thank you so okay great so um
+
+331
+00:26:21,240 --> 00:26:28,359
+ right there was a bit of a like innovation um with bitcoin this is what everyone got very
+
+332
+00:26:28,359 --> 00:26:34,059
+ excited about originally with crypto is like, in some sense, you know, Satoshi, the creator of
+
+333
+00:26:34,059 --> 00:26:39,259
+ Bitcoin, proposes the system that, you know, in some sense solves this Byzantine generals problem.
+
+334
+00:26:40,399 --> 00:26:44,799
+ So the cool thing here is that it scales to an arbitrary node count. So like, you can kind of
+
+335
+00:26:44,799 --> 00:26:50,119
+ get past this bottleneck of having, you know, some set number of nodes agree. And in particular,
+
+336
+00:26:50,119 --> 00:26:55,179
+ right, the way the system is designed is anyone can like join or leave. And again, the system,
+
+337
+00:26:55,180 --> 00:27:01,420
+ you know, together is like very tolerant to this type of behavior. There's a consensus that we'll
+
+338
+00:27:01,420 --> 00:27:06,160
+ look at in a second that gets you to the same state. And yeah, nodes can freely come and go
+
+339
+00:27:06,160 --> 00:27:09,039
+ and you kind of get through, you know, you get around the scalability bottleneck.
+
+340
+00:27:10,259 --> 00:27:16,259
+ So in particular, Bitcoin has this notion of proof of work. You take this proof of work,
+
+341
+00:27:16,620 --> 00:27:21,100
+ and it also in the same, at the same time, gives you this notion of like weight to a chain or
+
+342
+00:27:21,099 --> 00:27:25,980
+ difficulty. And the consensus algorithm is pretty straightforward. You just look at the chain out
+
+343
+00:27:25,980 --> 00:27:31,240
+ there that you can observe just from the public internet, and you pick the heaviest chain or the
+
+344
+00:27:31,240 --> 00:27:36,599
+ one with the most work done. And if you do this, as long as you have the same view of the chain as
+
+345
+00:27:36,599 --> 00:27:42,000
+ everyone else, you'll eventually get to the same state of the chain. Because assuming there's an
+
+346
+00:27:42,000 --> 00:27:45,740
+ honest majority of nodes in the network, they're going to all be following the same protocol.
+
+347
+00:27:45,740 --> 00:27:51,339
+ they're going to all follow the heaviest chain. And if you do this, you end up in the same place.
+
+348
+00:27:53,180 --> 00:28:05,500
+ So, let me see what's next. Okay. Yeah. So, let me actually move now to I'm going to draw
+
+349
+00:28:05,500 --> 00:28:12,380
+ some diagrams to kind of unpack what I just said. And I'm going to need a second to get this set up.
+
+350
+00:28:15,740 --> 00:28:17,420
+ Okay, let's see.
+
+351
+00:28:21,480 --> 00:28:22,539
+ We'll do that.
+
+352
+00:28:23,019 --> 00:28:28,240
+ And then I think I'm going to have to stop this, but I'll come back here.
+
+353
+00:28:30,279 --> 00:28:32,900
+ And okay.
+
+354
+00:28:34,039 --> 00:28:35,880
+ So I believe you can see this.
+
+355
+00:28:36,440 --> 00:28:39,140
+ So, okay, what do we mean here?
+
+356
+00:28:39,279 --> 00:28:42,980
+ So the way to think about this is that we start from some initial state.
+
+357
+00:28:42,980 --> 00:28:45,000
+ This is like the Genesis block in Bitcoin.
+
+358
+00:28:45,000 --> 00:28:48,940
+ it doesn't really matter what it is, but you know,
+
+359
+00:28:48,940 --> 00:28:51,200
+ we have our little block here,
+
+360
+00:28:51,200 --> 00:28:53,460
+ I'll put a G on it for Genesis.
+
+361
+00:28:53,460 --> 00:28:57,619
+ And the idea now is that anyone who wants to join the system,
+
+362
+00:28:57,619 --> 00:28:59,619
+ they come and they can add a block, right?
+
+363
+00:28:59,619 --> 00:29:01,640
+ So let's say then we have like a bunch of transactions
+
+364
+00:29:01,640 --> 00:29:04,920
+ out here, I'll just do some like little dots.
+
+365
+00:29:04,920 --> 00:29:06,859
+ And these are the transactions that are saying, you know,
+
+366
+00:29:06,859 --> 00:29:08,920
+ I'm gonna send one Bitcoin from me to you,
+
+367
+00:29:08,920 --> 00:29:10,759
+ we'll send like half a Bitcoin over here,
+
+368
+00:29:10,759 --> 00:29:11,759
+ whatever they do, right?
+
+369
+00:29:11,759 --> 00:29:14,420
+ These like, just transfers in the system.
+
+370
+00:29:15,000 --> 00:29:21,579
+ The way that this works is that if I want to propose a block, and again, anyone can do this.
+
+371
+00:29:21,980 --> 00:29:23,640
+ We'll see kind of how this works in a second.
+
+372
+00:29:23,799 --> 00:29:27,859
+ But basically, I like bundle all of these up and then I make a block.
+
+373
+00:29:28,299 --> 00:29:29,539
+ So there's a block here.
+
+374
+00:29:30,700 --> 00:29:33,400
+ I'll go ahead and delete these because we move them somewhere else.
+
+375
+00:29:34,880 --> 00:29:37,420
+ And yeah, there's like a couple of things going on here.
+
+376
+00:29:37,420 --> 00:29:43,099
+ So the key thing to realize here in Bitcoin is that there's this like proof of work notion.
+
+377
+00:29:43,099 --> 00:29:51,179
+ Proof-of-work is it's like, again, yeah, this notion that basically when I see this message,
+
+378
+00:29:51,179 --> 00:29:55,419
+ there's some cryptography involved such that I know a certain amount of work or computational
+
+379
+00:29:55,419 --> 00:30:01,259
+ power was dedicated to this block. One way to kind of think about it is you're sealing the block,
+
+380
+00:30:01,259 --> 00:30:06,299
+ you're adding this special thing that can prove to anyone no matter what it took a certain amount
+
+381
+00:30:06,299 --> 00:30:11,899
+ of work to produce. And the way this works is basically there's this notion of cryptographic
+
+382
+00:30:11,900 --> 00:30:17,980
+ cache where you know i give it some data i get back this like unique sort of like digest um
+
+383
+00:30:18,540 --> 00:30:23,580
+ and yeah basically the only way to get this digest because these hashes are like somewhat random
+
+384
+00:30:23,580 --> 00:30:27,340
+ the only way to get this is like i must have just computed the hash there's like no way around that
+
+385
+00:30:28,700 --> 00:30:31,820
+ so the first thing you do well i mean there's a couple things you do but
+
+386
+00:30:32,620 --> 00:30:37,019
+ um you know imagine now we have our block and then we have like all our transactions in here
+
+387
+00:30:37,019 --> 00:30:44,220
+ okay um you know so one cool thing is that this block is going to reference the hash
+
+388
+00:30:44,220 --> 00:30:50,379
+ of the previous block and this is like this arrow here it's like this pointer um you do this just so
+
+389
+00:30:50,379 --> 00:30:55,019
+ you can actually establish a history because you know if i just had some block over here
+
+390
+00:30:55,019 --> 00:31:00,779
+ that's just like floating off in space you know i need to know like the context of how these
+
+391
+00:31:00,779 --> 00:31:06,859
+ transactions should be sequenced because ultimately you know um maybe we'll think about it this way
+
+392
+00:31:06,859 --> 00:31:10,619
+ you want there to be like a unique sequence so imagine this you know i'm drawing transactions
+
+393
+00:31:10,619 --> 00:31:17,179
+ here and you know this is like you know plus five bitcoin to like some other account a
+
+394
+00:31:17,179 --> 00:31:24,379
+ you know plus 0.5 of some account b whatever they are um there should be a unique sequence
+
+395
+00:31:24,379 --> 00:31:28,619
+ and this is why we need consensus to get this unique sequence and then anyone can just basically
+
+396
+00:31:28,619 --> 00:31:33,579
+ replay them all and you end up at the end with the same state you know account a has whatever
+
+397
+00:31:33,579 --> 00:31:40,460
+ account b has whatever account c has whatever you know i don't know uh three bitcoin two bitcoin you
+
+398
+00:31:40,460 --> 00:31:47,259
+ know 24 bitcoin whatever it ends up being so the way we do this is again we need this like unique
+
+399
+00:31:47,259 --> 00:31:52,220
+ sequence that we're going to kind of represent or like serialize with these blocks and so you need
+
+400
+00:31:52,220 --> 00:31:57,899
+ this notion of like parent block so the way you do this is basically you have like a hash of this
+
+401
+00:31:57,900 --> 00:32:03,900
+ thing, I'll say h of g, you actually just write h of g in this block, and this basically says,
+
+402
+00:32:03,900 --> 00:32:09,019
+ okay, I know that this is, here, maybe I'll, well, let's try this.
+
+403
+00:32:15,820 --> 00:32:21,740
+ Hash of g. Either way. Hopefully this is clear. Sorry it's a little cramped. But basically you
+
+404
+00:32:21,740 --> 00:32:25,820
+ have the hash of this previous block and this one, and again, the way these cryptographic hash
+
+405
+00:32:25,819 --> 00:32:30,619
+ functions work is that there's no way for me to know this hash of the previous block unless I
+
+406
+00:32:30,619 --> 00:32:36,859
+ have the previous block. So you have that it has all the transactions in here and then also now
+
+407
+00:32:36,859 --> 00:32:41,099
+ there's this proof of work which you know the way we can think about it is it's just like this like
+
+408
+00:32:41,099 --> 00:32:46,939
+ seal of approval put a little check mark that says I did some amount of computation to actually make
+
+409
+00:32:46,939 --> 00:32:55,099
+ this block. Okay there's a couple things going on here so the first thing we get is that um
+
+410
+00:32:55,819 --> 00:32:59,339
+ This proof of work is this rate limiter thing or this notion of civil protection.
+
+411
+00:33:00,059 --> 00:33:05,019
+ So this is a big thing in, again, these open permissionless systems that anyone can join.
+
+412
+00:33:05,019 --> 00:33:09,740
+ You need to have some way to limit how many blocks can be made at a given time.
+
+413
+00:33:09,740 --> 00:33:14,220
+ Otherwise, you get, you know, there's now like 10 trillion blocks waiting out here
+
+414
+00:33:14,220 --> 00:33:18,859
+ and it's a mess. My toaster's going offline because it can't even handle this many blocks
+
+415
+00:33:18,859 --> 00:33:24,700
+ and we have a big problem. So the first thing that all these different proof of work or proof
+
+416
+00:33:24,700 --> 00:33:28,460
+ mistake which we'll get to in a second the way these protocols work is they have some notion
+
+417
+00:33:28,460 --> 00:33:34,380
+ of like the civil resistance meaning that you know on a reasonable amount of time only sort of one
+
+418
+00:33:34,380 --> 00:33:40,059
+ person let's say or like a few people can can make one of these updates or new blocks at a given time
+
+419
+00:33:42,299 --> 00:33:47,819
+ so let's clean this up a little bit um the other thing now is that and this is like you know one
+
+420
+00:33:47,819 --> 00:33:52,700
+ of the insights of bitcoin is that not only do we get this simple protection with this proof
+
+421
+00:33:52,700 --> 00:34:01,019
+ for work, it can be used for consensus. The way this would work now, let me zoom out a little bit
+
+422
+00:34:01,819 --> 00:34:08,860
+ if I can figure this out. So, yeah, let me actually just clean this up a little bit.
+
+423
+00:34:09,500 --> 00:34:13,260
+ So, the way this would work is that, you know, now let's say there's, like,
+
+424
+00:34:13,260 --> 00:34:20,780
+ a few blocks in the chain. Okay, cool. And okay. I'll just draw a few more for fun.
+
+425
+00:34:20,780 --> 00:34:23,000
+ So we have these blocks in the chain.
+
+426
+00:34:23,000 --> 00:34:27,100
+ And again, the way this would work is that you, you know, maybe start from your Genesis
+
+427
+00:34:27,100 --> 00:34:31,600
+ state, which could be like, no one has any coins and you can now just replay all the
+
+428
+00:34:31,600 --> 00:34:35,000
+ transactions, just going block by block and sequence.
+
+429
+00:34:35,000 --> 00:34:41,720
+ And again, it's the state machine replication idea where if I have the same inputs, we all
+
+430
+00:34:41,720 --> 00:34:44,980
+ have a, you know, correct implementation of our money protocol.
+
+431
+00:34:44,980 --> 00:34:48,680
+ We all end up with the same outputs, which in this case, for example, would be, you know,
+
+432
+00:34:48,680 --> 00:34:50,200
+ our ledger at some point in time.
+
+433
+00:34:50,780 --> 00:34:54,019
+ So we do this and write.
+
+434
+00:34:54,840 --> 00:34:57,380
+ The other thing here now is that with this proof of work,
+
+435
+00:34:57,380 --> 00:34:59,000
+ this is notion of difficulty,
+
+436
+00:34:59,000 --> 00:35:02,320
+ which we don't really need to get super into the weeds
+
+437
+00:35:02,320 --> 00:35:04,519
+ about this works, but ultimately,
+
+438
+00:35:04,519 --> 00:35:05,980
+ there's a notion of difficulty,
+
+439
+00:35:05,980 --> 00:35:09,460
+ which is how much work a particular proof work represents.
+
+440
+00:35:09,460 --> 00:35:11,240
+ A way to think about it is it's just a number.
+
+441
+00:35:11,240 --> 00:35:15,040
+ So we could say, okay, this is like first block in the chain
+
+442
+00:35:15,040 --> 00:35:17,380
+ here, maybe had difficulty like 15,
+
+443
+00:35:17,380 --> 00:35:19,440
+ and these are like arbitrary numbers.
+
+444
+00:35:19,440 --> 00:35:23,400
+ All you really need is that they are, you know, numbers that increase.
+
+445
+00:35:24,440 --> 00:35:27,280
+ So, you know, let's say there's difficulty 15 here.
+
+446
+00:35:27,360 --> 00:35:29,940
+ The next block has even like difficulty one.
+
+447
+00:35:29,940 --> 00:35:34,280
+ So that will be interesting in a second because it's not strictly increasing, but it's just more.
+
+448
+00:35:35,340 --> 00:35:39,380
+ And then, you know, I don't know, let's say there's like 2000 work on this last block.
+
+449
+00:35:40,019 --> 00:35:42,360
+ So now this algorithm is like pretty simple.
+
+450
+00:35:42,360 --> 00:35:49,920
+ and again this was like part of well it's a whole conversation about bitcoin and simplicity but
+
+451
+00:35:49,920 --> 00:35:56,900
+ ultimately um the way to think about this is that this is very simple uh to do and this was like a
+
+452
+00:35:56,900 --> 00:36:02,340
+ you know something that's very attractive about epic about bitcoin at least is that the way i
+
+453
+00:36:02,340 --> 00:36:08,640
+ find the head of the chain meaning like the the most recent block is i just sum these up and i
+
+454
+00:36:08,639 --> 00:36:10,199
+ take the one with the most work.
+
+455
+00:36:10,199 --> 00:36:11,940
+ And this is what I meant by heaviest a second ago.
+
+456
+00:36:12,480 --> 00:36:15,599
+ So here we would say that we have, I don't know, I guess it should be better
+
+457
+00:36:15,599 --> 00:36:18,000
+ numbers, but that would be what 16 and 2000.
+
+458
+00:36:18,400 --> 00:36:24,019
+ So, you know, total work here, total difficulty, uh, it would be, you know, 2016.
+
+459
+00:36:25,400 --> 00:36:25,799
+ Okay.
+
+460
+00:36:26,519 --> 00:36:28,579
+ Uh, there's no fork in this chain.
+
+461
+00:36:28,639 --> 00:36:30,400
+ So this is actually it's trivial.
+
+462
+00:36:30,400 --> 00:36:31,940
+ You wouldn't need to actually even look at this.
+
+463
+00:36:31,980 --> 00:36:34,599
+ You would just go to the most recent block and say, that's that the chain.
+
+464
+00:36:34,960 --> 00:36:35,279
+ Okay.
+
+465
+00:36:35,280 --> 00:36:42,560
+ Let's look at another example now where it's a little more complicated.
+
+466
+00:36:42,560 --> 00:36:44,340
+ And let's say we have this.
+
+467
+00:36:44,340 --> 00:36:45,480
+ And then okay.
+
+468
+00:36:45,480 --> 00:36:48,960
+ So again, the way to think about this is like anyone can come and propose a block really
+
+469
+00:36:48,960 --> 00:36:49,960
+ at any time.
+
+470
+00:36:49,960 --> 00:36:54,840
+ So let's say that we are, you know, over here somewhere at this state of the chain, maybe
+
+471
+00:36:54,840 --> 00:36:56,760
+ back at the first block.
+
+472
+00:36:56,760 --> 00:37:00,780
+ And then now someone else is going to come along and they're going to make another block.
+
+473
+00:37:00,780 --> 00:37:04,400
+ And let's say, yeah, we'll do it this way.
+
+474
+00:37:04,400 --> 00:37:07,139
+ So let's say someone makes a competing block,
+
+475
+00:37:07,139 --> 00:37:11,160
+ kind of around the same time as our second block here,
+
+476
+00:37:11,160 --> 00:37:14,220
+ but their block has a difficulty,
+
+477
+00:37:16,099 --> 00:37:17,400
+ I don't know, we'll say 10.
+
+478
+00:37:19,000 --> 00:37:20,900
+ The details actually get a little more complicated,
+
+479
+00:37:20,900 --> 00:37:24,019
+ but this should give you some intuition for how this works.
+
+480
+00:37:24,019 --> 00:37:26,000
+ Let's say this has difficulty 10,
+
+481
+00:37:26,000 --> 00:37:29,440
+ and then someone else comes along and makes another block
+
+482
+00:37:29,440 --> 00:37:34,260
+ that has difficulty, like, yeah, I don't know, 3000.
+
+483
+00:37:34,260 --> 00:37:38,480
+ So I missed the block, sorry.
+
+484
+00:37:44,560 --> 00:37:47,800
+ So we have this like very heavy block over here.
+
+485
+00:37:47,800 --> 00:37:51,720
+ So now the way to think about this is
+
+486
+00:37:52,720 --> 00:37:54,460
+ we now have all these blocks floating around.
+
+487
+00:37:54,460 --> 00:37:56,460
+ Like let's say again, we have our toaster
+
+488
+00:37:56,460 --> 00:38:00,620
+ running on this network and it's seen this set of blocks.
+
+489
+00:38:00,620 --> 00:38:03,260
+ We need to pick one unique head of the chain.
+
+490
+00:38:03,260 --> 00:38:05,200
+ Now, because, you know, a block can only commit
+
+491
+00:38:05,200 --> 00:38:08,380
+ to one parent, you know, you have this sequence
+
+492
+00:38:08,380 --> 00:38:10,160
+ where you could basically have,
+
+493
+00:38:10,160 --> 00:38:11,860
+ let's see if I can do this.
+
+494
+00:38:11,860 --> 00:38:15,020
+ There's a chain here, right?
+
+495
+00:38:15,020 --> 00:38:18,100
+ There's also a chain here.
+
+496
+00:38:20,160 --> 00:38:21,940
+ And this is just following these parent linkages.
+
+497
+00:38:21,940 --> 00:38:25,120
+ So you start, I maybe say, you know, this leaf,
+
+498
+00:38:25,120 --> 00:38:30,120
+ which would be, how do I get back to the other color?
+
+499
+00:38:31,120 --> 00:38:32,460
+ Okay, this is fun.
+
+500
+00:38:33,260 --> 00:38:41,740
+ um i guess i'll do this so you know we start say from like this block uh and this block and then
+
+501
+00:38:41,740 --> 00:38:45,820
+ the way this would work is there's now sort of these competing heads of the chain and we still
+
+502
+00:38:45,820 --> 00:38:51,660
+ want to get back to this like single you know single sequence so we need to apply this algorithm
+
+503
+00:38:51,660 --> 00:38:56,780
+ now to get to one head of the chain right which is picking basically this block or this block
+
+504
+00:38:56,780 --> 00:39:02,740
+ And in Bitcoin, we follow this difficulty number, we sum them up, and basically we say,
+
+505
+00:39:02,740 --> 00:39:09,700
+ okay, looking at the top chain it has difficulty 2016, looking at the bottom chain, we get,
+
+506
+00:39:09,700 --> 00:39:18,500
+ you know, what is that? 3,025, right? So yeah. So the intuition here is that basically we saw
+
+507
+00:39:18,500 --> 00:39:22,019
+ this bottom chain, well, we saw both chains, and we need to pick one, and we just simply
+
+508
+00:39:22,019 --> 00:39:24,579
+ to pick the one with more work done.
+
+509
+00:39:24,579 --> 00:39:28,199
+ So in that case, what we would say is that,
+
+510
+00:39:28,199 --> 00:39:30,880
+ let me maybe make this green,
+
+511
+00:39:30,880 --> 00:39:34,780
+ that this is the current head of the chain, right?
+
+512
+00:39:34,780 --> 00:39:37,360
+ And in particular, that means that all of this other,
+
+513
+00:39:37,360 --> 00:39:40,639
+ like this competing fork of the chain, this one,
+
+514
+00:39:40,639 --> 00:39:43,539
+ let me use this color.
+
+515
+00:39:43,539 --> 00:39:45,800
+ So this chain here, the red chain,
+
+516
+00:39:46,679 --> 00:39:49,019
+ basically we just ignore it, right?
+
+517
+00:39:49,019 --> 00:39:52,900
+ And this is cool now because yeah,
+
+518
+00:39:52,900 --> 00:39:55,699
+ anyone can come and join the system as they please.
+
+519
+00:39:55,699 --> 00:39:57,579
+ If I maybe missed this history,
+
+520
+00:39:57,579 --> 00:39:58,780
+ but I'm coming online now,
+
+521
+00:39:58,780 --> 00:40:00,860
+ I just downloaded the same set of blocks
+
+522
+00:40:00,860 --> 00:40:03,539
+ and independent of anyone else,
+
+523
+00:40:03,539 --> 00:40:05,519
+ I can just follow this difficulty,
+
+524
+00:40:05,519 --> 00:40:08,679
+ which is again, just a consequence of this hash function.
+
+525
+00:40:08,679 --> 00:40:13,400
+ And yeah, it's clear to me what that the chain is.
+
+526
+00:40:13,400 --> 00:40:15,239
+ If I wanna go make another block,
+
+527
+00:40:15,239 --> 00:40:18,639
+ then I know that the way I do that
+
+528
+00:40:18,639 --> 00:40:21,139
+ it's just make one here that has parent here
+
+529
+00:40:21,139 --> 00:40:22,879
+ and the system keeps going, right?
+
+530
+00:40:24,599 --> 00:40:25,440
+ Okay.
+
+531
+00:40:27,239 --> 00:40:31,019
+ Let's see, I'm gonna switch back to the slides now.
+
+532
+00:40:31,019 --> 00:40:32,460
+ Hopefully that made sense.
+
+533
+00:40:33,699 --> 00:40:36,139
+ I know that, yeah, there's,
+
+534
+00:40:37,299 --> 00:40:40,159
+ oh, I'll just, hopefully, I hope that it makes sense.
+
+535
+00:40:44,239 --> 00:40:46,139
+ Let me go back here.
+
+536
+00:40:46,139 --> 00:40:47,259
+ So great.
+
+537
+00:40:48,639 --> 00:40:57,199
+ So, yeah, I was trying to get across this notion that there's this proof-of-work thing.
+
+538
+00:40:57,199 --> 00:41:03,019
+ Hopefully my diagram made it a bit clear that anyone can download these messages from the
+
+539
+00:41:03,019 --> 00:41:09,219
+ Internet and there's a way to find a unique chain, even in the presence of competing chains.
+
+540
+00:41:09,219 --> 00:41:15,799
+ Now, just to use some of these words that we were using a minute ago, right?
+
+541
+00:41:15,800 --> 00:41:18,920
+ So this is like structured as a state machine replication.
+
+542
+00:41:19,840 --> 00:41:22,000
+ The inputs to the system are these transactions.
+
+543
+00:41:22,000 --> 00:41:26,220
+ So they're just Bitcoin transactions organized into blocks that, you know, spend Bitcoin
+
+544
+00:41:26,220 --> 00:41:26,860
+ here and there.
+
+545
+00:41:27,400 --> 00:41:32,120
+ And the output, again, is just like replaying all these transactions in a unique chain,
+
+546
+00:41:32,220 --> 00:41:33,760
+ you get back a unique state of the ledger.
+
+547
+00:41:35,800 --> 00:41:40,240
+ There's some things you can do here around using cryptography to like reduce the possible,
+
+548
+00:41:40,620 --> 00:41:42,240
+ you know, I'm calling it the state space.
+
+549
+00:41:42,239 --> 00:41:48,219
+ But, like, in particular, if I just make a transaction, I probably want to, like, have it be signed.
+
+550
+00:41:48,379 --> 00:41:49,659
+ So you know it's uniquely for me.
+
+551
+00:41:49,759 --> 00:41:53,339
+ It's, like, authorized for me to actually move the coins and not just have them out there.
+
+552
+00:41:54,619 --> 00:41:57,139
+ I mentioned this thing about the parent hash, right?
+
+553
+00:41:57,199 --> 00:42:01,719
+ Because otherwise you could imagine kind of like when I was drawing the, like, sea of blocks off to the side.
+
+554
+00:42:03,939 --> 00:42:08,019
+ It greatly reduces, like, how complex this, like, this protocol can be.
+
+555
+00:42:08,199 --> 00:42:09,919
+ This, like, algorithm you have to compute.
+
+556
+00:42:09,920 --> 00:42:14,000
+ if you can restrict how many options you can have, right?
+
+557
+00:42:14,820 --> 00:42:16,740
+ And again, cryptography here is very useful for this.
+
+558
+00:42:17,200 --> 00:42:19,019
+ In particular, you don't have to trust
+
+559
+00:42:19,019 --> 00:42:21,180
+ some other third party to tell you these things
+
+560
+00:42:21,180 --> 00:42:23,119
+ because you can just run the cryptography locally
+
+561
+00:42:23,119 --> 00:42:25,420
+ and get to the same facts yourself.
+
+562
+00:42:25,820 --> 00:42:27,539
+ So again, we're reducing trust in the system.
+
+563
+00:42:28,960 --> 00:42:30,220
+ Then you use proof-of-work
+
+564
+00:42:30,220 --> 00:42:31,700
+ to implement the consensus here.
+
+565
+00:42:32,340 --> 00:42:34,119
+ And again, there's this notion of civil protection
+
+566
+00:42:34,119 --> 00:42:36,519
+ where you just have to do some amount of work
+
+567
+00:42:36,519 --> 00:42:38,420
+ before the blocks even consider valid.
+
+568
+00:42:38,420 --> 00:42:43,700
+ And then in the same breath, you know, this is kind of a cool thing about Bitcoin is that it
+
+569
+00:42:43,700 --> 00:42:47,920
+ leverages this in multiple ways, but not only do you get similar protection, but you also can use
+
+570
+00:42:47,920 --> 00:42:54,740
+ this notion of difficulty to implement your consensus, right? And to give you one unique
+
+571
+00:42:54,740 --> 00:43:02,800
+ chain. There's another cool bit with like these cryptocurrencies that they also, you know,
+
+572
+00:43:03,059 --> 00:43:06,900
+ have this like native currency they can issue, right? So you just make up this money protocol.
+
+573
+00:43:06,900 --> 00:43:12,000
+ you can actually then also hand out money as rewards to incentivize people to actually,
+
+574
+00:43:12,180 --> 00:43:16,079
+ you know, extend the state of the chain. Because again, remember, we're now in the setting where
+
+575
+00:43:16,079 --> 00:43:21,400
+ it's a permissionless open system. Anyone can come and join without some incentive to actually,
+
+576
+00:43:21,440 --> 00:43:26,500
+ like, add another block to the chain. You might imagine that no one cares, right? And so then
+
+577
+00:43:26,500 --> 00:43:34,579
+ it's just like the protocol stops. Right. So then you have these rewards and, you know,
+
+578
+00:43:34,579 --> 00:43:40,019
+ it it seems to work like bitcoin's still running uh people care about it and yeah that's pretty cool
+
+579
+00:43:42,659 --> 00:43:49,059
+ okay so hopefully this gives you some notion of what we mean when we talk about consensus
+
+580
+00:43:49,059 --> 00:43:55,380
+ in these distributed protocols um that was bitcoin just because it's usually like a pretty
+
+581
+00:43:55,380 --> 00:44:01,139
+ straightforward simple way to think about this stuff and now we'll turn to ethereum so
+
+582
+00:44:01,139 --> 00:44:11,960
+ So in general, so yeah, it, yeah, there's a lot to say here, but basically Ethereum
+
+583
+00:44:11,960 --> 00:44:17,319
+ today is in this proof of stake consensus that I'll explain it more in a second.
+
+584
+00:44:17,319 --> 00:44:19,699
+ Previously we had a proof work consensus mechanism.
+
+585
+00:44:19,699 --> 00:44:23,559
+ There's this event called the merge that basically swapped us from work to prove it's tech.
+
+586
+00:44:23,559 --> 00:44:26,219
+ And I'll talk about that more in a second.
+
+587
+00:44:26,219 --> 00:44:33,379
+ But ultimately, yeah, we now have this consensus layer of Ethereum that uses this proof-of-stake
+
+588
+00:44:33,379 --> 00:44:34,980
+ protocol.
+
+589
+00:44:34,980 --> 00:44:37,980
+ So let's look at that.
+
+590
+00:44:37,980 --> 00:44:42,099
+ Generally, moving from proof-of-work to proof-of-stake, the idea is rather than use this what I'm
+
+591
+00:44:42,099 --> 00:44:47,219
+ calling an exogenous signal for the protection of consensus, namely this work you put in
+
+592
+00:44:47,219 --> 00:44:51,879
+ to compute this right block hash to signal this is a valid block and it can go into the
+
+593
+00:44:51,879 --> 00:44:55,739
+ chain, we're going to use an endogenous signal.
+
+594
+00:44:55,739 --> 00:44:58,019
+ And here I mean, with respect to the protocol, right?
+
+595
+00:44:58,019 --> 00:45:01,279
+ So the protocol itself can see now
+
+596
+00:45:01,279 --> 00:45:02,899
+ because we have this notion of stake.
+
+597
+00:45:02,899 --> 00:45:06,639
+ So the idea is you have some coins, in this case, Ether,
+
+598
+00:45:07,079 --> 00:45:09,179
+ you lock up Ether as sort of like, you know,
+
+599
+00:45:09,239 --> 00:45:11,419
+ this like risk capital or the stake in the system.
+
+600
+00:45:12,619 --> 00:45:16,079
+ And this is compared to say like work in Bitcoin
+
+601
+00:45:16,079 --> 00:45:18,799
+ where the work is like this thing that's just happening.
+
+602
+00:45:19,019 --> 00:45:20,699
+ Like the Bitcoin protocol itself
+
+603
+00:45:20,699 --> 00:45:24,119
+ has no way to understand what work was done.
+
+604
+00:45:24,119 --> 00:45:30,099
+ Like you can't, yeah, it's like it's not it's this thing that comes from outside the system.
+
+605
+00:45:30,440 --> 00:45:31,619
+ So hopefully this point's clear.
+
+606
+00:45:33,420 --> 00:45:44,319
+ It turns out that doing this is really useful because now that you have a protocol representation of this thing we're going to use for consensus, the stake, you can do a lot more with it.
+
+607
+00:45:45,880 --> 00:45:48,400
+ So that's kind of the second point around incentive concerns.
+
+608
+00:45:48,559 --> 00:45:51,039
+ But I'll just briefly touch on the first point, which is energy usage.
+
+609
+00:45:51,039 --> 00:46:00,380
+ So, you know, people were and still are very concerned that the way this proof of work works is there's now almost this race to like toss as much work as you can into the system.
+
+610
+00:46:00,800 --> 00:46:07,400
+ This is good for the security system because the more work, the harder it is to make a competing block and sort of reorg the system to like some other history.
+
+611
+00:46:08,119 --> 00:46:11,779
+ But then at the same time, you have people just like dumping energy into the system.
+
+612
+00:46:12,440 --> 00:46:17,320
+ And, you know, especially if you don't think Bitcoin is useful or valuable, then it seems like it's wasted in some sense.
+
+613
+00:46:17,320 --> 00:46:24,039
+ So there was this push and still is this push to think about, you know, more energy efficient ways we can design the systems.
+
+614
+00:46:24,300 --> 00:46:26,480
+ And that was a lot of the motivation for moving to proof of stake.
+
+615
+00:46:27,900 --> 00:46:33,960
+ So at the same time, there is also incentive concerns around proof of work itself.
+
+616
+00:46:34,519 --> 00:46:40,160
+ And again, this kind of gets to the fact that there's no way like you can you can get rewards for work.
+
+617
+00:46:40,200 --> 00:46:43,260
+ You can like invite people to do this work to like add blocks to Bitcoin.
+
+618
+00:46:43,260 --> 00:46:48,900
+ But there's no way to like then turn around and punish them or like take away these rewards if they don't do what you want.
+
+619
+00:46:49,100 --> 00:46:54,260
+ So you kind of almost have like half of, you know, the way to think about it is like carrot and stick.
+
+620
+00:46:54,600 --> 00:46:57,640
+ There's like a stick or rather, sorry, there's a carrot, right?
+
+621
+00:46:57,660 --> 00:47:00,940
+ So you can hand out these carrots with Bitcoin, which are more Bitcoin.
+
+622
+00:47:02,060 --> 00:47:10,720
+ But there's no stick to say, okay, if you do something bad, if you try to actively reorg the chain or just something like this, you know, I'm going to like swat you with the stick.
+
+623
+00:47:10,719 --> 00:47:16,539
+ and uh proof of stake because you then have the actual consensus like resource within the
+
+624
+00:47:16,539 --> 00:47:21,019
+ protocol itself it actually gives you a lot more flexibility around implementing this like stick
+
+625
+00:47:21,019 --> 00:47:25,000
+ right in particular what we mean is you can actually hand out penalties for bad behavior
+
+626
+00:47:25,000 --> 00:47:29,879
+ not just rewards this reduces the tax surface and generally makes the system more secure
+
+627
+00:47:29,879 --> 00:47:40,239
+ and yeah okay so we'll dig into proof of stake ethereum so you know at a very high level it
+
+628
+00:47:40,239 --> 00:47:43,399
+ it looks a lot more like these traditional BFT protocols.
+
+629
+00:47:43,399 --> 00:47:46,079
+ And again, I'll try to throw up some diagrams
+
+630
+00:47:46,079 --> 00:47:47,919
+ to make that more clear.
+
+631
+00:47:47,919 --> 00:47:49,539
+ There's an initiative validator.
+
+632
+00:47:49,539 --> 00:47:52,279
+ So, the system is still permissionless
+
+633
+00:47:52,279 --> 00:47:54,279
+ to the extent that anyone can join,
+
+634
+00:47:54,279 --> 00:47:55,739
+ but they do have to put up the stake,
+
+635
+00:47:55,739 --> 00:47:58,059
+ which today is like 32 ETH.
+
+636
+00:47:58,059 --> 00:47:59,899
+ And the way this is gonna work
+
+637
+00:47:59,899 --> 00:48:02,479
+ is that you essentially run something like two-phase commit
+
+638
+00:48:02,479 --> 00:48:04,679
+ like I was talking about a second ago.
+
+639
+00:48:04,679 --> 00:48:06,439
+ And once you have it BFT majority,
+
+640
+00:48:06,439 --> 00:48:08,719
+ so once say two thirds of the chain has signed off
+
+641
+00:48:08,719 --> 00:48:11,239
+ on some unique state of the chain,
+
+642
+00:48:11,239 --> 00:48:14,359
+ there's no way to sign off,
+
+643
+00:48:14,359 --> 00:48:16,119
+ have the majority sign off on another chain
+
+644
+00:48:16,119 --> 00:48:18,480
+ without there being what we call equivocation
+
+645
+00:48:18,480 --> 00:48:21,179
+ or again, some conflict.
+
+646
+00:48:21,179 --> 00:48:22,819
+ And because there's this resource
+
+647
+00:48:22,819 --> 00:48:25,079
+ within the protocol of the stake,
+
+648
+00:48:25,079 --> 00:48:27,019
+ if we do observe one of these equivocations
+
+649
+00:48:27,019 --> 00:48:28,899
+ or one of these faults or conflicts,
+
+650
+00:48:28,899 --> 00:48:31,939
+ we can actually delete stake of the actors
+
+651
+00:48:31,939 --> 00:48:34,939
+ who messed up, so to speak, right?
+
+652
+00:48:34,939 --> 00:48:38,299
+ So, every action is essentially signed.
+
+653
+00:48:38,300 --> 00:48:40,680
+ And so you can actually have the protocol itself
+
+654
+00:48:40,680 --> 00:48:42,340
+ ingest these messages and you can say,
+
+655
+00:48:42,340 --> 00:48:45,460
+ hey, you know, a majority of the evaluators
+
+656
+00:48:45,460 --> 00:48:46,700
+ said this was the chain,
+
+657
+00:48:46,700 --> 00:48:48,720
+ sometime later they wanted to reorg
+
+658
+00:48:48,720 --> 00:48:50,380
+ to a different state of the chain,
+
+659
+00:48:50,380 --> 00:48:51,780
+ but this is actually in conflict.
+
+660
+00:48:51,780 --> 00:48:53,860
+ And so when they do this, you can then say,
+
+661
+00:48:53,860 --> 00:48:56,580
+ hey, this is bad, I'm gonna ignore this other state,
+
+662
+00:48:56,580 --> 00:48:59,940
+ and moreover, I'm going to punish you somehow.
+
+663
+00:48:59,940 --> 00:49:01,840
+ This is what we mean when we talk about slashing
+
+664
+00:49:01,840 --> 00:49:03,120
+ is that basically we can start
+
+665
+00:49:03,120 --> 00:49:05,019
+ to then even just delete the stake
+
+666
+00:49:05,019 --> 00:49:06,780
+ when we observe one of these faults.
+
+667
+00:49:06,780 --> 00:49:11,100
+ So ultimately, especially compared to these work chains,
+
+668
+00:49:11,100 --> 00:49:14,180
+ it's less resource-intensive, more secure.
+
+669
+00:49:14,180 --> 00:49:19,060
+ Sounds pretty cool. So yeah,
+
+670
+00:49:19,060 --> 00:49:21,000
+ I'm going to switch back to
+
+671
+00:49:21,000 --> 00:49:24,280
+ my little whiteboard over here and try to go
+
+672
+00:49:24,280 --> 00:49:27,080
+ through some of the details of the Proof-Stake protocol.
+
+673
+00:49:27,080 --> 00:49:32,019
+ This is probably a good time for questions if anyone has them.
+
+674
+00:49:33,220 --> 00:49:36,560
+ There are a couple of questions here.
+
+675
+00:49:36,559 --> 00:49:44,900
+ Okay. Um, one question about is that there's a significance in the, uh, 32 ETH denomination
+
+676
+00:49:44,900 --> 00:49:53,759
+ for staking. Sure. Yeah. So there is, um, and it gets back again to the same bottleneck we
+
+677
+00:49:53,759 --> 00:49:59,119
+ were talking about a second ago, where there's this trade-off between how much throughput or
+
+678
+00:49:59,119 --> 00:50:02,860
+ like how, how much your system can process over a given time and how long it takes.
+
+679
+00:50:02,860 --> 00:50:18,079
+ And the idea of the 32 ETH is that it's like striking some spot in this trade-off between there being too many validators, meaning too much overhead, meaning it takes too long to actually like come to consensus, versus there being too few and the system not being as secure.
+
+680
+00:50:18,079 --> 00:50:22,239
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+681
+00:50:22,239 --> 00:50:25,360
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+682
+00:50:25,360 --> 00:50:28,480
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+683
+00:50:28,480 --> 00:50:29,840
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+684
+00:50:29,840 --> 00:50:31,759
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+685
+00:50:31,759 --> 00:50:33,039
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+686
+00:50:33,039 --> 00:50:34,960
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+687
+00:50:34,960 --> 00:50:36,880
+ it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much it's pretty much
+
+688
+00:50:36,880 --> 00:50:40,740
+ less signatures, which is this cryptographic construct that lets you actually aggregate
+
+689
+00:50:40,740 --> 00:50:41,740
+ messages.
+
+690
+00:50:41,740 --> 00:50:45,519
+ So rather than have to process say like a hundred messages, you can aggregate them into
+
+691
+00:50:45,519 --> 00:50:49,820
+ one and you know, from the same amount of work, you can basically do one processing
+
+692
+00:50:49,820 --> 00:50:52,180
+ that would say it for a hundred, right.
+
+693
+00:50:52,180 --> 00:50:55,059
+ And because of this, we could actually scale the system.
+
+694
+00:50:55,059 --> 00:51:00,460
+ And you know, what this meant then concretely is that, rather than have, you know, fewer
+
+695
+00:51:00,460 --> 00:51:03,880
+ validators or something for the same data accounts, we could actually lower the stake
+
+696
+00:51:03,880 --> 00:51:04,880
+ required.
+
+697
+00:51:04,880 --> 00:51:06,240
+ So that's why you have the 32.
+
+698
+00:51:08,119 --> 00:51:09,160
+ Cool, thank you.
+
+699
+00:51:10,420 --> 00:51:12,160
+ One other question.
+
+700
+00:51:13,260 --> 00:51:15,700
+ Is there an upper limit to the number of validators
+
+701
+00:51:15,700 --> 00:51:16,539
+ in proof of stake?
+
+702
+00:51:21,680 --> 00:51:22,440
+ Theoretically, no.
+
+703
+00:51:22,640 --> 00:51:24,400
+ But again, you'll hit practicalities
+
+704
+00:51:24,400 --> 00:51:26,640
+ of these being systems out in the real world.
+
+705
+00:51:26,940 --> 00:51:29,820
+ So we have just under a million validators
+
+706
+00:51:29,820 --> 00:51:30,840
+ on main net right now.
+
+707
+00:51:31,840 --> 00:51:33,539
+ The core devs very much are concerned
+
+708
+00:51:33,539 --> 00:51:38,900
+ about getting you know even like two million right like there's been it's sort of there's been like
+
+709
+00:51:38,900 --> 00:51:43,300
+ many many optimizations we've had to put into the protocol uh especially like the implementation to
+
+710
+00:51:43,300 --> 00:51:51,059
+ even get to this amount um we have our hlshq test net that's just over 1.5 million and it works but
+
+711
+00:51:51,059 --> 00:51:55,779
+ you know we definitely do like sort of these like more ephemeral test nets uh these like dev nets
+
+712
+00:51:55,779 --> 00:52:01,539
+ to actually see how high we can go and basically yeah the number um you know i don't think we can
+
+713
+00:52:01,539 --> 00:52:06,019
+ comfortably go much past that. So, you know, at the very end, if we have time, I'll touch
+
+714
+00:52:06,019 --> 00:52:10,500
+ on some future directions of things we're thinking about today. And one of them is very much figuring
+
+715
+00:52:10,500 --> 00:52:14,179
+ out actually how to reduce the value of your account for this reason.
+
+716
+00:52:17,500 --> 00:52:20,500
+ Great. Mario, any other questions you want to surface?
+
+717
+00:52:22,420 --> 00:52:24,099
+ I think it's good for now.
+
+718
+00:52:24,099 --> 00:52:29,099
+ So go ahead.
+
+719
+00:52:29,759 --> 00:52:30,739
+ Okay, great.
+
+720
+00:52:32,139 --> 00:52:33,440
+ Let's see.
+
+721
+00:52:33,440 --> 00:52:37,259
+ And it has the little emoji reacts.
+
+722
+00:52:37,259 --> 00:52:39,860
+ Let's see, let me just double check.
+
+723
+00:52:39,860 --> 00:52:44,400
+ I think time-wise, we're okay, like 30 minutes.
+
+724
+00:52:44,400 --> 00:52:48,000
+ Okay, let's see here.
+
+725
+00:52:48,000 --> 00:52:52,380
+ Okay, let me switch back to my whiteboard.
+
+726
+00:52:54,099 --> 00:52:59,099
+ And, okay, we should be good with this.
+
+727
+00:53:14,739 --> 00:53:17,900
+ So, okay, this was my previous scribbling
+
+728
+00:53:17,900 --> 00:53:19,299
+ around Bitcoin consensus.
+
+729
+00:53:19,299 --> 00:53:21,619
+ So we're now going to look at,
+
+730
+00:53:21,619 --> 00:53:24,019
+ yeah, let me just get a new page.
+
+731
+00:53:24,099 --> 00:53:28,259
+ I could just do this.
+
+732
+00:53:28,259 --> 00:53:31,259
+ Apparently I can't.
+
+733
+00:53:31,259 --> 00:53:32,659
+ This is great.
+
+734
+00:53:32,659 --> 00:53:33,659
+ Okay.
+
+735
+00:53:33,659 --> 00:53:35,440
+ Yeah, we'll do it like this.
+
+736
+00:53:35,440 --> 00:53:36,699
+ So, okay.
+
+737
+00:53:36,699 --> 00:53:37,699
+ Sorry.
+
+738
+00:53:37,699 --> 00:53:41,719
+ So, yeah.
+
+739
+00:53:41,719 --> 00:53:49,159
+ Let's look at Ethereum proof of stake.
+
+740
+00:53:49,159 --> 00:53:58,460
+ So, yeah, let me think about where I want to begin.
+
+741
+00:53:58,460 --> 00:54:00,500
+ I guess it's just like to set the stage.
+
+742
+00:54:00,500 --> 00:54:09,039
+ Within Ethereum, we have these end protocol consensus actors, the validators.
+
+743
+00:54:09,039 --> 00:54:13,119
+ And yeah, the validators do quite a bit.
+
+744
+00:54:13,119 --> 00:54:17,639
+ And this is maybe a little confusing because you don't it is actually something I think
+
+745
+00:54:17,639 --> 00:54:25,379
+ people have a misconception about around Ethereum generally is that you don't need to lock up 32Eth
+
+746
+00:54:25,379 --> 00:54:30,940
+ to be a validator to validate the protocol. Anyone can join the protocol. I can go run a
+
+747
+00:54:30,940 --> 00:54:36,000
+ flow node right now that doesn't... I'm not a consensus actor in the protocol, but I'm still
+
+748
+00:54:36,000 --> 00:54:40,500
+ running, I'm still validating all the blocks I see, running the consensus that the validators
+
+749
+00:54:40,500 --> 00:54:47,559
+ provide, and I get to the same state. And this is actually important because the validators
+
+750
+00:54:47,559 --> 00:54:48,699
+ are honestly trusted, right?
+
+751
+00:54:48,699 --> 00:54:49,500
+ They have this penalty,
+
+752
+00:54:49,840 --> 00:54:50,440
+ like they have this,
+
+753
+00:54:50,500 --> 00:54:51,440
+ we have this way to penalize them
+
+754
+00:54:51,440 --> 00:54:52,000
+ in the protocol.
+
+755
+00:54:53,099 --> 00:54:55,599
+ But as I'll probably get to later,
+
+756
+00:54:56,119 --> 00:54:57,559
+ you can get to a place where
+
+757
+00:54:57,559 --> 00:54:59,380
+ even if the, you know,
+
+758
+00:54:59,440 --> 00:55:01,039
+ consensus is like correct,
+
+759
+00:55:01,599 --> 00:55:03,500
+ the consensus could be on like a chain
+
+760
+00:55:03,500 --> 00:55:04,960
+ that doesn't implement
+
+761
+00:55:04,960 --> 00:55:05,940
+ something we agreed to.
+
+762
+00:55:06,159 --> 00:55:08,659
+ Like if there is a malicious majority,
+
+763
+00:55:08,779 --> 00:55:09,840
+ even of the validator set,
+
+764
+00:55:09,980 --> 00:55:11,599
+ they could decide to say,
+
+765
+00:55:11,759 --> 00:55:12,820
+ hey, the actual consensus
+
+766
+00:55:12,820 --> 00:55:14,440
+ was over this like block
+
+767
+00:55:14,440 --> 00:55:15,259
+ where, you know,
+
+768
+00:55:15,659 --> 00:55:16,820
+ we printed a million ETH
+
+769
+00:55:16,820 --> 00:55:17,480
+ to all the validators.
+
+770
+00:55:17,559 --> 00:55:21,039
+ This would be like a strong violation of like the protocol, right?
+
+771
+00:55:21,059 --> 00:55:23,139
+ Because again, we have a notion of what Ethereum should do.
+
+772
+00:55:23,259 --> 00:55:26,799
+ There's like this Ether asset and, you know, everything on top in the ABM.
+
+773
+00:55:27,639 --> 00:55:29,900
+ And, you know, it should still follow the rules.
+
+774
+00:55:30,059 --> 00:55:33,980
+ Like the validators should have no special role in here other than provide this like
+
+775
+00:55:33,980 --> 00:55:34,719
+ consensus function.
+
+776
+00:55:35,320 --> 00:55:39,000
+ And we still want to hold them accountable and keep them in check.
+
+777
+00:55:39,119 --> 00:55:41,960
+ And the way that we do this is like we run the nodes ourselves, right?
+
+778
+00:55:42,000 --> 00:55:47,059
+ So going back to Bitcoin for a second, you know, everyone running Bitcoin,
+
+779
+00:55:47,059 --> 00:55:49,179
+ even if you're not adding blocks to the chain,
+
+780
+00:55:49,559 --> 00:55:50,719
+ you know, acting as this miner,
+
+781
+00:55:50,840 --> 00:55:52,400
+ you're still checking the protocol,
+
+782
+00:55:52,599 --> 00:55:53,980
+ again, to keep the miners accountable.
+
+783
+00:55:54,739 --> 00:55:56,779
+ Same thing here where, you know,
+
+784
+00:55:56,799 --> 00:55:58,440
+ you still want to validate the protocol,
+
+785
+00:55:58,719 --> 00:56:01,519
+ even if you're not one of these consensus validators.
+
+786
+00:56:03,039 --> 00:56:04,019
+ So hopefully that's clear.
+
+787
+00:56:05,619 --> 00:56:07,360
+ So the way this works is you have validators.
+
+788
+00:56:08,360 --> 00:56:10,400
+ Today, if you want to like join the system,
+
+789
+00:56:10,599 --> 00:56:12,559
+ you know, you like find your 32 ETH,
+
+790
+00:56:13,500 --> 00:56:15,119
+ which these days is a lot of money,
+
+791
+00:56:15,119 --> 00:56:23,219
+ but you have the 32 ETH, you send it to the special place in the EVM. And, you know,
+
+792
+00:56:23,239 --> 00:56:28,039
+ I'll kind of assume you guys generally understand how this works, at least in broad strokes,
+
+793
+00:56:28,119 --> 00:56:33,859
+ because of yesterday, or sorry, the last talk, looking at an execution layer. But only you send
+
+794
+00:56:33,859 --> 00:56:43,000
+ your 32 ETH to this deposit contract. And there's a way then, okay, actually, I'll draw that out.
+
+795
+00:56:43,000 --> 00:56:50,280
+ Let me finish this contract. This is now a really important thing to understand
+
+796
+00:56:50,920 --> 00:56:58,519
+ is that there's a consensus layer, CL, and an execution layer. Basically, now there's two
+
+797
+00:56:58,519 --> 00:57:04,280
+ almost different parts of the protocol that work together. Before the merge, these things were
+
+798
+00:57:04,280 --> 00:57:11,800
+ kind of like uh you know they kind of were like one one unit and the part this was because the
+
+799
+00:57:11,800 --> 00:57:16,040
+ the consensus protocol was pretty work it was like relatively simple compared to like proof
+
+800
+00:57:16,040 --> 00:57:23,240
+ of stake as you'll see there's a lot going on um and for you know complexity reasons security
+
+801
+00:57:23,240 --> 00:57:28,040
+ reasons and also historical reasons uh this new purchase dickens layer was developed kind of in
+
+802
+00:57:28,039 --> 00:57:34,360
+ parallel and so that's like why we had the merge uh was to basically um bring in this new consensus
+
+803
+00:57:34,360 --> 00:57:42,119
+ layer to to add consensus to the chain and replace the proof-of-work setting so let's see yep there
+
+804
+00:57:42,119 --> 00:57:49,079
+ we go so there's a consensus layer and one way to think about this is that there's almost like
+
+805
+00:57:49,079 --> 00:57:53,719
+ two different chains here right so there's like the consensus layer that's making consensus blocks
+
+806
+00:57:53,719 --> 00:58:01,480
+ and there's also like this execution layer that you know in some sense is also producing blocks
+
+807
+00:58:01,480 --> 00:58:07,099
+ uh the way this actually works is like you know this execution payload is inside each
+
+808
+00:58:07,099 --> 00:58:11,179
+ consensus block so it's still just like one block but you can kind of think of it as having
+
+809
+00:58:11,179 --> 00:58:16,459
+ these two layers right and within the execution layer this is where all of our you know execution
+
+810
+00:58:16,459 --> 00:58:22,359
+ state lives the evm is running this is where for example like the deposit contract lives so you
+
+811
+00:58:22,360 --> 00:58:28,039
+ say in this block you put in your 32 ETH into the deposit contract, and there's a way now that the
+
+812
+00:58:28,039 --> 00:58:32,680
+ consensus layer can basically read this execution layer, and it's just watching this deposit
+
+813
+00:58:32,680 --> 00:58:37,800
+ contract. So what this means is that, you know, when a new validator has put in 32 ETH,
+
+814
+00:58:38,680 --> 00:58:43,160
+ the CL can see this, it then basically makes an entry say in the next block to add a new
+
+815
+00:58:43,160 --> 00:58:49,880
+ validator. Okay, so there's a way for others to enter the system, there's also a way for them
+
+816
+00:58:49,880 --> 00:58:54,039
+ to exit, there's a consensus layer message that they would add. So let's say, I don't know,
+
+817
+00:58:54,039 --> 00:58:59,820
+ let's go mini in the future. There's now, I'll start drawing big blocks for like the unified
+
+818
+00:58:59,820 --> 00:59:06,300
+ thing, but ultimately, you know, you know, this validator puts it in exit, let's say,
+
+819
+00:59:06,380 --> 00:59:11,160
+ cause they want to stop validating the exits processed. And then ultimately, you know,
+
+820
+00:59:11,180 --> 00:59:16,519
+ some mini blocks later you end up with a withdrawal off to some other, you know, I don't know,
+
+821
+00:59:16,519 --> 00:59:20,759
+ some whatever so they get to pick you know their execution address to withdrawal two
+
+822
+00:59:20,759 --> 00:59:27,400
+ um but let's say you know we picked uh i'll just write some random hex here dead beef cafe is
+
+823
+00:59:27,400 --> 00:59:34,119
+ always fun and then how this work is once the validator is done validating um there's many
+
+824
+00:59:34,119 --> 00:59:38,440
+ conditions that they have to satisfy to actually exit the system but once they have then the way
+
+825
+00:59:38,440 --> 00:59:42,840
+ to think about it is you know if they have 32 eath and maybe some rewards so let's say they're up to
+
+826
+00:59:42,840 --> 00:59:47,360
+ to 34th, that's withdrawn to this execution layer address.
+
+827
+00:59:47,360 --> 00:59:49,079
+ They could turn it around and then redeposit it
+
+828
+00:59:49,079 --> 00:59:52,000
+ to the system, and however they want to do this.
+
+829
+00:59:52,000 --> 00:59:53,420
+ But basically, there's now this way
+
+830
+00:59:53,420 --> 00:59:54,539
+ to go from the execution layer
+
+831
+00:59:54,539 --> 00:59:56,720
+ into the consensus layer and back,
+
+832
+00:59:56,720 --> 00:59:58,960
+ and importantly it's permissionless.
+
+833
+00:59:58,960 --> 01:00:01,760
+ The only thing you really need to join the system
+
+834
+01:00:01,760 --> 01:00:04,059
+ is the stake, which right now is 32th.
+
+835
+01:00:05,920 --> 01:00:09,360
+ So, okay, let me,
+
+836
+01:00:09,360 --> 01:00:13,140
+ How do I want to do this?
+
+837
+01:00:13,140 --> 01:00:15,320
+ I'll just keep going.
+
+838
+01:00:15,320 --> 01:00:16,720
+ Okay.
+
+839
+01:00:16,720 --> 01:00:20,700
+ So I'm now about it in the system.
+
+840
+01:00:20,700 --> 01:00:22,160
+ Like, what am I going to do?
+
+841
+01:00:22,160 --> 01:00:28,160
+ Like the main thing I'm doing with respect to consensus is forming consensus.
+
+842
+01:00:28,160 --> 01:00:29,780
+ And so how do I do this?
+
+843
+01:00:29,780 --> 01:00:34,579
+ The way it's going to work is that as a validator, I'm going to make an attestation.
+
+844
+01:00:34,579 --> 01:00:36,440
+ And if you dig into this stuff,
+
+845
+01:00:36,440 --> 01:00:38,739
+ you'll see this word everywhere,
+
+846
+01:00:39,739 --> 01:00:41,099
+ mainly because this is the core thing
+
+847
+01:00:41,099 --> 01:00:42,799
+ that a validator is doing.
+
+848
+01:00:42,799 --> 01:00:45,920
+ And what it S-sensation means is it's basically saying,
+
+849
+01:00:45,920 --> 01:00:48,480
+ I'm just based on my local view,
+
+850
+01:00:48,480 --> 01:00:51,400
+ this is the state of the chain, right, at some time.
+
+851
+01:00:51,400 --> 01:00:56,400
+ State of chain at,
+
+852
+01:00:56,500 --> 01:00:57,460
+ there's this notion of slot,
+
+853
+01:00:57,460 --> 01:00:58,500
+ which I'll explain in a second,
+
+854
+01:00:58,500 --> 01:01:00,539
+ but let's just say it's slot S.
+
+855
+01:01:04,579 --> 01:01:21,380
+ The way this works is that every validator, say there's a million validators on MainNet, that means that over some period of time, in these rounds of the protocol, every validator will make one attestation that is basically signing over, they make a cryptographic signature over their state of the chain.
+
+856
+01:01:21,380 --> 01:01:27,180
+ And if there is only one chain or like, you know, the idea is that ultimately they should all attest to the same chain.
+
+857
+01:01:28,480 --> 01:01:31,260
+ And you can take all the attestations over some period of time.
+
+858
+01:01:31,640 --> 01:01:36,599
+ You can basically sum them all up and you end up with some notion of stake weight on some fork of the chain.
+
+859
+01:01:37,019 --> 01:01:39,900
+ So, yeah, I'll draw this out a bit more in a second.
+
+860
+01:01:40,059 --> 01:01:47,180
+ But ultimately, the idea is that, you know, if I have my blockchain here, so this is now Ethereum.
+
+861
+01:01:47,179 --> 01:01:50,919
+ Of course, everything has a parent chain or parent block.
+
+862
+01:01:51,039 --> 01:01:51,419
+ That's nice.
+
+863
+01:01:52,079 --> 01:01:54,579
+ The idea is that when I go to make a new block in the chain,
+
+864
+01:01:55,139 --> 01:01:58,839
+ every other validator is going to essentially attest, you know, to this chain.
+
+865
+01:01:58,940 --> 01:02:01,679
+ So I'll draw like many check marks because there are many attestations.
+
+866
+01:02:02,440 --> 01:02:07,059
+ And like in particular, if there was like some other block over here
+
+867
+01:02:07,059 --> 01:02:11,179
+ that claimed the same parent, this would not be a fork in the chain, right?
+
+868
+01:02:11,379 --> 01:02:14,659
+ Because these basically are saying relative to, you know,
+
+869
+01:02:14,659 --> 01:02:16,440
+ this slot or this period of time,
+
+870
+01:02:16,440 --> 01:02:21,380
+ then you know, the next block is either this one or this one.
+
+871
+01:02:21,720 --> 01:02:23,159
+ And we need to know which one, right?
+
+872
+01:02:23,179 --> 01:02:25,519
+ This is the whole point of consensus is that if our consensus protocol is
+
+873
+01:02:25,519 --> 01:02:28,720
+ working, we're going to pick just one, right? Because again,
+
+874
+01:02:28,720 --> 01:02:29,960
+ there needs to be this unique sequence.
+
+875
+01:02:31,220 --> 01:02:35,139
+ So the attestations help us here because we can basically use the
+
+876
+01:02:35,139 --> 01:02:37,659
+ attestations as a way to like weight these relative chains.
+
+877
+01:02:37,740 --> 01:02:39,659
+ So let's say there's like, you know, four attestations,
+
+878
+01:02:39,659 --> 01:02:41,079
+ these like four check marks here.
+
+879
+01:02:41,780 --> 01:02:46,039
+ And let's say this block only gets like two attestations very similar to
+
+880
+01:02:46,039 --> 01:02:51,320
+ proof of work, we're going to use the attestation, the stake for each attestation, which is my
+
+881
+01:02:51,320 --> 01:02:57,079
+ validator stake in the system, as this score, to score the block. So in this case, we'd have
+
+882
+01:02:57,079 --> 01:03:02,119
+ four votes versus two, and we would say this is the head of the chain then, so as we go to put
+
+883
+01:03:02,119 --> 01:03:06,920
+ the next block in the chain, we would vote on top of this one. I'll go into this a little bit more
+
+884
+01:03:06,920 --> 01:03:11,320
+ in-depth in a little bit, but ultimately, this is kind of the idea of what these attestations
+
+885
+01:03:11,320 --> 01:03:21,039
+ are doing. So, I use these words a lot. So, let's actually get into some of the details here.
+
+886
+01:03:21,960 --> 01:03:29,720
+ So, the way this will work is that the protocol actually has some notion of, like, you know,
+
+887
+01:03:29,780 --> 01:03:34,559
+ what we call walk clock time. And what this means is that it's, like, actually the time you would
+
+888
+01:03:34,559 --> 01:03:41,659
+ see like on a clock, right? So like, you know, if it's like, what is it like 604 UTC or something
+
+889
+01:03:41,659 --> 01:03:49,400
+ right now, then you know, that's like the time. And what we're going to do is we're going to pick
+
+890
+01:03:49,400 --> 01:03:55,559
+ some Genesis time. So I'll just say like, you know, T0 for the Genesis time. And the idea is
+
+891
+01:03:55,559 --> 01:04:00,739
+ that this was like when the consensus protocol started. And now to like actually structure
+
+892
+01:04:00,739 --> 01:04:05,699
+ things. We're going to divide our walk clock time, again, like a normal sense of time,
+
+893
+01:04:05,699 --> 01:04:11,699
+ we're going to divide it into slots. I'll write this down. That's an important concept.
+
+894
+01:04:12,819 --> 01:04:18,819
+ So, we have slots. The slots could be generally whatever time we want. Today,
+
+895
+01:04:18,819 --> 01:04:24,819
+ they're 12 seconds. Maybe we'll talk a bit about what that means. But the idea is that
+
+896
+01:04:24,820 --> 01:04:28,260
+ But every 12 seconds, there's a new slot, you know, T1.
+
+897
+01:04:29,220 --> 01:04:31,880
+ Well, I could actually even just number these,
+
+898
+01:04:32,900 --> 01:04:36,860
+ you know, slot zero, slot one, every 12 seconds, right?
+
+899
+01:04:38,260 --> 01:04:40,519
+ No matter what actually happens,
+
+900
+01:04:41,680 --> 01:04:44,059
+ this is just following the time out in the world.
+
+901
+01:04:44,059 --> 01:04:47,059
+ And so you're always gonna have a new slot every 12 seconds.
+
+902
+01:04:48,559 --> 01:04:51,519
+ Okay, so we have these slots.
+
+903
+01:04:51,519 --> 01:04:54,340
+ From here now,
+
+904
+01:04:54,820 --> 01:04:59,539
+ and there's things that happen in each slot and I'll illustrate that more in a second but basically
+
+905
+01:04:59,539 --> 01:05:05,460
+ the idea would be that for example every slot can have a block right so I can have blocks here
+
+906
+01:05:07,140 --> 01:05:12,900
+ there is like you know very importantly there's the possibility that you know whatever validator
+
+907
+01:05:12,900 --> 01:05:16,980
+ was supposed to propose in slot two they like missed their proposal for some reason and so
+
+908
+01:05:16,980 --> 01:05:22,980
+ this is actually just missed so I'll just do like a dotted sort of empty block here
+
+909
+01:05:22,980 --> 01:05:26,760
+ The next validator would propose in slot three.
+
+910
+01:05:26,760 --> 01:05:29,659
+ And again, you know, so this block would have
+
+911
+01:05:29,659 --> 01:05:32,219
+ this next parent and it would keep going.
+
+912
+01:05:33,159 --> 01:05:35,519
+ So generally we have slots.
+
+913
+01:05:36,559 --> 01:05:38,280
+ The way you should think about it is that each slot
+
+914
+01:05:38,280 --> 01:05:39,199
+ has one block.
+
+915
+01:05:39,199 --> 01:05:41,780
+ This is like the block time of Ethereum.
+
+916
+01:05:41,780 --> 01:05:44,380
+ We kind of inherited this from work where it was like
+
+917
+01:05:44,380 --> 01:05:47,320
+ targeting, maybe say like 14 seconds.
+
+918
+01:05:47,320 --> 01:05:50,300
+ So 12 seconds is just the number we settled on.
+
+919
+01:05:50,300 --> 01:05:53,600
+ And the idea is like, this is our smallest unit of time
+
+920
+01:05:53,600 --> 01:05:57,780
+ in the protocol where you should basically put a block
+
+921
+01:05:57,780 --> 01:06:01,640
+ into the chain every 12 seconds, each slot, okay.
+
+922
+01:06:03,360 --> 01:06:07,580
+ Now, what this means is that, you know, as a user,
+
+923
+01:06:07,580 --> 01:06:09,840
+ let's like, you know, go to the other end of the spectrum,
+
+924
+01:06:09,840 --> 01:06:11,320
+ back in the execution layer.
+
+925
+01:06:11,320 --> 01:06:12,280
+ When I'm a user, you know,
+
+926
+01:06:12,280 --> 01:06:16,740
+ if I make my like unit swap trade here, right?
+
+927
+01:06:16,740 --> 01:06:19,500
+ Or let's, I don't know, let's say I like broadcast it here
+
+928
+01:06:19,500 --> 01:06:24,500
+ And then what I hope, if I can preserve enough of my drawing,
+
+929
+01:06:25,559 --> 01:06:28,420
+ what I hope is that basically a validator
+
+930
+01:06:28,420 --> 01:06:31,199
+ can pick up my transaction, you know,
+
+931
+01:06:31,199 --> 01:06:34,340
+ and put it into, here I'll use a different color.
+
+932
+01:06:34,340 --> 01:06:35,960
+ Here's my Uniswap trade in blue.
+
+933
+01:06:35,960 --> 01:06:37,320
+ Hopefully they can pick up my transaction
+
+934
+01:06:37,320 --> 01:06:38,460
+ along with like many others,
+
+935
+01:06:38,460 --> 01:06:41,039
+ and they can actually put it into the block, you know,
+
+936
+01:06:41,039 --> 01:06:42,860
+ to go into slot four.
+
+937
+01:06:42,860 --> 01:06:45,000
+ And, you know, if you're like using, I don't know,
+
+938
+01:06:45,000 --> 01:06:47,239
+ MetaMask to make this Uniswap trade, you know,
+
+939
+01:06:47,239 --> 01:06:49,739
+ There's some time before it shows up on ether scan
+
+940
+01:06:49,739 --> 01:06:52,139
+ or if you even look at your local node, it's better.
+
+941
+01:06:52,139 --> 01:06:54,179
+ But ultimately, there's some time
+
+942
+01:06:54,179 --> 01:06:56,159
+ before you actually get the transaction on chain.
+
+943
+01:06:56,159 --> 01:06:58,039
+ And that's because of the slot time.
+
+944
+01:06:58,039 --> 01:07:00,439
+ You don't have a new block until somewhere
+
+945
+01:07:00,439 --> 01:07:02,139
+ between zero and 12 seconds,
+
+946
+01:07:02,139 --> 01:07:04,419
+ depending on when you actually broadcast
+
+947
+01:07:04,419 --> 01:07:05,719
+ this original transaction.
+
+948
+01:07:06,619 --> 01:07:07,459
+ Okay.
+
+949
+01:07:08,379 --> 01:07:12,179
+ So, that's kind of a feel for sort of this
+
+950
+01:07:12,179 --> 01:07:14,639
+ heartbeat of the protocol and how things might line up
+
+951
+01:07:14,639 --> 01:07:16,519
+ with you making transactions.
+
+952
+01:07:16,519 --> 01:07:17,719
+ That's the execution layer.
+
+953
+01:07:17,719 --> 01:07:19,340
+ Separately, there's a lot of machinery
+
+954
+01:07:19,340 --> 01:07:21,179
+ that consists of this layer.
+
+955
+01:07:21,179 --> 01:07:25,880
+ And in particular, so here's one thing, these attestations.
+
+956
+01:07:25,880 --> 01:07:29,119
+ The idea again is that for every slot,
+
+957
+01:07:29,119 --> 01:07:33,460
+ let me go back to my other color.
+
+958
+01:07:33,460 --> 01:07:36,179
+ So for every slot, you're gonna have some attestations.
+
+959
+01:07:36,179 --> 01:07:40,920
+ So I don't know, let's say attestation from validator 123,
+
+960
+01:07:40,920 --> 01:07:44,759
+ we go into this block, but also attestation 456.
+
+961
+01:07:44,760 --> 01:07:47,560
+ And in general, you're gonna have like many attestations
+
+962
+01:07:47,560 --> 01:07:50,460
+ per block, and then separately,
+
+963
+01:07:50,460 --> 01:07:52,520
+ you're gonna have more for the next block, right?
+
+964
+01:07:52,520 --> 01:07:53,480
+ So I don't know.
+
+965
+01:07:55,400 --> 01:07:56,760
+ Pick your favorite validator indices,
+
+966
+01:07:56,760 --> 01:07:59,160
+ but ultimately, validators make attestations,
+
+967
+01:07:59,160 --> 01:08:01,100
+ the idea is that it should go to the next block.
+
+968
+01:08:01,100 --> 01:08:02,640
+ And in particular, the way this works
+
+969
+01:08:02,640 --> 01:08:04,960
+ is that for each of these blocks,
+
+970
+01:08:04,960 --> 01:08:06,700
+ there's gonna be like a unique state
+
+971
+01:08:06,700 --> 01:08:09,500
+ of the chain they attest to, or that they commit to rather,
+
+972
+01:08:09,500 --> 01:08:12,320
+ and validators then, when they make these attestations,
+
+973
+01:08:12,320 --> 01:08:14,360
+ they basically just look at this block
+
+974
+01:08:14,760 --> 01:08:18,619
+ So it's at the station say from value or one, two, three,
+
+975
+01:08:18,619 --> 01:08:20,400
+ they're gonna look at the state of the chain.
+
+976
+01:08:20,400 --> 01:08:22,980
+ They're gonna say, wow, okay.
+
+977
+01:08:22,980 --> 01:08:27,760
+ So it really works is that in this slot,
+
+978
+01:08:27,760 --> 01:08:30,199
+ they would actually look at say their prior slots,
+
+979
+01:08:30,199 --> 01:08:32,739
+ which in this case would even take you back to this block.
+
+980
+01:08:32,739 --> 01:08:35,159
+ But ultimately you're gonna look at the latest state
+
+981
+01:08:35,159 --> 01:08:38,940
+ of the chain and they would sign over,
+
+982
+01:08:38,940 --> 01:08:42,039
+ hey, I think the current block is this one
+
+983
+01:08:42,039 --> 01:08:44,319
+ that then would get included.
+
+984
+01:08:46,840 --> 01:08:48,600
+ Okay, I've run a little out of sync here.
+
+985
+01:08:49,199 --> 01:08:50,140
+ Sorry about that.
+
+986
+01:08:50,399 --> 01:08:51,659
+ Let me simplify this a bit.
+
+987
+01:08:54,460 --> 01:08:55,859
+ Let me actually just do this.
+
+988
+01:08:55,939 --> 01:08:57,880
+ So now we're going to zoom in actually into one slot.
+
+989
+01:09:00,100 --> 01:09:02,500
+ So let's say we'll take slot three as our example.
+
+990
+01:09:02,979 --> 01:09:04,560
+ The way this works is that,
+
+991
+01:09:04,859 --> 01:09:09,500
+ so this is like, you know, t equals zero, t equals 12.
+
+992
+01:09:10,239 --> 01:09:11,779
+ And again, this is like slot three.
+
+993
+01:09:12,039 --> 01:09:14,880
+ over here is like slot four.
+
+994
+01:09:14,880 --> 01:09:17,239
+ So we're just looking at one slot now.
+
+995
+01:09:17,239 --> 01:09:21,079
+ The way this would work is that the validator for slot three,
+
+996
+01:09:21,079 --> 01:09:24,600
+ they're gonna make this block here,
+
+997
+01:09:24,600 --> 01:09:27,579
+ and they should release near the start of the slot.
+
+998
+01:09:27,579 --> 01:09:29,539
+ This is gonna have attestations from the previous slot,
+
+999
+01:09:29,539 --> 01:09:31,220
+ let's say all of my transactions,
+
+1000
+01:09:31,220 --> 01:09:33,579
+ like my unit swap trades and whatever,
+
+1001
+01:09:33,579 --> 01:09:35,819
+ all the stuff that needs to go into the xblock
+
+1002
+01:09:35,819 --> 01:09:37,460
+ is gonna be here.
+
+1003
+01:09:37,460 --> 01:09:40,920
+ The way this works is then at like t equals four,
+
+1004
+01:09:42,039 --> 01:09:47,039
+ just to divide this slot up into thirds, or thirds rather.
+
+1005
+01:09:50,600 --> 01:09:53,800
+ Any validator who's assigned to test in slot three,
+
+1006
+01:09:53,800 --> 01:09:54,800
+ they're going to say,
+
+1007
+01:09:54,800 --> 01:09:56,920
+ hey, I'm gonna make an attestation.
+
+1008
+01:09:56,920 --> 01:10:00,779
+ Let's say the block root, as we call them here,
+
+1009
+01:10:00,779 --> 01:10:04,539
+ is like ABD.
+
+1010
+01:10:04,539 --> 01:10:06,079
+ They're gonna say my attestation.
+
+1011
+01:10:06,079 --> 01:10:08,739
+ So let's, we're looking at validator one, two, three again.
+
+1012
+01:10:08,739 --> 01:10:10,319
+ Their attestation's gonna say, yeah,
+
+1013
+01:10:10,319 --> 01:10:18,239
+ my state of the chain is ABD, whatever the rest of the hash is. They're going to broadcast their
+
+1014
+01:10:18,239 --> 01:10:23,299
+ attestation. There are different actors who then basically have the next four seconds to aggregate
+
+1015
+01:10:23,299 --> 01:10:31,439
+ them into like a smaller package to go on chain. And the idea is that ultimately this attestation
+
+1016
+01:10:31,439 --> 01:10:38,659
+ ends up in the next slot, right? So now we have the next block, which has, you know, again,
+
+1017
+01:10:38,659 --> 01:10:40,119
+ like our unit swap transactions
+
+1018
+01:10:40,119 --> 01:10:42,159
+ or whatever new execution state there is,
+
+1019
+01:10:42,399 --> 01:10:44,899
+ but then it also should include this attestation.
+
+1020
+01:10:46,420 --> 01:10:48,420
+ Then you just get the blocks from the network.
+
+1021
+01:10:48,619 --> 01:10:50,859
+ You can then count these attestations as they come in
+
+1022
+01:10:50,859 --> 01:10:52,939
+ and they can tell you things like,
+
+1023
+01:10:53,039 --> 01:10:54,760
+ yes, a majority of the batter set
+
+1024
+01:10:54,760 --> 01:10:56,960
+ thought that this was actually the block in slot three.
+
+1025
+01:10:58,539 --> 01:10:59,019
+ Okay.
+
+1026
+01:11:00,639 --> 01:11:02,239
+ So this is at the slot level.
+
+1027
+01:11:02,920 --> 01:11:05,739
+ There's another notion that
+
+1028
+01:11:05,739 --> 01:11:16,960
+ okay um a little short on time but that's my problem so there's another notion which is uh
+
+1029
+01:11:16,960 --> 01:11:22,679
+ an epoch so the way to think about epochs is that there's some number of slots
+
+1030
+01:11:22,679 --> 01:11:31,119
+ um and on main net for example there's 32 slots per epoch and the reason we do this
+
+1031
+01:11:31,119 --> 01:11:36,559
+ is that we basically went to like um there's like a bunch of consensus processing that is relatively
+
+1032
+01:11:36,559 --> 01:11:40,880
+ heavy and so we want to batch it so it only happens every so often rather than every slot
+
+1033
+01:11:41,680 --> 01:11:45,680
+ so the way i think about this is that you know here's our 32 slots
+
+1034
+01:11:48,880 --> 01:11:52,479
+ i didn't draw 32 but you get the picture um you know this is like
+
+1035
+01:11:53,039 --> 01:11:58,800
+ you know we'll just start at genesis so zero one two three dot dot dot dot and this is you
+
+1036
+01:11:58,800 --> 01:12:02,579
+ This would be slot 30 and 31.
+
+1037
+01:12:02,579 --> 01:12:06,980
+ So these are zero indexed, you get to 32 slots for epoch.
+
+1038
+01:12:06,980 --> 01:12:10,300
+ And this then would be epoch,
+
+1039
+01:12:10,300 --> 01:12:12,900
+ since we started at Genesis, epoch zero.
+
+1040
+01:12:12,900 --> 01:12:14,779
+ The way you should think about this is, again,
+
+1041
+01:12:14,779 --> 01:12:17,320
+ it keeps going just based on time.
+
+1042
+01:12:17,320 --> 01:12:21,279
+ You're now in epoch one here, and there's more slots.
+
+1043
+01:12:21,279 --> 01:12:25,100
+ So this is now slot 32, all the way up to the next multiple,
+
+1044
+01:12:25,100 --> 01:12:28,480
+ so you'd end up at slot 63.
+
+1045
+01:12:28,479 --> 01:12:33,099
+ you then go to epoch two, slot 64, hopefully that's clear.
+
+1046
+01:12:33,099 --> 01:12:36,459
+ And the idea is, one thing you're gonna do for example,
+
+1047
+01:12:36,459 --> 01:12:40,179
+ is like if anyone's trying to enter x into batter set,
+
+1048
+01:12:40,179 --> 01:12:41,839
+ you're gonna do that at this epoch boundary
+
+1049
+01:12:41,839 --> 01:12:43,779
+ where you do all this heavier processing.
+
+1050
+01:12:46,679 --> 01:12:47,979
+ I don't know what that was.
+
+1051
+01:12:48,839 --> 01:12:51,139
+ Oh, I just deleted something.
+
+1052
+01:12:51,139 --> 01:12:54,699
+ Okay, right, so you are gonna do this epoch processing
+
+1053
+01:12:54,699 --> 01:12:58,199
+ and then the idea is like, you know, there's, sorry,
+
+1054
+01:12:58,479 --> 01:13:00,179
+ There's blocks here, right?
+
+1055
+01:13:00,179 --> 01:13:04,259
+ So let's say ideally you have like 32 blocks, great.
+
+1056
+01:13:05,099 --> 01:13:07,059
+ And as you go here,
+
+1057
+01:13:07,059 --> 01:13:09,159
+ not only are you gonna do like the normal processing,
+
+1058
+01:13:09,159 --> 01:13:12,199
+ but you're also gonna say things like, okay,
+
+1059
+01:13:12,199 --> 01:13:13,619
+ if someone got slashed
+
+1060
+01:13:13,619 --> 01:13:15,339
+ or if there are any penalties or rewards,
+
+1061
+01:13:15,339 --> 01:13:18,159
+ we're gonna basically like hand these out
+
+1062
+01:13:18,159 --> 01:13:20,619
+ and update the consistent state at this boundary.
+
+1063
+01:13:24,599 --> 01:13:28,399
+ Okay, so we have slots, we have epochs,
+
+1064
+01:13:28,479 --> 01:13:31,779
+ And yeah, okay.
+
+1065
+01:13:31,779 --> 01:13:36,779
+ So like an important thing to realize is that,
+
+1066
+01:13:38,059 --> 01:13:40,159
+ so we have like the whole Valider set here.
+
+1067
+01:13:41,959 --> 01:13:46,279
+ So I don't know Valider zero, Valider one, you know,
+
+1068
+01:13:46,279 --> 01:13:48,399
+ for example, MainNet up to like, you know,
+
+1069
+01:13:49,779 --> 01:13:51,939
+ something like that, almost, you know,
+
+1070
+01:13:51,939 --> 01:13:53,739
+ the millionth Validator.
+
+1071
+01:13:53,739 --> 01:13:58,119
+ And the idea is that they are randomly shuffled
+
+1072
+01:13:58,119 --> 01:14:00,920
+ every epoch into these committees.
+
+1073
+01:14:00,920 --> 01:14:04,140
+ And what that would look like is that for a given epoch,
+
+1074
+01:14:05,099 --> 01:14:08,380
+ so here's our slots in the epoch,
+
+1075
+01:14:08,380 --> 01:14:11,619
+ let's say for example, there's like 100 validators.
+
+1076
+01:14:12,880 --> 01:14:15,880
+ Well, yeah, maybe I'll try to make this a little bit easier.
+
+1077
+01:14:15,880 --> 01:14:17,960
+ So there's 32 slots.
+
+1078
+01:14:17,960 --> 01:14:20,920
+ Let's just say there's 320 validators.
+
+1079
+01:14:20,920 --> 01:14:23,119
+ So if there's 32 slots,
+
+1080
+01:14:23,119 --> 01:14:26,439
+ that's something like 10 validators per slot, right?
+
+1081
+01:14:26,439 --> 01:14:29,559
+ And the idea is like the 10 validators per the,
+
+1082
+01:14:29,559 --> 01:14:32,019
+ out of the entire set, which is now 320,
+
+1083
+01:14:32,019 --> 01:14:35,859
+ you're gonna randomly shuffle them and put 10 validators.
+
+1084
+01:14:37,119 --> 01:14:38,659
+ Those look like blocks.
+
+1085
+01:14:38,659 --> 01:14:40,259
+ Let me do something differently.
+
+1086
+01:14:41,639 --> 01:14:45,639
+ So one, two, three, validator, four, five, six.
+
+1087
+01:14:47,139 --> 01:14:50,279
+ Again, the idea is that there are like 10 validators here,
+
+1088
+01:14:50,279 --> 01:14:53,960
+ and this is like a pretty important invariance
+
+1089
+01:14:53,960 --> 01:14:58,960
+ is that a validator makes one S station per epoch.
+
+1090
+01:15:03,460 --> 01:15:06,960
+ The exact slot data that ends is determined by the protocol.
+
+1091
+01:15:06,960 --> 01:15:08,980
+ There's this notion of like the Randow,
+
+1092
+01:15:08,980 --> 01:15:11,359
+ which is the way this works
+
+1093
+01:15:11,359 --> 01:15:15,399
+ is that when I go to put a block in the chain,
+
+1094
+01:15:15,399 --> 01:15:16,680
+ maybe I'll go back here.
+
+1095
+01:15:16,680 --> 01:15:19,119
+ Yeah, so as I go to put the block in the chain,
+
+1096
+01:15:19,119 --> 01:15:22,739
+ I basically put some local randomness and every block.
+
+1097
+01:15:22,739 --> 01:15:26,739
+ So we'll say like, you know, R0, R1, R2,
+
+1098
+01:15:26,739 --> 01:15:29,679
+ you basically just like mix them all together
+
+1099
+01:15:29,679 --> 01:15:31,059
+ in a particular way.
+
+1100
+01:15:31,059 --> 01:15:35,239
+ And the idea then is that there's this notion of randomness
+
+1101
+01:15:35,239 --> 01:15:37,800
+ that you can then use to do the shuffling,
+
+1102
+01:15:38,719 --> 01:15:41,479
+ to decide then say for the next epoch,
+
+1103
+01:15:41,479 --> 01:15:44,260
+ what this validator shuffling should be.
+
+1104
+01:15:45,219 --> 01:15:47,800
+ Validers then make one at station per each epoch,
+
+1105
+01:15:49,000 --> 01:15:51,079
+ again assigned to like some particular slot.
+
+1106
+01:15:51,079 --> 01:15:56,079
+ So, you know, now there's like two, two, two, one, nine, six.
+
+1107
+01:15:57,439 --> 01:16:00,039
+ And yeah, so similarly you end up with all of them
+
+1108
+01:16:00,039 --> 01:16:01,340
+ in a unique slot.
+
+1109
+01:16:01,340 --> 01:16:02,840
+ And this then tells you that,
+
+1110
+01:16:05,699 --> 01:16:06,539
+ did I,
+
+1111
+01:16:11,059 --> 01:16:12,640
+ yeah, maybe I'll just do this again.
+
+1112
+01:16:12,640 --> 01:16:14,539
+ So basically it tells you that,
+
+1113
+01:16:14,539 --> 01:16:20,939
+ uh we're looking at slots now
+
+1114
+01:16:20,939 --> 01:16:29,659
+ um well here this will be clear if there's just one so basically now you know we're at like uh
+
+1115
+01:16:29,659 --> 01:16:38,920
+ this is like slot 23 you know this is at t equals zero in the slot t equals 12 based on my view of
+
+1116
+01:16:38,920 --> 01:16:43,880
+ the chain i'm going to have some assignment and let's say again our lucky validator 123 is assigned
+
+1117
+01:16:43,880 --> 01:16:49,159
+ in slot 23 to attest uh when they see this block they then make their attestation
+
+1118
+01:16:50,760 --> 01:16:57,319
+ and this would then ultimately get into the next block okay so
+
+1119
+01:16:59,480 --> 01:17:04,119
+ okay let me then touch now on consensus um and that will actually probably put us at time
+
+1120
+01:17:04,760 --> 01:17:11,079
+ all right i got a couple questions for you before we move on okay um yeah great got one question is
+
+1121
+01:17:11,079 --> 01:17:15,119
+ Can you elaborate it on the time concept in proof of stake?
+
+1122
+01:17:15,119 --> 01:17:17,519
+ Like why 12 seconds?
+
+1123
+01:17:18,079 --> 01:17:20,479
+ How do they get split?
+
+1124
+01:17:20,479 --> 01:17:23,479
+ Why are the 32 slots per epoch, et cetera?
+
+1125
+01:17:24,819 --> 01:17:25,439
+ Right.
+
+1126
+01:17:25,439 --> 01:17:29,220
+ So the 12 seconds is like kind of arbitrary.
+
+1127
+01:17:29,220 --> 01:17:33,319
+ It was inspired by the work walk time, which was like on average
+
+1128
+01:17:33,319 --> 01:17:34,340
+ about 14 seconds.
+
+1129
+01:17:34,340 --> 01:17:36,380
+ So we just went for something a similar time.
+
+1130
+01:17:37,340 --> 01:17:40,140
+ The the number is kind of arbitrary.
+
+1131
+01:17:40,140 --> 01:17:41,500
+ it could be smaller or longer.
+
+1132
+01:17:42,200 --> 01:17:43,619
+ If it's smaller, then basically
+
+1133
+01:17:43,619 --> 01:17:46,200
+ it becomes harder to follow the chain.
+
+1134
+01:17:47,119 --> 01:17:48,180
+ Maybe a simpler way to think
+
+1135
+01:17:48,180 --> 01:17:49,860
+ about it first is the longer the slot,
+
+1136
+01:17:50,280 --> 01:17:52,200
+ it gives you more time to pass
+
+1137
+01:17:52,200 --> 01:17:54,180
+ the blocks, pass the attestations, figure out
+
+1138
+01:17:54,180 --> 01:17:56,140
+ which attestations to go into the next block and do
+
+1139
+01:17:56,140 --> 01:17:58,240
+ all this. Again, now there's this trade-off
+
+1140
+01:17:58,240 --> 01:18:00,079
+ between how quickly the
+
+1141
+01:18:00,079 --> 01:18:01,060
+ protocol can progress
+
+1142
+01:18:01,060 --> 01:18:03,060
+ and the slot time.
+
+1143
+01:18:04,079 --> 01:18:05,680
+ 12 seconds is what we have today.
+
+1144
+01:18:07,340 --> 01:18:08,220
+ Some people argue
+
+1145
+01:18:08,220 --> 01:18:13,500
+ for shortening the slot time, because it means, for example, it's execution state would evolve
+
+1146
+01:18:13,500 --> 01:18:18,619
+ more frequently. People also talk about lengthening slot time, because there's other
+
+1147
+01:18:18,619 --> 01:18:23,420
+ consensus upgrades we're thinking about where it actually makes more sense to have a longer slot
+
+1148
+01:18:23,420 --> 01:18:29,740
+ time to do more stuff every period of time. What was the other question?
+
+1149
+01:18:31,740 --> 01:18:35,420
+ Can you talk a bit about the randomness, about the brand dial,
+
+1150
+01:18:35,420 --> 01:18:43,100
+ and how the validators are shuffled randomly or uh right okay yeah so
+
+1151
+01:18:44,940 --> 01:18:53,180
+ uh okay yeah we can still see this so the idea here is that um right so there's one i mean i
+
+1152
+01:18:53,180 --> 01:18:59,819
+ guess this is another important invariance there's one proposer per slot and kind of like i was
+
+1153
+01:18:59,819 --> 01:19:04,619
+ alluding to um you know the proposer could like miss their slots in which case there just isn't
+
+1154
+01:19:04,619 --> 01:19:06,079
+ into block for that slot.
+
+1155
+01:19:06,920 --> 01:19:09,899
+ But generally, especially on main net,
+
+1156
+01:19:09,899 --> 01:19:12,279
+ people are incentivized to participate
+
+1157
+01:19:12,279 --> 01:19:14,119
+ and so they do their job well.
+
+1158
+01:19:14,119 --> 01:19:17,039
+ And so you can imagine then that like every slot
+
+1159
+01:19:17,039 --> 01:19:18,180
+ ends up with a block.
+
+1160
+01:19:19,340 --> 01:19:20,319
+ Okay.
+
+1161
+01:19:21,399 --> 01:19:24,979
+ And the way to think about this is that
+
+1162
+01:19:24,979 --> 01:19:26,380
+ I don't know, when I go to propose,
+
+1163
+01:19:26,380 --> 01:19:30,760
+ let's say I'm Validator, I don't know, 27.
+
+1164
+01:19:30,760 --> 01:19:34,619
+ As I go to propose, then I'm gonna also
+
+1165
+01:19:34,619 --> 01:19:37,460
+ include some randomness, which, you know,
+
+1166
+01:19:37,460 --> 01:19:39,140
+ there's some details where you can go look at it.
+
+1167
+01:19:39,140 --> 01:19:42,119
+ This is a spec essentially the way to think about it is
+
+1168
+01:19:42,119 --> 01:19:44,159
+ I'm gonna take like my slot number.
+
+1169
+01:19:44,159 --> 01:19:48,840
+ So say this is like, I don't know, slot 45,000.
+
+1170
+01:19:51,159 --> 01:19:53,539
+ I'm gonna basically like take this number,
+
+1171
+01:19:53,539 --> 01:19:55,099
+ maybe hash it some other things.
+
+1172
+01:19:55,099 --> 01:19:57,939
+ And ultimately I'm gonna get like a seed value
+
+1173
+01:19:57,939 --> 01:20:00,579
+ that I'm gonna sign over just with
+
+1174
+01:20:00,579 --> 01:20:02,319
+ like my validator private key.
+
+1175
+01:20:02,319 --> 01:20:04,359
+ And the way this works is that the signature
+
+1176
+01:20:04,359 --> 01:20:09,639
+ up being like a you know pseudo random value um so i'm gonna get like some randomness um
+
+1177
+01:20:10,920 --> 01:20:16,920
+ we'll just call it r um then basically i mean again these are like very low level details but
+
+1178
+01:20:16,920 --> 01:20:23,239
+ you take this readiness which is the signature um you're going to hash that to get like down to 32
+
+1179
+01:20:23,239 --> 01:20:29,559
+ bytes again which should be pseudo random um within the consistent state itself so for each
+
+1180
+01:20:29,560 --> 01:20:35,240
+ of these blocks right we're going to mix in each new randall into the state and what that means is
+
+1181
+01:20:35,240 --> 01:20:40,680
+ that there's going to be some like current value from this having happened in the past and then
+
+1182
+01:20:40,680 --> 01:20:45,320
+ for each block i'm just going to take whatever my random contribution was and i'm going to mix it in
+
+1183
+01:20:46,200 --> 01:20:52,039
+ to what's already there so the way to think about this is that basically there's like um so for
+
+1184
+01:20:52,039 --> 01:20:57,080
+ every block right the blocks can have some effect there's now like a consensus state it will say as
+
+1185
+01:20:57,079 --> 01:21:02,619
+ S-45K, S-45,001.
+
+1186
+01:21:03,239 --> 01:21:04,279
+ Hopefully you get the idea.
+
+1187
+01:21:04,760 --> 01:21:07,140
+ But basically each block is going to make a new state.
+
+1188
+01:21:07,500 --> 01:21:09,539
+ And then the idea is that within this beacon state,
+
+1189
+01:21:10,460 --> 01:21:12,420
+ yeah, I'm not sure how awful this will be,
+
+1190
+01:21:12,460 --> 01:21:14,180
+ but just imagine there's some state over here
+
+1191
+01:21:14,180 --> 01:21:14,840
+ as this triangle.
+
+1192
+01:21:15,539 --> 01:21:18,159
+ There's going to be like some ran down value.
+
+1193
+01:21:19,019 --> 01:21:20,300
+ Again, we'll just call it R0.
+
+1194
+01:21:21,479 --> 01:21:25,439
+ When I go to apply, say now my block,
+
+1195
+01:21:25,439 --> 01:21:35,639
+ let's say I'm going to apply, you know, block 45,001.
+
+1196
+01:21:35,899 --> 01:21:38,859
+ There's going to be, like, some unique random for the proposer,
+
+1197
+01:21:39,239 --> 01:21:40,659
+ which I'm calling R prime.
+
+1198
+01:21:41,119 --> 01:21:46,099
+ We're going to combine these two and get back some, like, new value R1.
+
+1199
+01:21:46,739 --> 01:21:48,059
+ And this happens for each block.
+
+1200
+01:21:48,619 --> 01:21:52,000
+ And the idea then is that you should have some, like, random value
+
+1201
+01:21:52,000 --> 01:21:54,039
+ that each proposer is updating as they go.
+
+1202
+01:21:54,039 --> 01:22:02,519
+ and then separately you get to this notion of shuffling so the way this works now is like um
+
+1203
+01:22:02,519 --> 01:22:07,340
+ there's a notion of look ahead just so people know and they have some time to like get ready to
+
+1204
+01:22:07,340 --> 01:22:12,500
+ say make their attestation or propose their block but the way to think about this is like let's say
+
+1205
+01:22:12,500 --> 01:22:18,979
+ this is like epoch one two three epoch one two four epoch one two five so basically
+
+1206
+01:22:18,979 --> 01:22:24,599
+ the way this works is that at the end of this epoch, so like whatever this final block is,
+
+1207
+01:22:25,179 --> 01:22:29,479
+ you know, so there's many blocks here in this epoch, great, you're going to end up with some,
+
+1208
+01:22:29,559 --> 01:22:35,679
+ you know, unique random value, we'll call it like r123. What that then is going to do
+
+1209
+01:22:36,139 --> 01:22:44,359
+ is basically tell you, okay, so it's a little backwards here, because of whether the lookahead
+
+1210
+01:22:44,359 --> 01:22:50,199
+ works let's instead say we're going into like this epoch the way this works is that we're
+
+1211
+01:22:50,199 --> 01:22:56,759
+ going to basically uh look back at the randomness we made here and that's going to then basically
+
+1212
+01:22:56,759 --> 01:23:03,559
+ tell us the the shufflings for say like the next two epochs hopefully that's clear this
+
+1213
+01:23:03,559 --> 01:23:10,039
+ look ahead thing's a little confusing but basically the idea is that um at some you
+
+1214
+01:23:10,039 --> 01:23:12,720
+ you know, at some point in time, say like here,
+
+1215
+01:23:12,720 --> 01:23:14,420
+ we're gonna look at the beacon state,
+
+1216
+01:23:14,420 --> 01:23:17,479
+ which I guess I started drawing this triangles.
+
+1217
+01:23:17,479 --> 01:23:19,220
+ We're gonna look at the beacon state.
+
+1218
+01:23:20,180 --> 01:23:21,579
+ There's gonna be some random value,
+
+1219
+01:23:21,579 --> 01:23:23,039
+ again, it's called R.
+
+1220
+01:23:23,039 --> 01:23:26,659
+ And the idea then is like this R is an input to like say,
+
+1221
+01:23:26,659 --> 01:23:29,079
+ some code reruns and shuffle function,
+
+1222
+01:23:29,079 --> 01:23:31,859
+ which takes like the entire validator set,
+
+1223
+01:23:31,859 --> 01:23:35,880
+ it's gonna take R and you know, for example,
+
+1224
+01:23:35,880 --> 01:23:38,979
+ without the stations, like the committee size or something,
+
+1225
+01:23:40,039 --> 01:23:43,279
+ it's then gonna take all of the validators.
+
+1226
+01:23:44,159 --> 01:23:46,119
+ So, you know, again, on main net,
+
+1227
+01:23:46,119 --> 01:23:49,199
+ this is like almost a million it's gonna say, okay,
+
+1228
+01:23:49,199 --> 01:23:51,699
+ we actually wanna break them up into like this number
+
+1229
+01:23:51,699 --> 01:23:53,380
+ of committees per epoch.
+
+1230
+01:23:53,380 --> 01:23:56,859
+ So, you know, let's say it's like whatever number this is,
+
+1231
+01:23:58,000 --> 01:23:59,319
+ where they're gonna shuffle them.
+
+1232
+01:23:59,319 --> 01:24:01,500
+ So, okay, the way we started it was the whole list, right?
+
+1233
+01:24:01,500 --> 01:24:03,579
+ So just counting the validators,
+
+1234
+01:24:03,579 --> 01:24:06,260
+ that are zero, one, two, three, you know,
+
+1235
+01:24:06,260 --> 01:24:09,279
+ all the way up to say like, you know, nine, nine, six,
+
+1236
+01:24:09,279 --> 01:24:11,899
+ whatever, just under a million,
+
+1237
+01:24:13,239 --> 01:24:16,380
+ we're then gonna use this randomness here to shuffle these.
+
+1238
+01:24:16,380 --> 01:24:18,559
+ And so then what that means is that we're gonna end up
+
+1239
+01:24:18,559 --> 01:24:19,779
+ with like a shuffled set,
+
+1240
+01:24:21,899 --> 01:24:25,139
+ say, you know, Validator 0 goes over to like,
+
+1241
+01:24:26,119 --> 01:24:27,619
+ I don't know, say here, right?
+
+1242
+01:24:27,619 --> 01:24:29,819
+ So you end up with like Validator 0 here,
+
+1243
+01:24:29,819 --> 01:24:32,500
+ and now this is like 45,
+
+1244
+01:24:33,539 --> 01:24:35,599
+ nine, five, six,
+
+1245
+01:24:35,599 --> 01:24:39,239
+ Validator 12, Validator 0, Validator 3,
+
+1246
+01:24:39,239 --> 01:24:40,800
+ And the idea is they get shuffled, right?
+
+1247
+01:24:40,800 --> 01:24:43,559
+ In some random way, then, you know,
+
+1248
+01:24:43,559 --> 01:24:45,920
+ if we wanna break this up in that station committees,
+
+1249
+01:24:45,920 --> 01:24:48,479
+ you just then basically like batch them, right?
+
+1250
+01:24:48,479 --> 01:24:52,539
+ And then this tells you, you know, in the next e-talk,
+
+1251
+01:24:53,479 --> 01:24:56,219
+ you end up with like, okay, I'm in this first committee,
+
+1252
+01:24:56,219 --> 01:24:57,979
+ which is in say the first slot.
+
+1253
+01:24:57,979 --> 01:24:59,359
+ And then I end up in the next committee,
+
+1254
+01:24:59,359 --> 01:25:01,880
+ which is in the next slot, something like this.
+
+1255
+01:25:06,579 --> 01:25:07,920
+ Hopefully that was helpful.
+
+1256
+01:25:07,920 --> 01:25:12,480
+ I do want to, we just have a few minutes, so I do want to like, explain a bit more about
+
+1257
+01:25:12,480 --> 01:25:15,319
+ ConsenSys and how this works.
+
+1258
+01:25:15,319 --> 01:25:18,699
+ And yeah, unfortunately, there's actually a lot to say.
+
+1259
+01:25:18,699 --> 01:25:23,220
+ So yeah, we won't necessarily get to everything today.
+
+1260
+01:25:23,220 --> 01:25:25,480
+ But hopefully I've piqued your interest.
+
+1261
+01:25:25,480 --> 01:25:29,819
+ And yeah, you can dig in more.
+
+1262
+01:25:29,819 --> 01:25:37,340
+ So let's zoom out again, to our notion of the Ethereum chain.
+
+1263
+01:25:37,920 --> 01:25:42,079
+ To close the picture on consensus, right.
+
+1264
+01:25:42,079 --> 01:25:47,079
+ So we have, again, let's think about epochs.
+
+1265
+01:25:49,260 --> 01:25:52,460
+ So like epoch, I don't know, one, two, three,
+
+1266
+01:25:52,460 --> 01:25:56,100
+ one, two, four, one, two, five, one, two, six,
+
+1267
+01:25:56,100 --> 01:25:57,800
+ maybe something like this.
+
+1268
+01:25:57,800 --> 01:25:59,680
+ And we're gonna start with some block, you know,
+
+1269
+01:25:59,680 --> 01:26:01,140
+ this could even be like the nearsighted block
+
+1270
+01:26:01,140 --> 01:26:02,739
+ or whatever it, whatever.
+
+1271
+01:26:02,739 --> 01:26:06,199
+ Well, okay, this is where it starts to get confusing.
+
+1272
+01:26:06,199 --> 01:26:12,939
+ it confusing. So there's blocks here now, because this was an epoch. These are now the slots,
+
+1273
+01:26:13,059 --> 01:26:20,819
+ right? And again, sorry if this is confusing, but basically it's just like, there's a new slot
+
+1274
+01:26:20,819 --> 01:26:27,420
+ every 12 seconds. Just like that. That's just how it works. Maybe you could like not have a block
+
+1275
+01:26:27,420 --> 01:26:34,300
+ either way um you have these blocks and uh these blocks now have attestations
+
+1276
+01:26:34,300 --> 01:26:43,020
+ so yeah that's maybe a little cramped but basically the idea is that you know if we have
+
+1277
+01:26:43,020 --> 01:26:50,020
+ more blocks here then they're going to basically have attestations to you know the state of the
+
+1278
+01:26:50,020 --> 01:26:55,119
+ chain and i guess i'll just switch to like check marks now and you know you might have like quite
+
+1279
+01:26:55,119 --> 01:27:04,000
+ it but ultimately um the way to think about this now is with respect to consensus and this notion
+
+1280
+01:27:04,000 --> 01:27:07,439
+ of like finality that we care about this is like the whole thing that we're trying to do with proof
+
+1281
+01:27:07,439 --> 01:27:12,000
+ of state consensus is to get to the social finality and when something's final it means it
+
+1282
+01:27:12,000 --> 01:27:18,000
+ basically will never change and i'll kind of explain a bit more what that means um the way to
+
+1283
+01:27:18,000 --> 01:27:24,800
+ think about it is that uh we're now going to work kind of in terms of uh we call them like epoch
+
+1284
+01:27:24,800 --> 01:27:29,840
+ boundary blocks but the way to think about it is just like the first block in an epoch it's
+
+1285
+01:27:29,840 --> 01:27:35,920
+ just going to stand in as like a representative for each epoch and if you think about it because
+
+1286
+01:27:35,920 --> 01:27:41,039
+ everything is cryptographically linked via the parent hash you know like if i somehow like have
+
+1287
+01:27:41,039 --> 01:27:48,480
+ the validators all vote um or maybe this is a better example here if i have them like you know
+
+1288
+01:27:48,480 --> 01:27:54,720
+ if even though these like these attestations here right they are implicitly attesting to like this
+
+1289
+01:27:54,720 --> 01:27:59,520
+ being the block of the beginning of this epoch again because these all have parent hashes
+
+1290
+01:28:00,320 --> 01:28:06,079
+ and yeah sorry there's so many arrows but the point i'm trying to make is that you can now
+
+1291
+01:28:06,079 --> 01:28:12,000
+ kind of zoom out and you can now say okay um for this epoch there's like this block
+
+1292
+01:28:12,880 --> 01:28:20,480
+ this block and this block this block okay and you know the direct parent hash is from block to block
+
+1293
+01:28:20,480 --> 01:28:23,600
+ but the way to think about it is there's kind of these like linkages you can make
+
+1294
+01:28:23,600 --> 01:28:27,160
+ between each epoch, right?
+
+1295
+01:28:28,500 --> 01:28:31,060
+ And the way this is going to work is that
+
+1296
+01:28:31,060 --> 01:28:34,240
+ based on the attestations we get in a given epoch,
+
+1297
+01:28:34,500 --> 01:28:37,060
+ they're going to have this notion of justification.
+
+1298
+01:28:38,140 --> 01:28:39,440
+ Let me actually just write that down.
+
+1299
+01:28:39,620 --> 01:28:41,980
+ This is a key concept.
+
+1300
+01:28:45,200 --> 01:28:48,079
+ What justification means is, again, this BFT concept
+
+1301
+01:28:48,079 --> 01:28:53,340
+ that, you know, at least two-thirds of the validators
+
+1302
+01:28:53,340 --> 01:28:57,440
+ have attested to a given block.
+
+1303
+01:28:58,779 --> 01:29:01,640
+ So, you know, you could, like, count all of the attestations here,
+
+1304
+01:29:01,900 --> 01:29:08,119
+ and they would ultimately, if you reach this threshold,
+
+1305
+01:29:08,300 --> 01:29:11,640
+ then they would be justifying, you know, this block, right?
+
+1306
+01:29:12,380 --> 01:29:13,460
+ So you have justification.
+
+1307
+01:29:14,619 --> 01:29:18,680
+ And what this kind of looks like then is that you end up with, you know,
+
+1308
+01:29:18,720 --> 01:29:21,119
+ a block tree that kind of looks like, you know, this picture,
+
+1309
+01:29:21,119 --> 01:29:25,199
+ where you then have like, yeah, maybe I should use,
+
+1310
+01:29:25,640 --> 01:29:27,079
+ I guess I'll use blue or something.
+
+1311
+01:29:27,399 --> 01:29:27,899
+ That would be nice.
+
+1312
+01:29:28,399 --> 01:29:33,300
+ You can end up like justifying with respect to like one epoch,
+
+1313
+01:29:33,359 --> 01:29:34,319
+ the previous epoch.
+
+1314
+01:29:34,819 --> 01:29:36,220
+ So then you get these things.
+
+1315
+01:29:36,380 --> 01:29:37,539
+ And now when these are blue arrows,
+
+1316
+01:29:37,640 --> 01:29:39,340
+ what I'm trying to communicate is like, you know,
+
+1317
+01:29:39,359 --> 01:29:42,760
+ you have like at least two thirds of attestations,
+
+1318
+01:29:43,140 --> 01:29:47,819
+ all referencing directly or indirectly, you know, these blocks here.
+
+1319
+01:29:50,319 --> 01:29:50,760
+ Okay.
+
+1320
+01:29:51,119 --> 01:29:54,279
+ So that's justification.
+
+1321
+01:29:54,279 --> 01:29:59,279
+ And in particular, well, yeah, I think I'll talk about,
+
+1322
+01:30:00,399 --> 01:30:01,699
+ it just splits in a second,
+
+1323
+01:30:03,220 --> 01:30:05,199
+ but in particular, what we wanna get to
+
+1324
+01:30:05,199 --> 01:30:06,939
+ is this notion of finality.
+
+1325
+01:30:08,140 --> 01:30:12,199
+ And finality here means that, again,
+
+1326
+01:30:12,199 --> 01:30:13,399
+ it looks like we're kind of at time,
+
+1327
+01:30:13,399 --> 01:30:14,779
+ so I'll just kind of be brief here,
+
+1328
+01:30:14,779 --> 01:30:18,680
+ but ultimately the idea is that if I, let's see,
+
+1329
+01:30:18,680 --> 01:30:22,960
+ Like, let's see if, sorry,
+
+1330
+01:30:22,960 --> 01:30:27,960
+ if I justify a justified block,
+
+1331
+01:30:33,260 --> 01:30:35,940
+ then, and I'll call it b,
+
+1332
+01:30:35,940 --> 01:30:40,119
+ if I justify a justify block b, then b is finalized.
+
+1333
+01:30:44,320 --> 01:30:48,380
+ And in this case, we'll call this b
+
+1334
+01:30:48,380 --> 01:30:50,279
+ because what happened is,
+
+1335
+01:30:51,680 --> 01:30:53,920
+ ah, you can't see my hands, that's too bad.
+
+1336
+01:30:53,920 --> 01:30:58,800
+ But basically before we had these votes come in,
+
+1337
+01:30:58,800 --> 01:31:00,980
+ we had justified B, basically,
+
+1338
+01:31:00,980 --> 01:31:03,779
+ and this epoch, we had justified B,
+
+1339
+01:31:03,779 --> 01:31:07,260
+ and then we came along and we justified this block,
+
+1340
+01:31:07,260 --> 01:31:09,819
+ I don't know, I'll call it C, we justified C,
+
+1341
+01:31:09,819 --> 01:31:11,920
+ because we justified
+
+1342
+01:31:14,239 --> 01:31:17,060
+ a block that had been justified, namely B,
+
+1343
+01:31:17,060 --> 01:31:18,140
+ B is now final.
+
+1344
+01:31:18,380 --> 01:31:21,060
+ And this is like the whole point of what we're trying to do
+
+1345
+01:31:21,060 --> 01:31:22,819
+ is get to this notion of finality.
+
+1346
+01:31:24,220 --> 01:31:28,440
+ And let's see what to say here.
+
+1347
+01:31:28,440 --> 01:31:29,980
+ I guess I'll just kind of explain what we mean here.
+
+1348
+01:31:29,980 --> 01:31:32,460
+ What we mean here is that it's final
+
+1349
+01:31:32,460 --> 01:31:35,920
+ because if we had then tried to attest,
+
+1350
+01:31:35,920 --> 01:31:38,260
+ like if we had tried to justify a different block,
+
+1351
+01:31:39,539 --> 01:31:40,720
+ let me do this.
+
+1352
+01:31:44,460 --> 01:31:48,079
+ So sure, let's do something like this.
+
+1353
+01:31:48,380 --> 01:31:52,539
+ Okay.
+
+1354
+01:31:52,539 --> 01:31:56,520
+ Let me just draw these arrows.
+
+1355
+01:31:56,520 --> 01:31:57,680
+ So right.
+
+1356
+01:31:57,680 --> 01:32:02,840
+ There's again this notion of slashing.
+
+1357
+01:32:02,840 --> 01:32:10,220
+ And for example, attesting to two conflicting blocks here, this would be slashable.
+
+1358
+01:32:10,220 --> 01:32:15,199
+ And then what this means is that you can't get in a situation where you've finalized
+
+1359
+01:32:15,199 --> 01:32:16,859
+ two different histories.
+
+1360
+01:32:16,859 --> 01:32:23,579
+ say the top and the bottom, because if you do, then what would happen is say all the attestations
+
+1361
+01:32:23,579 --> 01:32:30,239
+ that tried to finalize this block, let's say, on this chain, they would be in conflict with
+
+1362
+01:32:30,239 --> 01:32:35,319
+ the top chain, and you could then basically put these attestations as proof of misbehavior
+
+1363
+01:32:35,319 --> 01:32:41,239
+ into the top chain. You would slash these validators, and you can't get to this situation
+
+1364
+01:32:41,239 --> 01:32:43,840
+ where you finalize two conflicting histories
+
+1365
+01:32:43,840 --> 01:32:47,380
+ without it being slashable.
+
+1366
+01:32:47,699 --> 01:32:49,059
+ And so this is what we mean by final.
+
+1367
+01:32:49,260 --> 01:32:51,199
+ You have this notion of like economic finality
+
+1368
+01:32:51,199 --> 01:32:55,619
+ that does what we want.
+
+1369
+01:32:57,819 --> 01:33:00,659
+ Okay, yeah, sorry, I think we're at time,
+
+1370
+01:33:00,779 --> 01:33:02,559
+ but I can stay for some questions.
+
+1371
+01:33:03,260 --> 01:33:04,639
+ And yeah, sorry, we ran over.
+
+1372
+01:33:05,880 --> 01:33:08,279
+ Thanks, Alex, no problem on going over.
+
+1373
+01:33:08,279 --> 01:33:15,859
+ Um, one question, uh, can you talk a little bit about, uh, Gaspar in the context of, of
+
+1374
+01:33:15,859 --> 01:33:19,119
+ finalization and finding the canonical chain?
+
+1375
+01:33:20,500 --> 01:33:21,059
+ Right.
+
+1376
+01:33:21,219 --> 01:33:26,279
+ So, so Gaspar is like our particular, like instantiation of this protocol that I've been
+
+1377
+01:33:26,279 --> 01:33:27,019
+ trying to lay out.
+
+1378
+01:33:27,319 --> 01:33:33,219
+ Um, and again, this is where it starts to get a little, a little complex, but basically
+
+1379
+01:33:33,219 --> 01:33:34,920
+ there's almost two views.
+
+1380
+01:33:34,920 --> 01:33:48,140
+ There's like the epoch level view, which is kind of what I was just talking about, where it's like you have blocks that are kind of representing like, you know, this like epoch level thing.
+
+1381
+01:33:48,680 --> 01:33:54,119
+ But then within each epoch, right, you're still going to have, let's see if I can draw this.
+
+1382
+01:33:54,300 --> 01:33:54,600
+ I don't know.
+
+1383
+01:33:54,720 --> 01:33:55,619
+ I'll just do this, for example.
+
+1384
+01:33:55,800 --> 01:33:57,060
+ You're still going to have all the other blocks.
+
+1385
+01:33:57,060 --> 01:34:02,900
+ And so, like, a really cool thing about Ethereum is we have this notion of dynamic availability.
+
+1386
+01:34:04,340 --> 01:34:10,480
+ And the idea here is that basically you can keep adding to the chain.
+
+1387
+01:34:10,600 --> 01:34:11,760
+ So let's say this is out of the chain.
+
+1388
+01:34:11,860 --> 01:34:17,100
+ You can keep adding to the head of the chain kind of separately from this finality process.
+
+1389
+01:34:17,100 --> 01:34:23,760
+ So, like, even if finality for some reason, like, let's say there's, like, a bunch of others go offline and they can't get their attestations on chain.
+
+1390
+01:34:23,760 --> 01:34:32,119
+ chain, then finality, we might say that we've only finalized this block B or this epoch
+
+1391
+01:34:32,119 --> 01:34:35,100
+ B, the chain can still go on.
+
+1392
+01:34:35,100 --> 01:34:37,980
+ You can keep adding to the head of the chain.
+
+1393
+01:34:37,980 --> 01:34:44,940
+ And so then what that means is that this finality process is kind of trailing the actual blockchain.
+
+1394
+01:34:44,940 --> 01:34:51,560
+ And so then if you go to the head of the chain, say here, and I will zoom in now.
+
+1395
+01:34:51,560 --> 01:34:56,280
+ So let's say this is like epoch, I don't know, E minus one.
+
+1396
+01:34:56,280 --> 01:35:02,200
+ And so now we're here, and this is now, these are slots.
+
+1397
+01:35:02,200 --> 01:35:10,360
+ So you still now have blocks in the block tree, meaning a proposer can go, let's say
+
+1398
+01:35:10,360 --> 01:35:19,380
+ this was a missed slot, this proposer proposes here, the next proposer, let's say they propose
+
+1399
+01:35:19,380 --> 01:35:22,260
+ to say, you know, even back here.
+
+1400
+01:35:22,260 --> 01:35:23,600
+ And now what you have in general
+
+1401
+01:35:23,600 --> 01:35:26,220
+ is you now have this same block tree
+
+1402
+01:35:26,220 --> 01:35:29,279
+ where you still need to make this consensus inference,
+
+1403
+01:35:29,279 --> 01:35:30,619
+ meaning like, is this the head of the chain
+
+1404
+01:35:30,619 --> 01:35:32,400
+ or is this the head of the chain?
+
+1405
+01:35:32,400 --> 01:35:34,720
+ And again, we use the attestations for this.
+
+1406
+01:35:34,720 --> 01:35:37,500
+ As these attestations in each block are coming in,
+
+1407
+01:35:37,500 --> 01:35:40,020
+ you know, they're gonna attest to one block or the other,
+
+1408
+01:35:40,020 --> 01:35:41,600
+ and that's gonna say give, you know,
+
+1409
+01:35:41,600 --> 01:35:43,520
+ some weight of like, you know,
+
+1410
+01:35:43,520 --> 01:35:45,140
+ a hundred ETH attesting here
+
+1411
+01:35:45,140 --> 01:35:48,560
+ versus like, you know, a thousand ETH attesting here.
+
+1412
+01:35:48,560 --> 01:35:51,940
+ And in general, then we have this other algorithm,
+
+1413
+01:35:51,940 --> 01:35:55,200
+ LMD ghost, you might've heard of it, I'll write it down.
+
+1414
+01:35:56,660 --> 01:35:59,060
+ But it works very much like even where we saw it before
+
+1415
+01:35:59,060 --> 01:36:02,120
+ where you're gonna say, start from like some head we know,
+
+1416
+01:36:02,120 --> 01:36:04,060
+ and then just basically like,
+
+1417
+01:36:04,060 --> 01:36:05,320
+ this G here is like greedy.
+
+1418
+01:36:05,320 --> 01:36:09,820
+ So basically, find the one with the most stake weight
+
+1419
+01:36:09,820 --> 01:36:11,880
+ going off the attestations.
+
+1420
+01:36:11,880 --> 01:36:15,380
+ And so when we say Gaspar, this is really what we mean
+
+1421
+01:36:15,380 --> 01:36:20,380
+ is there's this like FFG friendly finality gadget.
+
+1422
+01:36:21,699 --> 01:36:24,180
+ It's not super important what the acronym stands for,
+
+1423
+01:36:24,180 --> 01:36:29,140
+ but ultimately this like epoch level process
+
+1424
+01:36:29,140 --> 01:36:32,779
+ that hopefully it's clear some of you, if not all of you,
+
+1425
+01:36:32,779 --> 01:36:35,460
+ we're doing finality on these like longer time scales.
+
+1426
+01:36:35,460 --> 01:36:37,739
+ And this is like, again, this finality gadget
+
+1427
+01:36:37,739 --> 01:36:41,940
+ it's providing finality, but then even within, you know,
+
+1428
+01:36:41,939 --> 01:36:50,699
+ one epoch, e plus one, within one epoch itself, we're also using this LMD ghost protocol to figure
+
+1429
+01:36:50,699 --> 01:36:55,839
+ out the actual tip of the chain. So when I go to produce the next block, I need to pick this block
+
+1430
+01:36:55,839 --> 01:37:01,979
+ or this block. And yeah, Gaspar is just basically our particular instantiation of this consensus
+
+1431
+01:37:01,979 --> 01:37:05,099
+ protocol that's like ffg plus lmd goes
+
+1432
+01:37:05,099 --> 01:37:13,179
+ thank you
+
+1433
+01:37:13,179 --> 01:37:24,099
+ um yeah i think that's probably all we have time for today unless mario you have another question
+
+1434
+01:37:24,099 --> 01:37:29,779
+ yeah i wanted to if we can just touch on the pbs for a second there was a question we are going to
+
+1435
+01:37:29,779 --> 01:37:37,880
+ dive into it more, but you are the man, and it's it's I think it's a good chance to just
+
+1436
+01:37:37,880 --> 01:37:44,319
+ briefly, we are out of time. So if you can touch on that. What's the motivation? What's
+
+1437
+01:37:44,319 --> 01:37:47,659
+ the workings of proposal builder separation?
+
+1438
+01:37:47,659 --> 01:37:58,259
+ Right. So yeah, I wanted to start from basics, basically, and go from zero to how
+
+1439
+01:37:58,260 --> 01:38:00,140
+ as it uses protocol work.
+
+1440
+01:38:00,140 --> 01:38:03,659
+ And it turns out that, you know,
+
+1441
+01:38:03,659 --> 01:38:05,539
+ this protocol lives in the real world
+
+1442
+01:38:05,539 --> 01:38:07,440
+ and there's like so many other things
+
+1443
+01:38:07,440 --> 01:38:09,760
+ that I don't have time to go into today,
+
+1444
+01:38:09,760 --> 01:38:12,360
+ but basically have been consequences of the system.
+
+1445
+01:38:14,900 --> 01:38:19,900
+ So, yeah, I actually maybe will just write,
+
+1446
+01:38:19,960 --> 01:38:21,480
+ I did have a few more things in my notes
+
+1447
+01:38:21,480 --> 01:38:23,739
+ around like a few things here.
+
+1448
+01:38:23,739 --> 01:38:26,880
+ So, you know, just kind of looking at like the future
+
+1449
+01:38:26,880 --> 01:38:29,560
+ of this proof-of-stake protocol
+
+1450
+01:38:29,560 --> 01:38:30,600
+ and Ethereum generally, right?
+
+1451
+01:38:30,600 --> 01:38:33,340
+ There's a bunch of things that we wanna kinda do.
+
+1452
+01:38:33,340 --> 01:38:36,819
+ One of them is like single slot finality, SSF.
+
+1453
+01:38:36,819 --> 01:38:41,520
+ And this is basically saying like, for many reasons,
+
+1454
+01:38:41,520 --> 01:38:42,920
+ I, again, I don't really have time to get into,
+
+1455
+01:38:42,920 --> 01:38:46,480
+ but because of the fact that you have
+
+1456
+01:38:46,480 --> 01:38:48,340
+ this dynamic availability,
+
+1457
+01:38:48,340 --> 01:38:51,699
+ then there's both games sort of happening here
+
+1458
+01:38:51,699 --> 01:38:54,699
+ that also impact this like, epoch level thing.
+
+1459
+01:38:54,699 --> 01:38:58,539
+ And it turns out there are like many different attacks
+
+1460
+01:38:58,539 --> 01:39:01,599
+ that others can pull off with this flexibility.
+
+1461
+01:39:01,599 --> 01:39:03,899
+ And so rather than have this like finality process,
+
+1462
+01:39:03,899 --> 01:39:07,500
+ like trail say like two epochs behind the chain,
+
+1463
+01:39:07,500 --> 01:39:10,960
+ you would actually wanna look at getting finality
+
+1464
+01:39:10,960 --> 01:39:12,199
+ within a single slot.
+
+1465
+01:39:12,199 --> 01:39:14,039
+ And again, single slot finality,
+
+1466
+01:39:14,039 --> 01:39:16,579
+ that can then should be pretty clear.
+
+1467
+01:39:16,579 --> 01:39:17,420
+ That's one thing.
+
+1468
+01:39:19,760 --> 01:39:20,920
+ Other things, I mean, yeah,
+
+1469
+01:39:20,920 --> 01:39:23,500
+ I guess I'll just like write out what I have as SLE.
+
+1470
+01:39:23,500 --> 01:39:27,439
+ So this is basically, you'd want to make proposal selection
+
+1471
+01:39:27,439 --> 01:39:29,460
+ be kind of secret or like just in time.
+
+1472
+01:39:29,460 --> 01:39:31,680
+ Like the idea is that as a validator,
+
+1473
+01:39:31,680 --> 01:39:33,779
+ so today you actually can go and look at the chain.
+
+1474
+01:39:33,779 --> 01:39:35,500
+ And based on the Randolph thing that I talked about,
+
+1475
+01:39:35,500 --> 01:39:38,119
+ you actually know one to two epochs ahead of time
+
+1476
+01:39:38,119 --> 01:39:39,760
+ who the proposer is.
+
+1477
+01:39:39,760 --> 01:39:41,880
+ This is not great because, you know,
+
+1478
+01:39:41,880 --> 01:39:43,680
+ this is an open decentralized network.
+
+1479
+01:39:43,680 --> 01:39:47,420
+ I can actually go and be a various like network techniques.
+
+1480
+01:39:47,420 --> 01:39:50,140
+ I can actually like identify on the peer-to-peer layer,
+
+1481
+01:39:50,140 --> 01:39:53,140
+ which IPs or which validators, for example.
+
+1482
+01:39:53,140 --> 01:39:55,780
+ Once I have your IP, if I don't like your block,
+
+1483
+01:39:55,780 --> 01:39:57,079
+ that's gonna come up in your slots,
+
+1484
+01:39:57,079 --> 01:39:58,539
+ I can actually try to DOS you.
+
+1485
+01:39:58,539 --> 01:40:02,119
+ And so one way that we can improve upon this
+
+1486
+01:40:02,119 --> 01:40:04,640
+ is basically get into a place where
+
+1487
+01:40:04,640 --> 01:40:07,660
+ the next proposer is actually like secret,
+
+1488
+01:40:07,660 --> 01:40:10,240
+ like until, you know, just in time almost,
+
+1489
+01:40:10,240 --> 01:40:12,480
+ where they have to like reveal some,
+
+1490
+01:40:12,480 --> 01:40:15,640
+ some like election ticket, let's say,
+
+1491
+01:40:15,640 --> 01:40:17,240
+ to actually have a valid block.
+
+1492
+01:40:19,100 --> 01:40:21,579
+ There's other things, max-eb is one.
+
+1493
+01:40:21,579 --> 01:40:25,079
+ So this is getting it it's like 32 ETH balance.
+
+1494
+01:40:25,079 --> 01:40:29,359
+ And you could imagine basically making it so that
+
+1495
+01:40:30,539 --> 01:40:34,159
+ rather than sort of making one validator have 32 ETH,
+
+1496
+01:40:34,159 --> 01:40:35,319
+ they could have like, I don't know,
+
+1497
+01:40:35,319 --> 01:40:37,939
+ so much higher number say 2048.
+
+1498
+01:40:37,939 --> 01:40:41,300
+ This is important because right now, if I have say like,
+
+1499
+01:40:41,300 --> 01:40:43,140
+ yeah, again, I don't know, 64 ETH,
+
+1500
+01:40:44,300 --> 01:40:47,399
+ that must be two validators in the protocol.
+
+1501
+01:40:47,399 --> 01:40:48,680
+ And this is partly how we got
+
+1502
+01:40:48,680 --> 01:40:50,199
+ to like such a high number of validators
+
+1503
+01:40:50,199 --> 01:40:53,220
+ is like, it happened to this unit's a 32.
+
+1504
+01:40:54,460 --> 01:40:57,139
+ Many people have, you know, much more than 32 ETH,
+
+1505
+01:40:57,139 --> 01:40:59,599
+ like these big, like professional staking operations,
+
+1506
+01:40:59,599 --> 01:41:00,859
+ for example.
+
+1507
+01:41:00,859 --> 01:41:03,260
+ And so you can imagine having one validator entity
+
+1508
+01:41:03,260 --> 01:41:06,220
+ in the protocol with like a much higher balance.
+
+1509
+01:41:06,220 --> 01:41:08,699
+ And this lets you consolidate the set.
+
+1510
+01:41:08,699 --> 01:41:10,899
+ That's something, there's also like, yeah,
+
+1511
+01:41:10,899 --> 01:41:12,819
+ there's like penalty campaigns we've been looking at
+
+1512
+01:41:12,819 --> 01:41:15,319
+ to actually like make the staking situation
+
+1513
+01:41:15,319 --> 01:41:17,279
+ or the slashing situation a bit better.
+
+1514
+01:41:17,279 --> 01:41:23,119
+ um there's the whole economics itself there's no like issuance around when values are rewarded
+
+1515
+01:41:23,119 --> 01:41:28,719
+ things like how that that goes into them and anyway okay i'm just like brain death and stuff
+
+1516
+01:41:28,719 --> 01:41:34,639
+ now um that all being said let me answer your question which is about pbs so this is another
+
+1517
+01:41:34,639 --> 01:41:41,519
+ thing very much top of mind uh for all the x's researchers so we have pbs proposer builder
+
+1518
+01:41:41,520 --> 01:41:51,280
+ separation. And yeah, so the idea here is that the protocol doesn't exist in a vacuum.
+
+1519
+01:41:52,420 --> 01:41:59,420
+ There's this very valuable execution layer, and there's this notion of MEV. And it used to stand
+
+1520
+01:41:59,420 --> 01:42:05,060
+ for maximum extractable value. The idea is that basically, when I go, I mean, let's see,
+
+1521
+01:42:05,260 --> 01:42:11,400
+ what's a good image I could use? Well, let me just start over. So when I keep drawing my box
+
+1522
+01:42:11,399 --> 01:42:15,799
+ that I have and I have my transactions it turns out that like some sequence of transactions could
+
+1523
+01:42:15,799 --> 01:42:20,399
+ be more valuable than another um and yeah I don't really have time to go into like the specifics of
+
+1524
+01:42:20,399 --> 01:42:25,699
+ that but ultimately um the way to think about this is that there is this notion of MEV where
+
+1525
+01:42:25,699 --> 01:42:33,119
+ uh you know it's better uh to be sophisticated better to be sophisticated
+
+1526
+01:42:33,119 --> 01:42:37,479
+ as a validator
+
+1527
+01:42:37,479 --> 01:42:42,000
+ in part so you can like extract this MEV,
+
+1528
+01:42:42,379 --> 01:42:43,259
+ which I don't know,
+
+1529
+01:42:43,359 --> 01:42:45,159
+ I'll just try to draw some coins or something.
+
+1530
+01:42:45,339 --> 01:42:47,479
+ But basically there's this notion
+
+1531
+01:42:47,479 --> 01:42:51,279
+ that you're kind of leaving money on the table
+
+1532
+01:42:51,279 --> 01:42:53,779
+ if you're like not pulling in
+
+1533
+01:42:53,779 --> 01:42:55,679
+ these more sophisticated techniques to build blocks.
+
+1534
+01:42:55,819 --> 01:42:56,599
+ And this is a problem
+
+1535
+01:42:56,599 --> 01:43:02,039
+ because it basically harms the centralization.
+
+1536
+01:43:02,299 --> 01:43:02,619
+ Why?
+
+1537
+01:43:02,979 --> 01:43:05,219
+ Because let's say some other validator
+
+1538
+01:43:05,219 --> 01:43:06,899
+ is better at me at extracting this MEV.
+
+1539
+01:43:07,479 --> 01:43:09,579
+ They can, for example, offer better returns.
+
+1540
+01:43:09,699 --> 01:43:10,719
+ They can attract more stake.
+
+1541
+01:43:10,719 --> 01:43:16,919
+ And now there's this flywheel where you have big, massive staking pools all run by, say, one entity.
+
+1542
+01:43:17,299 --> 01:43:22,019
+ And then now, rather than have actually a million nodes that are all working together to secure Ethereum,
+
+1543
+01:43:22,179 --> 01:43:24,639
+ there's now maybe just five or some smaller number,
+
+1544
+01:43:25,239 --> 01:43:30,539
+ perhaps in jurisdictional areas that are not favorable to certain Ethereum transactions.
+
+1545
+01:43:31,739 --> 01:43:34,759
+ So we want to stop this.
+
+1546
+01:43:34,760 --> 01:43:42,460
+ And generally the way that we think about this right now is PBS, where you kind of want to separate off this task of making the execution block.
+
+1547
+01:43:42,680 --> 01:43:44,420
+ So yeah, maybe I'll draw CL Neo.
+
+1548
+01:43:45,340 --> 01:43:49,659
+ There's now a CL block here with an execution payload that goes inside.
+
+1549
+01:43:50,199 --> 01:43:52,960
+ And with PBS, you actually want to think about separating these two.
+
+1550
+01:43:52,960 --> 01:44:03,699
+ So that you can outsource building this thing, this execution payload, which is becoming a very sophisticated task, to some other entity.
+
+1551
+01:44:03,699 --> 01:44:08,659
+ we'll call it a builder um and then as a validator you don't have to like play these like very
+
+1552
+01:44:08,659 --> 01:44:14,059
+ sophisticated games you can just again outsource this to someone and then still uh profit from the
+
+1553
+01:44:14,059 --> 01:44:26,119
+ work that was pbs in like one minute i hope that was helpful yeah that was great thanks alex
+
+1554
+01:44:26,119 --> 01:44:33,220
+ uh cool yeah i think we're about 15 minutes over here so i think we probably should wrap it up
+
+1555
+01:44:33,699 --> 01:44:40,179
+ um but yeah thanks so much for giving us a nice overview into the consensus layer um i'm sure
+
+1556
+01:44:40,179 --> 01:44:46,899
+ there are some questions that didn't get answered uh and so hopefully alex can join our discord
+
+1557
+01:44:46,899 --> 01:44:51,619
+ server and see if there's anything in there that he wants to dive into um
+
+1558
+01:44:53,539 --> 01:45:00,979
+ yeah thanks again alex and uh we will see you all next week for a dive into testing
+
+1559
+01:45:00,979 --> 01:45:03,979
+ thank you so much
+
+1560
+01:45:03,979 --> 01:45:04,279
+ Alex
+
+1561
+01:45:04,279 --> 01:45:04,919
+ we appreciate
+
+1562
+01:45:04,919 --> 01:45:05,639
+ your time man
+
+1563
+01:45:05,639 --> 01:45:07,039
+ yeah
+
+1564
+01:45:07,039 --> 01:45:07,819
+ yeah it was fun
+
+1565
+01:45:07,819 --> 01:45:08,500
+ thanks for having me
+
+1566
+01:45:08,500 --> 01:45:09,179
+ and yeah
+
+1567
+01:45:09,179 --> 01:45:10,279
+ I'll reach out
+
+1568
+01:45:10,279 --> 01:45:10,699
+ to any of you
+
+1569
+01:45:10,699 --> 01:45:11,500
+ to get in the discord
+
+1570
+01:45:11,500 --> 01:45:12,519
+ and I'm happy
+
+1571
+01:45:12,519 --> 01:45:13,839
+ to answer
+
+1572
+01:45:13,839 --> 01:45:14,439
+ some more questions
+
+1573
+01:45:14,439 --> 01:45:14,719
+ there
+
+1574
+01:45:14,719 --> 01:45:15,199
+ so
+
+1575
+01:45:15,199 --> 01:45:16,479
+ thanks everyone
+
+1576
+01:45:16,479 --> 01:45:17,679
+ and yeah
+
+1577
+01:45:17,679 --> 01:45:18,479
+ I'll see you around
+
+1578
+01:45:18,479 --> 01:45:20,139
+ thank you so much
+
+1579
+01:45:20,139 --> 01:45:21,799
+ yeah
+
+1580
+01:45:21,799 --> 01:45:24,039
+ great
+
+1581
+01:45:24,039 --> 01:45:24,519
+ bye
+
+1582
+01:45:24,519 --> 01:45:26,579
+ and
+
+1583
+01:45:26,579 --> 01:45:27,239
+ for everyone
+
+1584
+01:45:27,239 --> 01:45:27,939
+ still listening
+
+1585
+01:45:27,939 --> 01:45:29,059
+ please
+
+1586
+01:45:29,059 --> 01:45:30,639
+ take all the
+
+1587
+01:45:30,640 --> 01:45:35,760
+ great materials and questions answered and everything that was discussed in the talk
+
+1588
+01:45:35,760 --> 01:45:44,220
+ and the Discord chat and open PR Tweaky, feel free to add it to the corresponding doc or
+
+1589
+01:45:44,220 --> 01:45:45,220
+ create a new one.
+
+1590
+01:45:45,220 --> 01:45:48,820
+ We have a bunch of great contributions, so please keep it coming.
+
+1591
+01:45:48,820 --> 01:45:54,180
+ And yeah, thank you so much for joining us today for the Consensus Layer Talk.
+
+1592
+01:45:54,180 --> 01:45:55,460
+ Thanks, everybody.
+
+1593
+01:45:55,460 --> 01:45:56,460
+ Thanks, everybody.
+
+1594
+01:45:56,460 --> 01:45:59,619
+ We'll see you on Thursday on the Hangout call.
+
+1595
+01:45:59,619 --> 01:46:00,619
+ Yeah.
+
+1596
+01:46:00,619 --> 01:46:02,619
+ I want to mention that as well.
+
+1597
+01:46:02,619 --> 01:46:06,800
+ So yeah, if you want to just, you know, chat with us, discuss maybe what would you like
+
+1598
+01:46:06,800 --> 01:46:11,359
+ to work on, contribute in the Wiki or just like, you know, maybe even outside of the
+
+1599
+01:46:11,359 --> 01:46:17,020
+ Ethereum, come to chat with us in the call.
+
+1600
+01:46:17,020 --> 01:46:20,279
+ You can find the event on the Discord server.
+
+1601
+01:46:20,279 --> 01:46:21,680
+ Thanks a lot.
+
+1602
+01:46:21,680 --> 01:46:23,039
+ Excellent.
+
+1603
+01:46:51,680 --> 01:47:21,659
+ Thank you.
+

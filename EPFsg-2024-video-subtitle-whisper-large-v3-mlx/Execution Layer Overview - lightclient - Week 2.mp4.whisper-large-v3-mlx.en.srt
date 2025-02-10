@@ -1,0 +1,5336 @@
+1
+00:00:00,000 --> 00:00:13,380
+ All right, everybody, thanks for joining us, and welcome back to the Ethereum Protocol Fellowship Study Group.
+
+2
+00:00:13,960 --> 00:00:24,780
+ This is week two of 10 weeks, and today we'll be talking with core developer LightClient about the execution layer.
+
+3
+00:00:24,780 --> 00:00:31,420
+ So I will go ahead and let Mario introduce Matt for us, and we'll get rolling here.
+
+4
+00:00:33,039 --> 00:00:36,600
+ Hey, everyone. Hey, Matt. Thank you so much for joining. Thanks so much for coming.
+
+5
+00:00:37,380 --> 00:00:39,620
+ Can you hear me?
+
+6
+00:00:40,240 --> 00:00:41,159
+ I hear you.
+
+7
+00:00:42,380 --> 00:00:45,079
+ Yeah, thank you so much for being here, man. Really appreciate it.
+
+8
+00:00:45,520 --> 00:00:50,900
+ For anyone who doesn't know Matt or LightPlan, he's, well, not just core developer,
+
+9
+00:00:50,899 --> 00:00:57,619
+ he's part of the go ethereum tier team that does more than just the go ethereum uh also uh some
+
+10
+00:00:57,619 --> 00:01:04,180
+ testing the ip editing and generally uh light kill and this is kind of person who you can go to if
+
+11
+00:01:04,180 --> 00:01:11,299
+ you uh want to understand the uh all complexities of the protocol how different things come together
+
+12
+00:01:11,299 --> 00:01:17,299
+ i believe he has great opinions strong opinions on many parts of the protocol and uh yeah he's been
+
+13
+00:01:17,299 --> 00:01:22,979
+ also working on stuff like account obstruction for many years and um today he's going to give
+
+14
+00:01:22,979 --> 00:01:28,899
+ us a dive into the execution layer theory which he works on implementing in the go ethereum um
+
+15
+00:01:29,620 --> 00:01:36,099
+ and if you have any questions anything uh you'd like to i'd like to get clarified uh something
+
+16
+00:01:36,099 --> 00:01:42,420
+ that is we already had some questions come up during this past week so if you have those ready
+
+17
+00:01:42,420 --> 00:01:46,019
+ feel free to post them in the corresponding Discord thread.
+
+18
+00:01:46,460 --> 00:01:48,400
+ And when there is a space for it,
+
+19
+00:01:48,439 --> 00:01:49,159
+ we will ask it.
+
+20
+00:01:49,519 --> 00:01:51,240
+ We'll ask Matt about those.
+
+21
+00:01:51,840 --> 00:01:52,219
+ So yeah.
+
+22
+00:01:52,820 --> 00:01:54,180
+ Thanks again for being here, man.
+
+23
+00:01:54,299 --> 00:01:55,180
+ I really appreciate it.
+
+24
+00:01:55,299 --> 00:01:56,379
+ And the floor is yours.
+
+25
+00:01:58,379 --> 00:01:58,819
+ Cool.
+
+26
+00:01:59,000 --> 00:02:00,040
+ Can you guys hear me okay?
+
+27
+00:02:01,840 --> 00:02:02,280
+ Sweet.
+
+28
+00:02:03,140 --> 00:02:04,659
+ If I ask for questions,
+
+29
+00:02:05,240 --> 00:02:08,480
+ what's the best way for people to get those to you?
+
+30
+00:02:08,520 --> 00:02:10,180
+ Is it just through the Discord and you will ask them?
+
+31
+00:02:10,900 --> 00:02:11,500
+ Cool.
+
+32
+00:02:12,419 --> 00:02:18,179
+ Amazing. Thanks so much for having me. I'm excited to talk to everyone about the execution layer.
+
+33
+00:02:18,239 --> 00:02:19,699
+ We'll do it through the Discord, yeah.
+
+34
+00:02:20,479 --> 00:02:30,379
+ Yeah. So I have some notes prepared to go over an overview of the execution layer in somewhat simplistic terms.
+
+35
+00:02:31,019 --> 00:02:34,099
+ But if you have questions, please feel free to post them on Discord.
+
+36
+00:02:34,659 --> 00:02:37,519
+ Josh and Mario, feel free to interrupt me as we're going on.
+
+37
+00:02:37,519 --> 00:02:40,859
+ I want to make sure we're all on the same page as we go through.
+
+38
+00:02:42,419 --> 00:02:47,819
+ And with that, let me share my screen, and we can go ahead and get started.
+
+39
+00:02:53,759 --> 00:03:00,599
+ So I came up with a bit of an outline for us to have a little bit of structure to this
+
+40
+00:03:00,599 --> 00:03:01,019
+ discussion.
+
+41
+00:03:02,299 --> 00:03:07,139
+ And the first thing I want to do is just have a bit of an overview of the main pieces that
+
+42
+00:03:07,139 --> 00:03:12,339
+ I see that the execution layer has, and then we can dive a bit deeper into each of those
+
+43
+00:03:12,340 --> 00:03:19,159
+ specific elements. So let's just get started. Let's say this is week two lecture.
+
+44
+00:03:24,099 --> 00:03:27,900
+ And first things I want to talk about is I want to talk about
+
+45
+00:03:27,900 --> 00:03:31,240
+ the block validation aspect of the execution layer.
+
+46
+00:03:34,000 --> 00:03:39,980
+ With the merge, we've sort of changed the role that the execution layer has in Ethereum
+
+47
+00:03:39,979 --> 00:03:45,959
+ before it was kind of all-encompassing it was you know doing the consensus of the chain it was
+
+48
+00:03:45,959 --> 00:03:52,120
+ ensuring the integrity of the chain it was very you know making sure that the blocks were ordered
+
+49
+00:03:52,120 --> 00:03:56,879
+ in the correct manner that reorgs were happening happening correctly and and all of these types of
+
+50
+00:03:56,879 --> 00:04:04,019
+ things that all got outsourced to the consensus layer after the merge and at this point the role
+
+51
+00:04:04,019 --> 00:04:09,319
+ of the execution layer has become much more simplified so i like to think of it really as
+
+52
+00:04:09,319 --> 00:04:12,159
+ it's just performing a state transition function.
+
+53
+00:04:12,159 --> 00:04:14,180
+ And we'll talk about what that looks like,
+
+54
+00:04:14,180 --> 00:04:18,800
+ but just to illuminate that specifically,
+
+55
+00:04:18,800 --> 00:04:22,199
+ we can actually see in the consensus specs,
+
+56
+00:04:22,199 --> 00:04:26,839
+ how the consensus layer thinks about the execution layer.
+
+57
+00:04:26,839 --> 00:04:29,139
+ So if we go to consensus specs
+
+58
+00:04:29,139 --> 00:04:33,600
+ and we look at Deneb beacon chain,
+
+59
+00:04:33,600 --> 00:04:38,159
+ we can actually just go straight in and look at the,
+
+60
+00:04:38,160 --> 00:04:47,200
+ it's verify notified payload uh actually execution payload so there's a function called process
+
+61
+00:04:47,200 --> 00:04:55,200
+ execution payload that's performed by the beacon chain as it's going through all of the other
+
+62
+00:04:56,000 --> 00:05:01,120
+ verification that it needs to do to verify a block is valid and move the consensus layer forward
+
+63
+00:05:01,120 --> 00:05:08,399
+ So the execution layer has really just become embodied by this function right here.
+
+64
+00:05:08,399 --> 00:05:15,340
+ And there's a lot of different complexities of how to communicate that stuff.
+
+65
+00:05:15,340 --> 00:05:18,139
+ And you can sort of see this with this execution engine concept.
+
+66
+00:05:18,139 --> 00:05:23,740
+ This is this way that we're communicating to the execution layer from the consensus layer.
+
+67
+00:05:23,740 --> 00:05:28,740
+ But really what you can think about is we do some high level checks, make sure that some things
+
+68
+00:05:28,740 --> 00:05:33,699
+ like the parent hash is correct, this is the next block of the chain, verify some things like the
+
+69
+00:05:33,699 --> 00:05:40,579
+ timestamp, some others, you know, lightweight verification. And then we send the payload to
+
+70
+00:05:40,579 --> 00:05:48,660
+ the execution layer and have it verify the block. And we can actually see the lowest level function
+
+71
+00:05:48,660 --> 00:05:53,420
+ in the beacon chain that interacts with execution layer with notify new payload.
+
+72
+00:05:53,420 --> 00:05:55,920
+ So notify new payload.
+
+73
+00:05:56,580 --> 00:06:00,000
+ There is no implementation in the spec for the consensus layer
+
+74
+00:06:00,000 --> 00:06:03,180
+ because what it does is it just sends the execution payload
+
+75
+00:06:03,180 --> 00:06:07,020
+ to the execution engine, which is your execution client.
+
+76
+00:06:07,640 --> 00:06:11,040
+ And the execution client then does the state transition function.
+
+77
+00:06:11,180 --> 00:06:14,540
+ It validates that the block headers are corrected,
+
+78
+00:06:14,720 --> 00:06:18,580
+ validates that the transactions are applied to the state correctly,
+
+79
+00:06:18,580 --> 00:06:20,740
+ and it will return true or false.
+
+80
+00:06:20,740 --> 00:06:26,639
+ So it's really that simple in terms of how does the consensus layer think about the execution layer.
+
+81
+00:06:28,019 --> 00:06:33,500
+ So that is the block validation from the consensus layer's perspective.
+
+82
+00:06:34,040 --> 00:06:40,379
+ Let's look at what the block validation looks like at a high level from the actual execution layer.
+
+83
+00:06:40,879 --> 00:06:42,160
+ So I'm going to write this in go.
+
+84
+00:06:42,340 --> 00:06:44,000
+ This is just going to be super straightforward.
+
+85
+00:06:44,460 --> 00:06:46,720
+ Really no go special things.
+
+86
+00:06:46,720 --> 00:06:50,760
+ But if you have a question on what some syntax means, feel free to jump in.
+
+87
+00:06:51,440 --> 00:06:54,540
+ But basically, you can think of the stage transition function, I'm going to simplify
+
+88
+00:06:54,540 --> 00:06:58,220
+ it to STF as taking a few parameters.
+
+89
+00:06:58,220 --> 00:07:03,960
+ And this isn't perfect for exactly what the execution layer is taking.
+
+90
+00:07:04,200 --> 00:07:08,360
+ But for illustrative purposes, I think this is the simplest way to think about it.
+
+91
+00:07:08,700 --> 00:07:12,760
+ So that we take the parent block, because we're going to have to verify some of the
+
+92
+00:07:12,759 --> 00:07:18,819
+ transition logic from the parents to the current block. And then we'll take in the current block.
+
+93
+00:07:20,519 --> 00:07:29,779
+ And we'll take in a state DB. So state DB is, is basically just what is storing all of the
+
+94
+00:07:29,779 --> 00:07:35,180
+ state data with respect to the current, or I guess in this to the parent block. So that's
+
+95
+00:07:35,180 --> 00:07:40,459
+ the last known valid state. And what we would return is we would return another state DB,
+
+96
+00:07:40,459 --> 00:07:44,699
+ because this would be the updated state and an error.
+
+97
+00:07:44,979 --> 00:07:47,099
+ So if this function is to fail,
+
+98
+00:07:47,319 --> 00:07:50,359
+ we would want to return an error and not update the state DB.
+
+99
+00:07:55,959 --> 00:07:56,399
+ Okay.
+
+100
+00:07:57,259 --> 00:07:59,500
+ So the first thing we have to do
+
+101
+00:07:59,500 --> 00:08:00,699
+ is we have to verify the headers.
+
+102
+00:08:01,019 --> 00:08:02,500
+ We'll look at that a bit closer
+
+103
+00:08:02,500 --> 00:08:05,099
+ when we actually go through the implementation in GoEthereum.
+
+104
+00:08:05,620 --> 00:08:08,599
+ But I'm just going to say here that if there's an error
+
+105
+00:08:08,600 --> 00:08:10,879
+ while we are verifying the headers
+
+106
+00:08:10,879 --> 00:08:14,700
+ and we pass in the parent and the block,
+
+107
+00:08:15,480 --> 00:08:22,680
+ then we just want to return no updated state
+
+108
+00:08:22,680 --> 00:08:23,760
+ and we'll return the error.
+
+109
+00:08:24,720 --> 00:08:26,800
+ And basically what this means here is
+
+110
+00:08:26,800 --> 00:08:32,879
+ there was a header error detected.
+
+111
+00:08:33,420 --> 00:08:36,879
+ So an example of something that would fail
+
+112
+00:08:36,879 --> 00:08:38,060
+ with respect to the headers
+
+113
+00:08:38,059 --> 00:08:44,959
+ I guess an interesting example that has a lot of historical relevance is the gas limit. So today,
+
+114
+00:08:44,959 --> 00:08:49,679
+ we have a gas limit of about 30 million, the gas limit is actually something that's not
+
+115
+00:08:49,679 --> 00:08:55,519
+ hard and hard coded within the execution layer anywhere, there's a mechanism that block producers
+
+116
+00:08:55,519 --> 00:09:01,079
+ can use to change the gas limit. So they actually have the ability to change the gas limit by about
+
+117
+00:09:01,080 --> 00:09:08,379
+ a, you know, one 10, one 10 24th. So if the gas limit is 30 million, you could increase it by
+
+118
+00:09:08,379 --> 00:09:14,620
+ that small percentage. And so if you increase the gas limit from 30 million to 40 million in block,
+
+119
+00:09:15,160 --> 00:09:19,460
+ you know, in over the course of a single block, the header verification would fail,
+
+120
+00:09:19,680 --> 00:09:24,180
+ because you would have exceeded that one to over 10 24th fraction update.
+
+121
+00:09:25,280 --> 00:09:30,280
+ Another possibility of something that would be wrong is that you could have the block numbers
+
+122
+00:09:31,080 --> 00:09:32,900
+ not be sequential
+
+123
+00:09:32,900 --> 00:09:35,240
+ and that's something that should probably be caught at the
+
+124
+00:09:35,240 --> 00:09:37,180
+ beacon chain layer too but it might
+
+125
+00:09:37,180 --> 00:09:39,259
+ also occur within
+
+126
+00:09:39,259 --> 00:09:40,040
+ verify headers
+
+127
+00:09:40,040 --> 00:09:43,220
+ the 1559 base fee would
+
+128
+00:09:43,220 --> 00:09:45,000
+ need to be updated correctly based on
+
+129
+00:09:45,000 --> 00:09:47,139
+ the last gas used versus the
+
+130
+00:09:47,139 --> 00:09:49,100
+ gas limit so a bunch of those types of
+
+131
+00:09:49,100 --> 00:09:50,180
+ things are happening there
+
+132
+00:09:50,180 --> 00:09:53,139
+ hold on my cat is eating my
+
+133
+00:09:53,139 --> 00:09:54,139
+ foot right now
+
+134
+00:09:54,139 --> 00:09:55,520
+ nope
+
+135
+00:09:55,520 --> 00:09:58,840
+ hey man
+
+136
+00:09:58,840 --> 00:09:59,840
+ Okay.
+
+137
+00:09:59,840 --> 00:10:00,840
+ Can you hear me?
+
+138
+00:10:00,840 --> 00:10:04,800
+ Just for a second, can you zoom in the IDE so we can see more clearly on the screen?
+
+139
+00:10:04,800 --> 00:10:05,800
+ Yeah.
+
+140
+00:10:05,800 --> 00:10:06,800
+ It's a bit small.
+
+141
+00:10:06,800 --> 00:10:07,800
+ How's that?
+
+142
+00:10:07,800 --> 00:10:10,180
+ It's better, thanks.
+
+143
+00:10:10,180 --> 00:10:12,320
+ Okay.
+
+144
+00:10:12,320 --> 00:10:13,840
+ So that's verify headers.
+
+145
+00:10:13,840 --> 00:10:19,100
+ Once we verify the header, we'll just assume that the header is correct and that the environment
+
+146
+00:10:19,100 --> 00:10:25,060
+ that the header is specifying is the environment that the transaction should be running in.
+
+147
+00:10:25,059 --> 00:10:28,579
+ and so then from there you're really just going to apply the transactions
+
+148
+00:10:29,539 --> 00:10:35,859
+ so what i want to do here is say range over the blocks transactions
+
+149
+00:10:40,819 --> 00:10:45,779
+ so this is just going to give us a loop over every transaction in the block
+
+150
+00:10:45,779 --> 00:10:49,219
+ and for each transaction we need to execute it so we'll say
+
+151
+00:10:49,220 --> 00:10:55,200
+ that we're going to run this through the virtual machine, which is the EVM.
+
+152
+00:10:58,320 --> 00:11:02,519
+ So I'm going to give it a block header because in the EVM, you need to know
+
+153
+00:11:02,519 --> 00:11:10,519
+ the context that the block is in because there are instructions like coin base or gas limit or
+
+154
+00:11:10,519 --> 00:11:15,759
+ timestamp. And you need to know while you're executing that transaction, what those values are.
+
+155
+00:11:15,759 --> 00:11:38,360
+ So we'll pass that in through the header, and then we'll give it the transaction, and then we'll give it the state. And we'll say that if this function fails, we just have to return error again. And in this case, the problem is the transaction is actually invalid. So therefore, the block is invalid.
+
+156
+00:11:38,360 --> 00:11:47,639
+ in the execution layer it's not possible to have an invalid transaction within the block
+
+157
+00:11:47,639 --> 00:11:52,000
+ if there is something invalid within the block that sort of poisons the whole entire block
+
+158
+00:11:52,000 --> 00:11:53,460
+ and causes it to be invalid
+
+159
+00:11:53,460 --> 00:12:04,320
+ if that transaction was correct we'll update our state with the result res and uh and that's you
+
+160
+00:12:04,320 --> 00:12:09,280
+ pretty much it in terms of the straight state transition function if we actually make it through
+
+161
+00:12:09,280 --> 00:12:15,920
+ the whole list of transactions we can return the final accumulated state which has all of
+
+162
+00:12:15,920 --> 00:12:22,960
+ the transactions applied to it no error and then the beacon chain and you know you might
+
+163
+00:12:22,960 --> 00:12:27,840
+ have some wrapper around you might have some wrapper function around this um
+
+164
+00:12:27,840 --> 00:12:34,160
+ which takes in the execution payload.
+
+165
+00:12:39,600 --> 00:12:41,540
+ And this would return our bool.
+
+166
+00:12:43,540 --> 00:12:45,560
+ This would return our bool to the beacon chain,
+
+167
+00:12:45,660 --> 00:12:48,759
+ and it would call the state transition function within it.
+
+168
+00:12:49,300 --> 00:12:50,540
+ So I won't write that whole thing out.
+
+169
+00:12:50,660 --> 00:12:52,340
+ But basically, I would say,
+
+170
+00:12:52,340 --> 00:13:03,500
+ if there's no error sorry if there is an error return false otherwise return true
+
+171
+00:13:03,500 --> 00:13:15,320
+ okay so the beacon chain is essentially calling some function new payload it's passing the
+
+172
+00:13:15,320 --> 00:13:21,139
+ execution payload in then we call on the execution side our state transition function
+
+173
+00:13:21,139 --> 00:13:24,120
+ with the information in execution payload.
+
+174
+00:13:24,799 --> 00:13:27,340
+ And if the state transition function doesn't error,
+
+175
+00:13:27,559 --> 00:13:28,899
+ we'll return true.
+
+176
+00:13:29,059 --> 00:13:30,460
+ If it does error, we return false
+
+177
+00:13:30,460 --> 00:13:31,500
+ because the block is invalid.
+
+178
+00:13:32,899 --> 00:13:37,879
+ Any questions on this block validation overview?
+
+179
+00:13:42,899 --> 00:13:45,500
+ We get a few questions.
+
+180
+00:13:45,500 --> 00:13:49,059
+ What happened?
+
+181
+00:13:52,659 --> 00:13:55,000
+ Why did you pass the block header
+
+182
+00:13:55,000 --> 00:13:56,360
+ into the VM.run?
+
+183
+00:13:58,559 --> 00:14:00,759
+ Inside the block header
+
+184
+00:14:00,759 --> 00:14:01,960
+ is all the information.
+
+185
+00:14:02,399 --> 00:14:04,659
+ There's two pieces of context
+
+186
+00:14:04,659 --> 00:14:06,419
+ that you need when you're executing the transaction.
+
+187
+00:14:06,419 --> 00:14:08,179
+ The first is obviously the state
+
+188
+00:14:08,179 --> 00:14:09,840
+ because the state has things like
+
+189
+00:14:09,840 --> 00:14:12,279
+ the contract code that you're going to execute against
+
+190
+00:14:12,279 --> 00:14:14,620
+ the storage within that
+
+191
+00:14:14,620 --> 00:14:20,759
+ account that you might be manipulating or reading, but you also need the context, the block context
+
+192
+00:14:20,759 --> 00:14:27,679
+ that the transaction is executing against. And so I mentioned a couple examples, but a few more,
+
+193
+00:14:28,580 --> 00:14:35,000
+ you might want to access the previous Randow value or the block hash. This is to give you
+
+194
+00:14:35,000 --> 00:14:42,080
+ some sort of like randomness within the virtual machine, you might want to access the base the
+
+195
+00:14:42,080 --> 00:14:46,620
+ base fee, the base fee is within the block header and within the transaction execution,
+
+196
+00:14:46,620 --> 00:14:48,139
+ you can call the base fee opcode.
+
+197
+00:14:48,280 --> 00:14:50,960
+ And so that value would need to be populated in some way.
+
+198
+00:14:51,040 --> 00:14:54,820
+ And so the reason I'm passing the header in is to populate those environmental values.
+
+199
+00:14:56,620 --> 00:14:57,060
+ Right.
+
+200
+00:14:57,160 --> 00:14:57,420
+ Thanks.
+
+201
+00:14:57,420 --> 00:15:07,160
+ And so the say transition function is called by the consensus layer and gets returned whether
+
+202
+00:15:07,160 --> 00:15:07,720
+ it's valid.
+
+203
+00:15:07,720 --> 00:15:13,000
+ it's not valid, what happens on CL?
+
+204
+00:15:13,000 --> 00:15:19,060
+ So if it's not valid on the CL, then the block is going to be rejected.
+
+205
+00:15:19,060 --> 00:15:29,259
+ We might be able to look at that really quickly.
+
+206
+00:15:29,259 --> 00:15:37,259
+ It was process execution payload.
+
+207
+00:15:37,720 --> 00:15:56,100
+ So, right here, the way the beacon spec sort of works is they use asserts to verify that
+
+208
+00:15:56,100 --> 00:15:59,779
+ certain properties are as they expect.
+
+209
+00:15:59,779 --> 00:16:04,820
+ And because we said that this function verify and notify new payload returns a boolean,
+
+210
+00:16:04,820 --> 00:16:09,780
+ it's trying to assert that the value is going to be true,
+
+211
+00:16:09,940 --> 00:16:11,860
+ meaning that we in the state transition function
+
+212
+00:16:11,860 --> 00:16:13,160
+ validated the block correctly.
+
+213
+00:16:13,700 --> 00:16:17,820
+ If it's false and you fail an assert within the beacon spec,
+
+214
+00:16:17,940 --> 00:16:19,820
+ that basically means reject the block.
+
+215
+00:16:20,379 --> 00:16:23,720
+ It's maybe not super clear how that machinery works
+
+216
+00:16:23,720 --> 00:16:24,440
+ just from the spec,
+
+217
+00:16:24,580 --> 00:16:27,680
+ but that's how they're usually using the assert in this case.
+
+218
+00:16:32,060 --> 00:16:33,000
+ Awesome, thanks.
+
+219
+00:16:33,000 --> 00:16:36,159
+ Yeah, I think we can go ahead.
+
+220
+00:16:36,159 --> 00:16:41,559
+ There are some questions slowly coming, but feel free to come in.
+
+221
+00:16:41,559 --> 00:16:42,659
+ Cool.
+
+222
+00:16:42,659 --> 00:16:44,820
+ So that's the block validation.
+
+223
+00:16:44,820 --> 00:16:51,240
+ The other high-level topic that I wanted to mention with respect to the execution client,
+
+224
+00:16:51,240 --> 00:16:57,700
+ the other main role that it has in the ecosystem is to build the execution payloads, to build
+
+225
+00:16:57,700 --> 00:17:04,340
+ the blocks that it contain the state transitions, all the transactions that do interesting and
+
+226
+00:17:04,340 --> 00:17:04,980
+ useful things.
+
+227
+00:17:04,980 --> 00:17:12,620
+ So we can look quickly at how it looks to build a block from the perspective of the
+
+228
+00:17:12,620 --> 00:17:13,380
+ execution client.
+
+229
+00:17:16,000 --> 00:17:20,980
+ I'll talk about this more when we get to the peer-to-peer section, but essentially nodes
+
+230
+00:17:20,980 --> 00:17:24,299
+ are gossiping transactions over this peer-to-peer protocol.
+
+231
+00:17:24,299 --> 00:17:31,180
+ and these are transactions that are not yet valid in a block uh no sorry not yet validly included
+
+232
+00:17:31,180 --> 00:17:37,279
+ in a block but are themselves valid so meaning the nonce is the next valid nonce for the account
+
+233
+00:17:37,279 --> 00:17:46,859
+ the account has enough uh enough value to pay for a transaction etc so sometimes a node becomes
+
+234
+00:17:46,859 --> 00:17:53,299
+ tasked with creating a block that is up to the consensus layer the consensus layer randomly
+
+235
+00:17:53,299 --> 00:17:57,740
+ determines every epoch who is go like which validators are going to build a block and if
+
+236
+00:17:57,740 --> 00:18:02,579
+ your validator happens to be chosen to build that block you would tell your consensus client
+
+237
+00:18:02,579 --> 00:18:08,599
+ hey you should build a block and here is some context with which the block should be built
+
+238
+00:18:08,599 --> 00:18:13,980
+ and so we can sort of mock that out as a function again like we did above again and go
+
+239
+00:18:13,980 --> 00:18:17,419
+ and that is going to look a little bit like
+
+240
+00:18:17,420 --> 00:18:23,380
+ a function we'll call build, and it's going to take in an environment,
+
+241
+00:18:23,820 --> 00:18:30,880
+ which I won't fully define, we'll look a bit how we define it later. But the environment is going
+
+242
+00:18:30,880 --> 00:18:35,539
+ to have all the information, kind of like the header had, it's going to have the information,
+
+243
+00:18:35,660 --> 00:18:40,480
+ like what is the timestamp? What is the block number? What's the previous block, the base fee,
+
+244
+00:18:40,960 --> 00:18:45,380
+ the all the withdrawals that need to happen in the block, things that are coming from the
+
+245
+00:18:45,380 --> 00:18:51,620
+ consensus layer. The consensus layer is the brain in this case, and it's saying this is the
+
+246
+00:18:51,620 --> 00:18:56,800
+ information, the context in which you should build the block. So just build the block within that
+
+247
+00:18:56,800 --> 00:19:02,600
+ context. That's what the environment is. We'll take in a pool, which is a transaction pool.
+
+248
+00:19:04,540 --> 00:19:11,840
+ And this pool is maintaining the list of transactions. We'll just assume for simplicity
+
+249
+00:19:11,839 --> 00:19:17,279
+ that it's going to assume, sorry, that it's going to maintain a list of ordered transactions
+
+250
+00:19:17,279 --> 00:19:24,679
+ ordered by their value. So this is going to help us build the most profitable block for
+
+251
+00:19:24,679 --> 00:19:31,299
+ the execution client given the transactions that we have seen on the network.
+
+252
+00:19:31,980 --> 00:19:38,699
+ And we'll also take a state dbn because we'll have to update that. And what we need to return
+
+253
+00:19:38,700 --> 00:19:42,180
+ is a block, a state db,
+
+254
+00:19:42,860 --> 00:19:45,019
+ because we've updated it
+
+255
+00:19:45,019 --> 00:19:47,559
+ with the accumulated transactions in that block
+
+256
+00:19:47,559 --> 00:19:49,940
+ and possibly an error.
+
+257
+00:19:52,920 --> 00:19:53,319
+ Okay.
+
+258
+00:19:53,319 --> 00:19:53,420
+ Okay.
+
+259
+00:19:58,240 --> 00:19:59,259
+ Inside build,
+
+260
+00:19:59,819 --> 00:20:03,620
+ we'll keep track of a couple things.
+
+261
+00:20:04,660 --> 00:20:06,740
+ We should keep track of gas used.
+
+262
+00:20:08,700 --> 00:20:13,759
+ because there's only a finite amount of gas that we can use.
+
+263
+00:20:15,860 --> 00:20:20,039
+ And I'm going to not account for the fact
+
+264
+00:20:20,039 --> 00:20:21,759
+ that we can actually change the gas limit.
+
+265
+00:20:21,860 --> 00:20:23,960
+ I'll just say it's going to be some fixed value.
+
+266
+00:20:24,580 --> 00:20:25,860
+ So this is a simple example.
+
+267
+00:20:26,319 --> 00:20:28,299
+ But usually as you're building your block,
+
+268
+00:20:28,580 --> 00:20:31,180
+ you need to watch how much gas you're using
+
+269
+00:20:31,180 --> 00:20:32,819
+ and stop building the block
+
+270
+00:20:32,819 --> 00:20:36,160
+ once you reach the limit of transactions.
+
+271
+00:20:36,860 --> 00:20:37,980
+ That can be included.
+
+272
+00:20:38,700 --> 00:20:44,400
+ and we'll also store all the transactions that it's going to go into the block.
+
+273
+00:20:46,220 --> 00:20:52,720
+ So let's make sure that we continue adding transactions until our gas used is greater
+
+274
+00:20:52,720 --> 00:20:58,740
+ than 30 million. This is roughly what the gas limit is on mainnet today.
+
+275
+00:21:00,940 --> 00:21:06,220
+ So to get our first transaction or to get any transaction, we have to ask the transaction pool,
+
+276
+00:21:06,220 --> 00:21:13,100
+ which again, for black boxing to say that it's going to keep an ordered list of transactions
+
+277
+00:21:13,100 --> 00:21:18,620
+ for us so that we're always getting the best next transaction. And what we can say is just
+
+278
+00:21:18,620 --> 00:21:23,980
+ to pop a transaction, we'll think of it as like some type of, you know, list that allows us to pop,
+
+279
+00:21:24,779 --> 00:21:32,940
+ we'll pop that transaction, and then we will execute it. Let's call this gas you know,
+
+280
+00:21:32,940 --> 00:21:42,240
+ it's already named it um let's call it gas and error and we're going to run the transaction
+
+281
+00:21:42,240 --> 00:21:54,059
+ again kind of like we did above
+
+282
+00:21:54,059 --> 00:21:58,240
+ so i'm going to pass it in the environment we could just you know assume that run is
+
+283
+00:21:58,240 --> 00:22:02,400
+ it is requiring some interface that both block and the environment satisfy.
+
+284
+00:22:03,140 --> 00:22:06,000
+ So we'll pass it in the environment, we'll pass in that transaction,
+
+285
+00:22:06,000 --> 00:22:07,220
+ and then we'll pass in the state.
+
+286
+00:22:07,359 --> 00:22:11,720
+ And so it's again going to run the transaction in that context
+
+287
+00:22:11,720 --> 00:22:15,460
+ that the environment is defining, and it's going to return us
+
+288
+00:22:15,460 --> 00:22:20,700
+ an updated state to actually accumulate the transaction.
+
+289
+00:22:21,299 --> 00:22:25,759
+ So if that is not successful, meaning the run return an error,
+
+290
+00:22:25,759 --> 00:22:32,759
+ we're actually just going to continue here so what this means is the transaction is invalid
+
+291
+00:22:32,759 --> 00:22:42,019
+ and because we still have potentially more gas to consume within the block
+
+292
+00:22:42,339 --> 00:22:49,900
+ we don't want to return an area because um there's no error that's really occurred within the
+
+293
+00:22:49,900 --> 00:22:57,080
+ uh there's really no error that that's occurred within the block yet it's very possible that for
+
+294
+00:22:57,080 --> 00:23:02,500
+ some reason we have an invalid transaction because it did something bad while it was executing
+
+295
+00:23:02,500 --> 00:23:07,920
+ but or maybe the the transaction pool has become like slightly outdated
+
+296
+00:23:07,920 --> 00:23:12,700
+ what we'll do here is just allow ourselves to continue
+
+297
+00:23:12,700 --> 00:23:19,000
+ and try to get the next transaction from the pool into this block.
+
+298
+00:23:19,799 --> 00:23:23,380
+ So once that we verify that there's not an error running that transaction,
+
+299
+00:23:23,380 --> 00:23:27,759
+ we can actually add that gas to our gas used.
+
+300
+00:23:28,000 --> 00:23:30,380
+ So we'll just add that.
+
+301
+00:23:30,580 --> 00:23:34,259
+ So now let's say that we had a transaction which was a simple transfer.
+
+302
+00:23:34,539 --> 00:23:39,140
+ Simple transfers cost only 21,000 gas.
+
+303
+00:23:39,140 --> 00:23:45,160
+ we would now have our gas used go from zero to 21,000.
+
+304
+00:23:45,460 --> 00:23:47,360
+ And so we would just keep doing this process
+
+305
+00:23:47,360 --> 00:23:52,200
+ until we get to 30 million, I should probably say,
+
+306
+00:23:52,200 --> 00:23:54,500
+ or the pool is empty.
+
+307
+00:23:58,140 --> 00:23:59,540
+ The pool is not empty.
+
+308
+00:24:00,900 --> 00:24:04,520
+ So either we fill the block completely
+
+309
+00:24:04,520 --> 00:24:07,620
+ or we run out of potential transactions to include.
+
+310
+00:24:07,619 --> 00:24:13,579
+ and once we do that what we need to do is we need to finalize this whole
+
+311
+00:24:13,579 --> 00:24:22,919
+ transition and return our block our state db and our error and i will just sort of outsource this
+
+312
+00:24:22,919 --> 00:24:27,159
+ to another function we have in go ethereum something that's kind of like this finalize
+
+313
+00:24:27,159 --> 00:24:33,399
+ and what finalize does is it takes a bunch of transactions and some information about
+
+314
+00:24:33,400 --> 00:24:41,540
+ the block and it produces a fully assembled block. And the reason that we do this is there's some
+
+315
+00:24:41,540 --> 00:24:47,940
+ calculations that need to be done at the end of the block. I'm glossing over it a bit here. We'll
+
+316
+00:24:47,940 --> 00:24:53,400
+ see when we look at the process function. But basically, in the header, you have things like
+
+317
+00:24:53,400 --> 00:25:01,280
+ the transaction route, the receipts route, the withdrawals route. These are values that you need
+
+318
+00:25:01,279 --> 00:25:03,480
+ to calculate by merkle-izing a list.
+
+319
+00:25:04,079 --> 00:25:06,680
+ And so what we can imagine is this finalized function
+
+320
+00:25:06,680 --> 00:25:07,559
+ is going to do that.
+
+321
+00:25:07,700 --> 00:25:10,940
+ So we can, I forgot to append these transactions actually.
+
+322
+00:25:10,940 --> 00:25:15,139
+ So we would have to say append.
+
+323
+00:25:16,779 --> 00:25:19,000
+ So now we have a list of our transactions.
+
+324
+00:25:20,079 --> 00:25:20,559
+ Oops.
+
+325
+00:25:22,019 --> 00:25:26,619
+ So I'm going to finalize this block that we're building
+
+326
+00:25:26,619 --> 00:25:30,359
+ with the environment, the transactions, and the state.
+
+327
+00:25:31,279 --> 00:25:36,559
+ And I'll just say that finalize is going to return those three values as well.
+
+328
+00:25:36,559 --> 00:25:39,839
+ So it's going to assemble the block, it's going to return the state
+
+329
+00:25:39,839 --> 00:25:45,819
+ after it's been correctly updated, maybe with some withdrawals or something else.
+
+330
+00:25:45,819 --> 00:25:51,160
+ And if something goes wrong during the finalization, it'll return an error.
+
+331
+00:25:51,160 --> 00:25:58,319
+ So this is a super simplified way of building a block.
+
+332
+00:25:58,319 --> 00:26:05,240
+ So hopefully this sort of conveys to you how the execution layer thinks about building the block.
+
+333
+00:26:05,939 --> 00:26:10,700
+ I don't know if there's any questions on this example here.
+
+334
+00:26:18,039 --> 00:26:21,899
+ Yeah, it looks like we've got a few questions in the chat here.
+
+335
+00:26:25,559 --> 00:26:26,599
+ Let's see.
+
+336
+00:26:28,319 --> 00:26:32,960
+ Paul asks, is the transaction pool ordered in any way?
+
+337
+00:26:33,119 --> 00:26:36,659
+ If not, how do we ensure maximum profit when using pool.pop?
+
+338
+00:26:37,619 --> 00:26:38,139
+ Yeah, exactly.
+
+339
+00:26:38,279 --> 00:26:42,439
+ So the transaction pool is, and we're assuming in this case,
+
+340
+00:26:42,599 --> 00:26:47,939
+ it is ordered by basically the gas price.
+
+341
+00:26:48,200 --> 00:26:52,460
+ With 1559, it's a bit more complicated because we have this concept of tip,
+
+342
+00:26:52,460 --> 00:26:56,079
+ but essentially it's ordered by the highest paying transactions to the builder.
+
+343
+00:26:56,079 --> 00:27:02,839
+ So every time you call pop, you're getting the transaction that is giving you the most value per gas.
+
+344
+00:27:05,240 --> 00:27:07,419
+ Great, thank you.
+
+345
+00:27:11,339 --> 00:27:18,720
+ 721 Orbit asks, while building blocks, does the execution layer reject any transactions before sending it to the consensus layer?
+
+346
+00:27:18,720 --> 00:27:26,380
+ so the only time that you would reject a transaction is if it is invalid for some
+
+347
+00:27:26,380 --> 00:27:34,279
+ reason and you can sort of see that here in this case generally the transaction pool itself is
+
+348
+00:27:34,279 --> 00:27:40,339
+ doing some verification so we're verifying more or less that the transaction is valid
+
+349
+00:27:40,339 --> 00:27:46,100
+ sometimes there can be some race conditions where the pool hasn't quite updated but the blockhead
+
+350
+00:27:46,099 --> 00:27:55,319
+ has been updated, or maybe a transaction. In general, yeah, I mean, in general, though,
+
+351
+00:27:55,399 --> 00:28:00,919
+ the transaction pool should should really verify the transaction is valid. So this doesn't really
+
+352
+00:28:00,919 --> 00:28:06,139
+ occur too much. But you're not going to look at a transaction and reject it for any other reason,
+
+353
+00:28:06,139 --> 00:28:12,279
+ then it can't pay. Because if a transaction can pay, then any quote unquote, invalid transaction
+
+354
+00:28:12,279 --> 00:28:15,379
+ during execution is really a reverted transaction,
+
+355
+00:28:15,619 --> 00:28:18,119
+ which is valid from the consensus's perspective.
+
+356
+00:28:18,480 --> 00:28:22,859
+ It just may not have validly changed the states
+
+357
+00:28:22,859 --> 00:28:24,740
+ beyond paying for the gas that it used.
+
+358
+00:28:28,700 --> 00:28:30,460
+ One other question is,
+
+359
+00:28:30,579 --> 00:28:33,259
+ there was some talk about encrypted mempools.
+
+360
+00:28:33,759 --> 00:28:35,440
+ One, how viable is that?
+
+361
+00:28:35,500 --> 00:28:38,660
+ And two, since block transactions are ordered by gas,
+
+362
+00:28:38,660 --> 00:28:41,000
+ is gas unencrypted in such a design?
+
+363
+00:28:42,279 --> 00:28:48,240
+ yeah i mean this is a pretty challenging problem i think a lot of people have looked at this and
+
+364
+00:28:48,240 --> 00:28:55,740
+ there are different ideas about how to do it the proposals i've seen mostly on other chains i think
+
+365
+00:28:55,740 --> 00:29:03,359
+ cosmos for encrypted mempools have had things like gas unencrypted because you when you're
+
+366
+00:29:03,359 --> 00:29:08,899
+ building the block you don't know what the transaction is yet you're sort of uh committing
+
+367
+00:29:08,900 --> 00:29:10,700
+ to an ordered list of a block
+
+368
+00:29:10,700 --> 00:29:13,500
+ and therefore you need to have an idea
+
+369
+00:29:13,500 --> 00:29:15,460
+ of how much gas that block is using.
+
+370
+00:29:16,300 --> 00:29:19,700
+ I've also, I think, seen some proposals
+
+371
+00:29:19,700 --> 00:29:22,540
+ where the sender is also unencrypted
+
+372
+00:29:22,540 --> 00:29:26,720
+ and it's just the target and data
+
+373
+00:29:26,720 --> 00:29:28,160
+ that they're doing is encrypted.
+
+374
+00:29:28,780 --> 00:29:31,140
+ That way they can somehow verify.
+
+375
+00:29:31,140 --> 00:29:33,980
+ I guess they can do a very simple verification
+
+376
+00:29:33,980 --> 00:29:36,900
+ that the sender can pay for the unencrypted gas.
+
+377
+00:29:38,900 --> 00:29:45,680
+ So these are obviously riddled with drawbacks, because if you're trying to have an encrypted
+
+378
+00:29:45,680 --> 00:29:51,540
+ mempool, and you're trying to have private transaction flow, you are leaking a lot of
+
+379
+00:29:51,540 --> 00:29:58,980
+ information by even just saying gas used, and even more so if you have the sender address.
+
+380
+00:30:00,660 --> 00:30:06,900
+ So just, you know, from Ethereum's perspective, I think it probably is something that's a
+
+381
+00:30:06,900 --> 00:30:11,900
+ lot farther in the future something that we probably want a complete solution and not something
+
+382
+00:30:11,900 --> 00:30:19,660
+ that is only doing most of the things right i could be i could be off a bit here this isn't
+
+383
+00:30:19,660 --> 00:30:24,300
+ something i haven't looked at in a while but that's that's generally been my understanding
+
+384
+00:30:24,300 --> 00:30:30,120
+ it doesn't seem like we figure out a way to do encrypted mempools completely in an efficient way
+
+385
+00:30:30,120 --> 00:30:33,160
+ and so we're waiting for that to be cracked
+
+386
+00:30:33,160 --> 00:30:37,200
+ Awesome, thank you
+
+387
+00:30:37,200 --> 00:30:40,060
+ There is a condition you used
+
+388
+00:30:40,060 --> 00:30:42,460
+ for gas being less than 30 million
+
+389
+00:30:42,460 --> 00:30:44,300
+ but you also mentioned it's not hard-coded
+
+390
+00:30:44,300 --> 00:30:46,519
+ so this is just an example
+
+391
+00:30:46,519 --> 00:30:48,160
+ of parameter being passed
+
+392
+00:30:48,160 --> 00:30:50,060
+ Yeah, I mean
+
+393
+00:30:50,060 --> 00:30:51,800
+ we could say gas limit
+
+394
+00:30:51,800 --> 00:30:54,160
+ I think the function that we have is
+
+395
+00:30:54,160 --> 00:30:58,660
+ I mean, really what we could say
+
+396
+00:30:58,660 --> 00:31:00,259
+ is we could just say it's in the environment
+
+397
+00:31:00,259 --> 00:31:02,500
+ but basically
+
+398
+00:31:02,500 --> 00:31:10,980
+ whenever you're building a block you your node has that ability like i said to
+
+399
+00:31:10,980 --> 00:31:20,920
+ control the gas limit by one over 1024 so i could manipulate it on either end
+
+400
+00:31:20,920 --> 00:31:27,660
+ i could make it plus or minus that value and so what you would say on your client you might pass
+
+401
+00:31:27,660 --> 00:31:33,880
+ something like gas targets. I forget, I forget what this flag is called. It's gas limit target
+
+402
+00:31:33,880 --> 00:31:43,820
+ or something like that. Um, and you could say 40 million, maybe. So if your gas limit target is
+
+403
+00:31:43,820 --> 00:31:51,740
+ above the parent blocks, gas limits, then environment doc, like gas limit would be
+
+404
+00:31:51,740 --> 00:31:56,759
+ calculated at some point where it would try and figure out how close can we get to our targets?
+
+405
+00:31:56,759 --> 00:32:07,339
+ and it's basically just taking the it's trying to it does one over 1024 to see is that the target
+
+406
+00:32:07,339 --> 00:32:13,119
+ did we overshoot the target if it's not quite the target or sorry if it's over the target then we
+
+407
+00:32:13,119 --> 00:32:19,500
+ could reduce it and be less than one over 1024 of a delta and you know exactly equal our target
+
+408
+00:32:19,500 --> 00:32:25,539
+ so in this case if our target was 40 million and the last value was 30 million then it would be
+
+409
+00:32:25,539 --> 00:32:28,559
+ 30 million times
+
+410
+00:32:28,559 --> 00:32:30,339
+ I mean 1025
+
+411
+00:32:30,339 --> 00:32:31,240
+ over 1024
+
+412
+00:32:31,240 --> 00:32:32,639
+ essentially
+
+413
+00:32:32,639 --> 00:32:38,240
+ so your node
+
+414
+00:32:38,240 --> 00:32:40,259
+ has a bit of control over what the gas limit
+
+415
+00:32:40,259 --> 00:32:42,180
+ is for this example I'm not really
+
+416
+00:32:42,180 --> 00:32:43,960
+ going super deep on how it's
+
+417
+00:32:43,960 --> 00:32:46,399
+ computed but we can
+
+418
+00:32:46,399 --> 00:32:48,359
+ in just a second unless there are more questions
+
+419
+00:32:48,359 --> 00:33:01,139
+ yeah they kind of keep coming in but I'm just trying to uh it's a more more important one I
+
+420
+00:33:01,139 --> 00:33:07,379
+ guess um yeah interesting question was whether there are any race conditions to worry about here
+
+421
+00:33:07,379 --> 00:33:13,179
+ uh like transactions from the mem who will be included in the block and uh they have to be
+
+422
+00:33:13,180 --> 00:33:19,500
+ deleted before you build another book yeah i mean we try to avoid the race conditions it's
+
+423
+00:33:19,500 --> 00:33:24,240
+ i mean this is just like a toy example so it's not really addressing any of those problems but
+
+424
+00:33:24,240 --> 00:33:29,160
+ that's kind of where like the integrity might be lost the transaction pool is supposed to be doing
+
+425
+00:33:29,160 --> 00:33:34,460
+ a lot of transaction validation generally once you get to this point that transaction should be valid
+
+426
+00:33:34,460 --> 00:33:42,259
+ but sometimes the pool you know the pool is not always perfectly in sync and it's may be updating
+
+427
+00:33:42,259 --> 00:33:45,420
+ or like going through its list of transactions
+
+428
+00:33:45,420 --> 00:33:49,460
+ and trying to update the transactions that are valid.
+
+429
+00:33:49,539 --> 00:33:50,579
+ And so you might get something
+
+430
+00:33:50,579 --> 00:33:52,879
+ that hasn't been updated for the current head.
+
+431
+00:33:52,879 --> 00:33:55,259
+ And so then the transaction could be invalid.
+
+432
+00:33:56,160 --> 00:33:57,220
+ That's like an example.
+
+433
+00:33:59,279 --> 00:34:01,879
+ But our transaction,
+
+434
+00:34:03,059 --> 00:34:05,019
+ our block building is a lot more complicated
+
+435
+00:34:05,019 --> 00:34:09,639
+ and there are some things that have to avoid.
+
+436
+00:34:12,260 --> 00:34:18,580
+ Awesome. Yeah. And people are not sure what the res variable means, whether it's
+
+437
+00:34:18,580 --> 00:34:19,580
+ the new state.
+
+438
+00:34:19,580 --> 00:34:26,800
+ Sorry, this is the new state. I think I forgot to, yeah, I forgot to accumulate
+
+439
+00:34:26,800 --> 00:34:34,180
+ it. So basically res is the state with the transaction applied to it. And so what I'm
+
+440
+00:34:34,180 --> 00:34:41,260
+ doing is if that transaction was valid, then I just update the state variable to res. So
+
+441
+00:34:41,260 --> 00:34:45,700
+ But then state becomes the next state that has that transaction applied to it.
+
+442
+00:34:46,800 --> 00:34:47,240
+ Right.
+
+443
+00:34:48,520 --> 00:34:49,260
+ Okay, awesome.
+
+444
+00:34:49,580 --> 00:34:50,480
+ Yeah, thanks a lot, Matt.
+
+445
+00:34:50,560 --> 00:34:52,020
+ I think we can move forward.
+
+446
+00:34:52,820 --> 00:34:53,180
+ Sweet.
+
+447
+00:34:54,260 --> 00:34:58,840
+ So that's, you know, we're over halfway in, but now we're done with the overview.
+
+448
+00:34:59,720 --> 00:35:04,260
+ So let's just jump in and look a little bit more at the state transition function.
+
+449
+00:35:04,260 --> 00:35:10,400
+ so i gave you a really high level overview about what the
+
+450
+00:35:10,400 --> 00:35:16,500
+ state transition function looks like but i want to actually walk us through
+
+451
+00:35:16,500 --> 00:35:24,820
+ what happens in go ethereum it might be a bit difficult since you guys can't unmute
+
+452
+00:35:24,820 --> 00:35:31,040
+ to ask questions but i'm just going to go through this and hopefully this is a way for you to sort
+
+453
+00:35:31,039 --> 00:35:36,659
+ of see where it is this code live, what is the shape of these things, and maybe on your own time,
+
+454
+00:35:37,000 --> 00:35:42,920
+ go through it a bit more in depth and try to really understand that the flow and every line
+
+455
+00:35:42,920 --> 00:35:47,279
+ that's happening. But we'll just go through it kind of quickly here. Because I do have a couple
+
+456
+00:35:47,279 --> 00:35:57,259
+ other things to talk about. Okay, so if I go into go Ethereum, we can actually look at that function,
+
+457
+00:35:57,260 --> 00:36:02,600
+ that notify new payload function that the beacon chain is calling
+
+458
+00:36:02,600 --> 00:36:04,720
+ to interact with the execution layer.
+
+459
+00:36:05,620 --> 00:36:08,680
+ And to do that, we would go to Catalyst,
+
+460
+00:36:09,020 --> 00:36:13,840
+ which is our name for the engine API.
+
+461
+00:36:14,200 --> 00:36:19,760
+ The engine API is that interface that connects the consensus layer
+
+462
+00:36:19,760 --> 00:36:20,800
+ to the execution layer.
+
+463
+00:36:21,360 --> 00:36:23,160
+ And we'll go to API.go.
+
+464
+00:36:23,159 --> 00:36:27,199
+ There's a function called new payload.
+
+465
+00:36:30,679 --> 00:36:36,559
+ So new payload here is what the beacon chain is calling.
+
+466
+00:36:37,059 --> 00:36:39,779
+ So it's taking in a bunch of values,
+
+467
+00:36:40,019 --> 00:36:42,259
+ and mostly the values that I was talking about,
+
+468
+00:36:42,539 --> 00:36:45,480
+ the block data is in this executable data.
+
+469
+00:36:45,859 --> 00:36:48,819
+ And this looks a lot like a block.
+
+470
+00:36:49,119 --> 00:36:52,420
+ It's got the parent hash, the state root, the receipts root,
+
+471
+00:36:52,420 --> 00:36:58,400
+ the number, the gas limit, gas used, your transactions, the withdrawals, a bunch of other
+
+472
+00:36:58,400 --> 00:37:03,460
+ stuff. I'm not going to go too deeply into the 4844 things because that's just making stuff a
+
+473
+00:37:03,460 --> 00:37:10,599
+ lot more complicated. But what happens is the consensus layer got a block. It wants to ask the
+
+474
+00:37:10,599 --> 00:37:18,599
+ execution layer, was that block valid? The execution layer does a bunch of verification
+
+475
+00:37:18,599 --> 00:37:20,119
+ about that block information.
+
+476
+00:37:20,420 --> 00:37:23,199
+ So this is going to perform some integrity checks.
+
+477
+00:37:23,960 --> 00:37:27,699
+ Like, if I hash all of the data that you gave me,
+
+478
+00:37:27,819 --> 00:37:30,299
+ is it going to equal the block hash you also gave me?
+
+479
+00:37:30,639 --> 00:37:35,239
+ This is something that catches small bugs in clients often.
+
+480
+00:37:37,759 --> 00:37:41,440
+ And eventually, it just goes through and verifies some,
+
+481
+00:37:41,719 --> 00:37:43,360
+ it just does a bunch of integrity checks,
+
+482
+00:37:43,360 --> 00:37:50,900
+ a bunch of edge cases with respect to the communication between the beacon chain and
+
+483
+00:37:50,900 --> 00:37:56,460
+ consensus layer. But eventually, we get down to this function, insert block without set head.
+
+484
+00:37:57,099 --> 00:38:02,300
+ And so here, it's where we actually start trying to put that block into our chain,
+
+485
+00:38:02,519 --> 00:38:08,700
+ we validated a bunch of invariants that we want to exist before we start putting that block into
+
+486
+00:38:08,699 --> 00:38:13,319
+ the chain and then we have to jump in and like just go ahead and do it so these functions are
+
+487
+00:38:13,319 --> 00:38:20,579
+ pretty complicated and they are you know they have a lot of stuff that i think we could probably look
+
+488
+00:38:20,579 --> 00:38:27,299
+ at removing now that the beacon chain is doing a lot of the reorganization and chain management for
+
+489
+00:38:27,299 --> 00:38:32,939
+ us but it's sort of an artifact of the of the fact that we used to have to do this ourselves
+
+490
+00:38:32,939 --> 00:38:38,559
+ before we were on proof of stake so insert chain is going to call some things that we talked
+
+491
+00:38:38,559 --> 00:38:44,299
+ about. There's a function called verify headers. And verify headers is a function that's on an
+
+492
+00:38:44,299 --> 00:38:53,440
+ interface. The interface is defined in consensus, which is where we are, but there's a consensus
+
+493
+00:38:53,440 --> 00:38:59,880
+ engine for the beacon chain, and it it has its function verify header. And what it can do is it
+
+494
+00:38:59,880 --> 00:39:11,220
+ it will perform the header verifications that are relevant for this type of consensus.
+
+495
+00:39:11,220 --> 00:39:16,240
+ The first thing that it does is it checks to see is the terminal total difficulty reached?
+
+496
+00:39:16,240 --> 00:39:24,519
+ This was the way that we determine whether or not a chain was proof of work or proof of stake.
+
+497
+00:39:24,519 --> 00:39:30,920
+ point it's always you know quote-unquote reached because there is no more updates to the difficulty
+
+498
+00:39:31,480 --> 00:39:40,920
+ the uh the merge has happened and so we're always skipping over the eth1 header verification and
+
+499
+00:39:40,920 --> 00:39:46,440
+ we're just doing the beacon header verification so the beacon header header verification is
+
+500
+00:39:47,800 --> 00:39:52,920
+ pretty identical in a lot of ways you can go through the in very individual
+
+501
+00:39:54,519 --> 00:39:58,179
+ the individual constraints.
+
+502
+00:39:58,679 --> 00:40:00,300
+ I'll mention some interesting ones.
+
+503
+00:40:00,840 --> 00:40:03,380
+ For one, in proof of stake,
+
+504
+00:40:03,480 --> 00:40:05,099
+ there's no more concept of uncles.
+
+505
+00:40:05,719 --> 00:40:09,300
+ An uncle is a duplicate block at the same block height.
+
+506
+00:40:09,579 --> 00:40:10,960
+ We had this in proof of work
+
+507
+00:40:10,960 --> 00:40:14,019
+ because sometimes if you had a bunch of distributed miners
+
+508
+00:40:14,019 --> 00:40:14,840
+ around the world,
+
+509
+00:40:15,219 --> 00:40:18,300
+ two miners might find a block at roughly the same time
+
+510
+00:40:18,300 --> 00:40:20,480
+ before they communicate to the other
+
+511
+00:40:20,480 --> 00:40:21,519
+ that they had found a block.
+
+512
+00:40:22,039 --> 00:40:24,340
+ And so now you have two blocks at the same block number
+
+513
+00:40:24,340 --> 00:40:28,760
+ and you want to still reward both of those miners
+
+514
+00:40:28,760 --> 00:40:30,980
+ because they put the work in and they found a block,
+
+515
+00:40:31,160 --> 00:40:34,700
+ but only one of those blocks can become canonicalized,
+
+516
+00:40:34,920 --> 00:40:39,000
+ meaning that it's part of the canonical chain, the chain.
+
+517
+00:40:39,820 --> 00:40:43,380
+ And in proof of stake, we don't have that concept anymore.
+
+518
+00:40:43,380 --> 00:40:45,280
+ And so in the execution layer,
+
+519
+00:40:45,420 --> 00:40:48,559
+ we force the uncle hash to always be an empty uncle hash,
+
+520
+00:40:48,980 --> 00:40:51,360
+ which is just the Merkle root of an empty list.
+
+521
+00:40:51,360 --> 00:40:56,420
+ So if it's not that, then we have to just return an error because that's not a valid proof-of-stake block.
+
+522
+00:40:57,059 --> 00:40:59,660
+ Similarly with difficulty, we don't have proof-of-work anymore.
+
+523
+00:41:00,079 --> 00:41:02,180
+ The header difficulty always just has to be zero.
+
+524
+00:41:06,620 --> 00:41:07,340
+ Let's see.
+
+525
+00:41:07,720 --> 00:41:12,160
+ Okay, so then we talked a bit about 1559, and we talked a bit about the gas limit.
+
+526
+00:41:12,420 --> 00:41:14,220
+ This is where this check happens.
+
+527
+00:41:14,219 --> 00:41:21,019
+ So we have to verify that the gas limit is staying within the allowed bound.
+
+528
+00:41:21,739 --> 00:41:24,019
+ And I think that's happening here.
+
+529
+00:41:24,019 --> 00:41:27,279
+ So we give it, okay, the parent gas limit with some value.
+
+530
+00:41:27,699 --> 00:41:30,839
+ Here is the gas limit now for this current header.
+
+531
+00:41:31,239 --> 00:41:37,839
+ And we have to make sure that it's still within the bounds that's acceptable.
+
+532
+00:41:37,840 --> 00:41:53,260
+ So basically, we just compute that gas limit bound divisor, and we just make sure that the difference is not greater or less than what the limit should be.
+
+533
+00:41:53,740 --> 00:41:56,059
+ So that's that 1024 number.
+
+534
+00:41:56,140 --> 00:42:03,140
+ We're just dividing the previous gas limit by that and making sure the difference is not greater than that.
+
+535
+00:42:03,940 --> 00:42:05,900
+ So that's verifying the gas limit.
+
+536
+00:42:05,900 --> 00:42:10,940
+ it. And then there's the 1559 logic where we calculate the base fee. We're making sure that
+
+537
+00:42:10,940 --> 00:42:16,220
+ the headers base fee is equal to what we expect that base fee to be. So we're essentially going
+
+538
+00:42:16,220 --> 00:42:22,559
+ through every single field in the header and making sure that all of those fields are correct.
+
+539
+00:42:23,920 --> 00:42:29,720
+ So that's mostly the header verification. Once the header is verified, we can actually go
+
+540
+00:42:29,719 --> 00:42:34,039
+ and we can execute the block or process the block.
+
+541
+00:42:34,239 --> 00:42:35,899
+ I'm just jumping back up.
+
+542
+00:42:36,239 --> 00:42:39,379
+ So now we're back in that function, insert block,
+
+543
+00:42:39,719 --> 00:42:41,059
+ insert block without set head.
+
+544
+00:42:41,539 --> 00:42:43,099
+ And so if we continue going down,
+
+545
+00:42:43,199 --> 00:42:46,879
+ there's a bunch of other logic to deal with reorging,
+
+546
+00:42:47,319 --> 00:42:50,899
+ blocks that we already know, blocks that we already know about.
+
+547
+00:42:51,659 --> 00:42:55,419
+ But eventually, if we go down past all of this,
+
+548
+00:42:55,419 --> 00:42:58,099
+ there should be a call to a function called process.
+
+549
+00:42:59,719 --> 00:43:08,279
+ I passed it, I think, maybe.
+
+550
+00:43:08,279 --> 00:43:09,279
+ Nope.
+
+551
+00:43:09,279 --> 00:43:13,939
+ Here it is, here it is, here it is.
+
+552
+00:43:13,939 --> 00:43:14,939
+ Okay.
+
+553
+00:43:14,939 --> 00:43:21,959
+ So after we go through a whole bunch of important but kind of unrelated things with respect
+
+554
+00:43:21,959 --> 00:43:26,939
+ to inserting a block, we can finally get to this function process, which is what I wrote
+
+555
+00:43:26,940 --> 00:43:28,000
+ in the outline originally.
+
+556
+00:43:29,220 --> 00:43:32,139
+ And this is the function that I was trying to spec out
+
+557
+00:43:32,139 --> 00:43:33,920
+ a bit for you in the overview.
+
+558
+00:43:34,700 --> 00:43:36,220
+ So it takes, as you can see,
+
+559
+00:43:36,280 --> 00:43:38,760
+ something kind of similar to what we showed
+
+560
+00:43:38,760 --> 00:43:39,380
+ in that overview.
+
+561
+00:43:39,519 --> 00:43:41,480
+ It's taking a block, it's taking a state DB.
+
+562
+00:43:42,579 --> 00:43:45,280
+ I think I also passed the parent,
+
+563
+00:43:45,539 --> 00:43:48,539
+ but we have that accessible to us.
+
+564
+00:43:48,840 --> 00:43:51,079
+ Sorry, we don't really need that at this point
+
+565
+00:43:51,079 --> 00:43:54,480
+ because the parent information is put into the VM config.
+
+566
+00:43:54,480 --> 00:43:57,039
+ That's kind of like the environment for the execution.
+
+567
+00:43:57,920 --> 00:43:59,699
+ So it's calling an interface there.
+
+568
+00:43:59,760 --> 00:44:04,440
+ I can access it in State Processor.
+
+569
+00:44:05,059 --> 00:44:09,679
+ So the actual implementation for this function is in here.
+
+570
+00:44:10,460 --> 00:44:11,599
+ StateProcessor.go.
+
+571
+00:44:12,780 --> 00:44:19,400
+ So this is where we really perform the state transition in Go Ethereum.
+
+572
+00:44:24,480 --> 00:44:33,579
+ There's a lot more here than what we talked about in the example, but you can basically see like a very similar structure in general.
+
+573
+00:44:33,699 --> 00:44:38,980
+ So up here, we're just creating a bunch of values that we're going to maintain throughout the execution of the block.
+
+574
+00:44:39,440 --> 00:44:40,480
+ Here's used gas.
+
+575
+00:44:40,719 --> 00:44:45,240
+ At the end, we want to make sure the gas that we used is equal to what the gas used in the header says.
+
+576
+00:44:45,539 --> 00:44:49,420
+ This is an important check for verifying all the execution went correctly.
+
+577
+00:44:50,440 --> 00:44:52,240
+ And then we have our loop.
+
+578
+00:44:52,239 --> 00:44:55,679
+ So we just go through all the transactions in the block
+
+579
+00:44:55,679 --> 00:44:59,279
+ and we apply the transaction.
+
+580
+00:45:00,219 --> 00:45:04,919
+ The apply transaction does kind of like what we talked about
+
+581
+00:45:04,919 --> 00:45:08,439
+ or eventually we get here and we call the VM.
+
+582
+00:45:08,979 --> 00:45:11,179
+ We have to go through this function transition DB.
+
+583
+00:45:12,119 --> 00:45:16,899
+ Transition DB does a bunch of the transaction level validation.
+
+584
+00:45:17,199 --> 00:45:18,659
+ So it has a pre-check function.
+
+585
+00:45:18,659 --> 00:45:21,899
+ That's verifying that the nonce of the transaction is correct.
+
+586
+00:45:22,239 --> 00:45:31,519
+ that the balance of the transaction is correct some other like overflows that could happen um
+
+587
+00:45:33,439 --> 00:45:41,919
+ some 1559 checks a lot of the fee validation is done here and eventually
+
+588
+00:45:44,559 --> 00:45:49,279
+ we verify you know there's a lot of small verifications that have to happen but
+
+589
+00:45:49,280 --> 00:45:52,440
+ But eventually we get to this point where we can execute that transaction.
+
+590
+00:45:55,120 --> 00:46:00,620
+ And that is, I passed it.
+
+591
+00:46:06,680 --> 00:46:07,380
+ Ah, here it is.
+
+592
+00:46:07,380 --> 00:46:12,980
+ Okay, so here we're saying there's two types of instantiations of execution.
+
+593
+00:46:13,540 --> 00:46:18,620
+ Either you're executing a contract creation or you're executing a call.
+
+594
+00:46:19,280 --> 00:46:24,780
+ And we've sort of, we've made it so that we have these functions create and call.
+
+595
+00:46:25,600 --> 00:46:29,820
+ So here you can see if the transaction is going to create something,
+
+596
+00:46:29,920 --> 00:46:33,700
+ we're going to call the create function and that does the creation.
+
+597
+00:46:34,240 --> 00:46:36,800
+ And if we're not creating, then we have to update the nonce.
+
+598
+00:46:36,800 --> 00:46:38,840
+ In create, the nonce is already updated.
+
+599
+00:46:39,000 --> 00:46:46,060
+ So that's not, that doesn't exist in this branch of the code,
+
+600
+00:46:46,059 --> 00:46:50,320
+ but we update the nonce and we then perform the call.
+
+601
+00:46:50,860 --> 00:46:53,719
+ And so I'm going to skip over the implementation of call
+
+602
+00:46:53,719 --> 00:46:56,779
+ because we'll look at that a little bit when we look at the EVM.
+
+603
+00:46:57,259 --> 00:47:00,119
+ But this is essentially kicking the EVM up
+
+604
+00:47:00,119 --> 00:47:05,059
+ and saying I want to execute an EVM with this as my message sender.
+
+605
+00:47:05,900 --> 00:47:06,960
+ This is the destination.
+
+606
+00:47:07,179 --> 00:47:09,119
+ So go load the code at that destination
+
+607
+00:47:09,119 --> 00:47:13,019
+ and then pass this data into that destination as call data.
+
+608
+00:47:13,019 --> 00:47:27,400
+ So that processes, we get a return value, we get gas remaining, which if you subtract that from the gas passed in, you get the amount of gas that was used and any errors that occurred during execution.
+
+609
+00:47:27,400 --> 00:47:37,800
+ we refund some gas to the user if there were some refunds from resetting storage we pay out
+
+610
+00:47:37,800 --> 00:47:45,400
+ the coinbase the fee that was charged to the user to execute that transaction and then we
+
+611
+00:47:45,400 --> 00:47:50,760
+ return that execution result and so if we bounce back up we're back to apply message
+
+612
+00:47:50,760 --> 00:47:54,760
+ which we just accumulate that gas used.
+
+613
+00:47:55,280 --> 00:47:58,860
+ We accumulate this receipt into our list of receipts.
+
+614
+00:48:01,340 --> 00:48:04,220
+ Into our list of receipts there, the logs are accumulated.
+
+615
+00:48:05,460 --> 00:48:08,580
+ And eventually we go through all those transactions.
+
+616
+00:48:08,580 --> 00:48:10,560
+ We complete this transaction loop
+
+617
+00:48:10,560 --> 00:48:13,000
+ and we get to this function that I sort of mentioned before,
+
+618
+00:48:13,180 --> 00:48:16,400
+ finalize, which is going to just apply
+
+619
+00:48:16,400 --> 00:48:18,840
+ some consensus specific things.
+
+620
+00:48:18,840 --> 00:48:39,900
+ So an interesting one that we have for the beacon chain is in finalize, we actually apply the withdrawals because this is kind of a consensus layer primitive, I guess you could say, where it really has nothing to do with the transactions.
+
+621
+00:48:39,900 --> 00:48:46,860
+ it's all about the fact that we're running a beacon chain, a proof of stake, click, for example,
+
+622
+00:48:46,960 --> 00:48:52,440
+ another type of consensus that go Ethereum generally supports does not have withdrawals.
+
+623
+00:48:52,559 --> 00:48:56,800
+ And so you need to have a place to differentiate it. And that's where this function finalize comes
+
+624
+00:48:56,800 --> 00:49:01,160
+ into play. It lets us differentiate between different consensus engines that we might have.
+
+625
+00:49:01,740 --> 00:49:07,320
+ So finalize is going to go through each of the withdrawals that happen from the beacon chain,
+
+626
+00:49:07,320 --> 00:49:09,600
+ that the beacon chain told us what happened
+
+627
+00:49:09,600 --> 00:49:11,720
+ in this block, and it just performs them.
+
+628
+00:49:11,940 --> 00:49:15,340
+ So it adds a balance out of thin air.
+
+629
+00:49:16,000 --> 00:49:18,140
+ It's basically just taking some ether
+
+630
+00:49:18,140 --> 00:49:20,120
+ that was on that beacon chain
+
+631
+00:49:20,120 --> 00:49:21,940
+ and putting it onto the execution layer.
+
+632
+00:49:23,420 --> 00:49:25,800
+ So once that's all done, once that's finalized,
+
+633
+00:49:25,800 --> 00:49:27,200
+ we can return our receipts.
+
+634
+00:49:28,620 --> 00:49:32,340
+ Let's see if I can bounce back to where this is called.
+
+635
+00:49:32,340 --> 00:49:39,440
+ so we were digging into this function
+
+636
+00:49:39,440 --> 00:49:40,519
+ apply transaction
+
+637
+00:49:40,519 --> 00:49:42,059
+ all those transactions
+
+638
+00:49:42,059 --> 00:49:44,160
+ oh sorry we were digging into process
+
+639
+00:49:44,160 --> 00:49:47,260
+ so once process is done
+
+640
+00:49:47,260 --> 00:49:48,059
+ we are in blockchain
+
+641
+00:49:48,059 --> 00:49:50,880
+ and now the blockchain is basically
+
+642
+00:49:50,880 --> 00:49:52,600
+ processed that
+
+643
+00:49:52,600 --> 00:49:55,360
+ so it's going to do some more things
+
+644
+00:49:55,360 --> 00:49:56,539
+ update some metrics
+
+645
+00:49:56,539 --> 00:49:59,300
+ and eventually we're going to write that block to state
+
+646
+00:49:59,300 --> 00:50:00,480
+ and this is kind of
+
+647
+00:50:00,480 --> 00:50:06,179
+ when everything is resolved onto the disk or into your memory.
+
+648
+00:50:06,940 --> 00:50:10,179
+ So at this point, we are inserting the block.
+
+649
+00:50:10,240 --> 00:50:11,099
+ The block was valid.
+
+650
+00:50:11,820 --> 00:50:19,320
+ And there's just some more metrics and small things that we do.
+
+651
+00:50:19,320 --> 00:50:23,639
+ But basically, at the end, we return the number of blocks
+
+652
+00:50:23,639 --> 00:50:27,240
+ that were written to the disk.
+
+653
+00:50:27,440 --> 00:50:28,760
+ And we return if there were any errors.
+
+654
+00:50:28,760 --> 00:50:33,280
+ since there would have been no errors, we successfully wrote that block, we would just say,
+
+655
+00:50:33,740 --> 00:50:39,160
+ in this case, one block was written. And if we go all the way back to the Catalyst API,
+
+656
+00:50:40,320 --> 00:50:46,640
+ so this actually throws away the number of blocks that were written, it just checks to see if error,
+
+657
+00:50:46,940 --> 00:50:54,140
+ there was no error, we would get the error nil error back from insert block without set head,
+
+658
+00:50:54,139 --> 00:51:01,420
+ skip through all of this uh and eventually we would return a payload status status engine valid
+
+659
+00:51:01,420 --> 00:51:08,460
+ and a new latest hash which is the block that was just inserted so that's the full block insertion
+
+660
+00:51:08,460 --> 00:51:13,519
+ pipeline that happens whenever a consensus layer gets a block and it sends it to the execution
+
+661
+00:51:13,519 --> 00:51:18,859
+ layer i know that was a lot i don't want to get hung up on like a whole bunch of questions but
+
+662
+00:51:18,859 --> 00:51:22,460
+ if there are some like high level things that i could answer quickly before we talk about some
+
+663
+00:51:22,460 --> 00:51:25,139
+ other stuff, I am open to that.
+
+664
+00:51:28,780 --> 00:51:30,139
+ Thank you so much.
+
+665
+00:51:30,559 --> 00:51:31,659
+ We have it on higher level.
+
+666
+00:51:31,780 --> 00:51:35,500
+ If you can explain again what a receipt is.
+
+667
+00:51:37,000 --> 00:51:37,559
+ Yeah.
+
+668
+00:51:37,679 --> 00:51:51,619
+ So a receipt is information about a transaction that can only be verified or determined after
+
+669
+00:51:51,619 --> 00:51:59,139
+ executing the transaction so if we look at the consensus definition of a receipt it has things
+
+670
+00:51:59,139 --> 00:52:06,699
+ like so these are the consensus fields these are the things that are actually in a receipt this
+
+671
+00:52:06,699 --> 00:52:12,619
+ other stuff is some go ethereum stuff that's not in the receipt but you have things such as the type
+
+672
+00:52:12,619 --> 00:52:17,539
+ which says that you know what transaction type this receipt was associated with
+
+673
+00:52:17,539 --> 00:52:30,420
+ And that's used as a discriminator, basically, so you can interpret if different types of transactions have different types of different types of receipts, which I don't think they really do at the moment.
+
+674
+00:52:31,759 --> 00:52:39,019
+ Post state, this was deprecated in Byzantium, I think, but it's been deprecated for quite a while.
+
+675
+00:52:39,019 --> 00:52:43,960
+ So really what you have are these, you have status, which would say whether or not a transaction
+
+676
+00:52:43,960 --> 00:52:50,320
+ reverted, you would have gas, cumulative gas used, which says how much gas that transaction
+
+677
+00:52:50,320 --> 00:52:52,119
+ used the Bloom filter.
+
+678
+00:52:52,619 --> 00:52:55,759
+ I would, if you're not familiar with what Bloom filters are, I would check that out
+
+679
+00:52:55,759 --> 00:52:56,179
+ on Wikipedia.
+
+680
+00:52:56,380 --> 00:53:02,960
+ It's basically a fast way to determine if it's possible, a log you're looking for occurred
+
+681
+00:53:02,960 --> 00:53:04,179
+ within that transaction.
+
+682
+00:53:04,400 --> 00:53:08,440
+ And then you just have a list of all the logs and a log is something that you can write
+
+683
+00:53:08,440 --> 00:53:15,059
+ from a smart contract, the smart contract address would be here. And you can have topics which help
+
+684
+00:53:15,059 --> 00:53:21,059
+ you quickly find it via the Bloom filter. And then you have the data. So an example of a log might be
+
+685
+00:53:21,059 --> 00:53:29,320
+ if you send an ERC-20, that ERC-20 might set out a log that says some amount of that ERC-20 was sent
+
+686
+00:53:29,320 --> 00:53:35,220
+ from one address to another address. And so you could read that from the block at the end of the
+
+687
+00:53:35,219 --> 00:53:41,059
+ transaction and see all of the ERC-20 transfers that happened with a particular token.
+
+688
+00:53:41,059 --> 00:53:52,379
+ Awesome. Thanks a lot, Matt. One more question is about environment of multiple
+
+689
+00:53:52,379 --> 00:53:57,779
+ transactions which result in multiple other transactions, like contracts calling other
+
+690
+00:53:57,779 --> 00:54:02,459
+ contracts, et cetera. How is the context, the environment that you used in your overview,
+
+691
+00:54:02,460 --> 00:54:15,519
+ variable how is it how it's fetched okay let me see if I can show this really quickly I want to
+
+692
+00:54:15,519 --> 00:54:23,519
+ go to state processor so there's two kind of environments that we care about there I think
+
+693
+00:54:23,519 --> 00:54:34,320
+ think this is the right one so we got have the evm environment which stores mostly transaction
+
+694
+00:54:34,320 --> 00:54:40,000
+ level context and block level context so block level are things that i mentioned coinbase gas
+
+695
+00:54:40,000 --> 00:54:46,159
+ limit block number time difficulty base fee random all this stuff this is stuff that doesn't change
+
+696
+00:54:46,159 --> 00:54:52,639
+ transaction to transaction it's fixed across the entire block then we have transaction context
+
+697
+00:54:52,639 --> 00:54:55,879
+ origin, gas price, blob stuff.
+
+698
+00:54:55,879 --> 00:54:59,239
+ These are things that are true across the whole transaction,
+
+699
+00:54:59,980 --> 00:55:02,199
+ but might change within the block
+
+700
+00:55:02,199 --> 00:55:03,739
+ because there are different transactions.
+
+701
+00:55:04,319 --> 00:55:06,119
+ So these are two types of environments
+
+702
+00:55:06,119 --> 00:55:08,920
+ which are accessible during execution,
+
+703
+00:55:09,319 --> 00:55:13,059
+ but are generally fixed for the full execution of the transaction.
+
+704
+00:55:13,920 --> 00:55:17,019
+ Then there's also in the interpreter,
+
+705
+00:55:17,019 --> 00:55:22,820
+ an EVO, no, is that right?
+
+706
+00:55:30,980 --> 00:55:34,460
+ Okay, so inside the interpreter, you have some things.
+
+707
+00:55:35,199 --> 00:55:38,199
+ And you have, for one, the scope context,
+
+708
+00:55:38,199 --> 00:55:39,980
+ which we'll look at here in just a second,
+
+709
+00:55:40,239 --> 00:55:43,259
+ that has things related to the current scope that you're in.
+
+710
+00:55:43,340 --> 00:55:46,300
+ So if you are accessing the stack in the current scope
+
+711
+00:55:46,300 --> 00:55:47,760
+ or the memory in the current scope
+
+712
+00:55:47,760 --> 00:55:51,100
+ or storage via contract in the current scope.
+
+713
+00:55:51,640 --> 00:55:56,620
+ Those are all things that are accessible,
+
+714
+00:55:57,060 --> 00:56:00,440
+ that change within that transaction frame to frame.
+
+715
+00:56:00,519 --> 00:56:04,320
+ Every time you invoke something that adds a new call frame,
+
+716
+00:56:04,760 --> 00:56:07,519
+ things like call, delegate call, create, create to,
+
+717
+00:56:07,860 --> 00:56:09,580
+ that's going to create new scopes.
+
+718
+00:56:10,560 --> 00:56:12,420
+ And then contract is also an interesting one
+
+719
+00:56:12,420 --> 00:56:14,240
+ because it has the sender in it.
+
+720
+00:56:14,239 --> 00:56:18,779
+ So the caller here is the message.sender if you write some solidity.
+
+721
+00:56:19,619 --> 00:56:23,359
+ So this is an environment context that's changing within the transaction.
+
+722
+00:56:24,379 --> 00:56:31,319
+ And this is what the EVM, the interpreter, will use to fill requests for instructions.
+
+723
+00:56:31,319 --> 00:56:32,759
+ Like, what's the caller?
+
+724
+00:56:32,939 --> 00:56:34,719
+ Who called this contract?
+
+725
+00:56:35,319 --> 00:56:40,979
+ Or what's the value of this piece of memory right here?
+
+726
+00:56:40,980 --> 00:56:45,139
+ These are things that are accessible via this environment variable.
+
+727
+00:56:45,139 --> 00:56:48,139
+ So I was kind of simplifying a lot of that stuff, but
+
+728
+00:56:48,139 --> 00:56:50,639
+ that's how it looks if you start to dig in,
+
+729
+00:56:50,639 --> 00:56:54,039
+ in the actual implementation here in the VM that we have.
+
+730
+00:56:58,380 --> 00:57:00,860
+ Awesome, thanks for diving there.
+
+731
+00:57:00,860 --> 00:57:05,800
+ I've been seeing new questions, but people are still typing,
+
+732
+00:57:05,800 --> 00:57:09,219
+ there's a slight delay with the screen, so-
+
+733
+00:57:09,219 --> 00:57:13,099
+ Okay. Well, let's keep going then.
+
+734
+00:57:13,639 --> 00:57:21,399
+ I've got a couple other things to talk about before we close up.
+
+735
+00:57:22,019 --> 00:57:23,599
+ So that was the state transition function.
+
+736
+00:57:23,759 --> 00:57:30,339
+ Let's dig in even deeper and talk about what the Ethereum virtual machine is.
+
+737
+00:57:32,039 --> 00:57:38,000
+ So to illustrate this, I want to make a quick diagram.
+
+738
+00:57:39,219 --> 00:57:44,859
+ so that you can have an idea of what is going on within the EVM.
+
+739
+00:57:45,000 --> 00:57:47,359
+ I think I sort of just showed quite a bit of stuff
+
+740
+00:57:47,359 --> 00:57:50,299
+ about the different contexts that exist within the EVM,
+
+741
+00:57:50,779 --> 00:57:54,579
+ but I tend to find that people understand it a bit better
+
+742
+00:57:54,579 --> 00:57:56,079
+ if they have a picture to look at.
+
+743
+00:57:56,839 --> 00:57:59,399
+ So we'll call this the EVM.
+
+744
+00:57:59,639 --> 00:58:02,659
+ This is the EVM box.
+
+745
+00:58:03,659 --> 00:58:06,819
+ And this is essentially an EVM call frame.
+
+746
+00:58:06,820 --> 00:58:16,620
+ And so like I was saying, the call frame changes throughout the transaction, and you have access only to things that are related to that call frame.
+
+747
+00:58:17,059 --> 00:58:21,000
+ So a big example of what's accessible in that call frame is the code.
+
+748
+00:58:21,780 --> 00:58:24,680
+ This is the code that you are currently executing.
+
+749
+00:58:26,280 --> 00:58:30,720
+ And alongside that code, you need to know where in the code you're executing.
+
+750
+00:58:30,860 --> 00:58:33,039
+ So you have the PC, that's the program counter.
+
+751
+00:58:33,039 --> 00:58:39,340
+ if you're familiar with with interpreters at all then you will be familiar with how the pc works
+
+752
+00:58:39,340 --> 00:58:45,239
+ but basically it's just saying uh the way the interpreter is processing this is if pc is at
+
+753
+00:58:45,239 --> 00:58:51,719
+ zero it would load the instruction at index zero in the code and then execute it and then it would
+
+754
+00:58:51,719 --> 00:58:59,000
+ update the pc by one or possibly more if the instruction uh was larger than one byte but
+
+755
+00:58:59,000 --> 00:59:01,219
+ Most of our instructions are one byte.
+
+756
+00:59:01,219 --> 00:59:04,960
+ So then we have some other frame level stuff.
+
+757
+00:59:04,960 --> 00:59:08,300
+ We have the stack, we have the memory,
+
+758
+00:59:14,440 --> 00:59:16,679
+ we have the gas remaining.
+
+759
+00:59:22,960 --> 00:59:26,320
+ And these are mostly the things that we have
+
+760
+00:59:26,320 --> 00:59:29,980
+ with respect to just this frame of execution.
+
+761
+00:59:29,980 --> 00:59:33,039
+ We also have things like we saw,
+
+762
+00:59:33,039 --> 00:59:36,960
+ we have the block context that I just went over
+
+763
+00:59:36,960 --> 00:59:38,760
+ and we have the Tx context.
+
+764
+00:59:38,760 --> 00:59:40,900
+ These are accessible within the frame.
+
+765
+00:59:41,820 --> 00:59:45,320
+ We also have the state which is accessible.
+
+766
+00:59:46,700 --> 00:59:48,160
+ So there's a bunch of operations
+
+767
+00:59:48,160 --> 00:59:51,240
+ that can access parts of the state.
+
+768
+00:59:51,240 --> 00:59:56,200
+ Things like xcode-size xcode-hash,
+
+769
+00:59:56,199 --> 00:59:59,019
+ meaning external code size or external code hash.
+
+770
+00:59:59,439 --> 01:00:02,519
+ Those are instructions that would let you read things from the state.
+
+771
+01:00:03,359 --> 01:00:06,379
+ Instructions like Coinbase give you block context.
+
+772
+01:00:07,099 --> 01:00:10,359
+ Instructions like Origin give you transaction context.
+
+773
+01:00:13,139 --> 01:00:18,759
+ Okay, this is mostly what the VM looks like.
+
+774
+01:00:19,739 --> 01:00:24,759
+ To understand a bit more about how the EVM works,
+
+775
+01:00:24,760 --> 01:00:27,780
+ we can have a quick example program.
+
+776
+01:00:29,280 --> 01:00:31,300
+ And we'll do it on this playground here.
+
+777
+01:00:32,160 --> 01:00:33,100
+ Oh, they already have one.
+
+778
+01:00:34,760 --> 01:00:35,740
+ Yeah, let's just use this one.
+
+779
+01:00:36,440 --> 01:00:38,820
+ So the way the stack machine works is
+
+780
+01:00:38,820 --> 01:00:42,460
+ the stack is kind of your working place for doing operations.
+
+781
+01:00:42,900 --> 01:00:48,180
+ All the instructions essentially take stack arguments
+
+782
+01:00:48,180 --> 01:00:54,440
+ to modify the behavior of that specific instruction.
+
+783
+01:00:54,760 --> 01:01:02,660
+ So in this example, essentially, we're writing something to the memory with mStore, and then we're going to return it to the caller.
+
+784
+01:01:03,360 --> 01:01:09,920
+ So if we look at how that looks, if we step by step, we're on this first instruction.
+
+785
+01:01:10,140 --> 01:01:13,600
+ So if we're thinking about this picture here, PC is equal to zero.
+
+786
+01:01:13,960 --> 01:01:16,700
+ So in this example, we would have our PC at zero.
+
+787
+01:01:17,320 --> 01:01:20,420
+ Our stack and our memory are empty.
+
+788
+01:01:20,420 --> 01:01:22,539
+ and then gas remaining is kind of irrelevant,
+
+789
+01:01:23,019 --> 01:01:25,880
+ but let's just imagine we have basically infinite gas remaining.
+
+790
+01:01:27,240 --> 01:01:30,820
+ If we step one through, we've pushed a value on,
+
+791
+01:01:30,880 --> 01:01:32,019
+ and that value is 42.
+
+792
+01:01:32,619 --> 01:01:35,200
+ So now our stack has grown to one element,
+
+793
+01:01:35,300 --> 01:01:36,960
+ and it has the value 42 on top.
+
+794
+01:01:38,099 --> 01:01:41,099
+ We run another instruction, again, push one.
+
+795
+01:01:41,360 --> 01:01:43,300
+ That's pushing zero onto the stack.
+
+796
+01:01:44,440 --> 01:01:46,000
+ And now we're at mStore.
+
+797
+01:01:46,180 --> 01:01:48,700
+ So mStore, the way that mStore works is it takes
+
+798
+01:01:48,699 --> 01:01:54,919
+ the first element on the stack it uses that as the offset to write a value and then it reads the
+
+799
+01:01:54,919 --> 01:02:00,799
+ next item on the stack and it writes that value to that offset so when I press this next button
+
+800
+01:02:00,799 --> 01:02:05,119
+ what's going to happen is we're going to remove both of the stack elements but then the memory
+
+801
+01:02:05,119 --> 01:02:11,879
+ is going to have 42 written to it and that's exactly what happened here so now we want to
+
+802
+01:02:11,879 --> 01:02:17,179
+ return this value so the way to return a value is you need to say how big the return value is going
+
+803
+01:02:17,179 --> 01:02:22,759
+ to be. And you need to say where to start reading that return value. And the way that it does that
+
+804
+01:02:22,759 --> 01:02:31,460
+ here is we push the hex value 20, which is 32 in decimal. And then we push the index to start with,
+
+805
+01:02:31,559 --> 01:02:37,239
+ which is zero. So we're going to start here. And we'll pass in all 32 of these bytes. So if we just
+
+806
+01:02:37,239 --> 01:02:42,500
+ look at those, we push 20 onto the stack and the zero onto the stack. And then we pop them both
+
+807
+01:02:42,500 --> 01:02:50,820
+ off with return. And so now we get this return value of 42. And that is like really roughly how
+
+808
+01:02:50,820 --> 01:02:58,099
+ a stack machine works, how to think about the behavior within the EVM. I will mention that
+
+809
+01:02:58,099 --> 01:03:03,320
+ within the EVM, there's a bunch of different types of instructions. What we looked at there
+
+810
+01:03:03,320 --> 01:03:11,380
+ are some pretty simple stuff. In general, you can think of the different categories.
+
+811
+01:03:11,380 --> 01:03:13,740
+ is this things like arithmetic.
+
+812
+01:03:16,280 --> 01:03:20,140
+ So arithmetic is adding, subtracting, exponentiation,
+
+813
+01:03:21,039 --> 01:03:24,480
+ doing modulos, that type of stuff.
+
+814
+01:03:24,680 --> 01:03:27,019
+ There's bitwise functions for bitbanging.
+
+815
+01:03:27,240 --> 01:03:29,660
+ If you need to do an and, an x or a not,
+
+816
+01:03:30,119 --> 01:03:31,400
+ those functions exist.
+
+817
+01:03:32,400 --> 01:03:33,800
+ There are environment functions,
+
+818
+01:03:33,800 --> 01:03:37,200
+ which give us this access to the block context
+
+819
+01:03:37,200 --> 01:03:39,160
+ and the TX context, like I mentioned.
+
+820
+01:03:39,159 --> 01:03:47,339
+ And shoot.
+
+821
+01:03:47,339 --> 01:03:51,039
+ We also have call frame instructions.
+
+822
+01:03:51,039 --> 01:03:59,259
+ We saw that a little bit whenever we were looking at the transition DB method where
+
+823
+01:03:59,259 --> 01:04:04,579
+ upon a create, we call evm.create upon a call, we call evm.call.
+
+824
+01:04:04,579 --> 01:04:07,940
+ These are all in types of instructions that also exist in the EVM.
+
+825
+01:04:07,940 --> 01:04:10,539
+ if you need to create a new call frame,
+
+826
+01:04:10,539 --> 01:04:12,500
+ there's control flow.
+
+827
+01:04:12,500 --> 01:04:15,220
+ So if you wanna have more complicated programs,
+
+828
+01:04:15,220 --> 01:04:17,380
+ programs that branch,
+
+829
+01:04:17,380 --> 01:04:20,559
+ and by branching, maybe an example I can show is,
+
+830
+01:04:23,460 --> 01:04:25,639
+ is this 4788 contract.
+
+831
+01:04:28,599 --> 01:04:32,679
+ So there's a night, so this is the contract for 4788,
+
+832
+01:04:32,679 --> 01:04:36,659
+ which is going to be used in the next hard fork,
+
+833
+01:04:36,659 --> 01:04:39,019
+ But you can see an example of branching here.
+
+834
+01:04:39,500 --> 01:04:41,960
+ So what this is doing is it's going to branch
+
+835
+01:04:41,960 --> 01:04:44,920
+ depending on if the caller is equal to this big number,
+
+836
+01:04:45,420 --> 01:04:47,119
+ which this number is a special number.
+
+837
+01:04:47,239 --> 01:04:48,839
+ It's the system address.
+
+838
+01:04:49,539 --> 01:04:51,779
+ And this is how 4788 works.
+
+839
+01:04:51,960 --> 01:04:55,460
+ The system will call this contract with this address.
+
+840
+01:04:55,460 --> 01:04:57,940
+ And in that case, we know this is a special call.
+
+841
+01:04:58,219 --> 01:05:00,879
+ So we use jump I to determine
+
+842
+01:05:00,880 --> 01:05:08,740
+ if the equal of caller and that number is true,
+
+843
+01:05:08,740 --> 01:05:11,519
+ we would jump to a certain value.
+
+844
+01:05:11,700 --> 01:05:13,619
+ And if it's not, we would jump to a different value.
+
+845
+01:05:14,119 --> 01:05:15,900
+ So that's something that allows you
+
+846
+01:05:15,900 --> 01:05:17,960
+ to control the flow of the program.
+
+847
+01:05:19,800 --> 01:05:21,460
+ And then there's also stack ops.
+
+848
+01:05:22,119 --> 01:05:24,539
+ So we saw some stack ops in that example.
+
+849
+01:05:24,820 --> 01:05:25,579
+ There was push.
+
+850
+01:05:25,860 --> 01:05:28,380
+ There's also things like pop and swap.
+
+851
+01:05:28,380 --> 01:05:31,820
+ so that lets you just manipulate the stack in different ways
+
+852
+01:05:31,820 --> 01:05:37,140
+ and then there's some system types of calls
+
+853
+01:05:37,140 --> 01:05:41,360
+ which I guess I can put the
+
+854
+01:05:41,360 --> 01:05:45,119
+ we can say call as part of the system calls
+
+855
+01:05:45,119 --> 01:05:46,440
+ so we can say call create
+
+856
+01:05:46,440 --> 01:05:49,940
+ we saw this return value that's type of system call
+
+857
+01:05:49,940 --> 01:05:54,160
+ yeah
+
+858
+01:05:54,160 --> 01:05:56,960
+ maybe store
+
+859
+01:05:56,960 --> 01:05:58,320
+ yes store
+
+860
+01:05:58,320 --> 01:06:00,720
+ This writes to the storage of the contract.
+
+861
+01:06:01,760 --> 01:06:03,360
+ And then there's some memory operations.
+
+862
+01:06:03,700 --> 01:06:07,280
+ We can do mload, mstore, mstore8,
+
+863
+01:06:07,820 --> 01:06:09,660
+ which stores one single byte.
+
+864
+01:06:10,539 --> 01:06:12,860
+ So these are things that let us manipulate the memory
+
+865
+01:06:12,860 --> 01:06:13,500
+ within the frame.
+
+866
+01:06:15,519 --> 01:06:18,160
+ Okay, that was a super fast crash course
+
+867
+01:06:18,160 --> 01:06:19,519
+ on EVM-related things.
+
+868
+01:06:19,600 --> 01:06:21,559
+ Any questions on EVM?
+
+869
+01:06:21,559 --> 01:06:33,679
+ uh one question from paul uh asking how were various instruction costs determined
+
+870
+01:06:33,679 --> 01:06:40,940
+ uh a long time ago there was
+
+871
+01:06:40,940 --> 01:06:51,119
+ there was some benchmarking done i forget what the target gas per second was that
+
+872
+01:06:51,119 --> 01:06:57,659
+ we were roughly targeting i don't know if i could find i don't know if i could find that quickly
+
+873
+01:06:57,659 --> 01:07:03,940
+ uh basically there was a gas per second that we wanted to be processed on a specific
+
+874
+01:07:03,940 --> 01:07:10,619
+ processor architecture and that was sort of where we roughly came to the different gas prices
+
+875
+01:07:10,619 --> 01:07:16,519
+ and I don't remember what that gas per second off the top of my head was but we would just come up
+
+876
+01:07:16,519 --> 01:07:22,559
+ with a benchmark that used the instruction and we would run that many many times to sort of see how
+
+877
+01:07:22,559 --> 01:07:29,659
+ many times you could run that per second and then work backwards to figure out what is the
+
+878
+01:07:29,659 --> 01:07:35,440
+ appropriate like you know if this instruction takes so long then what gas would we need to
+
+879
+01:07:35,440 --> 01:07:42,599
+ get to that gas per second value. At this point, you know, we have a lot of instructions. And so
+
+880
+01:07:42,599 --> 01:07:49,059
+ sometimes we don't super closely do this type of benchmarking. So base fee came with the London
+
+881
+01:07:49,059 --> 01:07:53,619
+ hard fork, and there wasn't really benchmarking done on that specific instruction, because we
+
+882
+01:07:53,619 --> 01:08:00,659
+ just copied the same gas value that is charged for other block context types of instructions.
+
+883
+01:08:00,659 --> 01:08:09,420
+ So a lot of these things today just use what the gas cost of other similar types of instructions are.
+
+884
+01:08:09,759 --> 01:08:18,279
+ We still have this rough gas per second that we want to process, but I don't think that things are perfectly in line.
+
+885
+01:08:19,340 --> 01:08:22,760
+ I think that some things are probably being overcharged for.
+
+886
+01:08:22,760 --> 01:08:28,300
+ awesome thank you
+
+887
+01:08:28,300 --> 01:08:30,039
+ few people
+
+888
+01:08:30,039 --> 01:08:31,560
+ typing right now so maybe we'll give
+
+889
+01:08:31,560 --> 01:08:33,920
+ five seconds and
+
+890
+01:08:33,920 --> 01:08:35,760
+ if something comes up we can
+
+891
+01:08:35,760 --> 01:08:37,659
+ continue here
+
+892
+01:08:37,659 --> 01:08:40,159
+ yeah I have like maybe 15 more minutes
+
+893
+01:08:40,159 --> 01:08:42,060
+ or so of stuff I don't know if that's okay
+
+894
+01:08:42,060 --> 01:08:44,180
+ yeah
+
+895
+01:08:44,180 --> 01:08:44,680
+ it's great
+
+896
+01:08:44,680 --> 01:08:46,300
+ sweet
+
+897
+01:08:46,300 --> 01:08:50,020
+ cool let's
+
+898
+01:08:50,020 --> 01:08:52,199
+ just keep moseying on and then we can do
+
+899
+01:08:52,199 --> 01:08:53,939
+ a big session of questions at the end.
+
+900
+01:08:54,479 --> 01:08:54,720
+ Okay.
+
+901
+01:08:56,359 --> 01:08:59,059
+ All right, we talked about block validation.
+
+902
+01:08:59,479 --> 01:09:01,739
+ We talked about block building,
+
+903
+01:09:02,099 --> 01:09:03,539
+ the state transition function,
+
+904
+01:09:04,539 --> 01:09:07,340
+ super high-level overview about how the EVM works.
+
+905
+01:09:07,899 --> 01:09:11,319
+ And now I want to talk about the peer-to-peer layer,
+
+906
+01:09:11,659 --> 01:09:14,519
+ which we alluded to a bit
+
+907
+01:09:14,519 --> 01:09:17,659
+ when we were talking about the transaction pool
+
+908
+01:09:17,659 --> 01:09:19,279
+ and how blocks are being built.
+
+909
+01:09:19,819 --> 01:09:21,199
+ But I wanted to dig in more
+
+910
+01:09:21,199 --> 01:09:26,500
+ about how does the peer-to-peer layer look,
+
+911
+01:09:26,659 --> 01:09:28,019
+ what is its responsibilities.
+
+912
+01:09:28,960 --> 01:09:35,159
+ So the execution layer operates
+
+913
+01:09:35,159 --> 01:09:41,500
+ on a P2P protocol called devP2P.
+
+914
+01:09:42,319 --> 01:09:49,000
+ And devP2P is something that is a bespoke protocol for Ethereum.
+
+915
+01:09:49,000 --> 01:09:52,520
+ it's evolved from the beginning of Ethereum
+
+916
+01:09:52,520 --> 01:09:55,859
+ a funny easter egg I guess about
+
+917
+01:09:55,859 --> 01:09:57,880
+ devP2P today
+
+918
+01:09:57,880 --> 01:09:58,699
+ if you're not familiar
+
+919
+01:09:58,699 --> 01:10:00,859
+ we call devP2P protocols
+
+920
+01:10:00,859 --> 01:10:02,380
+ like ETH68
+
+921
+01:10:02,380 --> 01:10:04,979
+ ETH69
+
+922
+01:10:04,979 --> 01:10:07,600
+ I think we're on ETH68 right now
+
+923
+01:10:07,600 --> 01:10:09,420
+ working on ETH69
+
+924
+01:10:09,420 --> 01:10:11,439
+ but
+
+925
+01:10:11,439 --> 01:10:13,279
+ and
+
+926
+01:10:13,279 --> 01:10:16,039
+ I guess I should say that this is like a sub
+
+927
+01:10:16,039 --> 01:10:16,880
+ capability
+
+928
+01:10:16,880 --> 01:10:29,880
+ So there are other protocols under dev P2P.
+
+929
+01:10:29,880 --> 01:10:36,000
+ We have ETH, we have Snap.
+
+930
+01:10:36,000 --> 01:10:38,119
+ Those are the main ones today.
+
+931
+01:10:38,119 --> 01:10:41,140
+ There used to be things like Whisper.
+
+932
+01:10:41,140 --> 01:10:49,700
+ um were there any other ones that i can think of i guess we can just look at it
+
+933
+01:10:49,700 --> 01:10:56,100
+ oh yeah les
+
+934
+01:10:56,100 --> 01:11:06,400
+ yes there's some ideas for a witness propagation sub capability which would allow us to propagate
+
+935
+01:11:06,399 --> 01:11:13,879
+ block witnesses those are those are things yeah whisper leas s witness things are that have kind
+
+936
+01:11:13,879 --> 01:11:19,079
+ of been deprecated today we really just focus on on eth and snap i was going to say the funny
+
+937
+01:11:19,079 --> 01:11:26,139
+ easter egg for eth is that you know now we're on eth 68 69 we don't we haven't had 68 eth protocols
+
+938
+01:11:26,139 --> 01:11:33,059
+ i guess what happened in the early days is we started with eth 1 and then we went to eth 2
+
+939
+01:11:33,060 --> 01:11:39,640
+ and there's a lot of very quick iteration the very early days of ethereum and we kind of got
+
+940
+01:11:39,640 --> 01:11:47,340
+ somewhere around eth6 and at that point they just decide i think that they started trying
+
+941
+01:11:47,340 --> 01:11:56,520
+ to think like in terms of eth6.1 eth6.2 and all these these protocols are lost you won't really
+
+942
+01:11:56,520 --> 01:12:02,960
+ find these types of protocols in the in client definitions anymore because this was you know
+
+943
+01:12:02,960 --> 01:12:09,279
+ pre-launch uh very early launch and so we eventually got i don't know what the
+
+944
+01:12:09,279 --> 01:12:14,960
+ first one that's even mentioned here is it might be what uh
+
+945
+01:12:20,159 --> 01:12:22,239
+ okay so the current version is e68
+
+946
+01:12:22,239 --> 01:12:38,079
+ okay so yeah you 60 so we had a bunch of POC so there was like POC 1 2 3 4 5 6 and then finally
+
+947
+01:12:38,079 --> 01:12:47,559
+ for 6 for at 6 they said we can't keep going like this let's just do 6.0 6.1 etc and so 2015 we had
+
+948
+01:12:47,560 --> 01:12:57,960
+ ith 61 uh ith 62 63 i think 64 is probably the last one you might see in clients uh but yeah
+
+949
+01:12:57,960 --> 01:13:03,080
+ we've we've made a lot of different changes to these protocol so there haven't been 68
+
+950
+01:13:03,080 --> 01:13:11,080
+ youth protocols there's been about 15 protocols which is kind of funny but okay back to what does
+
+951
+01:13:11,079 --> 01:13:25,880
+ the PDP do for us? So the responsibility, we need to be able to access historical data.
+
+952
+01:13:28,119 --> 01:13:32,279
+ We also need to be able to access transactions.
+
+953
+01:13:32,279 --> 01:13:43,439
+ I'll say new transactions actually pooled transactions. So these are pending. So these
+
+954
+01:13:43,439 --> 01:13:48,479
+ are transactions that are trying to propagate to get into a block, they're not yet in a block,
+
+955
+01:13:48,479 --> 01:13:58,439
+ and then state. So this is the three main pieces that the ETH protocol, the devP2P protocol,
+
+956
+01:13:58,439 --> 01:14:07,879
+ the ETH protocol are trying to give to us. So let's look at accessing historical data.
+
+957
+01:14:09,479 --> 01:14:17,879
+ That's done with two different methods, more or less, get headers, get block headers,
+
+958
+01:14:17,880 --> 01:14:23,760
+ and get block bodies.
+
+959
+01:14:24,060 --> 01:14:26,520
+ If you think about what is historical data,
+
+960
+01:14:27,440 --> 01:14:30,560
+ it is more or less these two things.
+
+961
+01:14:31,340 --> 01:14:32,500
+ There's also,
+
+962
+01:14:32,840 --> 01:14:35,279
+ let me make sure I have this one right.
+
+963
+01:14:36,619 --> 01:14:39,340
+ Get block, get receipts.
+
+964
+01:14:40,000 --> 01:14:40,119
+ Yeah.
+
+965
+01:14:40,859 --> 01:14:42,220
+ So then there's also get receipts.
+
+966
+01:14:44,480 --> 01:14:46,680
+ So there's these three methods
+
+967
+01:14:46,680 --> 01:14:48,840
+ that allow us to get all the historical data
+
+968
+01:14:48,840 --> 01:14:49,760
+ related to Ethereum.
+
+969
+01:14:50,240 --> 01:14:52,280
+ If you think about what historical data is,
+
+970
+01:14:52,360 --> 01:14:55,880
+ it's data that's not needed
+
+971
+01:14:55,880 --> 01:14:59,380
+ for active validation of the state transition function.
+
+972
+01:15:00,060 --> 01:15:01,780
+ And if we look back and we think
+
+973
+01:15:01,780 --> 01:15:04,020
+ what that state transition function was,
+
+974
+01:15:05,480 --> 01:15:07,140
+ it's taking the parent block,
+
+975
+01:15:07,260 --> 01:15:09,440
+ which we'll just assume is available in the client.
+
+976
+01:15:10,220 --> 01:15:14,320
+ It's kind of accessible in the hot memory of the client.
+
+977
+01:15:14,319 --> 01:15:19,039
+ the current block that we're trying to validate, and then the state. So there's no point where
+
+978
+01:15:19,039 --> 01:15:23,259
+ it's like, let me access all of the historical blocks of Ethereum, or, you know, in the state
+
+979
+01:15:23,259 --> 01:15:28,319
+ transition function, there's no place where I'm checking the header of a block from 200 blocks
+
+980
+01:15:28,319 --> 01:15:33,559
+ ago. So that's why we refer to this as historical data, things that happened in the chain,
+
+981
+01:15:33,559 --> 01:15:36,880
+ but not necessarily in the active path for validation.
+
+982
+01:15:36,880 --> 01:15:41,819
+ We also have some methods for getting transactions.
+
+983
+01:15:42,420 --> 01:15:47,239
+ We have the method transactions, which has existed for quite a while.
+
+984
+01:15:47,340 --> 01:15:52,960
+ And then we have this newer method called new pooled transaction hashes.
+
+985
+01:15:53,520 --> 01:15:59,659
+ And this new pooled transaction hashes method came along, I think in ETH 66.
+
+986
+01:15:59,659 --> 01:16:06,920
+ and the rationale at that time was that we needed to reduce the bandwidth usage of an execution
+
+987
+01:16:06,920 --> 01:16:14,279
+ client and even you know even today especially today now that once your client is synced
+
+988
+01:16:14,279 --> 01:16:20,960
+ most of your pretty much all of your transaction or sorry all of your network bandwidth is going
+
+989
+01:16:20,960 --> 01:16:29,279
+ towards transactions and so in e66 peter wanted to figure out a way to reduce the load the bandwidth
+
+990
+01:16:29,279 --> 01:16:37,139
+ load for execution clients and it came up with an idea that instead of sending the full transaction
+
+991
+01:16:37,139 --> 01:16:42,719
+ to every single one of our peers when we get a new transaction either a peer announces that
+
+992
+01:16:42,719 --> 01:16:47,819
+ transaction to us or we receive it locally instead of sending that to all of our peers
+
+993
+01:16:47,819 --> 01:16:54,259
+ we will only send this to a square rooted peers and all the rest of our peers would receive
+
+994
+01:16:54,260 --> 01:16:55,619
+ new pool transactions.
+
+995
+01:16:56,480 --> 01:16:58,320
+ And the full transactions goes to
+
+996
+01:16:58,320 --> 01:17:00,539
+ a random subset, a random
+
+997
+01:17:00,539 --> 01:17:02,180
+ subset of square root peers.
+
+998
+01:17:02,739 --> 01:17:04,659
+ And so this really helped mitigate
+
+999
+01:17:04,659 --> 01:17:06,640
+ the bandwidth usage
+
+1000
+01:17:06,640 --> 01:17:08,800
+ where I'm getting the same transaction
+
+1001
+01:17:08,800 --> 01:17:10,840
+ over and over again from many different
+
+1002
+01:17:10,840 --> 01:17:14,020
+ nodes.
+
+1003
+01:17:14,300 --> 01:17:16,320
+ Now I get mostly
+
+1004
+01:17:16,320 --> 01:17:18,340
+ just duplicate hashes from other nodes.
+
+1005
+01:17:18,820 --> 01:17:20,960
+ And I'll only call this method
+
+1006
+01:17:20,960 --> 01:17:23,460
+ I think it's
+
+1007
+01:17:23,460 --> 01:17:25,600
+ get pooled transaction.
+
+1008
+01:17:28,079 --> 01:17:31,579
+ So I'll only call this method get pooled transactions
+
+1009
+01:17:31,579 --> 01:17:35,300
+ if I receive some hashes that I haven't seen before.
+
+1010
+01:17:37,539 --> 01:17:39,500
+ One interesting thing we can look at
+
+1011
+01:17:39,500 --> 01:17:42,819
+ is we can actually go and see exactly the line of code
+
+1012
+01:17:42,819 --> 01:17:47,960
+ where Ethereum does the square root announcement.
+
+1013
+01:17:48,439 --> 01:17:50,619
+ That's in ETH.
+
+1014
+01:17:51,180 --> 01:17:52,579
+ I think it's in handler.
+
+1015
+01:17:53,460 --> 01:18:00,500
+ So there's a function broadcast transactions.
+
+1016
+01:18:00,500 --> 01:18:07,300
+ This method is called whenever there are transactions that can be broadcast.
+
+1017
+01:18:07,300 --> 01:18:13,340
+ What it does is it...
+
+1018
+01:18:13,340 --> 01:18:27,079
+ Okay, so for every transaction, we determine if that transaction has been seen by that
+
+1019
+01:18:27,079 --> 01:18:33,100
+ other client, and we also determine how many of our peers are going to receive this directly,
+
+1020
+01:18:33,100 --> 01:18:35,420
+ and there that square root function is.
+
+1021
+01:18:35,420 --> 01:18:39,300
+ So depending on how many peers we have, we take the square root of that, and that is
+
+1022
+01:18:39,300 --> 01:18:51,539
+ the number of direct peers. Where do we use that? Yeah, okay. So I think peers is a random
+
+1023
+01:18:51,539 --> 01:19:01,760
+ list of our peers. And so here we say, okay, all the way up into num direct. So you can imagine
+
+1024
+01:19:01,760 --> 01:19:03,820
+ This is a small value, say two.
+
+1025
+01:19:05,000 --> 01:19:08,920
+ So peers index zero and one,
+
+1026
+01:19:08,920 --> 01:19:12,480
+ we will send this transaction unconditionally.
+
+1027
+01:19:13,260 --> 01:19:14,360
+ And for everyone else,
+
+1028
+01:19:14,860 --> 01:19:19,360
+ we're just using list slicing here.
+
+1029
+01:19:19,579 --> 01:19:22,320
+ We're going to send all the rest of our peers
+
+1030
+01:19:22,320 --> 01:19:23,239
+ just an announcement.
+
+1031
+01:19:24,260 --> 01:19:28,079
+ So that's using this announcement list
+
+1032
+01:19:28,079 --> 01:19:29,960
+ versus the TX set list.
+
+1033
+01:19:29,960 --> 01:19:34,119
+ So that's in this file, what is it?
+
+1034
+01:19:34,199 --> 01:19:35,720
+ eth slash handler.go.
+
+1035
+01:19:35,800 --> 01:19:39,100
+ You can actually see this is where this behavior
+
+1036
+01:19:39,100 --> 01:19:42,800
+ from the dev P2P layer is coming through.
+
+1037
+01:19:44,800 --> 01:19:48,060
+ So if we look quickly at the different methods,
+
+1038
+01:19:48,199 --> 01:19:50,659
+ let's look at each of them.
+
+1039
+01:19:52,520 --> 01:19:53,359
+ Git block headers.
+
+1040
+01:19:54,420 --> 01:19:58,439
+ The requests, we use this request ID.
+
+1041
+01:19:58,439 --> 01:20:01,519
+ this was added in maybe ETH 67
+
+1042
+01:20:01,519 --> 01:20:03,819
+ and the request ID
+
+1043
+01:20:03,819 --> 01:20:07,819
+ just lets us keep track of our requests a bit better
+
+1044
+01:20:07,819 --> 01:20:10,059
+ so when we send a request
+
+1045
+01:20:10,059 --> 01:20:11,039
+ we send an ID
+
+1046
+01:20:11,039 --> 01:20:12,659
+ and then the response comes back
+
+1047
+01:20:12,659 --> 01:20:14,000
+ and it gives us the same ID
+
+1048
+01:20:14,000 --> 01:20:16,739
+ just helps with tracking requests
+
+1049
+01:20:16,739 --> 01:20:18,319
+ tracking requests that are in flight
+
+1050
+01:20:18,319 --> 01:20:21,679
+ and we say here's a start block
+
+1051
+01:20:21,679 --> 01:20:25,419
+ so this would be the block value
+
+1052
+01:20:25,420 --> 01:20:31,800
+ that we would want to start receiving from,
+
+1053
+01:20:32,520 --> 01:20:34,579
+ and we would say how many blocks we would want,
+
+1054
+01:20:34,840 --> 01:20:36,060
+ and then we have the ability
+
+1055
+01:20:36,060 --> 01:20:38,180
+ to also get them potentially in reverse.
+
+1056
+01:20:38,960 --> 01:20:42,480
+ And this is important because before the merge,
+
+1057
+01:20:42,600 --> 01:20:44,859
+ the way that you would sync a node,
+
+1058
+01:20:45,239 --> 01:20:45,800
+ sync the history,
+
+1059
+01:20:45,940 --> 01:20:47,000
+ is you would start from Genesis
+
+1060
+01:20:47,000 --> 01:20:49,199
+ because this was the first place
+
+1061
+01:20:49,199 --> 01:20:54,920
+ where this is the trusted root of the chain,
+
+1062
+01:20:54,920 --> 01:20:57,000
+ and we would just sync forward.
+
+1063
+01:20:57,140 --> 01:20:58,699
+ We would download all of the headers,
+
+1064
+01:20:59,440 --> 01:21:01,239
+ download all the block bodies.
+
+1065
+01:21:01,800 --> 01:21:03,020
+ And so we would be syncing,
+
+1066
+01:21:03,239 --> 01:21:05,060
+ we would be saying start blocks zero,
+
+1067
+01:21:06,260 --> 01:21:09,239
+ download 20 blocks in order from zero.
+
+1068
+01:21:09,600 --> 01:21:10,880
+ So then we would get to 20.
+
+1069
+01:21:11,279 --> 01:21:14,159
+ With the merge, we actually sync in reverse.
+
+1070
+01:21:14,539 --> 01:21:16,220
+ So we have a trusted checkpoint,
+
+1071
+01:21:16,699 --> 01:21:18,260
+ which is a little bit like the Genesis.
+
+1072
+01:21:18,699 --> 01:21:21,140
+ But now that the trusted checkpoint is somewhere,
+
+1073
+01:21:21,699 --> 01:21:24,100
+ you know, non-zero portion of the chain past Genesis,
+
+1074
+01:21:24,100 --> 01:21:25,960
+ us, we want to get the historical data.
+
+1075
+01:21:26,380 --> 01:21:28,000
+ So if our checkpoint is like block
+
+1076
+01:21:28,000 --> 01:21:29,840
+ n, we would then
+
+1077
+01:21:29,840 --> 01:21:31,140
+ say I want to get
+
+1078
+01:21:31,140 --> 01:21:33,820
+ starting block at n, limit of
+
+1079
+01:21:33,820 --> 01:21:35,900
+ maybe 20, and get the blocks in
+
+1080
+01:21:35,900 --> 01:21:38,060
+ reverse. And so we would download
+
+1081
+01:21:38,060 --> 01:21:40,000
+ n-1, n-2, all the
+
+1082
+01:21:40,000 --> 01:21:41,900
+ way to n-20. And so
+
+1083
+01:21:41,900 --> 01:21:43,900
+ that would let us go backwards and download all of
+
+1084
+01:21:43,900 --> 01:21:44,400
+ those blocks.
+
+1085
+01:21:46,120 --> 01:21:47,700
+ Basically, same thing for
+
+1086
+01:21:47,700 --> 01:21:48,539
+ getBlockBodies.
+
+1087
+01:21:51,200 --> 01:21:51,880
+ Once we
+
+1088
+01:21:51,880 --> 01:21:53,680
+ actually, no, this one is a bit different.
+
+1089
+01:21:54,100 --> 01:21:55,900
+ So if we've already gotten the headers,
+
+1090
+01:21:56,840 --> 01:21:58,180
+ once we've already gotten the headers,
+
+1091
+01:21:58,260 --> 01:21:59,640
+ we know what the block hashes are.
+
+1092
+01:21:59,640 --> 01:22:01,579
+ So we can just ask for the bodies
+
+1093
+01:22:01,579 --> 01:22:03,760
+ related to those specific headers.
+
+1094
+01:22:04,180 --> 01:22:07,520
+ So we would send a list of all the block hashes that we have
+
+1095
+01:22:07,520 --> 01:22:08,800
+ and get the bodies for those.
+
+1096
+01:22:09,800 --> 01:22:12,520
+ And I'm getting receipts is the same as that.
+
+1097
+01:22:13,440 --> 01:22:15,220
+ Yeah, so in the same deal with receipts,
+
+1098
+01:22:15,400 --> 01:22:16,600
+ we have our chain,
+
+1099
+01:22:16,860 --> 01:22:19,060
+ we've received our chain via get block header.
+
+1100
+01:22:19,360 --> 01:22:21,220
+ And then we just go and we get all those receipts
+
+1101
+01:22:21,220 --> 01:22:24,060
+ by asking for the receipts by the block hash.
+
+1102
+01:22:24,100 --> 01:22:28,420
+ So that's getting the historical data for pending transactions.
+
+1103
+01:22:30,700 --> 01:22:32,320
+ We have a method.
+
+1104
+01:22:36,980 --> 01:22:37,780
+ Transactions.
+
+1105
+01:22:38,620 --> 01:22:44,180
+ And so this can come without any kind of request associated with it.
+
+1106
+01:22:44,400 --> 01:22:49,180
+ A lot of the other messages are get block, get transaction, whatever.
+
+1107
+01:22:49,640 --> 01:22:52,680
+ This one is something you would just send unconditionally to your peer,
+
+1108
+01:22:52,680 --> 01:22:56,340
+ like we saw in broadcast functions broadcast transactions,
+
+1109
+01:22:56,340 --> 01:22:59,900
+ this will directly send the transactions immediately to your peer.
+
+1110
+01:23:00,900 --> 01:23:03,079
+ And so it's really just sending a list of transactions.
+
+1111
+01:23:04,240 --> 01:23:08,560
+ The other one is the new pool transaction hashes.
+
+1112
+01:23:09,180 --> 01:23:10,960
+ This one is a bit more complicated,
+
+1113
+01:23:11,480 --> 01:23:16,940
+ but basically it's just sending a list of the transaction types,
+
+1114
+01:23:16,940 --> 01:23:20,360
+ their sizes, and the hashes of the transactions.
+
+1115
+01:23:20,359 --> 01:23:28,119
+ So once you receive that, you can see if these are transaction hashes that you haven't seen before.
+
+1116
+01:23:28,719 --> 01:23:42,380
+ If they are transaction hashes that you have not seen before, you can call get pool transactions, pass it the transaction hashes, and then the peer will respond with the full transaction values.
+
+1117
+01:23:42,920 --> 01:23:45,460
+ And that comes back in pool transactions.
+
+1118
+01:23:45,460 --> 01:23:50,359
+ And pool transactions looks very much like the transactions message.
+
+1119
+01:23:51,920 --> 01:23:55,279
+ Okay, that's historical data, pending data.
+
+1120
+01:23:55,960 --> 01:24:02,279
+ The last responsibility I wanted to mention on the P2P is accessing the state.
+
+1121
+01:24:02,960 --> 01:24:06,880
+ So a lot of people have probably heard about what's about SnapSync.
+
+1122
+01:24:07,480 --> 01:24:10,920
+ I just want to say quickly how SnapSync works.
+
+1123
+01:24:10,920 --> 01:24:13,800
+ at a high level you can think about
+
+1124
+01:24:13,800 --> 01:24:15,100
+ SnapSync as
+
+1125
+01:24:15,100 --> 01:24:17,239
+ a two-phase protocol
+
+1126
+01:24:17,239 --> 01:24:19,180
+ the first phase being
+
+1127
+01:24:19,180 --> 01:24:21,739
+ I need to download a bunch
+
+1128
+01:24:21,739 --> 01:24:23,500
+ of data
+
+1129
+01:24:23,500 --> 01:24:25,880
+ contiguously so if we
+
+1130
+01:24:25,880 --> 01:24:28,319
+ oops
+
+1131
+01:24:28,319 --> 01:24:31,699
+ if we think
+
+1132
+01:24:31,699 --> 01:24:33,579
+ about the
+
+1133
+01:24:33,579 --> 01:24:34,699
+ try
+
+1134
+01:24:34,699 --> 01:24:37,260
+ as
+
+1135
+01:24:37,260 --> 01:24:39,760
+ some sort
+
+1136
+01:24:39,760 --> 01:24:41,659
+ of Merkle tree.
+
+1137
+01:24:43,420 --> 01:24:48,760
+ This diagram is just going to be a binary tree because it would be really difficult
+
+1138
+01:24:48,760 --> 01:24:49,560
+ to draw.
+
+1139
+01:24:50,159 --> 01:24:57,159
+ It'd be really difficult to draw a hex array tree in text.
+
+1140
+01:24:57,940 --> 01:24:59,520
+ I'm sure it's been done though.
+
+1141
+01:25:02,180 --> 01:25:02,820
+ Okay.
+
+1142
+01:25:02,819 --> 01:25:12,099
+ So this is a B, C, D.
+
+1143
+01:25:12,979 --> 01:25:24,139
+ Okay, so the way that SnapSync works is you first request the leaves of the tree against a certain root.
+
+1144
+01:25:24,880 --> 01:25:26,699
+ And so let's say this is root one.
+
+1145
+01:25:31,099 --> 01:25:32,739
+ So the root is changing.
+
+1146
+01:25:32,819 --> 01:25:42,899
+ This is a very small example, but obviously there's, you know, I don't know, maybe millions, maybe 100 million different leaf nodes that we have to access.
+
+1147
+01:25:43,319 --> 01:25:45,099
+ 200 million leaf nodes that we have to access.
+
+1148
+01:25:45,920 --> 01:25:51,880
+ And so as we're going through this, we might access A and B against a root one.
+
+1149
+01:25:52,239 --> 01:25:58,359
+ And then root one changes because nodes don't keep all of the historical state.
+
+1150
+01:25:58,460 --> 01:26:01,679
+ They only sort of keep that hot state, the active state.
+
+1151
+01:26:01,680 --> 01:26:06,300
+ In Go Ethereum and in a lot of clients, that's around the last 128 states.
+
+1152
+01:26:06,800 --> 01:26:12,100
+ So if root 1 is for block, let's say 1, and now you need to access,
+
+1153
+01:26:12,320 --> 01:26:14,280
+ now the blockchain has moved on.
+
+1154
+01:26:17,840 --> 01:26:25,940
+ The blockchain has moved on and it's now on 200.
+
+1155
+01:26:26,840 --> 01:26:29,560
+ These are going to be like totally different values.
+
+1156
+01:26:31,680 --> 01:26:38,440
+ So let's say that we downloaded this part of the trial.
+
+1157
+01:26:38,539 --> 01:26:40,180
+ We downloaded this left part of the trial.
+
+1158
+01:26:40,240 --> 01:26:41,060
+ We got A and B.
+
+1159
+01:26:42,079 --> 01:26:43,360
+ Now we're at block 200.
+
+1160
+01:26:43,720 --> 01:26:46,360
+ It's taking a very long time for us to download these things.
+
+1161
+01:26:46,640 --> 01:26:47,920
+ We need to download C and D.
+
+1162
+01:26:48,060 --> 01:26:49,480
+ C and D still have not changed.
+
+1163
+01:26:50,100 --> 01:26:51,740
+ We're able to download those.
+
+1164
+01:26:51,820 --> 01:26:56,840
+ And so now locally what we have is we have A, B, C, D.
+
+1165
+01:26:56,840 --> 01:27:07,480
+ and what we can see on our chain is that a and b do not match in in this root for block 200
+
+1166
+01:27:07,480 --> 01:27:12,640
+ and so now we need to go and we need to ask like what is the like updated values for this
+
+1167
+01:27:12,640 --> 01:27:19,079
+ so this first part of the snap protocol is just uh
+
+1168
+01:27:19,079 --> 01:27:23,060
+ i don't know how to say this contiguous
+
+1169
+01:27:23,060 --> 01:27:26,440
+ state retrieval.
+
+1170
+01:27:29,700 --> 01:27:34,480
+ So we're just going through and we're accessing every single leaf in order for the accounts. And
+
+1171
+01:27:34,480 --> 01:27:38,060
+ this is like super simple. There's obviously the account try, then there's the storage try
+
+1172
+01:27:38,060 --> 01:27:42,780
+ underneath it. But you would just go through, you would start the lowest indexed leaf node,
+
+1173
+01:27:43,320 --> 01:27:46,840
+ download it, download the next one and go all the way through until you get to the end of the state.
+
+1174
+01:27:47,140 --> 01:27:50,580
+ Once you get through the end of the state, you can see that you might have something that's stale.
+
+1175
+01:27:50,579 --> 01:27:57,319
+ so c and d are still valid but a and b are incorrect and so now you have to go through this
+
+1176
+01:27:57,319 --> 01:28:03,319
+ this healing phase which if you run a geth node or any node that's doing snap sync the healing
+
+1177
+01:28:03,319 --> 01:28:08,239
+ phase is probably the most confusing part so the healing phase is really just going through your
+
+1178
+01:28:08,239 --> 01:28:14,859
+ tree and trying to you know get the integrity of the state back so you're going to do a bypass
+
+1179
+01:28:14,859 --> 01:28:23,479
+ path lookup. And so you might ask, okay, get me the full list of nodes that are underneath
+
+1180
+01:28:23,479 --> 01:28:32,399
+ root 200. Let's put one and two here. So this healing phase might be like get R200.
+
+1181
+01:28:33,599 --> 01:28:41,519
+ And that would return to you the nodes one and two, which are listed here. The next part is
+
+1182
+01:28:41,520 --> 01:28:45,120
+ to get one.
+
+1183
+01:28:46,040 --> 01:28:50,080
+ And so that will list you R and A.
+
+1184
+01:28:50,820 --> 01:28:54,880
+ And you'll now notice that this path is exactly the same.
+
+1185
+01:28:54,880 --> 01:28:58,100
+ If you think about it in terms of a binary tree,
+
+1186
+01:28:58,620 --> 01:29:00,740
+ the left node could be index zero.
+
+1187
+01:29:01,280 --> 01:29:03,900
+ The left left node is index zero zero.
+
+1188
+01:29:04,520 --> 01:29:08,060
+ The left right node is like index zero one.
+
+1189
+01:29:08,340 --> 01:29:11,500
+ And so those are the paths, zero zero, zero one.
+
+1190
+01:29:11,520 --> 01:29:15,520
+ and you can see now that for 0, 0, you had A.
+
+1191
+01:29:16,040 --> 01:29:19,220
+ You already had A, but it's telling you it's actually R.
+
+1192
+01:29:19,780 --> 01:29:23,400
+ So you can update, we can now update our local state
+
+1193
+01:29:23,400 --> 01:29:26,360
+ to be R, A, C, D.
+
+1194
+01:29:27,200 --> 01:29:29,100
+ And you would continue this healing process.
+
+1195
+01:29:29,340 --> 01:29:32,120
+ You would see that you had to update that,
+
+1196
+01:29:32,500 --> 01:29:34,100
+ but then you get down to 2.
+
+1197
+01:29:36,340 --> 01:29:37,740
+ You say get 2,
+
+1198
+01:29:37,739 --> 01:29:44,899
+ and you see that you already have cnd and that's all correct so there's no need to update at this
+
+1199
+01:29:44,899 --> 01:29:52,000
+ point like healing is done uh this might be maybe difficult to conceptualize because it's such a
+
+1200
+01:29:52,000 --> 01:29:57,659
+ small example but if you extrapolate this to millions of nodes uh this is this could become
+
+1201
+01:29:57,659 --> 01:30:04,479
+ a very slow process and what's interesting is that the function of this process that matters is
+
+1202
+01:30:04,479 --> 01:30:06,759
+ how fast you can download,
+
+1203
+01:30:07,599 --> 01:30:10,059
+ how fast can you do this contiguous download?
+
+1204
+01:30:10,679 --> 01:30:11,579
+ If you can do this,
+
+1205
+01:30:11,899 --> 01:30:14,939
+ imagine you can do this contiguous download instantly
+
+1206
+01:30:14,939 --> 01:30:18,539
+ and you download everything against R1.
+
+1207
+01:30:19,099 --> 01:30:20,399
+ So you're able to download everything
+
+1208
+01:30:20,399 --> 01:30:21,819
+ before R1 pivots out.
+
+1209
+01:30:21,979 --> 01:30:23,639
+ That means that you don't have to do any healing
+
+1210
+01:30:23,639 --> 01:30:25,319
+ because you have downloaded
+
+1211
+01:30:25,319 --> 01:30:30,319
+ a complete state try against a certain route.
+
+1212
+01:30:31,059 --> 01:30:33,019
+ Healing only has to occur
+
+1213
+01:30:33,020 --> 01:30:39,160
+ whenever you cannot complete the continuous state retrieval against the same route.
+
+1214
+01:30:39,260 --> 01:30:44,700
+ And so you download some against R1, you download some against R200, some against R400,
+
+1215
+01:30:45,220 --> 01:30:46,240
+ and it goes on.
+
+1216
+01:30:46,800 --> 01:30:51,280
+ And so if you have a very slow internet connection, and it takes you a super long time to do the
+
+1217
+01:30:51,280 --> 01:30:57,940
+ state retrieval, once you get to the healing phase, you have a ton of nodes that are out
+
+1218
+01:30:57,940 --> 01:30:58,320
+ of date.
+
+1219
+01:30:58,319 --> 01:31:09,659
+ And so now you have to go through this very slow process of by path retrieval to go and download that data. And so that's why sometimes people are saying, like, why is my node stuck on healing?
+
+1220
+01:31:09,659 --> 01:31:14,019
+ and that's typically what's happening.
+
+1221
+01:31:14,460 --> 01:31:17,579
+ Their node is trying to heal
+
+1222
+01:31:17,579 --> 01:31:21,319
+ an extremely deformed state try.
+
+1223
+01:31:21,899 --> 01:31:26,279
+ And so sometimes it's better to just delete
+
+1224
+01:31:26,279 --> 01:31:28,559
+ the full database and try and start again
+
+1225
+01:31:28,559 --> 01:31:30,220
+ with the contiguous state retrieval.
+
+1226
+01:31:30,779 --> 01:31:32,880
+ And if maybe you had something wrong with your internet
+
+1227
+01:31:32,880 --> 01:31:35,359
+ or maybe your node was offline for a long time
+
+1228
+01:31:35,359 --> 01:31:38,000
+ and it has the contiguous state,
+
+1229
+01:31:38,099 --> 01:31:39,420
+ but it has to do the healing,
+
+1230
+01:31:39,659 --> 01:31:45,579
+ it's sometimes better just to download all the state once again and we don't have to go too
+
+1231
+01:31:46,380 --> 01:31:53,340
+ deeply into the different uh snap messages but it's all here uh this repo that i'm in is
+
+1232
+01:31:55,340 --> 01:32:03,099
+ uh this repo is is in the ethereum organization so if you're curious about other parts of the
+
+1233
+01:32:03,099 --> 01:32:09,340
+ devpdp spec or want to dig look more into these things there's the ethereum slash devpdp repo
+
+1234
+01:32:09,340 --> 01:32:11,960
+ And if you're wanting more information on SnapSync,
+
+1235
+01:32:12,020 --> 01:32:13,340
+ this is the SnapSpec.
+
+1236
+01:32:13,819 --> 01:32:17,980
+ And the SnapSpec has a super good overview and description.
+
+1237
+01:32:19,000 --> 01:32:22,400
+ And it's definitely, I think it's definitely worth a read
+
+1238
+01:32:22,400 --> 01:32:26,560
+ if you're still kind of confused on exactly how SnapSync works.
+
+1239
+01:32:28,140 --> 01:32:29,720
+ Okay, that's P2P.
+
+1240
+01:32:29,860 --> 01:32:32,880
+ Any questions related to P2P content?
+
+1241
+01:32:32,880 --> 01:32:40,159
+ Thank you so much, Matt. That was awesome.
+
+1242
+01:32:42,400 --> 01:32:48,079
+ We already answered a few questions in the chat. It was mostly people asking,
+
+1243
+01:32:48,079 --> 01:32:54,319
+ how do you know you are not downloading a wrong chain when you, for example,
+
+1244
+01:32:54,319 --> 01:32:59,920
+ connect your network at bootstrap node is malicious? What happens then?
+
+1245
+01:32:59,920 --> 01:33:05,760
+ Yeah, in that case, these routes are authenticated routes.
+
+1246
+01:33:06,520 --> 01:33:14,699
+ So the way that you start doing SnapSync sort of looks like this.
+
+1247
+01:33:20,060 --> 01:33:23,460
+ So basically you start with your weak subjectivity checkpoint.
+
+1248
+01:33:23,460 --> 01:33:35,220
+ how you get that values you know that's sort of up to each person but what most people do is they
+
+1249
+01:33:35,220 --> 01:33:44,159
+ get some weak subjectivity checkpoint from some checkpoint server and that gives you a route
+
+1250
+01:33:44,159 --> 01:33:55,979
+ let's see we'll just call it r and actually this is like a block hash so then you go and
+
+1251
+01:33:55,979 --> 01:33:58,960
+ you get the block associated with the hash
+
+1252
+01:33:58,960 --> 01:34:11,319
+ once you have the block associated with the hash you start snap against that blocks state
+
+1253
+01:34:11,319 --> 01:34:17,599
+ so what I'm trying to illuminate here is that the state root which you're running snap against
+
+1254
+01:34:17,599 --> 01:34:25,539
+ has been authenticated by you in the sense that we trust this state root to be correct like you're
+
+1255
+01:34:25,539 --> 01:34:31,500
+ not verifying that the computation to get to that state root was correct you're assuming it was
+
+1256
+01:34:31,500 --> 01:34:35,960
+ correct and you're just going to download the state associated with it and
+
+1257
+01:34:35,960 --> 01:34:42,380
+ you are kind of able to like continue doing this because we're not verifying the state.
+
+1258
+01:34:42,460 --> 01:34:47,159
+ And so you're sort of seeing new blocks come in, you do header about verification on it.
+
+1259
+01:34:47,720 --> 01:34:51,560
+ And if the headers are correct, you just assume those state routes are correct. So that's where
+
+1260
+01:34:51,560 --> 01:34:57,560
+ the new routes come in. So you might have verified route one with your weak subjectivity checkpoint,
+
+1261
+01:34:57,560 --> 01:35:04,319
+ it took you a long time to download this data, you eventually get to route to 200. And now you
+
+1262
+01:35:04,319 --> 01:35:09,380
+ You have a different route, but each time we're just trusting that route is correct.
+
+1263
+01:35:09,579 --> 01:35:12,939
+ And then the data that you're getting back has a witness against this route.
+
+1264
+01:35:13,420 --> 01:35:21,519
+ So if I ask for all of the accounts, all of the leaves from zero to one, it would return
+
+1265
+01:35:21,519 --> 01:35:26,139
+ a proof that proves that R is part of route 200, that A is part of route 200.
+
+1266
+01:35:27,299 --> 01:35:32,599
+ So in this case, you're not going to get data that's not part of the route you're downloading.
+
+1267
+01:35:32,600 --> 01:35:40,100
+ really the only thing that could possibly happen is that the state was computed incorrectly
+
+1268
+01:35:40,100 --> 01:35:47,440
+ and you're downloading some corrupted state that the chain has accepted it's extremely
+
+1269
+01:35:47,440 --> 01:35:52,440
+ unlikely for that to happen because you know this is sort of this light client assumption
+
+1270
+01:35:52,440 --> 01:35:59,120
+ that we have this economic majority verifying the chain if you don't want to rely on an economic
+
+1271
+01:35:59,119 --> 01:36:05,500
+ majority, if you want to verify from Genesis or from the merge that a state is correct,
+
+1272
+01:36:05,500 --> 01:36:11,500
+ you have to do a full sync. And so Snap has nothing to do with full sync. That's a totally
+
+1273
+01:36:11,500 --> 01:36:16,059
+ separate way of accessing the state. And that's where you start from the very beginning and you
+
+1274
+01:36:16,059 --> 01:36:21,000
+ apply every single transaction that's ever occurred on Ethereum to eventually get to the
+
+1275
+01:36:21,000 --> 01:36:27,079
+ latest block and verify that the state of the latest block equals the state of all the transactions
+
+1276
+01:36:27,079 --> 01:36:27,699
+ that you applied.
+
+1277
+01:36:33,399 --> 01:36:33,960
+ Awesome.
+
+1278
+01:36:35,420 --> 01:36:36,800
+ Let's see, maybe there are
+
+1279
+01:36:36,800 --> 01:36:38,840
+ more questions, but we are at the time
+
+1280
+01:36:38,840 --> 01:36:40,460
+ we should be wrapping up. It's been
+
+1281
+01:36:40,460 --> 01:36:42,039
+ more than 90 minutes.
+
+1282
+01:36:42,380 --> 01:36:44,840
+ But yeah, amazing
+
+1283
+01:36:44,840 --> 01:36:46,699
+ fire, man. Thanks
+
+1284
+01:36:46,699 --> 01:36:47,319
+ a lot.
+
+1285
+01:36:48,059 --> 01:36:50,180
+ It's really great inside.
+
+1286
+01:36:51,159 --> 01:36:52,800
+ People love your
+
+1287
+01:36:52,800 --> 01:36:54,559
+ Vim setup, by the way.
+
+1288
+01:36:54,640 --> 01:36:56,500
+ They already found your .files repo
+
+1289
+01:36:56,500 --> 01:36:57,479
+ to replicate it.
+
+1290
+01:37:00,159 --> 01:37:01,439
+ This was a nice, yeah.
+
+1291
+01:37:08,539 --> 01:37:10,119
+ Yeah, thanks so much for having me.
+
+1292
+01:37:11,579 --> 01:37:12,640
+ That's most of the things
+
+1293
+01:37:12,640 --> 01:37:13,560
+ that I want to talk about.
+
+1294
+01:37:13,659 --> 01:37:14,460
+ I don't think we really had
+
+1295
+01:37:14,460 --> 01:37:15,560
+ too much time
+
+1296
+01:37:15,560 --> 01:37:17,119
+ to go super deeply
+
+1297
+01:37:17,119 --> 01:37:17,899
+ into these things.
+
+1298
+01:37:18,020 --> 01:37:19,359
+ Hopefully you're able to see
+
+1299
+01:37:19,359 --> 01:37:20,760
+ the different repos
+
+1300
+01:37:20,760 --> 01:37:22,340
+ that I was accessing.
+
+1301
+01:37:23,279 --> 01:37:25,100
+ The dead P2P repo,
+
+1302
+01:37:25,100 --> 01:37:30,200
+ the consensus specs repo those are things that have really good information that i recommend
+
+1303
+01:37:30,200 --> 01:37:36,140
+ people like digging more deeply into go ethereum's repo lots of good comments to read if you're
+
+1304
+01:37:36,140 --> 01:37:40,079
+ curious about how some of the things that i was describing worked you can totally
+
+1305
+01:37:40,079 --> 01:37:47,060
+ go through that stuff and and see some see the documentation there the only other thing that i
+
+1306
+01:37:47,060 --> 01:37:53,680
+ was thinking of talking about was the json rpc i would check out the execution apis repo it
+
+1307
+01:37:53,680 --> 01:37:58,159
+ describes the interface for the execution layer.
+
+1308
+01:37:58,159 --> 01:38:00,960
+ When people think about what is Ethereum,
+
+1309
+01:38:00,960 --> 01:38:02,980
+ the JSON RPC is kind of Ethereum
+
+1310
+01:38:02,980 --> 01:38:06,920
+ in more or less absolute terms,
+
+1311
+01:38:06,920 --> 01:38:08,940
+ because that's the interface that people have
+
+1312
+01:38:08,940 --> 01:38:12,659
+ to access Ethereum.
+
+1313
+01:38:12,659 --> 01:38:17,159
+ So take a look at the execution APIs repo,
+
+1314
+01:38:17,159 --> 01:38:19,700
+ and you can see all the data that is available
+
+1315
+01:38:19,700 --> 01:38:21,320
+ to query for Ethereum.
+
+1316
+01:38:21,319 --> 01:38:29,880
+ Awesome, thanks a lot. I just want to ask one more thing, can you please share the notes,
+
+1317
+01:38:29,880 --> 01:38:36,279
+ the Overview doc that you created there with us, send it to us or edit it to the repo?
+
+1318
+01:38:36,279 --> 01:38:38,719
+ Yeah, I can do that.
+
+1319
+01:38:38,719 --> 01:38:49,799
+ Again, amazing job, I learned a lot myself, and seeing you go through all the important
+
+1320
+01:38:49,800 --> 01:38:56,440
+ it was great yeah i think people have a little to learn and uh also uh watch the recording again
+
+1321
+01:38:56,440 --> 01:39:03,860
+ so yeah um thanks a lot man i really appreciate it yeah feel free to tag me on i'm on the eps
+
+1322
+01:39:03,860 --> 01:39:08,539
+ discord so tag me at like clients if you have any more questions i'll try to get back to you
+
+1323
+01:39:08,539 --> 01:39:15,180
+ guys if i can awesome thanks so much matt appreciate it and uh for those of you who are
+
+1324
+01:39:15,180 --> 01:39:18,300
+ in Denver for ETH Denver this week.
+
+1325
+01:39:18,680 --> 01:39:22,880
+ We will be hosting a meetup on Thursday.
+
+1326
+01:39:23,740 --> 01:39:27,380
+ You can check in the Discord for that information.
+
+1327
+01:39:29,400 --> 01:39:30,880
+ Yeah, once again, thanks a lot, Matt,
+
+1328
+01:39:30,880 --> 01:39:34,840
+ and we'll see you all next week for Consensus Layer Overview
+
+1329
+01:39:34,840 --> 01:39:35,880
+ with Alex Stokes.
+
+1330
+01:39:36,619 --> 01:39:37,020
+ Nice.
+
+1331
+01:39:38,000 --> 01:39:38,960
+ Thanks, guys.
+
+1332
+01:39:39,320 --> 01:39:39,860
+ Take it easy.
+
+1333
+01:39:41,140 --> 01:39:41,320
+ Bye.
+
+1334
+01:39:42,000 --> 01:39:42,500
+ Bye-bye.
+

@@ -1,0 +1,3864 @@
+1
+00:00:30,000 --> 00:00:59,980
+ Thank you.
+
+2
+00:01:00,000 --> 00:01:29,980
+ Thank you.
+
+3
+00:01:30,000 --> 00:01:40,000
+ ¶¶
+
+4
+00:01:40,000 --> 00:01:50,000
+ ¶¶
+
+5
+00:01:50,000 --> 00:02:00,000
+ ¶¶
+
+6
+00:02:00,000 --> 00:02:10,000
+ ¶¶
+
+7
+00:02:10,000 --> 00:02:20,000
+ ¶¶
+
+8
+00:02:20,000 --> 00:02:30,000
+ ¶¶
+
+9
+00:02:30,000 --> 00:02:59,979
+ I love you.
+
+10
+00:03:00,000 --> 00:03:29,979
+ Thank you.
+
+11
+00:03:30,000 --> 00:03:42,719
+ all right welcome back everyone to another edition of the ethereum protocol fellowship study group
+
+12
+00:03:42,719 --> 00:03:50,659
+ this is week nine the research track and we are here with piper miriam longtime ef
+
+13
+00:03:50,659 --> 00:03:59,920
+ member and he will be here to talk about some expiry things today so all things the purge so
+
+14
+00:03:59,919 --> 00:04:05,359
+ So I will pass it off to Mario here, and he will give Piper a little more of a proper introduction.
+
+15
+00:04:07,019 --> 00:04:09,560
+ Thank you so much, Josh, and thank you, Piper, for being here.
+
+16
+00:04:10,319 --> 00:04:14,399
+ And as Josh said, it's been a while Piper has been contributing to Ethereum,
+
+17
+00:04:14,599 --> 00:04:17,779
+ so it's hard to give a quick summary of his work.
+
+18
+00:04:17,779 --> 00:04:25,819
+ But he's been around since, I believe, 2015, 2016, contributing to various core projects on Ethereum,
+
+19
+00:04:25,819 --> 00:04:27,439
+ the Python ecosystem.
+
+20
+00:04:27,439 --> 00:04:30,939
+ So if you ever used things like web3py, Viper,
+
+21
+00:04:30,939 --> 00:04:32,779
+ or for many years,
+
+22
+00:04:32,779 --> 00:04:35,639
+ people have been working on actual
+
+23
+00:04:35,639 --> 00:04:38,899
+ Python client implementation 3d,
+
+24
+00:04:38,899 --> 00:04:40,899
+ which we already mentioned in
+
+25
+00:04:43,959 --> 00:04:45,060
+ the week,
+
+26
+00:04:46,060 --> 00:04:49,240
+ week six on the Python specs.
+
+27
+00:04:49,240 --> 00:04:51,319
+ And yeah,
+
+28
+00:04:51,319 --> 00:04:53,959
+ Piper just gave me more time to introduce it,
+
+29
+00:04:53,959 --> 00:04:54,800
+ that's great.
+
+30
+00:04:55,819 --> 00:05:01,659
+ Piper has been also one random interesting fact. Piper has been one of the first people,
+
+31
+00:05:01,659 --> 00:05:07,579
+ maybe the first or the second actual demonstration of non-fungible token on Ethereum,
+
+32
+00:05:07,579 --> 00:05:11,420
+ so kind of an inventor of NFTs, if you want to call it that way.
+
+33
+00:05:12,779 --> 00:05:17,500
+ And yeah, so after working in the Python ecosystem and contributing to various pro-projects,
+
+34
+00:05:17,500 --> 00:05:26,800
+ I believe three years ago he started research and development of the portal network, which
+
+35
+00:05:26,800 --> 00:05:31,399
+ will be one of the main topics today, because portal is one of the alternative solutions
+
+36
+00:05:31,399 --> 00:05:34,899
+ for the history provider.
+
+37
+00:05:34,899 --> 00:05:41,040
+ Thank you so much, Piper, for being here.
+
+38
+00:05:41,040 --> 00:05:43,319
+ It's an honor to have such an orgy here.
+
+39
+00:05:43,319 --> 00:05:48,759
+ more important thing, yeah, Piper is creator of what was originally called CDAP and became BPF.
+
+40
+00:05:48,759 --> 00:05:54,120
+ He's the father of this whole program as well, actually. The study group is
+
+41
+00:05:58,199 --> 00:06:03,719
+ spin-off of the protocol fellowship, which was indeed started by Piper here. So it's an honor
+
+42
+00:06:03,719 --> 00:06:08,920
+ to have you here again. And I have to say, so far, my favorite presentation format, the actual white
+
+43
+00:06:08,920 --> 00:06:21,400
+ work, it's incredible. So, go ahead, Piper. Howdy. Audio good? Everybody can hear me?
+
+44
+00:06:22,120 --> 00:06:28,680
+ Cool. All right. So, I started making some slides, and then I started feeling like busy work,
+
+45
+00:06:29,879 --> 00:06:35,560
+ diagramming Ethereum data structures and things and slides. It felt kind of boring.
+
+46
+00:06:35,560 --> 00:06:39,720
+ I hope that this format ends up working. We're going to find out.
+
+47
+00:06:43,319 --> 00:06:54,360
+ There we go. So this is sort of mixed about the purge. So the purge being, you know, one of those
+
+48
+00:06:54,360 --> 00:06:59,480
+ sections in that wonderful image that Vitalik has made for us about all the different
+
+49
+00:06:59,480 --> 00:07:08,180
+ research tracks going on in Ethereum. And the purge itself is kind of specifically targeted at,
+
+50
+00:07:09,200 --> 00:07:13,140
+ I had this wonderful picture in my slides of somebody vomiting into a toilet, because it's
+
+51
+00:07:13,140 --> 00:07:19,500
+ us just trying to get some stuff out of our protocol that, depending on how kind of words
+
+52
+00:07:19,500 --> 00:07:25,540
+ you want to use, they were just mistakes that were made in terms of how the protocol was designed
+
+53
+00:07:25,540 --> 00:07:28,920
+ and things that we want to clean up
+
+54
+00:07:28,920 --> 00:07:30,840
+ because they're not working, they're wrong,
+
+55
+00:07:31,060 --> 00:07:34,080
+ they're fundamentally limiting us from doing things.
+
+56
+00:07:35,120 --> 00:07:37,000
+ I started drawing some shape
+
+57
+00:07:37,000 --> 00:07:40,500
+ of what the Ethereum data structure looks like,
+
+58
+00:07:40,500 --> 00:07:45,000
+ but I actually want to back up even a little bit further.
+
+59
+00:07:46,240 --> 00:07:49,900
+ There was an EPF, one of these, I think maybe a week,
+
+60
+00:07:50,000 --> 00:07:51,600
+ two weeks, a couple weeks ago about Verkle.
+
+61
+00:07:51,600 --> 00:08:05,760
+ Um, and there's all of this stuff is linked together in some pretty intrinsic ways, but one of the, but I want to kind of like start in this in this vertical context and work our way forward.
+
+62
+00:08:06,560 --> 00:08:16,520
+ So, um, I didn't finish drawing a full structure up here of like what kind of you know, Ethereum blockchain data structure stuff looks like.
+
+63
+00:08:16,519 --> 00:08:24,699
+ But I want to talk about block execution and what happens during block execution.
+
+64
+00:08:26,079 --> 00:08:31,519
+ A block is full of this series of...
+
+65
+00:08:32,500 --> 00:08:38,899
+ You've got a block, and in it are a series of transactions.
+
+66
+00:08:40,059 --> 00:08:42,519
+ And each one of those transactions gets executed in a block.
+
+67
+00:08:42,519 --> 00:08:47,960
+ and as we step through each one of these transactions it has possibly some like data
+
+68
+00:08:47,960 --> 00:08:55,399
+ with it that we call call data and that call data gets fed into the evm uh the the transaction
+
+69
+00:08:55,399 --> 00:09:00,679
+ parameters like what address it is sent to dictate things like whether it executes a contract and
+
+70
+00:09:00,679 --> 00:09:05,519
+ most transactions there's a there's a lot of just simple value transfers and and those do touch
+
+71
+00:09:05,519 --> 00:09:11,000
+ state but most transactions are contracts and so they start digging down into the ethereum state
+
+72
+00:09:11,000 --> 00:09:21,960
+ And the Ethereum state, kid trash and drawings on my floor, the Ethereum state is a Merkle Patricia tree.
+
+73
+00:09:23,039 --> 00:09:34,080
+ And there are all kinds of ways that you can diagram these, and diagramming them for real on a whiteboard is a giant pain because they have 16 branches at each level, and that's a lot to draw.
+
+74
+00:09:34,080 --> 00:09:43,520
+ So often in any of my diagrams here, I'll be drawing things that look like binary trees, but in reality, think of each of these things as having 16 branches.
+
+75
+00:09:44,540 --> 00:09:49,060
+ The Ethereum state is this kind of like big monster data set.
+
+76
+00:09:50,420 --> 00:09:58,200
+ We call it the Merkle Patricia tree, and it is kind of anchored at each block under this value that we call the state root.
+
+77
+00:09:58,200 --> 00:10:06,500
+ And under the state root is a tree of nodes that eventually find their way down here to the bottom where you get accounts.
+
+78
+00:10:08,600 --> 00:10:15,440
+ And in each of these accounts, sometimes they're externally owned accounts and they have no concept of state built into them.
+
+79
+00:10:15,480 --> 00:10:19,140
+ But when they are a contract, each of these has a state.
+
+80
+00:10:20,100 --> 00:10:25,820
+ And each of these has dangly bits hanging off the bottom.
+
+81
+00:10:25,820 --> 00:10:35,000
+ Okay, so when we get into block execution, there's this set of transactions, right?
+
+82
+00:10:35,240 --> 00:10:42,840
+ Each block has a gas limit, and that gas limit and the Merkle-Patricia tree and Verkle are all sort of tied together.
+
+83
+00:10:44,000 --> 00:10:53,000
+ So Ethereum clients have this – so we get into block execution, and the code says access sim state, access sim state,
+
+84
+00:10:53,000 --> 00:11:00,360
+ and we have to reach all over this massive tree, and it has trillions of values in it these days,
+
+85
+00:11:00,399 --> 00:11:09,559
+ it is definitely into the high billions. It is a big piece of data. And in order to do block
+
+86
+00:11:09,559 --> 00:11:15,779
+ execution, what you're effectively doing is random access all over this thing, and it is a big,
+
+87
+00:11:15,779 --> 00:11:26,839
+ ugly data set. So some of the early implementations of the Merkle-Patricia tree started with what I
+
+88
+00:11:26,839 --> 00:11:32,100
+ often call the naive approach. It is the simple approach to implementing this in like a real
+
+89
+00:11:32,100 --> 00:11:37,379
+ piece of software, which is that they stored everything by all of these individual nodes
+
+90
+00:11:37,379 --> 00:11:42,480
+ inside of the tree. And if you wanted to get down here, what the client had to do was it had to walk
+
+91
+00:11:42,480 --> 00:11:47,840
+ through its database down here. Now, these days, the data set is large enough that to get to an
+
+92
+00:11:47,840 --> 00:11:52,620
+ account, you've got to go about seven layers deep. So you've got seven kind of disk reads here.
+
+93
+00:11:52,940 --> 00:11:58,759
+ And then when we start getting into smart contract storage and things like that, you're going even
+
+94
+00:11:58,759 --> 00:12:04,820
+ further down into these trees. So one of the early bottlenecks in Ethereum clients was
+
+95
+00:12:04,820 --> 00:12:08,600
+ this access pattern.
+
+96
+00:12:08,600 --> 00:12:10,780
+ So this access pattern alone
+
+97
+00:12:10,780 --> 00:12:13,740
+ of having to step down through each tree node
+
+98
+00:12:13,740 --> 00:12:16,680
+ as you went is heavy, right?
+
+99
+00:12:16,820 --> 00:12:18,280
+ Disk access is pretty fast.
+
+100
+00:12:19,440 --> 00:12:21,740
+ You know, clients are using things like level DB
+
+101
+00:12:21,740 --> 00:12:22,840
+ and then some people figure out
+
+102
+00:12:22,840 --> 00:12:25,060
+ that rocks DB was maybe like a little bit faster.
+
+103
+00:12:25,300 --> 00:12:25,940
+ I'm not really sure
+
+104
+00:12:25,940 --> 00:12:27,879
+ if that's actually holds true these days,
+
+105
+00:12:27,960 --> 00:12:29,060
+ but either way,
+
+106
+00:12:29,080 --> 00:12:31,360
+ they're using these really fast key value stores,
+
+107
+00:12:31,360 --> 00:12:39,820
+ high-speed SSDs, and even there, the bottleneck for Ethereum clients executing blocks was the
+
+108
+00:12:39,820 --> 00:12:47,720
+ rate at which they could access this stuff. So fast forward a couple of years of hard engineering
+
+109
+00:12:47,720 --> 00:12:56,519
+ work, and what you get is you get new models of this data. So this has like an O,
+
+110
+00:12:56,519 --> 00:13:03,639
+ I'm not going to get this exactly right, but it's something like O log log in access
+
+111
+00:13:03,639 --> 00:13:12,460
+ pattern here, okay? It's expensive. It's cheap in terms of certain things, but it ended up being
+
+112
+00:13:12,460 --> 00:13:17,699
+ expensive, right? You're talking about in some of the average cases here, digging through like
+
+113
+00:13:17,699 --> 00:13:25,460
+ seven to 10 layers of tree data to get to things. And so this was the bottleneck. This was the
+
+114
+00:13:25,460 --> 00:13:33,340
+ throughput. So client teams did a whole bunch of engineering work, and they built what we call,
+
+115
+00:13:33,440 --> 00:13:41,820
+ I guess, flat database designs that had just O1 access, which meant that for any key in this
+
+116
+00:13:41,820 --> 00:13:46,820
+ dataset, they could generally just go straight to it, okay? I'm not going to get into exactly
+
+117
+00:13:46,820 --> 00:13:52,420
+ the specifics of how that design came about or how it's implemented. Go read some client code,
+
+118
+00:13:52,419 --> 00:13:56,139
+ go ask some client developers. They can talk to you about that. Not the point of this talk.
+
+119
+00:13:58,659 --> 00:14:03,699
+ So this O1 access pattern opened up a lot of throughput, right? So before this,
+
+120
+00:14:03,839 --> 00:14:09,379
+ clients were bottlenecked on this kind of like O log log in access pattern. And this effectively
+
+121
+00:14:09,379 --> 00:14:16,899
+ dictates the overall block gas limit, okay? And the gas limit is sort of like an Ethereum scaling
+
+122
+00:14:16,899 --> 00:14:23,139
+ number, right? We're never going to get to like MasterCard visa transaction through puts by upping
+
+123
+00:14:23,139 --> 00:14:30,360
+ the gas limit, but the gas limit does dictate how many transactions worth of stuff the base chain
+
+124
+00:14:30,360 --> 00:14:37,279
+ can do. So, so we figured out a way to get from, from this access pattern of like, oh, log, log in
+
+125
+00:14:37,279 --> 00:14:44,899
+ to, to like a, a really nice, oh, one. And this thing gave Ethereum clients a bit of a speed
+
+126
+00:14:44,899 --> 00:14:53,919
+ boost in terms of how fast they could execute blocks. But even still, it ends up being that
+
+127
+00:14:53,919 --> 00:15:00,199
+ Ethereum clients, to the best of my knowledge, are effectively bottlenecked on disk IO. Because
+
+128
+00:15:00,199 --> 00:15:06,299
+ even moving to this O1 access pattern, there are tons and tons of state accesses inside of a block
+
+129
+00:15:06,299 --> 00:15:12,259
+ that gets executed. And the state access is very random access, and the state itself is very,
+
+130
+00:15:12,259 --> 00:15:23,360
+ very large. So what we would love to do, so what we wanted to do was say, okay, well, maybe we can
+
+131
+00:15:23,360 --> 00:15:28,139
+ do this stateless thing. So many years back, we all got together and started working on what,
+
+132
+00:15:28,240 --> 00:15:33,740
+ you know, stateless Ethereum looks like. And ultimately, what one of the main bottlenecks
+
+133
+00:15:33,740 --> 00:15:41,059
+ were, what was, the Merkle-Patricia tree. So the Merkle-Patricia tree itself ended up being the
+
+134
+00:15:41,059 --> 00:15:47,879
+ thing that was sort of blocking us from being able to go from this kind of like the best that
+
+135
+00:15:47,879 --> 00:15:51,519
+ we could do in terms of client design where they're storing all the state locally, they've
+
+136
+00:15:51,519 --> 00:15:57,099
+ got it, and they've got this nice O1 access pattern. But even there, with that being the
+
+137
+00:15:57,099 --> 00:16:03,019
+ bottleneck for us to go faster, the idea was witnesses. So witness being a proof of all of
+
+138
+00:16:03,019 --> 00:16:07,839
+ the state that a block accesses. And rather than a client needing to read all of that state off of
+
+139
+00:16:07,840 --> 00:16:16,519
+ it's disk it could just be given it and use that as the state data for whatever uh for uh for
+
+140
+00:16:16,519 --> 00:16:24,280
+ executing a block um the problem is that the merka patricia tree uh has really inefficient proofs
+
+141
+00:16:25,000 --> 00:16:30,660
+ um in fact it's got even sort of like attackable proofs some of like the worst case proof sizes i
+
+142
+00:16:30,660 --> 00:16:34,940
+ think when we looked at these numbers and i'm pulling stuff from pretty deep memory so
+
+143
+00:16:34,940 --> 00:16:36,980
+ So take all of this with a grain of salt.
+
+144
+00:16:38,240 --> 00:16:45,340
+ But to do proofs with the Merkle-Patricia tree meant proofs that were potentially in the tens to hundreds of megabytes.
+
+145
+00:16:45,340 --> 00:16:55,460
+ And the reason for that is that branching factor of 16, that at every level of the Merkle Patricia tree, if you want to provide a proof to anybody, you've got to branch out to that.
+
+146
+00:16:56,060 --> 00:17:05,160
+ You've got to include all of those, like, possibly 15 sibling node elements in order to have a full proof for execution data.
+
+147
+00:17:05,579 --> 00:17:08,860
+ So this is where Verkle comes from.
+
+148
+00:17:08,859 --> 00:17:24,859
+ Virgo comes from us needing a different tree design that has a much more succinct proof shape so that we can actually do this whole stateless thing where we distribute proofs around.
+
+149
+00:17:24,859 --> 00:17:50,019
+ Okay. In the process of going towards stateless Ethereum, what we found was that like going full, we wanted to clean up a lot of stuff, right? Getting proofs was just kind of like one piece of this, where we had this big inefficiency, this big tech debt, legacy thing that we chose to use, right?
+
+150
+00:17:50,019 --> 00:17:51,440
+ Miracle Patricia trees were great.
+
+151
+00:17:51,579 --> 00:17:53,960
+ And at the time that Ethereum was built, it was, you know, like,
+
+152
+00:17:54,460 --> 00:17:55,559
+ Virkle trees didn't exist.
+
+153
+00:17:55,700 --> 00:17:59,240
+ Nobody had come up with them yet.
+
+154
+00:18:01,019 --> 00:18:05,279
+ But then as we got further, we realized that there were things that we wanted
+
+155
+00:18:05,279 --> 00:18:07,539
+ that Miracle Patricia trees were holding us back.
+
+156
+00:18:07,740 --> 00:18:10,819
+ So Virkle is one of these things that we've worked to unlock.
+
+157
+00:18:13,359 --> 00:18:17,259
+ Virkle is maybe the thing that unlocks one of the things that we wanted,
+
+158
+00:18:17,400 --> 00:18:18,139
+ stateless, okay?
+
+159
+00:18:18,140 --> 00:18:27,759
+ Now, that's one piece. So what I want to look at is some of these other pieces that we're looking to unlock and some of the things that we're trying to get rid of.
+
+160
+00:18:27,759 --> 00:18:34,120
+ So I'm going to erase some of this scribbly bits.
+
+161
+00:18:34,119 --> 00:18:47,559
+ Okay.
+
+162
+00:18:48,439 --> 00:18:59,579
+ So, in Vitalik's picture, roadmap image, we end up looking at a number of things.
+
+163
+00:18:59,579 --> 00:19:11,899
+ So over time, we ended up with, or the initial design of Ethereum has a whole bunch of things that grow linearly over time.
+
+164
+00:19:11,900 --> 00:19:35,120
+ And while they are not necessarily, like, fundamentally going to, like, kill Ethereum or make Ethereum nodes just sort of, like, stop working, they have shown, like, we found that they are kind of problematic in our protocol design because they give us these things that just keep growing.
+
+165
+00:19:35,580 --> 00:19:38,620
+ So the simple one is just the blocks, right?
+
+166
+00:19:38,619 --> 00:19:47,179
+ over a very long period of time, we end up with, what is it, 19 million blocks, roughly,
+
+167
+00:19:47,179 --> 00:19:55,979
+ around this number today. So there's this long, long history of 19 million blocks of things.
+
+168
+00:19:57,219 --> 00:20:03,639
+ And it turns out that, like, realistically, clients really only need the stuff that's,
+
+169
+00:20:03,739 --> 00:20:08,459
+ like, right up here towards the front, and that everything else that's in the deep, deep, deep,
+
+170
+00:20:08,460 --> 00:20:21,180
+ deep history is mostly not that important for everyday operation of the protocol.
+
+171
+00:20:22,420 --> 00:20:29,120
+ In fact, with the advent of the beacon chain, the deep, long history is not even something that you
+
+172
+00:20:29,120 --> 00:20:35,259
+ can actually reasonably follow because of this whole beacon chain subjectivity piece, where you
+
+173
+00:20:35,259 --> 00:20:41,980
+ actually need to jump to the front of the chain so um in order to track things so one of the things
+
+174
+00:20:41,980 --> 00:20:46,539
+ that is being worked on and it's sort of like probably front of mind and one of the simplest
+
+175
+00:20:46,539 --> 00:20:54,299
+ ones is what we call four fours and good job to light client for sniping a eip number it's
+
+176
+00:20:54,299 --> 00:21:00,700
+ really easy to remember here uh so four fours is one of our eips um and the proposal is that
+
+177
+00:21:00,700 --> 00:21:07,180
+ clients start dropping their deep history, that clients start getting rid of the deep history
+
+178
+00:21:07,180 --> 00:21:14,460
+ of all of the headers and the blocks and everything like that. Now it turns out that that
+
+179
+00:21:14,460 --> 00:21:22,059
+ has been quite a difficult thing for us to figure out how to do, because where is that data going to
+
+180
+00:21:22,059 --> 00:21:27,900
+ come from, how are clients going to sync to the front of the chain, right, what if we lose this
+
+181
+00:21:27,900 --> 00:21:34,220
+ data is one of the things that people like to say um i actually think what if we lose the data is
+
+182
+00:21:34,220 --> 00:21:41,660
+ probably the least interesting one here because the it is my belief that the chance of us losing
+
+183
+00:21:42,380 --> 00:21:49,900
+ the history of ethereum is near zero there's just too many people doing things with this with this
+
+184
+00:21:49,900 --> 00:21:54,700
+ piece of technology for us to lose it but it is important to say like where are people going to
+
+185
+00:21:54,700 --> 00:21:57,819
+ to be able to get it reliably, that sort of thing.
+
+186
+00:21:58,860 --> 00:22:03,259
+ So 4-4s is one of the tech debt cleanups
+
+187
+00:22:03,259 --> 00:22:04,259
+ that we're working on doing,
+
+188
+00:22:04,360 --> 00:22:06,160
+ which is to say that clients themselves
+
+189
+00:22:06,160 --> 00:22:07,759
+ do not need to keep that deep history.
+
+190
+00:22:08,920 --> 00:22:12,620
+ We'll get into kind of like how some of this works later,
+
+191
+00:22:12,940 --> 00:22:15,400
+ but I believe that there are kind of
+
+192
+00:22:15,400 --> 00:22:17,100
+ like three approaches going on here.
+
+193
+00:22:18,160 --> 00:22:23,180
+ I think Aragon is looking at a torrent-based solution.
+
+194
+00:22:23,180 --> 00:22:26,560
+ So Aragon likes to do things kind of their own way.
+
+195
+00:22:27,799 --> 00:22:34,720
+ And Aragon, at least, I didn't double check all of this immediately before this talk, but at least in history,
+
+196
+00:22:34,940 --> 00:22:39,440
+ they've been looking at using BitTorrent protocol in order to figure out how to sync these things.
+
+197
+00:22:40,380 --> 00:22:46,400
+ There is another solution called ARA1 files, which are this kind of like flat file format.
+
+198
+00:22:46,720 --> 00:22:50,080
+ And these two things are very compatible with each other.
+
+199
+00:22:50,079 --> 00:22:55,779
+ I don't know exactly what format Aragorn is using in their torrents, but I wouldn't be surprised if it was something like error files.
+
+200
+00:22:56,839 --> 00:23:07,919
+ So error1 files are just a file format for clients to be able to at least ingest old deep block data, and it's kind of just an archive format for us to do.
+
+201
+00:23:08,299 --> 00:23:17,119
+ They have some nice properties to them, which are basically just the ability to do random access into them to be able to read directly in and get whichever block you want.
+
+202
+00:23:17,119 --> 00:23:30,179
+ And then Portal is kind of the live, distributed, on-demand solution that I've been pioneering and building.
+
+203
+00:23:30,919 --> 00:23:37,119
+ It's very much my baby. It's my project. There's a lot of other people who work on it. I do not get all the credit for this.
+
+204
+00:23:37,259 --> 00:23:44,759
+ But Portal is a peer-to-peer decentralized network and protocol for storage and retrieval of Ethereum data.
+
+205
+00:23:44,759 --> 00:24:06,180
+ And so history is the first data set that we've gone after. In the last few weeks, we've actually squashed the appropriate bugs that we needed to squash to actually get things really working. And we are basically starting to aggressively approach the ecosystem and say, hey, we are ready for you guys to pull this history data from us.
+
+206
+00:24:06,180 --> 00:24:16,480
+ So, four-fours is just one of these things in the purge that we want to do, which is purging all of that old history data out of things.
+
+207
+00:24:18,860 --> 00:24:25,400
+ And forgive me if I'm going to work my way through a couple of things that we're working on getting out of the protocol.
+
+208
+00:24:26,140 --> 00:24:32,700
+ I didn't work too hard to try to construct a nice little clean narrative where we walk through these things.
+
+209
+00:24:32,700 --> 00:24:39,660
+ um they're they're all very much attached to kind of like the core protocol pieces but they are a
+
+210
+00:24:39,660 --> 00:24:46,940
+ little bit all over the place in terms of what things we're doing um another one of the things
+
+211
+00:24:46,940 --> 00:24:52,460
+ that we are working on getting out of the protocol is this op code called self-destruct
+
+212
+00:24:52,460 --> 00:25:04,880
+ um so self-destruct in its current and historical form uh clears the storage data for a contract
+
+213
+00:25:04,880 --> 00:25:13,700
+ um originally it seemed like a pretty good idea to have this concept of a contract being able to
+
+214
+00:25:13,700 --> 00:25:22,519
+ decide to delete itself. Um, and when we look at, so when we look at things like the state tree
+
+215
+00:25:22,519 --> 00:25:28,240
+ and it's got right, all of these things hanging off of it, and then you get to a contract
+
+216
+00:25:28,240 --> 00:25:33,380
+ and then the contract down here has a few things in it that are, you know, stored under it.
+
+217
+00:25:33,580 --> 00:25:39,840
+ The idea is that when this contract decides to self-destruct, all of this is supposed to go away.
+
+218
+00:25:39,839 --> 00:25:48,799
+ Well, that's fine and all, in kind of some of the original designs for how Ethereum is designed.
+
+219
+00:25:48,799 --> 00:25:52,439
+ And to understand that, we look at how the State Tree is designed.
+
+220
+00:25:52,439 --> 00:26:01,679
+ So the State Tree has all of these, it's got this whole tree branching structure, and you get down here, and it doesn't actually look like this.
+
+221
+00:26:01,680 --> 00:26:16,820
+ The state tree really just has an account down here and a state root for the account storage along with a couple of other fields like a knots and a balance and things like that.
+
+222
+00:26:17,380 --> 00:26:26,460
+ It turns out that this is the only thing in the state tree that represents the storage for the contract.
+
+223
+00:26:26,460 --> 00:26:42,340
+ Now, that contract storage has to live somewhere, right? And it has all of this data hanging down under it. But this is not inside of this. It does not live inside of this state tree. It has only got this reference.
+
+224
+00:26:42,339 --> 00:26:52,480
+ And when you go and implement the Ethereum protocol and the MPG as it exists today, what you realize is that there's a couple of these things.
+
+225
+00:26:52,619 --> 00:26:56,879
+ So there's this other one right here called the code hash, right?
+
+226
+00:26:57,059 --> 00:27:04,679
+ The contract itself, the account, has this big, you know, some of them have like large, large code streams to them.
+
+227
+00:27:04,959 --> 00:27:09,539
+ That code is not actually stored anywhere in the state tree.
+
+228
+00:27:09,539 --> 00:27:13,579
+ it is only referenced opaquely from this code hash,
+
+229
+00:27:13,779 --> 00:27:17,759
+ similar to how the state root is only referenced opaquely
+
+230
+00:27:17,759 --> 00:27:19,539
+ through this hash right here.
+
+231
+00:27:20,879 --> 00:27:22,759
+ At the implementation level,
+
+232
+00:27:22,920 --> 00:27:25,119
+ we actually have to store the code somewhere
+
+233
+00:27:25,119 --> 00:27:30,839
+ because when we go to execute the code at an account,
+
+234
+00:27:31,200 --> 00:27:33,700
+ the EVM needs that code to read it,
+
+235
+00:27:33,799 --> 00:27:35,920
+ which means that the client implementation
+
+236
+00:27:35,920 --> 00:27:36,920
+ has to store it somewhere.
+
+237
+00:27:36,920 --> 00:27:50,600
+ But it isn't in any of these places it is only referenced and so and so the client has to actually store it somewhere. This is where we actually get a little bit of like storage leak inside of clients.
+
+238
+00:27:50,599 --> 00:27:58,699
+ um two so a client has to decide in its implementation am i going to deduplicate
+
+239
+00:27:58,699 --> 00:28:07,759
+ contract code or am i going to do reference counting or am i going to just leak uh uh
+
+240
+00:28:07,759 --> 00:28:15,139
+ contract codes and so those three things may not i'll try to describe them all so you have to store
+
+241
+00:28:15,140 --> 00:28:22,420
+ this code somewhere. So the naive implementation is every time I receive, I encounter new contract
+
+242
+00:28:22,420 --> 00:28:28,160
+ code, then I will store it in my key value database under this code hash. What that means
+
+243
+00:28:28,160 --> 00:28:34,080
+ is that if two contracts deploy the same code, I'm going to have one entry in my database for
+
+244
+00:28:34,080 --> 00:28:39,680
+ that code, while there are multiple accounts out here that have the same code hash. That means that
+
+245
+00:28:39,680 --> 00:28:46,580
+ when this account self-destructs, I can clear its data, but I can't actually clear its code out of
+
+246
+00:28:46,580 --> 00:28:52,660
+ my database because I don't know if there is another account down here that stores the same
+
+247
+00:28:52,660 --> 00:28:57,080
+ code. And if I go delete it, and then this other one goes to execute, then I'm kind of screwed.
+
+248
+00:28:58,720 --> 00:29:04,259
+ So the typical implementation is this. They store it, and then they never delete it, which means
+
+249
+00:29:04,259 --> 00:29:06,539
+ that a long-running Ethereum client
+
+250
+00:29:06,539 --> 00:29:09,079
+ is actually kind of accumulating extra code
+
+251
+00:29:09,079 --> 00:29:10,480
+ that it shouldn't be holding onto
+
+252
+00:29:10,480 --> 00:29:13,779
+ because of this whole implementation.
+
+253
+00:29:14,660 --> 00:29:15,940
+ Now, you can do some overhead
+
+254
+00:29:15,940 --> 00:29:17,619
+ to either do reference counting.
+
+255
+00:29:18,799 --> 00:29:20,400
+ I forgot the other thing that I said,
+
+256
+00:29:20,680 --> 00:29:22,000
+ but either way, you can do some overhead
+
+257
+00:29:22,000 --> 00:29:24,379
+ to do better cleanup or better deletion,
+
+258
+00:29:24,519 --> 00:29:26,879
+ or you can store extra
+
+259
+00:29:26,879 --> 00:29:28,920
+ and store copies of all of it for each account
+
+260
+00:29:28,920 --> 00:29:30,480
+ so that you know that you can just delete
+
+261
+00:29:30,480 --> 00:29:31,680
+ that account's copy.
+
+262
+00:29:32,259 --> 00:29:34,039
+ But either way, you're talking about overhead,
+
+263
+00:29:34,259 --> 00:29:39,059
+ terms of storage. This is another place where we cleaned something up with
+
+264
+00:29:39,059 --> 00:29:46,000
+ Vercl. So Vercl actually stores the code itself inside of the main state tree. So
+
+265
+00:29:46,000 --> 00:29:49,980
+ these are some of the places where we needed to do cleanup. This is another one
+
+266
+00:29:49,980 --> 00:29:57,599
+ of those places where providing proofs was complicated or is complicated in
+
+267
+00:29:57,599 --> 00:30:03,200
+ the Merkle Patricia Tree model of things. If you imagine trying to provide the
+
+268
+00:30:03,200 --> 00:30:08,360
+ naive implementation of providing a Merkle Patricia tree proof for execution
+
+269
+00:30:08,360 --> 00:30:13,019
+ of a block you might forget that you that you need to include the actual code
+
+270
+00:30:13,019 --> 00:30:22,920
+ for any code that is encountered within within the execution of a block because
+
+271
+00:30:22,920 --> 00:30:26,720
+ the Merkle Patricia tree again it only has a reference to the code hash not the
+
+272
+00:30:26,720 --> 00:30:31,799
+ code itself so getting back to self-destruct we've got this reference
+
+273
+00:30:31,799 --> 00:30:37,779
+ to a state root, the contract state is not actually stored anywhere inside of
+
+274
+00:30:37,779 --> 00:30:41,819
+ the actual state tree. Client implementations have to just implement a
+
+275
+00:30:41,819 --> 00:30:48,299
+ thing to store it elsewhere, it's just to store that state somewhere else, and thus
+
+276
+00:30:48,299 --> 00:30:53,700
+ when a self-destruct comes through in this model, in the old Merkle-Patricia
+
+277
+00:30:53,700 --> 00:31:03,080
+ tree model, a client can go through and actually delete every single one of these out of their
+
+278
+00:31:03,080 --> 00:31:09,400
+ database. But the thing is that a contract might have one, two, or a hundred billion
+
+279
+00:31:09,400 --> 00:31:15,259
+ state entries in its database. And when you run into that hundred billion model,
+
+280
+00:31:15,720 --> 00:31:20,120
+ and you implement your client so that it walks through this tree and deletes every one of these
+
+281
+00:31:20,119 --> 00:31:25,279
+ keys out of your database, all of a sudden your client hangs while executing a block because it
+
+282
+00:31:25,279 --> 00:31:29,259
+ spends a couple of hours digging through its database, deleting all of this stuff.
+
+283
+00:31:29,939 --> 00:31:37,939
+ And that is not an okay design. In the old Merkle partition tree, we can kind of get around this by
+
+284
+00:31:37,939 --> 00:31:43,539
+ just sort of like nuking this reference and just leaving this stuff around if we want to.
+
+285
+00:31:43,539 --> 00:31:48,399
+ The problem is that we fixed this in the Virkle.
+
+286
+00:31:50,059 --> 00:31:52,960
+ So Virkle is one of the places where we cleaned a lot of stuff up.
+
+287
+00:31:53,099 --> 00:31:58,079
+ And in Virkle, this stuff, the contract storage stuff, does not live separate.
+
+288
+00:31:58,220 --> 00:32:01,420
+ It does not live in this kind of magic-made-up other area.
+
+289
+00:32:01,779 --> 00:32:05,119
+ It is inside of the main state tree.
+
+290
+00:32:05,220 --> 00:32:07,680
+ In fact, everything is inside of the main state tree.
+
+291
+00:32:07,779 --> 00:32:10,000
+ This is one of the really nice cleanups that Virkle did.
+
+292
+00:32:10,000 --> 00:32:36,700
+ But in doing so, in doing this, it means that self-destruct becomes incredibly problematic, because if we're going to allow self-destructs, and we have the data inside of the main tree, it means that we're sort of required to go through and delete all of those things, which means that we introduce sort of a denial-of-service factor with self-destructs.
+
+293
+00:32:36,700 --> 00:32:40,860
+ So self-destruct removal, self-destruct essentially,
+
+294
+00:32:42,660 --> 00:32:46,480
+ like in order to do this transition,
+
+295
+00:32:46,480 --> 00:32:49,319
+ we have to deal with self-destruct.
+
+296
+00:32:49,319 --> 00:32:51,279
+ So self-destruct, one of the things
+
+297
+00:32:51,279 --> 00:32:53,059
+ that we get rid of in the purge.
+
+298
+00:32:58,200 --> 00:32:59,039
+ Let's see.
+
+299
+00:33:04,580 --> 00:33:05,420
+ All right.
+
+300
+00:33:06,700 --> 00:33:15,660
+ So precompiles are another one of the things that are being looked at for wanting to do purge things.
+
+301
+00:33:15,660 --> 00:33:29,440
+ So I think we've all heard of something like zkevm, zero-knowledge evm stuff.
+
+302
+00:33:29,440 --> 00:33:37,700
+ any sort of this category of technology applied to EVM execution.
+
+303
+00:33:38,740 --> 00:33:49,320
+ So one of the problems that shows up in being able to zero-knowledge-ify zk-evm things are precompiles.
+
+304
+00:33:49,900 --> 00:33:52,860
+ Kekak is one of the other ones.
+
+305
+00:33:52,859 --> 00:34:05,539
+ So it turns out that precompiles and Kekak being one of those are really kind of fundamentally problematic for doing zk things.
+
+306
+00:34:05,539 --> 00:34:19,579
+ Now, I'm going to do a lot of hand-waving in this part, because this is not my domain of deep expertise. I understand these things at a high level. I do not have deep knowledge of the fundamentals of how they work.
+
+307
+00:34:19,579 --> 00:34:41,819
+ But what I do understand is that implementing KECAC in this model accounts for a very large percentage of the computation that must be done in order to z-k-fi things, in order to zero-knowledge-fi things.
+
+308
+00:34:41,820 --> 00:34:56,480
+ And so we had this idea in the origin, you know, kind of the origin, the inception of Ethereum, that we wanted things like Kekak, because our protocol itself, right, Ethereum's protocol has Kekak all over the place.
+
+309
+00:34:57,519 --> 00:35:02,640
+ This is how we acquire block caches. Kekak is all over the Merkle Patricia tree, right?
+
+310
+00:35:03,100 --> 00:35:07,360
+ And so having Kekak available inside of the EVM was really valuable.
+
+311
+00:35:07,360 --> 00:35:10,140
+ same with things like SHA-256
+
+312
+00:35:10,140 --> 00:35:12,260
+ SHA-256 is used to secure
+
+313
+00:35:12,260 --> 00:35:14,460
+ all kinds of data all over the place
+
+314
+00:35:14,460 --> 00:35:16,420
+ and being able to do
+
+315
+00:35:16,420 --> 00:35:18,640
+ SHA-256 cheap in the EVM
+
+316
+00:35:18,640 --> 00:35:22,200
+ was valuable
+
+317
+00:35:22,200 --> 00:35:24,460
+ so there's a lot of use cases
+
+318
+00:35:24,460 --> 00:35:26,480
+ around that but what it turns
+
+319
+00:35:26,480 --> 00:35:28,420
+ out is that by including
+
+320
+00:35:28,420 --> 00:35:30,440
+ these kinds of things what we do
+
+321
+00:35:30,440 --> 00:35:32,480
+ is we make doing zk things
+
+322
+00:35:32,480 --> 00:35:33,900
+ fundamentally hard
+
+323
+00:35:33,900 --> 00:35:34,740
+ that
+
+324
+00:35:34,739 --> 00:35:41,699
+ that applying zk things to these makes them fundamentally hard and so one of the areas
+
+325
+00:35:41,699 --> 00:35:47,299
+ of cleanup that we are looking to that people are working on is essentially
+
+326
+00:35:48,099 --> 00:35:55,059
+ evmifying to the best that we can pre-compiles and trying to figure out what we do with the
+
+327
+00:35:55,059 --> 00:36:02,579
+ rest of them so one of the things that is standing in the way of this are all of these
+
+328
+00:36:02,579 --> 00:36:07,759
+ types of things of precompiles. So this is why we are trying to kind of like find ways to get these
+
+329
+00:36:07,759 --> 00:36:17,139
+ out. One of the major efforts where this stuff is happening is the Ethereum object format. I believe
+
+330
+00:36:17,139 --> 00:36:23,699
+ that there's links to this stuff in the protocol studies documents related to this talk. But
+
+331
+00:36:23,699 --> 00:36:28,639
+ Ethereum object format is one of the places where large amounts of this kind of cleanup are happening.
+
+332
+00:36:28,639 --> 00:36:43,179
+ So, the reason for getting, you know, wanting to get rid of pre-compiles is wanting to get rid of, well, not get rid of, but make it possible for us to get to this kind of zk-evm place.
+
+333
+00:36:43,179 --> 00:36:47,699
+ Because as amazing as a vertical is with the ability for us to distribute
+
+334
+00:36:49,480 --> 00:36:53,359
+ vertical proofs of the states that make black execution
+
+335
+00:36:56,859 --> 00:36:58,480
+ Easy to do
+
+336
+00:36:58,480 --> 00:37:00,779
+ at the client level because all you have to do is
+
+337
+00:37:00,940 --> 00:37:05,419
+ Have the block be you want to execute and the proof and you can run it all in memory and you don't have to
+
+338
+00:37:05,419 --> 00:37:09,239
+ Store any state and that sort of thing it's great as great as that is
+
+339
+00:37:09,699 --> 00:37:11,899
+ What's even greater is the world here?
+
+340
+00:37:11,900 --> 00:37:15,980
+ where at that point, the proofs get even smaller
+
+341
+00:37:15,980 --> 00:37:18,340
+ and the verification of the proofs get even faster.
+
+342
+00:37:18,700 --> 00:37:21,340
+ Because it turns out that even in a Virkle model,
+
+343
+00:37:21,980 --> 00:37:24,960
+ executing a block is relatively CPU expensive
+
+344
+00:37:24,960 --> 00:37:28,240
+ and in kind of like a light client world,
+
+345
+00:37:28,440 --> 00:37:31,780
+ doing that on things like mobile phones
+
+346
+00:37:31,780 --> 00:37:34,720
+ is still probably more expensive than we want it to be.
+
+347
+00:37:34,960 --> 00:37:38,460
+ Whereas this in theory is actually accessible
+
+348
+00:37:38,460 --> 00:37:42,400
+ in the kind of like resource-constrained light device world.
+
+349
+00:37:53,679 --> 00:37:57,960
+ This feels like an appropriate spot to pause.
+
+350
+00:37:58,059 --> 00:38:01,579
+ I really probably should have paused and seen if there's any questions
+
+351
+00:38:01,579 --> 00:38:05,579
+ at at least one of the previous topic boundaries.
+
+352
+00:38:05,579 --> 00:38:10,380
+ But do we have any questions or anything that people want me to dig into?
+
+353
+00:38:10,380 --> 00:38:11,900
+ Any areas of clarification?
+
+354
+00:38:11,900 --> 00:38:15,980
+ Yeah, we have some questions on Discord.
+
+355
+00:38:15,980 --> 00:38:21,559
+ First, is it difficult because precompiles are not defined to EVM's language code, or
+
+356
+00:38:21,559 --> 00:38:25,460
+ zkvm in the context that you said a moment ago?
+
+357
+00:38:25,460 --> 00:38:26,460
+ Yes.
+
+358
+00:38:26,460 --> 00:38:30,400
+ So precompiles are not EVM code, typically.
+
+359
+00:38:30,400 --> 00:38:32,819
+ They tend to be machine code.
+
+360
+00:38:32,819 --> 00:38:35,139
+ Or just external, right?
+
+361
+00:38:35,139 --> 00:38:38,299
+ Like, I don't know what the other clients have done.
+
+362
+00:38:38,799 --> 00:38:42,059
+ I decided to write a client many years ago in Python.
+
+363
+00:38:42,239 --> 00:38:46,239
+ It was a mistake, but I learned so much doing it,
+
+364
+00:38:46,239 --> 00:38:47,619
+ so maybe it wasn't a mistake.
+
+365
+00:38:48,079 --> 00:38:50,900
+ But either way, in my Python clients,
+
+366
+00:38:51,119 --> 00:38:53,679
+ when you called the precompile that did Kekak,
+
+367
+00:38:54,299 --> 00:38:57,699
+ I used the Python library that does Kekak,
+
+368
+00:38:57,799 --> 00:38:59,440
+ and I feed it through, and I do Kekak,
+
+369
+00:38:59,519 --> 00:39:02,559
+ and I hope that the Python library does exactly the right thing.
+
+370
+00:39:02,559 --> 00:39:25,119
+ In fact, I think that a lot of the bugs that people find in fuzzers tend to be in kind of like the precompile area, because you're going to get slightly different behaviors with things like number overflows and stuff in a go library, maybe than an arrest library than in a C library that was written differently.
+
+371
+00:39:25,119 --> 00:39:36,460
+ And so most of the clients are essentially shelling out to some other library that implements SHA-256, KECAC, whatever it is, Blake2B, those things.
+
+372
+00:39:38,000 --> 00:39:50,839
+ So yeah, I don't know what the state of the art is for what the plan for how we do KECAC going forward, or if we do, or how we do SHA-256 going forward, or if we do.
+
+373
+00:39:50,840 --> 00:39:57,240
+ I don't know if it becomes viable for us to do those things at the EVM level.
+
+374
+00:39:59,800 --> 00:40:04,940
+ But either way, the problem is that they shell out to machine code,
+
+375
+00:40:05,059 --> 00:40:12,220
+ which means that how do you do a zk-proof for something that is just a go library being run on your machine?
+
+376
+00:40:12,740 --> 00:40:15,100
+ I think that's kind of where the problem comes up.
+
+377
+00:40:18,460 --> 00:40:19,640
+ Great, thank you so much.
+
+378
+00:40:19,639 --> 00:40:25,960
+ Yeah, the brick compiles are quite complex topic, and we also have an article on that on the APF
+
+379
+00:40:25,960 --> 00:40:34,679
+ Wikipedia, it's also put there. And I have another question, because I didn't quite catch that,
+
+380
+00:40:34,679 --> 00:40:41,879
+ when you were mentioning, we were explaining the self-destruct mechanism and how the contract code
+
+381
+00:40:41,879 --> 00:40:47,719
+ is stored, you mentioned that there is some storage leakage or some sort of leak happening,
+
+382
+00:40:47,719 --> 00:40:51,879
+ and uh i didn't really catch that can you elaborate from that like what is the what is
+
+383
+00:40:51,879 --> 00:41:01,159
+ illegal got it um so you can you can look at this in either contract code bridge and both i believe
+
+384
+00:41:01,159 --> 00:41:07,559
+ actually end up having the same mechanism so because the existing state of how the merkle
+
+385
+00:41:07,559 --> 00:41:15,079
+ patriciatory stores the ethereum state only has references via code hash or or the contract
+
+386
+00:41:15,079 --> 00:41:23,420
+ storage route, a client who's doing either a self-destruct, who's doing a self-destruct
+
+387
+00:41:23,420 --> 00:41:29,259
+ has to decide whether or not they're going to delete the code itself and whether or not
+
+388
+00:41:29,259 --> 00:41:32,480
+ they're going to delete the storage elements themselves.
+
+389
+00:41:35,219 --> 00:41:39,340
+ The hygienic thing to do is, in theory, to delete them.
+
+390
+00:41:39,340 --> 00:41:47,000
+ But to implement that naively means possibly allowing your client to get DOST off the network.
+
+391
+00:41:47,700 --> 00:41:56,780
+ So in the event that a very large contract deletes itself, there might be hundreds of thousands or millions of storage keys that need to be deleted.
+
+392
+00:41:56,780 --> 00:42:14,220
+ And if you naively implement self-destruct so that it actually goes through and delete those, what you might find is that during a block that calls self-destruct on a very large contract, that your client is going to hang for a very long time trying to do that deletion.
+
+393
+00:42:16,080 --> 00:42:23,060
+ Which means that you probably need to put some limits on how long your client is going to spend deleting them.
+
+394
+00:42:23,059 --> 00:42:44,259
+ If you want to be really hygienic, but realistically, I think the reality is that the smart thing to do if you want to write a client that is robust, it's just not to delete that stuff or to put some really strict limits on how many keys you're willing to spend time deleting before you force your client to move on.
+
+395
+00:42:44,260 --> 00:42:47,660
+ and then potentially to never ever come back and clean that stuff up.
+
+396
+00:42:48,880 --> 00:42:54,780
+ So for contract storage, you get that DOS vector where it's maybe difficult to clean up a contract
+
+397
+00:42:54,780 --> 00:42:58,940
+ that self-destructs itself that has a very, very large amount of storage keys.
+
+398
+00:43:00,280 --> 00:43:08,020
+ So there you get a kind of like storage leakage where your database will use store contract storage
+
+399
+00:43:08,520 --> 00:43:13,460
+ over some period of time if you don't implement perfect deletion mechanics,
+
+400
+00:43:13,460 --> 00:43:21,059
+ which are not it's not infeasible to do that engineering work but it isn't the most important
+
+401
+00:43:21,059 --> 00:43:25,840
+ thing i think that most clients work on so it's not unreasonable to expect that many clients or
+
+402
+00:43:25,840 --> 00:43:31,119
+ some clients or maybe even all clients um i don't know what they do under the hood but i wouldn't
+
+403
+00:43:31,119 --> 00:43:35,559
+ be surprised if there are clients out there that when a self-destruct happens they don't actually
+
+404
+00:43:35,559 --> 00:43:42,139
+ wipe everything off disk which means that over a long-running uh ethereum client that stays online
+
+405
+00:43:42,139 --> 00:43:46,659
+ and it doesn't reset it's it's storage databases and things will accumulate
+
+406
+00:43:46,659 --> 00:43:52,339
+ cruft in its database extra storage in this database that should it is
+
+407
+00:43:52,339 --> 00:43:58,639
+ deletable but yes but it wasn't deleted because maybe they made the smart choice
+
+408
+00:43:58,639 --> 00:44:03,699
+ to to put limits or even just to say you know what we're not even gonna clean up
+
+409
+00:44:03,699 --> 00:44:07,940
+ contract storage deletions we're just gonna let it sit so that we don't get
+
+410
+00:44:07,940 --> 00:44:11,799
+ dosed off the network because this isn't the highest priority issue that we have
+
+411
+00:44:11,800 --> 00:44:12,600
+ to work on right now.
+
+412
+00:44:13,260 --> 00:44:15,539
+ So that's where that stuff shows up with contract storage.
+
+413
+00:44:16,920 --> 00:44:19,460
+ With contract code, it's much,
+
+414
+00:44:22,480 --> 00:44:25,700
+ two contracts can share the exact same code,
+
+415
+00:44:25,900 --> 00:44:27,940
+ which means they'll have the exact same code hash,
+
+416
+00:44:28,380 --> 00:44:30,600
+ which means that at the implementation level,
+
+417
+00:44:31,180 --> 00:44:34,820
+ since the code is not stored in the state tree,
+
+418
+00:44:35,580 --> 00:44:39,600
+ the client has a choice about how they store it,
+
+419
+00:44:39,599 --> 00:44:43,039
+ and the naive way to store it is to store it by its hash.
+
+420
+00:44:44,119 --> 00:44:46,980
+ And since two accounts can have the exact same code hash
+
+421
+00:44:46,980 --> 00:44:49,039
+ and can have identical code,
+
+422
+00:44:49,819 --> 00:44:51,360
+ if you choose that mechanism,
+
+423
+00:44:51,360 --> 00:44:53,279
+ when a contract self-destructs,
+
+424
+00:44:53,299 --> 00:44:55,819
+ you can't go delete its code from your database
+
+425
+00:44:55,819 --> 00:44:57,500
+ because you don't know whether or not
+
+426
+00:44:57,500 --> 00:44:59,420
+ there is another account that has the same code.
+
+427
+00:45:00,019 --> 00:45:01,619
+ That's where that leakage happens.
+
+428
+00:45:02,079 --> 00:45:04,039
+ These are not major, major issues.
+
+429
+00:45:04,239 --> 00:45:09,259
+ These are not issues that are going to, like,
+
+430
+00:45:09,260 --> 00:45:14,060
+ immediately cause a client to fall off the network or anything like that, they are just
+
+431
+00:45:14,060 --> 00:45:20,540
+ little bits of debt that over time cause clients to store more data than they're required to.
+
+432
+00:45:21,260 --> 00:45:27,340
+ And they're probably not the highest engineering problems that most client teams,
+
+433
+00:45:27,340 --> 00:45:31,500
+ they're probably not the highest priority engineering problems that most client teams work
+
+434
+00:45:31,500 --> 00:45:37,580
+ on. All right, thank you so much. That's very interesting. I didn't know about the
+
+435
+00:45:37,579 --> 00:45:41,739
+ a potential dose vector there that's pretty interesting.
+
+436
+00:45:41,739 --> 00:45:43,719
+ The next question is on portal report,
+
+437
+00:45:43,719 --> 00:45:45,940
+ and I think you can just go on
+
+438
+00:45:45,940 --> 00:45:47,980
+ and we'll get to this topic eventually.
+
+439
+00:45:49,819 --> 00:45:51,340
+ Yeah, I think we've got two,
+
+440
+00:45:51,340 --> 00:45:55,880
+ like two and a half more kind of purge topics,
+
+441
+00:45:55,880 --> 00:45:57,920
+ and then I'll pause for a second,
+
+442
+00:45:57,920 --> 00:46:00,000
+ and then we'll do a bit of kind of like what is portal
+
+443
+00:46:00,000 --> 00:46:01,500
+ and where are we going with it?
+
+444
+00:46:02,659 --> 00:46:05,619
+ So one of the other major areas of cleanup
+
+445
+00:46:05,619 --> 00:46:09,779
+ that we want to do is in the state, right?
+
+446
+00:46:09,779 --> 00:46:12,719
+ Earlier, we talked about how 4-4s is aiming at cleaning up
+
+447
+00:46:12,719 --> 00:46:15,279
+ this long history of linear growth, right?
+
+448
+00:46:15,279 --> 00:46:19,639
+ This very long history of blocks, and it grows over time.
+
+449
+00:46:19,639 --> 00:46:22,920
+ The state itself has this very long history
+
+450
+00:46:22,920 --> 00:46:24,359
+ of linear growth, right?
+
+451
+00:46:24,359 --> 00:46:26,059
+ The state tree just keeps getting bigger and bigger
+
+452
+00:46:26,059 --> 00:46:27,719
+ and bigger and bigger, and we just keep throwing more
+
+453
+00:46:27,719 --> 00:46:30,699
+ and more stuff, and we need it all to be there.
+
+454
+00:46:30,699 --> 00:46:32,039
+ So what are we gonna do about that?
+
+455
+00:46:32,039 --> 00:46:34,019
+ How do we clean it up?
+
+456
+00:46:34,019 --> 00:46:42,820
+ And years ago, when we came together to try to kind of fix these problems, we came up with this concept that we call state expiry.
+
+457
+00:46:45,780 --> 00:46:52,360
+ Which actually is probably a terrible name because it makes it it's it's it's the expiry is like a violent word, right?
+
+458
+00:46:52,400 --> 00:46:54,699
+ It says it expires. It goes away. Right.
+
+459
+00:46:55,219 --> 00:47:01,880
+ So maybe we should we should talk about some branding at some point and come up with a with a with a nicer, friendlier word here.
+
+460
+00:47:01,880 --> 00:47:06,619
+ But today we're going to call it state expiry because that's what we've called it in protocol discussions for forever.
+
+461
+00:47:07,160 --> 00:47:11,820
+ And maybe we'd get less fear if we used a different word than expiry.
+
+462
+00:47:12,380 --> 00:47:17,740
+ Because the truth is that it doesn't actually expire. It just kind of goes to sleep. That's the idea.
+
+463
+00:47:18,380 --> 00:47:25,900
+ So the idea is that we define epics, right? We got epics all over the place, right?
+
+464
+00:47:25,900 --> 00:47:35,360
+ it's this whole thing. And the idea behind state expiry is, and I'm only going to hit this at the
+
+465
+00:47:35,360 --> 00:47:42,840
+ highest level, because there's a lot of nuance here. The idea behind state expiry is this, is that
+
+466
+00:47:42,840 --> 00:47:51,980
+ for now, we'll say this is today. Today, we are inside this epic, okay? There's a bunch of these
+
+467
+00:47:51,980 --> 00:47:53,340
+ hanging out back here too.
+
+468
+00:47:54,480 --> 00:47:55,760
+ So under this epic,
+
+469
+00:47:56,139 --> 00:47:57,639
+ we have a state.
+
+470
+00:47:58,679 --> 00:48:00,559
+ And so do we have a state
+
+471
+00:48:00,559 --> 00:48:02,780
+ under every single one
+
+472
+00:48:02,780 --> 00:48:04,480
+ of these other epics as well.
+
+473
+00:48:05,179 --> 00:48:06,619
+ And this one hasn't happened yet.
+
+474
+00:48:07,619 --> 00:48:07,820
+ Okay?
+
+475
+00:48:08,079 --> 00:48:10,000
+ And during a block that's executed
+
+476
+00:48:10,000 --> 00:48:11,860
+ in this epic right here,
+
+477
+00:48:15,519 --> 00:48:17,420
+ when it reads state,
+
+478
+00:48:17,940 --> 00:48:19,820
+ first it will try
+
+479
+00:48:19,820 --> 00:48:21,400
+ to read from this one.
+
+480
+00:48:21,980 --> 00:48:32,219
+ it will see if the value is there or not. And when it writes state it will always write
+
+481
+00:48:32,219 --> 00:48:38,800
+ to this one. So this one, we read from it, and we write from it. In the event that state
+
+482
+00:48:38,800 --> 00:48:45,639
+ is missing from this one, the idea is that we reach back into this kind of like previous
+
+483
+00:48:45,639 --> 00:48:53,239
+ tree of the state. Let me try to read the state from back here. And if it's not in either of
+
+484
+00:48:53,239 --> 00:49:01,719
+ these, then too bad it's not here. If it is here, what we do is we elevate it into the active state.
+
+485
+00:49:02,440 --> 00:49:08,920
+ So we have this concept of kind of the active state and the previous state.
+
+486
+00:49:08,920 --> 00:49:28,039
+ And the idea is that these epics might be six months, nine months, 12 months long, something in this rough realm, and that every time you cross an epic boundary, you say, well, the previous state here is now read-only.
+
+487
+00:49:28,039 --> 00:49:43,340
+ Now we get a nice new empty one that is read-write, and anything that's getting regularly accessed within this time frame will just automatically move itself forward.
+
+488
+00:49:44,300 --> 00:49:53,119
+ And anything that doesn't still lives back here, but the clients no longer keep this one around.
+
+489
+00:49:53,539 --> 00:49:54,800
+ It still exists.
+
+490
+00:49:55,239 --> 00:49:56,219
+ Somebody's got it.
+
+491
+00:49:56,219 --> 00:50:02,879
+ we probably make something like an error file format for it
+
+492
+00:50:02,879 --> 00:50:05,459
+ so that people can package it up really nicely,
+
+493
+00:50:05,980 --> 00:50:10,059
+ ship it around, make torrents for it, or anything like that.
+
+494
+00:50:10,759 --> 00:50:13,980
+ And then the mechanism here is that in the event
+
+495
+00:50:13,980 --> 00:50:16,559
+ that you're doing something here
+
+496
+00:50:16,559 --> 00:50:20,859
+ that really needs to access something
+
+497
+00:50:20,859 --> 00:50:23,559
+ from back a couple of epics ago
+
+498
+00:50:23,559 --> 00:50:27,420
+ that is no longer immediately accessible in the EVM
+
+499
+00:50:27,420 --> 00:50:32,719
+ because clients are allowed to drop things that are past this boundary,
+
+500
+00:50:33,239 --> 00:50:39,699
+ the idea is that it is pretty easy for the Ethereum protocol
+
+501
+00:50:39,699 --> 00:50:42,799
+ to just keep track of the old routes.
+
+502
+00:50:43,799 --> 00:50:47,500
+ And as long as the protocol keeps track of all of these old state routes,
+
+503
+00:50:48,199 --> 00:50:51,400
+ then somebody can build themselves a proof
+
+504
+00:50:51,400 --> 00:50:54,519
+ for a piece of state that they want to essentially revive,
+
+505
+00:50:55,639 --> 00:50:58,980
+ and they can include it in their transaction
+
+506
+00:50:58,980 --> 00:51:02,059
+ so that when execution happens here
+
+507
+00:51:02,059 --> 00:51:04,059
+ that wants to access something back here
+
+508
+00:51:04,059 --> 00:51:06,019
+ that isn't immediately accessible,
+
+509
+00:51:06,820 --> 00:51:09,460
+ it can just look at this old root, check the proof,
+
+510
+00:51:09,460 --> 00:51:10,820
+ see that it matches the root,
+
+511
+00:51:11,160 --> 00:51:12,780
+ and then write it into the state.
+
+512
+00:51:14,260 --> 00:51:19,079
+ So state expiry is this,
+
+513
+00:51:19,079 --> 00:51:25,559
+ really quite wonderful, nice, clean solution for this.
+
+514
+00:51:26,599 --> 00:51:28,199
+ I think it's where we go.
+
+515
+00:51:29,400 --> 00:51:32,219
+ I think it's where we're going, but it's hard.
+
+516
+00:51:32,380 --> 00:51:33,579
+ It's a lot of work.
+
+517
+00:51:34,159 --> 00:51:35,099
+ It's complex.
+
+518
+00:51:35,539 --> 00:51:38,239
+ The amount of, right, this is a big feature.
+
+519
+00:51:38,239 --> 00:51:41,539
+ This is a feature as big as Verkle, right?
+
+520
+00:51:41,639 --> 00:51:45,840
+ This is a fundamental change to kind of how Ethereum's protocol works.
+
+521
+00:51:45,840 --> 00:51:52,720
+ The expiry of old things is a new thing, right?
+
+522
+00:51:52,720 --> 00:51:58,600
+ But state expiry is one of these it's it's really the big purge item it is
+
+523
+00:51:58,600 --> 00:52:03,240
+ that can maybe the biggest thing in the purge that we want to do and it's hard
+
+524
+00:52:03,240 --> 00:52:09,480
+ but this is generally the concept. And I realize that this next topic that I want
+
+525
+00:52:09,480 --> 00:52:21,980
+ to talk about, which is address space expansion, that I think I'm not going to be able to draw
+
+526
+00:52:21,980 --> 00:52:24,440
+ you a perfect picture for why we need this.
+
+527
+00:52:24,440 --> 00:52:29,219
+ But I will be able to give you what is generally a hand-wavy answer for this.
+
+528
+00:52:29,900 --> 00:52:35,740
+ And there are a lot of links in the protocol studies document that go into detail about
+
+529
+00:52:35,740 --> 00:52:38,380
+ address space expansion and why we need it.
+
+530
+00:52:38,380 --> 00:52:50,539
+ But the general gist is that in each of these epics, we need a slightly different addressing scheme so that it's very clear which epic we're talking about.
+
+531
+00:52:52,119 --> 00:53:05,960
+ And that addressing scheme, essentially, we don't have enough bits of entropy in our 20-byte Ethereum addresses.
+
+532
+00:53:05,960 --> 00:53:27,340
+ I think the number that's been cited is that the Bitcoin blockchain has done this much computation, that the Bitcoin blockchain has effectively brute-forced at least a couple of Ethereum addresses in the amount of computation that has happened there.
+
+533
+00:53:27,340 --> 00:53:39,340
+ And so the analysis is that our 20-byte addresses are not actually secure enough for us to implement state expiry because they're just not big enough, right?
+
+534
+00:53:39,519 --> 00:53:45,960
+ We take a 32-byte value, and then we really truncate it down to a 20-byte value.
+
+535
+00:53:45,960 --> 00:54:09,340
+ Um, and so while this is, you know, it's, it's complicated as well. State expiry is complicated, um, difficult to do. You know, it's, it's got a lot of moving parts. We, we, we really kind of know how to do all of this. This is like not, um, it's hard, but, but, but it's, it's, it's known in, in most ways.
+
+536
+00:54:09,340 --> 00:54:32,559
+ What we ran into that was sort of the blocker was that this one actually was somewhat fundamentally hard, because there is a lot of stuff in our protocol that did very strict things about 20 byte addresses, like truncating values that were sent back and forth within the EVM, things like that.
+
+537
+00:54:32,559 --> 00:54:43,759
+ And so, or even just the sheer amount of tooling out there that knows exactly how to do this and has no idea how to do 32-byte addresses.
+
+538
+00:54:46,779 --> 00:54:54,320
+ So address-based expansion ends up being actually one of the harder problems here, simply, I think, because this is a technical problem.
+
+539
+00:54:54,460 --> 00:54:56,000
+ State expiry is a technical problem.
+
+540
+00:54:56,820 --> 00:55:02,480
+ Address-based expansion has a bit of technical problems buried in it, but it, boy, does have a lot of people problems.
+
+541
+00:55:02,559 --> 00:55:06,860
+ built in it, right? Lots and lots of client libraries that deal with 20-byte addresses,
+
+542
+00:55:07,360 --> 00:55:15,380
+ and it will blindly take a 32-byte address and just rip it down and turn it into a 20-byte
+
+543
+00:55:15,380 --> 00:55:19,440
+ address without saying anything about it or throwing any errors or anything like that.
+
+544
+00:55:20,259 --> 00:55:24,400
+ And so one of the blockers that we ran into was this thing right here with address space expansion.
+
+545
+00:55:24,400 --> 00:55:34,240
+ Um, cool. Um, any questions about this?
+
+546
+00:55:40,039 --> 00:55:46,320
+ Uh, nothing specific to, to the state expiry stuff, unless people have some questions they
+
+547
+00:55:46,320 --> 00:55:52,440
+ want to type in quickly. Uh, we have one coming that says, uh, in week five,
+
+548
+00:55:52,440 --> 00:56:01,200
+ Donathy mentioned that he believes state expiry might never get implemented due to complexity and that PBS and statelessness makes it a lower priority.
+
+549
+00:56:01,980 --> 00:56:07,079
+ What are your thoughts on the likelihood that state expiry gets implemented?
+
+550
+00:56:09,840 --> 00:56:13,079
+ I don't think I have an informed opinion here.
+
+551
+00:56:14,679 --> 00:56:18,700
+ I have my own opinion, but I don't think I have an ecosystem-informed opinion.
+
+552
+00:56:18,699 --> 00:56:24,299
+ I think that that stuff is correct, that there is a viable future in which we never implement state expiry.
+
+553
+00:56:26,460 --> 00:56:33,799
+ I find that kind of disappointing, and I think I can lay out my reason for that.
+
+554
+00:56:33,800 --> 00:56:40,860
+ it appears to be completely viable
+
+555
+00:56:40,860 --> 00:56:42,400
+ to never do state expiry
+
+556
+00:56:42,400 --> 00:56:50,160
+ that hardware should probably outpace state growth
+
+557
+00:56:50,160 --> 00:56:55,620
+ and that it is reasonable to expect block builders
+
+558
+00:56:55,620 --> 00:57:00,260
+ to throw high-end, great, amazing hardware at this stuff
+
+559
+00:57:00,260 --> 00:57:05,520
+ and to be able to manage 10 terabyte state databases
+
+560
+00:57:05,520 --> 00:57:07,020
+ and just to figure it out
+
+561
+00:57:07,020 --> 00:57:09,540
+ and to do the engineering work to do that.
+
+562
+00:57:09,860 --> 00:57:13,860
+ I think that is a viable future for what we do,
+
+563
+00:57:14,540 --> 00:57:16,540
+ but boy, do I not like it.
+
+564
+00:57:17,420 --> 00:57:21,080
+ And some of this is directly influenced
+
+565
+00:57:21,080 --> 00:57:23,440
+ by the context that I work in, which is portal network.
+
+566
+00:57:23,800 --> 00:57:26,260
+ And the reason is that the state
+
+567
+00:57:26,260 --> 00:57:28,320
+ is a very hard data set to work with.
+
+568
+00:57:28,320 --> 00:57:31,620
+ you get this value that is the state root.
+
+569
+00:57:32,840 --> 00:57:37,880
+ And the state root references this huge data set that lives under it.
+
+570
+00:57:38,140 --> 00:57:45,480
+ And not only references it, but the state changes fast, constantly, and kind of randomly.
+
+571
+00:57:47,120 --> 00:57:51,700
+ And because of that, it's a very hard data set to work with
+
+572
+00:57:51,700 --> 00:57:54,640
+ because it's always trying to move out from under you.
+
+573
+00:57:54,639 --> 00:58:01,019
+ If you have a copy of it, you've got to constantly be executing every single block that comes through.
+
+574
+00:58:01,519 --> 00:58:11,319
+ Otherwise, this thing that you worked so hard to gather and build and tend and love suddenly becomes borderline useless just because you were gone for 10 minutes.
+
+575
+00:58:11,759 --> 00:58:13,559
+ And now you can't really do anything with it.
+
+576
+00:58:13,679 --> 00:58:16,460
+ And that's not a great feeling.
+
+577
+00:58:18,179 --> 00:58:24,139
+ And we want – so in the PBS model, it's very protocol-focused, right?
+
+578
+00:58:24,139 --> 00:58:31,480
+ decision, I believe, to say, you know what? This is fine. This is okay. We're fine with,
+
+579
+00:58:31,480 --> 00:58:38,359
+ it is totally viable for our protocol to just keep chugging on because block builders
+
+580
+00:58:38,359 --> 00:58:47,480
+ have a strong incentive to put big pieces of hardware at block building to store mega large
+
+581
+00:58:47,480 --> 00:58:52,779
+ state trees and to have no problem at all doing block building and block execution.
+
+582
+00:58:52,780 --> 00:59:10,500
+ And I think this is sort of like a blinders view, because it's very protocol centric, which is not a bad way to do this development of the protocol. But what about users? This is kind of like my question.
+
+583
+00:59:10,500 --> 00:59:20,360
+ So, in order to build and send a transaction, I must do this thing that we do called gas
+
+584
+00:59:20,360 --> 00:59:21,360
+ estimation.
+
+585
+00:59:21,360 --> 00:59:26,920
+ And gas estimation means running arbitrary EVM code, and running arbitrary EVM code means
+
+586
+00:59:26,920 --> 00:59:28,800
+ accessing the state.
+
+587
+00:59:28,800 --> 00:59:37,880
+ And so while the protocol can turn along just fine, how are users going to build transactions
+
+588
+00:59:37,880 --> 00:59:45,400
+ their own in a manner that is ideologically aligned with what we say we care about, which
+
+589
+00:59:45,400 --> 00:59:48,380
+ is decentralization and that sort of thing.
+
+590
+00:59:49,920 --> 01:00:01,760
+ Because a monolithic, giant, mega state means we are saying to users, you should go use
+
+591
+01:00:01,760 --> 01:00:02,820
+ centralized providers.
+
+592
+01:00:03,579 --> 01:00:05,200
+ You should go use Infura.
+
+593
+01:00:05,559 --> 01:00:06,559
+ You should go use Alchemy.
+
+594
+01:00:06,559 --> 01:00:08,619
+ because that's what we're saying if we do that.
+
+595
+01:00:10,799 --> 01:00:19,619
+ State expiry puts bounds on the overall size of the state that is hard to work with.
+
+596
+01:00:20,360 --> 01:00:23,559
+ The state is still hard to work with in a state expiry model,
+
+597
+01:00:23,840 --> 01:00:28,900
+ but that difficulty is firmly bound into this box.
+
+598
+01:00:29,500 --> 01:00:35,400
+ And every time something expires out of here, it becomes very easy to work with
+
+599
+01:00:35,400 --> 01:00:36,860
+ because it stops wiggling around
+
+600
+01:00:36,860 --> 01:00:38,200
+ and moving out from under you
+
+601
+01:00:38,200 --> 01:00:39,039
+ and it gets frozen.
+
+602
+01:00:40,000 --> 01:00:42,680
+ And so it becomes viable
+
+603
+01:00:42,680 --> 01:00:44,860
+ to build sustainable protocols
+
+604
+01:00:44,860 --> 01:00:47,480
+ that can serve this state data.
+
+605
+01:00:48,079 --> 01:00:53,340
+ It is easier to build a portal network model
+
+606
+01:00:53,340 --> 01:00:55,360
+ that serves this state data
+
+607
+01:00:55,360 --> 01:00:56,539
+ because there's upper bounds
+
+608
+01:00:56,539 --> 01:00:58,619
+ on how much of it there ever will be.
+
+609
+01:00:59,320 --> 01:01:00,680
+ Whereas in the monolithic,
+
+610
+01:01:01,500 --> 01:01:03,200
+ single state, single route,
+
+611
+01:01:03,320 --> 01:01:04,519
+ no state expiry model,
+
+612
+01:01:04,519 --> 01:01:16,119
+ it means that a solution like portal network has to figure out how to continually grow its provided storage to be able to store all of this historical state in order to serve it.
+
+613
+01:01:16,340 --> 01:01:28,420
+ So I'm sure that there's some holes in the reasoning there, but that's the rough gist of why I find that approach to be disappointing.
+
+614
+01:01:28,780 --> 01:01:34,079
+ Yeah, thank you so much for this paper.
+
+615
+01:01:34,079 --> 01:01:38,980
+ I really appreciate it, because when Domotis said it, I was personally quite disappointed.
+
+616
+01:01:38,980 --> 01:01:42,420
+ I was a fan of StateXparry exactly for the reasons you're saying.
+
+617
+01:01:42,420 --> 01:01:46,119
+ I'm learning a node, I'm learning an archive node, and I will keep doing this, providing
+
+618
+01:01:46,119 --> 01:01:47,119
+ the data.
+
+619
+01:01:47,119 --> 01:01:48,119
+ So it's great argumentation, Dave.
+
+620
+01:01:48,119 --> 01:01:49,119
+ Thank you so much.
+
+621
+01:01:49,119 --> 01:01:59,799
+ Yeah, we have one more question, because you mentioned address space extension, and it's
+
+622
+01:01:59,799 --> 01:02:03,079
+ something that I haven't heard about in a while now.
+
+623
+01:02:03,079 --> 01:02:04,759
+ I wonder what's the priority there?
+
+624
+01:02:05,159 --> 01:02:08,599
+ What is the current research state of the ASE?
+
+625
+01:02:12,739 --> 01:02:16,420
+ I know that EOF, so Ethereum Object Format,
+
+626
+01:02:16,559 --> 01:02:21,380
+ is doing some of the work to make address-based expansion possible.
+
+627
+01:02:21,380 --> 01:02:23,539
+ So it seems to be prioritized.
+
+628
+01:02:23,779 --> 01:02:27,259
+ I haven't had my thumb on the pulse of core development for a bit.
+
+629
+01:02:27,519 --> 01:02:30,099
+ I've been very much off in my own portal project,
+
+630
+01:02:30,099 --> 01:02:35,400
+ And so I've stayed, I've been catching up, but I don't know.
+
+631
+01:02:35,799 --> 01:02:54,559
+ I can talk more generically about it, which is that most things in our ecosystem get done because of a few very motivated people who decide to die on that hill, who decide to take up the flag and run with it and make it happen.
+
+632
+01:02:54,559 --> 01:03:01,539
+ I almost started listing names of who's done things but if I do that then I'm going to leave
+
+633
+01:03:01,539 --> 01:03:06,759
+ somebody out who was important and involved in it and I don't want to do that but just about all of
+
+634
+01:03:06,759 --> 01:03:13,559
+ our major protocol changes and initiatives that are hard they get done because somebody decides
+
+635
+01:03:13,559 --> 01:03:18,380
+ that they are going to make it happen or some small number of people decide that they are going
+
+636
+01:03:18,380 --> 01:03:25,640
+ to make it happen. And typically, that is a client team or somebody on a client team,
+
+637
+01:03:25,720 --> 01:03:31,440
+ because you don't really get to work directly on the protocol, not very effectively, without
+
+638
+01:03:31,440 --> 01:03:37,599
+ being a client team, because client implementations matter so much. So I think for address-based
+
+639
+01:03:37,599 --> 01:03:43,300
+ expansion to happen, I think it means somebody is going to have to decide that that's a hill
+
+640
+01:03:43,300 --> 01:03:48,220
+ that they want to die on, or not. Hopefully, we don't die on any of these hills, but that's the
+
+641
+01:03:48,219 --> 01:03:57,500
+ metaphor. And so, you know, is state expiry up next? Is address space expansion up next? Are the
+
+642
+01:03:57,500 --> 01:04:07,439
+ things all unblocked, right? Vitalik's beautiful roadmap document really kind of lines things up
+
+643
+01:04:07,439 --> 01:04:13,819
+ in dependency order. And so I'm not sure if address space expansion is fully unlocked yet.
+
+644
+01:04:13,820 --> 01:04:19,100
+ I think the process of getting address space expansion across the line is
+
+645
+01:04:19,100 --> 01:04:23,920
+ having a hundred conversations with a hundred different open source
+
+646
+01:04:23,920 --> 01:04:28,100
+ projects that all are going to need to update their libraries and,
+
+647
+01:04:28,100 --> 01:04:30,559
+ you know, support 32 byte addresses.
+
+648
+01:04:30,559 --> 01:04:35,519
+ And whoever does this is going to have to figure out and lay the,
+
+649
+01:04:35,519 --> 01:04:41,100
+ the pavement and the path forward for how we get from where we are today to
+
+650
+01:04:41,099 --> 01:04:45,079
+ like a viable address space expansion implementation.
+
+651
+01:04:45,079 --> 01:04:48,679
+ So maybe not the most satisfying answer,
+
+652
+01:04:48,679 --> 01:04:50,380
+ but that's what I've got for this.
+
+653
+01:04:53,440 --> 01:04:55,059
+ I also see that we're at an hour,
+
+654
+01:04:55,059 --> 01:04:57,920
+ what are our time constraints today?
+
+655
+01:04:57,920 --> 01:04:58,759
+ What's the?
+
+656
+01:04:59,980 --> 01:05:01,500
+ This is scheduled for 90 minutes,
+
+657
+01:05:01,500 --> 01:05:04,239
+ so you got another 30 minutes to go.
+
+658
+01:05:04,239 --> 01:05:05,039
+ Great.
+
+659
+01:05:05,920 --> 01:05:08,519
+ And I think that's all the questions for now.
+
+660
+01:05:08,519 --> 01:05:10,619
+ Great, I got one more small one here
+
+661
+01:05:10,619 --> 01:05:23,219
+ it will talk about. And in the meantime, I'd be curious for people to kind of drop into
+
+662
+01:05:23,219 --> 01:05:31,139
+ chat direction on what you want to hear about with portal network. Do you want to hear anything
+
+663
+01:05:31,139 --> 01:05:35,079
+ about it? Do you know about it? Do you know nothing about it? Kind of like what's your
+
+664
+01:05:35,079 --> 01:05:40,019
+ knowledge level, and are there specific areas that you'd like me to dive into?
+
+665
+01:05:41,059 --> 01:05:41,579
+ Cool.
+
+666
+01:05:41,840 --> 01:05:45,400
+ This last one is quite simple, log reform.
+
+667
+01:05:46,420 --> 01:05:46,460
+ Okay.
+
+668
+01:05:50,460 --> 01:05:57,340
+ So there are these four opcodes that are all log opcodes in the EVM.
+
+669
+01:05:59,000 --> 01:06:04,539
+ And when EVM execution is going through, and one of these opcodes gets called,
+
+670
+01:06:05,079 --> 01:06:09,239
+ it often has a couple of pieces of data associated with it.
+
+671
+01:06:10,519 --> 01:06:18,440
+ And those pieces of data get hashed to form what we call topics.
+
+672
+01:06:19,299 --> 01:06:23,880
+ And the idea is, or the log itself ends up with a topic,
+
+673
+01:06:24,119 --> 01:06:26,599
+ and then some of the data inside of it becomes a topic.
+
+674
+01:06:26,599 --> 01:06:42,519
+ So the structure of the log itself dictates kind of like the primary topic, and then all of the data elements in it result in topics as well.
+
+675
+01:06:42,519 --> 01:06:55,039
+ So these things all get sort of like bundled up and stuck into a receipt that has this Bloom filter in it.
+
+676
+01:06:55,039 --> 01:07:09,880
+ And the idea was, okay, and as a concrete example, an ERC-20 transfer has a specific topic associated with it.
+
+677
+01:07:10,739 --> 01:07:18,500
+ So the idea is that somebody, lots of people actually, want to know about ERC-20 token transfers because tokens.
+
+678
+01:07:18,500 --> 01:07:29,260
+ and the idea is that by that when you perform an erc20 token transfer in a compliant erc20
+
+679
+01:07:29,260 --> 01:07:38,219
+ contract it'll limit a log with a specific topic it gets included in the receipt it gets included
+
+680
+01:07:38,219 --> 01:07:44,599
+ in this bloom filter and that by doing this thing we can make it easy for application
+
+681
+01:07:44,599 --> 01:07:49,920
+ for applications to consume these events as they happen.
+
+682
+01:07:51,420 --> 01:07:58,819
+ The reality is that we have 19 million and growing,
+
+683
+01:07:59,559 --> 01:08:00,279
+ and I hope it's,
+
+684
+01:08:01,019 --> 01:08:02,860
+ really should have looked at the block number this morning.
+
+685
+01:08:03,079 --> 01:08:04,960
+ I don't pay close enough attention to these things.
+
+686
+01:08:05,440 --> 01:08:07,860
+ That we have this huge history of blocks
+
+687
+01:08:07,860 --> 01:08:09,599
+ and every one of those blocks
+
+688
+01:08:09,599 --> 01:08:11,299
+ is spitting out all of this stuff.
+
+689
+01:08:11,300 --> 01:08:40,900
+ And then clients, Ethereum clients, have all of these JSON RPC methods, Git logs, and all these – I'm not going to remember all of them, but there's all these methods that are supposed to allow you to query the entire history of all of these 19 million blocks about these topics.
+
+690
+01:08:40,899 --> 01:08:42,659
+ and these events that happened.
+
+691
+01:08:44,199 --> 01:08:47,000
+ This sucks as a client developer.
+
+692
+01:08:47,879 --> 01:08:51,479
+ Doing this, querying this stuff
+
+693
+01:08:51,479 --> 01:08:54,039
+ across 19 million possible historical blocks,
+
+694
+01:08:54,279 --> 01:08:56,639
+ because these endpoints basically say
+
+695
+01:08:56,639 --> 01:08:59,119
+ across any amount of this data set,
+
+696
+01:08:59,199 --> 01:09:00,779
+ you should be able to accurately query
+
+697
+01:09:00,779 --> 01:09:02,659
+ and get, right, you should be able to,
+
+698
+01:09:02,859 --> 01:09:05,219
+ I want to know about all the ERC-20 tokens,
+
+699
+01:09:05,420 --> 01:09:08,739
+ the worst thing you could do is ask a client,
+
+700
+01:09:08,739 --> 01:09:13,679
+ Please give me all ERC-20 token transfers from block 0 to block 19 million.
+
+701
+01:09:14,279 --> 01:09:19,279
+ And again, these were mistakes that were made in theory.
+
+702
+01:09:19,840 --> 01:09:25,979
+ I think it is reasonable to say that the JSON-RPC API for accessing logs was a mistake.
+
+703
+01:09:27,539 --> 01:09:32,880
+ It has this unbounded, massive data set that it has to query
+
+704
+01:09:32,880 --> 01:09:37,639
+ and potentially return huge, huge, huge, massive amounts of data.
+
+705
+01:09:38,739 --> 01:09:46,699
+ it's a mess it's a it's a it's an unreasonable api to serve um the amount of work that clients
+
+706
+01:09:46,699 --> 01:09:54,800
+ have had to do to to continue serving this api is is is nasty um i don't know the deep specifics
+
+707
+01:09:54,800 --> 01:10:01,079
+ of it but like geff has layers and layers of all of these bloom filters and indexes in order to be
+
+708
+01:10:01,079 --> 01:10:08,059
+ able to answer the questions that you ask it about historical logs and serving these endpoints is
+
+709
+01:10:08,060 --> 01:10:18,060
+ awful and sucks um so the proposal is we are not going to do this anymore it's real simple
+
+710
+01:10:18,060 --> 01:10:24,980
+ um there's a there's an eep in there uh i don't know what the schedule is on any of this um but
+
+711
+01:10:24,980 --> 01:10:32,700
+ but um all of this information about about whether an erc20 token transfer happened
+
+712
+01:10:32,699 --> 01:10:36,859
+ topics, all of that stuff, we're basically looking to say,
+
+713
+01:10:36,859 --> 01:10:39,859
+ we're just not going to do that anymore.
+
+714
+01:10:39,859 --> 01:10:44,039
+ This is something that an external service can do.
+
+715
+01:10:44,039 --> 01:10:46,859
+ If you really need application data,
+
+716
+01:10:46,859 --> 01:10:50,059
+ then build yourself some fancy EVM tooling
+
+717
+01:10:50,059 --> 01:10:52,300
+ that executes every block and monitors them
+
+718
+01:10:52,300 --> 01:10:54,779
+ as they get executed and detects the things
+
+719
+01:10:54,779 --> 01:10:56,139
+ that you want to detect.
+
+720
+01:10:56,139 --> 01:10:57,639
+ So this is what log reform is.
+
+721
+01:10:57,639 --> 01:11:00,460
+ It's it's just effectively removing the logging API.
+
+722
+01:11:02,699 --> 01:11:07,859
+ I believe that touches just about every piece of the purge.
+
+723
+01:11:08,500 --> 01:11:19,119
+ Maybe the only piece I didn't touch is gas observability and gas mechanics, which have proven to be problematic.
+
+724
+01:11:19,119 --> 01:11:25,199
+ The reason for that is that within the EVM, you can observe how much gas there is.
+
+725
+01:11:25,199 --> 01:11:45,779
+ And in allowing the code that is executing to observe the gas as it's going by, it means that people have written things, and I have written, deep history me wrote things, that were really specific about gas and gas schedule and how much gas the code was written for.
+
+726
+01:11:45,779 --> 01:12:04,159
+ And it turns out that by making the gas observable, which in turn sort of encourages people to write code that functions on gas observability, it makes it really complicated for us to change the gas schedule.
+
+727
+01:12:04,579 --> 01:12:11,279
+ And changing the gas schedule, changing the cost of different opcodes and things is something that we just fundamentally need to be able to do.
+
+728
+01:12:11,279 --> 01:12:18,439
+ And so this is another one of those things that is getting cleaned up in the Ethereum object format work that is happening,
+
+729
+01:12:18,679 --> 01:12:20,880
+ is the removal of gas observability.
+
+730
+01:12:21,420 --> 01:12:21,699
+ That's everything.
+
+731
+01:12:23,599 --> 01:12:25,779
+ All right, I think that's all of the purge things.
+
+732
+01:12:31,420 --> 01:12:37,239
+ So, let's see.
+
+733
+01:12:37,239 --> 01:12:41,059
+ I see the question about old transaction types.
+
+734
+01:12:41,279 --> 01:13:09,079
+ I believe what we're looking at there, and again, take this with a grain of salt, is that over time we've implemented multiple new transaction types, and there's this kind of overall effort where I think what we want to do is try to eventually unify that into kind of like one, hopefully, hopefully one, like final type of transaction
+
+735
+01:13:09,079 --> 01:13:16,239
+ that fully captures all of the different types of functionality
+
+736
+01:13:16,239 --> 01:13:18,460
+ that we'd like to be able to come in through a transaction,
+
+737
+01:13:18,739 --> 01:13:21,359
+ which at that point, we can, in theory,
+
+738
+01:13:21,579 --> 01:13:25,519
+ discard the old original transaction types
+
+739
+01:13:25,519 --> 01:13:28,960
+ and have one kind of modernized transaction.
+
+740
+01:13:39,079 --> 01:13:44,920
+ All right, I'm going to move on to talk a bit about portal network.
+
+741
+01:13:46,359 --> 01:13:50,039
+ Don't know how much I'm going to need this, but I magically cleaned a whiteboard.
+
+742
+01:14:04,039 --> 01:14:07,880
+ So,
+
+743
+01:14:09,079 --> 01:14:12,600
+ What do we say here?
+
+744
+01:14:14,920 --> 01:14:24,100
+ So what Portal is, it is a very specialized storage engine for Ethereum.
+
+745
+01:14:25,300 --> 01:14:26,399
+ I'm not going to get in.
+
+746
+01:14:26,500 --> 01:14:30,059
+ I've got less than 20 minutes here, so I'm not going to get into the details.
+
+747
+01:14:30,059 --> 01:14:34,000
+ I have a bunch of talks on the Internet where I go, where I deep dive on this.
+
+748
+01:14:34,000 --> 01:14:46,880
+ Um, and, and, and then this will be some like, kind of like short condensed version of that. Um, but portal is a very specialized storage engine, um, for Ethereum's data.
+
+749
+01:14:46,880 --> 01:15:08,480
+ And the general idea was take a look at all of the data that you need to do things with Ethereum and then figure out how we can take that data and we've got this huge block of data.
+
+750
+01:15:08,479 --> 01:15:13,339
+ And this right here is a full node, right?
+
+751
+01:15:13,419 --> 01:15:17,519
+ And it's got some, you know, like one, I don't know,
+
+752
+01:15:17,779 --> 01:15:20,159
+ like something like one terabyte of data.
+
+753
+01:15:20,519 --> 01:15:26,419
+ And the idea behind portal network is that we've got this whole protocol, right?
+
+754
+01:15:26,519 --> 01:15:31,339
+ Where at its root, right, we have like a block hash, right?
+
+755
+01:15:31,479 --> 01:15:34,019
+ And under that block hash, we've got all these fields,
+
+756
+01:15:34,020 --> 01:15:38,580
+ like the transactions route and the state route and things like that.
+
+757
+01:15:39,400 --> 01:15:41,620
+ And I'm not even going to get into Beacon Chain,
+
+758
+01:15:41,740 --> 01:15:45,880
+ but Beacon Chain has all of these routes and things and whatnot in it.
+
+759
+01:15:46,400 --> 01:15:51,680
+ And the idea is that all of the data that you need to do things with Ethereum
+
+760
+01:15:51,680 --> 01:15:56,320
+ is addressed in some way, right?
+
+761
+01:15:57,240 --> 01:16:01,260
+ That all of these blocks have a block hash
+
+762
+01:16:01,260 --> 01:16:07,780
+ and that all of these blocks have a transaction route, which references some list of transactions.
+
+763
+01:16:08,420 --> 01:16:15,619
+ And all of these blocks have a state, a state route, which references some, some big tree of
+
+764
+01:16:15,619 --> 01:16:23,500
+ state data, right? And things like that. And it's all addressed in some way. And, and I say addressed,
+
+765
+01:16:23,680 --> 01:16:28,220
+ maybe another way to say that it's cryptographically anchored, but it's, it's referenced,
+
+766
+01:16:28,220 --> 01:16:37,079
+ And it is referenced in a way that if I give you back the right data, if you have one of these things, you can verify that I did indeed give you the right data.
+
+767
+01:16:38,300 --> 01:16:45,340
+ The idea behind portal network is we've got this distributed peer-to-peer network of nodes.
+
+768
+01:16:45,340 --> 01:17:08,460
+ Why can't we take this thing and cut it up into a bunch of pieces and spread all of those pieces out in some intelligent, planned way that matches the retrieval patterns that people use for when they want to get at this data?
+
+769
+01:17:08,460 --> 01:17:19,460
+ so that rather than having a thousand full nodes that are hard to run,
+
+770
+01:17:19,460 --> 01:17:23,420
+ and this number maybe is always kind of like, I don't think it's actually going down,
+
+771
+01:17:23,560 --> 01:17:26,600
+ but boy, is it not growing massively.
+
+772
+01:17:27,500 --> 01:17:32,420
+ Instead of having this small number of full nodes that are heavy and hard to run,
+
+773
+01:17:32,420 --> 01:17:51,420
+ What if we had a much bigger network of really smaller, simpler nodes that all held on to some piece of this, and maybe some of them hold on to bigger pieces or whatever, but that we take all of that and we spread it out and we put it in all of these different nodes?
+
+774
+01:17:51,420 --> 01:17:54,440
+ My phone is ringing. Apologies.
+
+775
+01:17:54,439 --> 01:18:03,239
+ So, good time to thought break there.
+
+776
+01:18:06,199 --> 01:18:18,159
+ Another way to think about this is that in the current paradigm where we have full nodes, you essentially have filled my board.
+
+777
+01:18:24,439 --> 01:18:29,979
+ You've got the client and the network, okay?
+
+778
+01:18:29,979 --> 01:18:41,839
+ In the current model, the client is very heavy, and the network is very light, okay?
+
+779
+01:18:42,319 --> 01:18:49,219
+ DevP2P, the network that all Ethereum nodes run off of, is a very simple protocol.
+
+780
+01:18:49,220 --> 01:18:55,680
+ it has a bunch of RPC methods for retrieving pieces of data from all the clients of that network.
+
+781
+01:18:56,260 --> 01:19:01,220
+ All the clients of that network are full nodes, and all of the methods that it uses are very simple.
+
+782
+01:19:01,560 --> 01:19:02,520
+ Give me this block.
+
+783
+01:19:02,680 --> 01:19:04,000
+ Give me this piece of state.
+
+784
+01:19:04,579 --> 01:19:05,560
+ Give me these receipts.
+
+785
+01:19:07,240 --> 01:19:11,020
+ So this is now, right?
+
+786
+01:19:11,020 --> 01:19:19,580
+ And in portal, we want to say the client is light and the network is complex.
+
+787
+01:19:20,680 --> 01:19:22,360
+ I'm not sure that's quite the right word.
+
+788
+01:19:22,780 --> 01:19:29,020
+ But the idea is that I want to move all of the machinery.
+
+789
+01:19:29,480 --> 01:19:35,780
+ It's heavy because it sinks and it manages states and it executes blocks and things.
+
+790
+01:19:35,779 --> 01:19:53,659
+ And what I want to do and what I've done and what we are doing is we're shoving this stuff into the network itself. And we're saying the network, the network itself is a full node. And the individual clients, the sum of them are what make this up.
+
+791
+01:19:53,659 --> 01:20:12,659
+ So it's a harder thing to do it is a it is a more complex network to build it is a it's that but the endgame is that the net sum of the network is a full node, and not just a full node, but an archive node.
+
+792
+01:20:12,659 --> 01:20:34,979
+ One big, global shared archive node is a truly distributed network, it's truly peer-to-peer, that exposes what the functionality of a full node is through the sum of many, many smaller lightweight clients.
+
+793
+01:20:34,979 --> 01:20:42,079
+ I don't know how else you do like clients in Ethereum.
+
+794
+01:20:43,539 --> 01:21:02,019
+ There are cool alternative ways, such as people have done things like the provable JSON-RPC and things like that, where you can get JSON-RPC responses back but have them proven locally.
+
+795
+01:21:02,020 --> 01:21:17,280
+ But all of those, to the best of my knowledge, still depend on a full node that has access to the state being able to serve you whatever the debug get proof stuff is.
+
+796
+01:21:17,279 --> 01:21:33,779
+ And this is still dependent on a full node, which means that those light clients, while great for things like browser context where, you know, I'm not trying to say that they're not bad, but they're not light clients.
+
+797
+01:21:33,779 --> 01:21:34,759
+ Not exactly.
+
+798
+01:21:34,979 --> 01:21:43,819
+ Not in the definition that I prefer, which is shouldn't we be building peer-to-peer solutions?
+
+799
+01:21:43,819 --> 01:21:55,819
+ I think that's the gist of kind of like my elevator pitch for portal, and now I'm going to look at Discord and see what people are asking for.
+
+800
+01:22:00,319 --> 01:22:06,420
+ What proofs is a portal client expected to serve so it's not considered a leech or kicked off?
+
+801
+01:22:06,420 --> 01:22:16,980
+ Um, um, so every piece of data that portal serves is cryptographically anchored and
+
+802
+01:22:16,980 --> 01:22:24,619
+ canonically proven. So, um, for a client in our network to store anything, um, it will always
+
+803
+01:22:24,619 --> 01:22:30,680
+ guarantee through whatever proof mechanism is needed, um, to, to, to anchor itself to canonical
+
+804
+01:22:30,680 --> 01:22:36,260
+ canonicalness. And the reason for that is that we have to make sure that you can't put garbage
+
+805
+01:22:36,260 --> 01:22:44,500
+ data into our network. We need a network that has a fixed, growing, but fixed amount of, at any
+
+806
+01:22:44,500 --> 01:22:50,340
+ given time, there's a fixed set of data that is viable and provable and can be stored in
+
+807
+01:22:50,340 --> 01:22:53,820
+ Poro network. And if you can't prove that it's canonical, then it can't be in the network.
+
+808
+01:22:53,819 --> 01:23:02,299
+ Um, we also have designed all of our access patterns, uh, so that, uh, you know, things
+
+809
+01:23:02,299 --> 01:23:04,380
+ are provable in the way that they are accessed.
+
+810
+01:23:04,840 --> 01:23:12,299
+ Um, so, so the serving and storing tends to be very simple, small data packets of here's
+
+811
+01:23:12,299 --> 01:23:16,279
+ a Merkel Patricia tree proof that this tree node is in a state route and that that state
+
+812
+01:23:16,279 --> 01:23:19,039
+ route is part of, of the canonical chain.
+
+813
+01:23:19,039 --> 01:23:28,960
+ um the nuances of how that grows over time are a big unknown at this point and they are problem
+
+814
+01:23:28,960 --> 01:23:35,619
+ there there are many many problems that we expect to have to solve over time so think so questions
+
+815
+01:23:35,619 --> 01:23:41,079
+ and things like you know how much will you have to serve before you're kicked off or or you know
+
+816
+01:23:41,079 --> 01:23:46,380
+ what about leeching nodes and things like that we've generally kicked those cans down the road
+
+817
+01:23:46,380 --> 01:23:50,199
+ and said, these are going to be good problems for us to have, and these are going to be hard
+
+818
+01:23:50,199 --> 01:23:56,020
+ problems that individual client teams are going to focus on solving. So the network itself is not
+
+819
+01:23:56,020 --> 01:24:06,000
+ likely to define specifics in terms of what a leecher is or how to protect yourself from being
+
+820
+01:24:06,000 --> 01:24:10,279
+ kicked off the network. And there really is no kicked off the network. It is a distributed peer
+
+821
+01:24:10,279 --> 01:24:14,920
+ to peer network that's permissionless. So there's not really a kicked off, but it is probably
+
+822
+01:24:14,920 --> 01:24:20,840
+ reasonable for some clients to implement protections where when they detect that a client
+
+823
+01:24:20,840 --> 01:24:27,800
+ maybe isn't doing their part through whatever metric, that maybe they either throttle them or
+
+824
+01:24:27,800 --> 01:24:35,380
+ they stop serving data, or maybe there's even a meta layer that shows up where people,
+
+825
+01:24:35,380 --> 01:24:38,500
+ you know, some sort of like blacklisting or whitelisting or whatever.
+
+826
+01:24:38,500 --> 01:24:45,380
+ But these are problems that we expect to solve, to have and solve down the road.
+
+827
+01:24:46,819 --> 01:24:53,180
+ In order to get this thing out the door, it is big, it is complicated, and we had to kind of cut scope.
+
+828
+01:24:53,500 --> 01:25:04,500
+ And trying to launch on day one with a network that is fully secure from all of these different types and directions of attacks would mean that we would never, ever ship it.
+
+829
+01:25:04,500 --> 01:25:11,340
+ um uh and so the follow-up question from Dirk here is like how much storage and bandwidth
+
+830
+01:25:11,340 --> 01:25:14,640
+ does a client need to participate will mobile phones be allowed to participate
+
+831
+01:25:14,640 --> 01:25:23,800
+ I think the problem on mobile is going to be um I think mobile is possibly viable in some
+
+832
+01:25:23,800 --> 01:25:28,760
+ limited context but we're going to have to see I think mobile is likely to be a relatively leachy
+
+833
+01:25:28,760 --> 01:25:37,260
+ use case, because you don't want to spend your mobile bandwidth and your battery on serving a
+
+834
+01:25:37,260 --> 01:25:42,000
+ whole bunch of data, which means that your mobile thing is probably only going to participate in the
+
+835
+01:25:42,000 --> 01:25:46,480
+ network during the times when you're actively using it, and it's going to probably get put
+
+836
+01:25:46,480 --> 01:25:51,980
+ to sleep pretty quick as soon as you stop using it. But I still don't have an answer for your
+
+837
+01:25:51,980 --> 01:25:56,600
+ question, because this is going to be a client-specific thing, and it's going to be something
+
+838
+01:25:56,600 --> 01:26:02,400
+ that we're going to have to essentially react to over time
+
+839
+01:26:02,400 --> 01:26:06,060
+ as we see what the actual shape of these problems are,
+
+840
+01:26:06,260 --> 01:26:07,180
+ how big they are,
+
+841
+01:26:07,240 --> 01:26:09,160
+ and it's also probably a function
+
+842
+01:26:09,160 --> 01:26:11,120
+ of how big our network actually ends up being.
+
+843
+01:26:12,720 --> 01:26:15,260
+ There's a chance that our network becomes big enough
+
+844
+01:26:15,260 --> 01:26:18,840
+ that we can absorb a good amount of leachy use cases,
+
+845
+01:26:19,160 --> 01:26:22,380
+ and there's a chance that clients will have to be smart
+
+846
+01:26:22,380 --> 01:26:24,200
+ and implement fast lanes and slow lanes
+
+847
+01:26:24,199 --> 01:26:27,500
+ and things like that for leachy clients.
+
+848
+01:26:38,099 --> 01:26:39,460
+ Seven minutes left.
+
+849
+01:26:40,479 --> 01:26:42,939
+ I'm happy to answer more questions,
+
+850
+01:26:42,939 --> 01:26:46,260
+ but I don't think that there's an effective level of depth
+
+851
+01:26:46,260 --> 01:26:51,939
+ that I'm going to get into here in terms of like...
+
+852
+01:26:51,939 --> 01:27:06,859
+ So, yeah, you mentioned early in the talk that you guys had recently, you know, passed a specific sort of like marker where, you know, you smash enough bugs and that you're ready to start serving data.
+
+853
+01:27:06,859 --> 01:27:17,099
+ Can you talk a little bit more about that and how a person might participate in the network and what you would want people to, you know, be?
+
+854
+01:27:17,379 --> 01:27:17,539
+ Yeah.
+
+855
+01:27:17,699 --> 01:27:18,719
+ Yeah. How do they participate?
+
+856
+01:27:18,720 --> 01:27:26,000
+ it? So, um, one of the things that you could do today is run a bridge. So bridge is our term for
+
+857
+01:27:26,000 --> 01:27:34,000
+ clients that, that, that magically inject content into the network. So, um, I believe there's a blog
+
+858
+01:27:34,000 --> 01:27:39,560
+ post up on the portal network blog. That's is something like blog.eathportal.net. Maybe
+
+859
+01:27:39,560 --> 01:27:43,780
+ somebody can find that and drop it into the chat. Um, I think there's a recent blog post about
+
+860
+01:27:43,779 --> 01:27:51,219
+ running a four-fours bridge, things rot quickly. So I hope that all of those things work. And if
+
+861
+01:27:51,219 --> 01:27:57,479
+ they don't, please tell us. But right now, running a bridge is one of the ways where you can actually
+
+862
+01:27:57,479 --> 01:28:02,119
+ contribute and help to the network by helping us inject all of that historical four-fours data
+
+863
+01:28:02,119 --> 01:28:11,099
+ into the network. Running a client is actually, if you'd like to run one, that sounds great. But
+
+864
+01:28:11,100 --> 01:28:16,680
+ but I would ask that maybe you don't run a whole bunch of them behind NATed firewalls at the moment.
+
+865
+01:28:17,060 --> 01:28:21,400
+ We have a roadmap item that we just have intentionally deprioritized at the moment
+
+866
+01:28:21,400 --> 01:28:26,060
+ because we're not quite ready to onboard people users.
+
+867
+01:28:26,320 --> 01:28:29,560
+ We're definitely ready to onboard infrastructure users
+
+868
+01:28:29,560 --> 01:28:33,440
+ and people who want to run things in data centers and things like that,
+
+869
+01:28:33,760 --> 01:28:36,180
+ but we don't have a solid NAT traversal.
+
+870
+01:28:36,180 --> 01:28:54,980
+ So, so, so I guess what I'm saying is that, like, I'd love for you guys to run a portal client, but we aren't actually actively marketing that at the moment, specifically because adding a large number of NATed nodes to our network is actually problematic. And we have, we have roadmap plans for how to deal with that, but they just haven't been done yet.
+
+871
+01:28:54,979 --> 01:29:11,179
+ Um, if you are working on a client, if you are working on a client team, um, if you, um, run a, if you, if you're interested in being kind of like leading edge experimental stuff, that's where we're at.
+
+872
+01:29:11,180 --> 01:29:12,440
+ and we have four-fours data.
+
+873
+01:29:13,000 --> 01:29:15,539
+ Later this year, we'll have state data for you.
+
+874
+01:29:15,700 --> 01:29:18,000
+ And that's really like the golden hymn,
+
+875
+01:29:18,760 --> 01:29:22,000
+ the magic hymn that lays golden eggs point
+
+876
+01:29:22,000 --> 01:29:25,119
+ where we'll really start looking at user onboarding
+
+877
+01:29:25,119 --> 01:29:27,159
+ and where the interesting use cases show up.
+
+878
+01:29:27,460 --> 01:29:30,560
+ Right now, we're four-fours use cases, history use cases.
+
+879
+01:29:30,680 --> 01:29:32,820
+ If you want history data, we've got it for you.
+
+880
+01:29:32,880 --> 01:29:34,240
+ We're ready to serve it for you.
+
+881
+01:29:34,720 --> 01:29:38,340
+ Running a portal client and portal clients have,
+
+882
+01:29:38,340 --> 01:29:45,319
+ most of them should have some API for a standard looking JSON RPC API for fetching historical
+
+883
+01:29:45,319 --> 01:29:52,140
+ blocks. And you can experiment with what it is to fetch historical block data from portal network.
+
+884
+01:29:52,420 --> 01:29:58,420
+ So that's where we're at. And yeah, the thing I said earlier about things starting to work
+
+885
+01:29:58,420 --> 01:30:04,579
+ was that we've built this, you know, our clients are complex machines and they had some bugs in
+
+886
+01:30:04,579 --> 01:30:07,760
+ them. We had a whole bunch of pieces that we put together and there were bugs that were keeping
+
+887
+01:30:07,760 --> 01:30:11,199
+ clients from just staying online, memory leaks, things like that.
+
+888
+01:30:11,260 --> 01:30:12,880
+ Those are boring software problems.
+
+889
+01:30:13,640 --> 01:30:17,320
+ And my team's essentially recently hit the bottom.
+
+890
+01:30:17,579 --> 01:30:19,239
+ You know, they've been pulling on that thread for a while,
+
+891
+01:30:19,360 --> 01:30:22,159
+ and they hit the bottom, and everything just sort of started working.
+
+892
+01:30:22,720 --> 01:30:28,140
+ So we've got, like, 100% on latest block data, most recent block data,
+
+893
+01:30:28,460 --> 01:30:32,980
+ and we are just actively piping all of the old historical blocks
+
+894
+01:30:32,980 --> 01:30:33,820
+ into the network.
+
+895
+01:30:33,819 --> 01:30:50,439
+ And I think we're looking at right now like a two-week timeframe to essentially hit what is 99.9% of all Ethereum block data being reliably available on the network.
+
+896
+01:30:53,439 --> 01:30:54,279
+ Awesome.
+
+897
+01:30:55,880 --> 01:30:56,719
+ Nimbus.
+
+898
+01:30:57,759 --> 01:30:59,319
+ I got a big dog.
+
+899
+01:31:00,639 --> 01:31:01,719
+ That's called Nimbus.
+
+900
+01:31:02,299 --> 01:31:03,679
+ It is called Nimbus.
+
+901
+01:31:03,819 --> 01:31:08,219
+ He's a giant white fluffy cloud.
+
+902
+01:31:08,539 --> 01:31:10,699
+ He's not named after the Ethereum client.
+
+903
+01:31:11,519 --> 01:31:13,179
+ The client is named after him.
+
+904
+01:31:13,880 --> 01:31:15,500
+ The client's named after him, definitely.
+
+905
+01:31:16,960 --> 01:31:17,299
+ Great.
+
+906
+01:31:17,500 --> 01:31:18,539
+ Yeah, thank you so much.
+
+907
+01:31:18,599 --> 01:31:21,139
+ I want to say congrats on all the progress with Portal.
+
+908
+01:31:21,319 --> 01:31:22,359
+ It sounds very exciting.
+
+909
+01:31:22,359 --> 01:31:25,840
+ I think we are running others.
+
+910
+01:31:26,059 --> 01:31:27,359
+ Some more questions in the Discord.
+
+911
+01:31:29,479 --> 01:31:32,059
+ Yeah, will there be Portal exports for other chains,
+
+912
+01:31:32,380 --> 01:31:33,299
+ like Layer 2s?
+
+913
+01:31:33,819 --> 01:31:36,319
+ Because they also need a data availability key.
+
+914
+01:31:36,840 --> 01:31:37,619
+ Ah, yes.
+
+915
+01:31:38,059 --> 01:31:39,699
+ I have a quick answer for that.
+
+916
+01:31:40,699 --> 01:31:44,319
+ So L2s are on my long horizon roadmap.
+
+917
+01:31:44,639 --> 01:31:50,439
+ The thing about Portal is it is a critical mass system.
+
+918
+01:31:50,759 --> 01:31:55,439
+ So the current Ethereum network works great if there's just one full node, right?
+
+919
+01:31:55,500 --> 01:31:57,659
+ There's just like one full node out there to serve data.
+
+920
+01:31:58,420 --> 01:32:01,960
+ Portal needs a critical mass of nodes to be able to store all of it.
+
+921
+01:32:01,960 --> 01:32:09,239
+ And so running portal for test nets is just fundamentally not something that we are doing.
+
+922
+01:32:09,579 --> 01:32:11,779
+ We have ideas about how to do it.
+
+923
+01:32:12,140 --> 01:32:23,859
+ But to run portal for a test net probably means us throwing 10 nodes at it that we run ourselves that are all massive instead of a bunch of tiny nodes.
+
+924
+01:32:25,180 --> 01:32:28,800
+ So portal needs a critical mass to work.
+
+925
+01:32:28,800 --> 01:32:44,000
+ And so if we want to do portal for an L2, that's great, but there has to be a critical mass of nodes being run to be able to serve the capacity, to achieve the overall capacity needed to serve that data, right?
+
+926
+01:32:44,000 --> 01:32:51,579
+ for main net for archive what we're talking about is what will like like late this year early next
+
+927
+01:32:51,579 --> 01:32:57,100
+ year i'm not you know timelines are fuzzy but late this year early next year what you're likely to
+
+928
+01:32:57,100 --> 01:33:02,359
+ see out of us is something that looks like a fundraising drive but it's going to be a storage
+
+929
+01:33:02,359 --> 01:33:07,920
+ raising drive of of we've done all the work we we're ready for you to bring your nodes online
+
+930
+01:33:07,920 --> 01:33:28,279
+ We're ready for consumer nodes that live behind NATs. Go turn your node on, configure it with however much storage you want to throw at us. That's great. And the wonderful thing about our network is that we can actually look at the network and see how much storage there is out there. We can derive it from the node information that's on the network.
+
+931
+01:33:28,279 --> 01:33:47,739
+ And we're going to essentially run a storage drive for the Ethereum community to provide us with something like 200 terabytes of storage for us to throw at all of the Ethereum state data to bring on the single global archive node that absolutely everybody in the world can access.
+
+932
+01:33:49,139 --> 01:33:55,599
+ So, you know, that'll be, we're not there yet, but we're chipping away at it.
+
+933
+01:33:55,600 --> 01:34:02,600
+ Yeah, it's amazing. I'm looking very much looking forward to this. I'm excited to participate for a while.
+
+934
+01:34:02,600 --> 01:34:07,600
+ I'm hearing about it work and especially like, yeah, what you're saying, like the community need to embrace it.
+
+935
+01:34:07,600 --> 01:34:13,600
+ And I like what you said about the the submit task protocol before it's having it's like social layer.
+
+936
+01:34:13,600 --> 01:34:21,600
+ This like I imagine, you know, the torrent trackers kind of think where we can score ourselves and just contribute to that work.
+
+937
+01:34:21,600 --> 01:34:22,960
+ I'm very excited to join that.
+
+938
+01:34:23,960 --> 01:34:26,140
+ So yeah, we are out of time.
+
+939
+01:34:26,280 --> 01:34:27,980
+ I'm not sure if we want to push any longer.
+
+940
+01:34:28,120 --> 01:34:29,500
+ I think we should wrap up here.
+
+941
+01:34:30,240 --> 01:34:31,600
+ I need to move on to my next thing.
+
+942
+01:34:32,100 --> 01:34:32,940
+ Yeah, yeah, yeah.
+
+943
+01:34:33,360 --> 01:34:35,140
+ There are some questions in Discord.
+
+944
+01:34:35,360 --> 01:34:36,620
+ Maybe if you join there,
+
+945
+01:34:37,880 --> 01:34:39,600
+ then for later, but...
+
+946
+01:34:40,760 --> 01:34:43,260
+ I will page through this later today
+
+947
+01:34:43,260 --> 01:34:44,460
+ when I have a bit more time.
+
+948
+01:34:44,620 --> 01:34:46,760
+ And if there are questions that I didn't get to,
+
+949
+01:34:46,900 --> 01:34:50,360
+ I will more than happily answer them in this thread.
+
+950
+01:34:51,600 --> 01:34:56,720
+ Awesome. Yeah, thank you very much, Piper. It was it was amazing. I love the whiteboard
+
+951
+01:34:56,720 --> 01:35:02,280
+ and all of the explanation. I learned a lot. I saw your talks in portal network and I learned
+
+952
+01:35:02,280 --> 01:35:07,160
+ even more today. So it's it's really great. And yeah, thank you so much for for being
+
+953
+01:35:07,160 --> 01:35:09,000
+ here. It's it's an honor as always.
+
+954
+01:35:09,000 --> 01:35:12,300
+ Very happy to be happy to do it.
+
+955
+01:35:12,300 --> 01:35:17,560
+ Thanks, Piper. And everybody who's watching. We'll see you all next Monday for a talk on
+
+956
+01:35:17,560 --> 01:35:21,020
+ pre images. Thanks.
+
+957
+01:35:21,600 --> 01:35:23,420
+ Oh, break and piles.
+
+958
+01:35:24,280 --> 01:35:25,039
+ Break and piles.
+
+959
+01:35:25,760 --> 01:35:26,000
+ Yeah.
+
+960
+01:35:26,880 --> 01:35:28,280
+ The calendar says pre-images.
+
+961
+01:35:29,220 --> 01:35:31,280
+ Well, I did that.
+
+962
+01:35:31,400 --> 01:35:32,100
+ It was by mistake.
+
+963
+01:35:32,700 --> 01:35:34,120
+ Pre-images from get.
+
+964
+01:35:51,600 --> 01:36:01,600
+ ¶¶
+
+965
+01:36:01,600 --> 01:36:31,380
+ Thank you.
+
+966
+01:36:31,600 --> 01:37:01,579
+ Thank you.
+

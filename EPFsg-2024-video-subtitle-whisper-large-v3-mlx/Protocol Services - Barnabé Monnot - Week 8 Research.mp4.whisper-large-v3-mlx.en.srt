@@ -1,0 +1,4432 @@
+1
+00:00:30,000 --> 00:00:59,980
+ Thank you.
+
+2
+00:01:00,000 --> 00:01:29,980
+ Thank you.
+
+3
+00:01:30,000 --> 00:01:40,000
+ ¶¶
+
+4
+00:01:40,000 --> 00:01:50,000
+ ¶¶
+
+5
+00:01:50,000 --> 00:02:00,000
+ ¶¶
+
+6
+00:02:00,000 --> 00:02:10,000
+ ¶¶
+
+7
+00:02:10,000 --> 00:02:20,000
+ ¶¶
+
+8
+00:02:20,000 --> 00:02:30,000
+ ¶¶
+
+9
+00:02:30,000 --> 00:02:59,979
+ I love you.
+
+10
+00:03:00,000 --> 00:03:29,979
+ Thank you.
+
+11
+00:03:30,000 --> 00:03:59,979
+ Thank you.
+
+12
+00:04:00,000 --> 00:04:18,139
+ All right.
+
+13
+00:04:18,139 --> 00:04:22,480
+ Welcome back to the Ethereum Protocol Fellowship Study Group.
+
+14
+00:04:23,220 --> 00:04:26,620
+ This is week eight on the research track,
+
+15
+00:04:26,879 --> 00:04:29,259
+ and we are here with Barnabé Monod.
+
+16
+00:04:29,259 --> 00:04:37,279
+ from the Robust Incentives Group, part of the Ethereum Foundation research program.
+
+17
+00:04:37,819 --> 00:04:43,240
+ And yeah, he'll be talking today about some NEV and censorship.
+
+18
+00:04:44,219 --> 00:04:48,060
+ So I'll pass it up to Mario here, give a little bit more in-depth introduction,
+
+19
+00:04:48,060 --> 00:04:49,899
+ and then we'll get started with Barnaby.
+
+20
+00:04:52,379 --> 00:04:54,860
+ Thank you so much all for joining our stream today.
+
+21
+00:04:54,980 --> 00:04:57,259
+ Thank you so much, Barnaby, for being here especially.
+
+22
+00:04:57,259 --> 00:05:06,259
+ it's an honor to have you here because Barnaby is one of the best experts we can have here to cover this topic.
+
+23
+00:05:06,259 --> 00:05:16,259
+ Barnaby is from the RoboScientist group, as Josh said, but he's the research scientist,
+
+24
+00:05:16,259 --> 00:05:20,259
+ I believe the leader or the leading position of this group,
+
+25
+00:05:20,259 --> 00:05:25,259
+ which is doing a lot of interesting research on the game theory of Ethereum
+
+26
+00:05:25,259 --> 00:05:30,259
+ with the crypto economics that's happening in the staking.
+
+27
+00:05:31,259 --> 00:05:35,259
+ But also previously, a lot of improvements done on Ethereum
+
+28
+00:05:35,259 --> 00:05:42,259
+ has been analyzed by Barnaby and Eric, for example, 1559 Models and so on.
+
+29
+00:05:42,259 --> 00:05:45,259
+ So Barnaby has a long experience with these topics.
+
+30
+00:05:45,259 --> 00:05:51,980
+ topics, and today specifically about MEV and censorship resistance. So, we will have a
+
+31
+00:05:51,980 --> 00:05:57,860
+ deeper look into some recent economic proposals. Yeah, very excited about it. Many people are
+
+32
+00:05:57,860 --> 00:06:02,759
+ excited for this topic, so thanks so much again for being here, Barda. We appreciate
+
+33
+00:06:02,759 --> 00:06:10,079
+ you joining us. And yeah, the floor is yours. Let's see if we can hear you.
+
+34
+00:06:10,079 --> 00:06:21,839
+ yeah thank you for having me can you hear me yeah yeah okay um all right perfect uh okay yeah i
+
+35
+00:06:23,039 --> 00:06:27,519
+ i know i was slated to do a talk on mivian censorship and i'll definitely talk about
+
+36
+00:06:27,519 --> 00:06:34,319
+ that too but i want to widen the frame a little bit and talk about this kind of conceptual
+
+37
+00:06:34,319 --> 00:06:38,639
+ framework that i use to to think about the different parts because there's so much
+
+38
+00:06:38,639 --> 00:06:45,360
+ happening in Ethereum all the time. So this idea of protocol services, I think it's a good way of
+
+39
+00:06:45,360 --> 00:06:52,399
+ trying to map this out for ourselves. So yeah, I'll give some notes about this and then I'll try
+
+40
+00:06:52,399 --> 00:06:58,959
+ to show what might be a good way to think about it and to organize these protocol services.
+
+41
+00:07:01,599 --> 00:07:07,360
+ A very quick intro, though, Mario already said quite a lot. I joined the EF in January 2020.
+
+42
+00:07:07,360 --> 00:07:13,199
+ I've worked on a couple of exciting proposals since then. Our team, the robots incentives group
+
+43
+00:07:13,199 --> 00:07:19,920
+ now is seven people, including me. So yeah, we have quite the scope and we are excited to always
+
+44
+00:07:19,920 --> 00:07:25,520
+ dive into the most, I think, tricky questions that we face. We have a lot of work that's published,
+
+45
+00:07:25,520 --> 00:07:30,319
+ we try to do as much in the open as possible, so do check out our website if you can.
+
+46
+00:07:30,319 --> 00:07:36,639
+ What I want to talk about today is three things.
+
+47
+00:07:36,639 --> 00:07:41,659
+ So the first thing I'll introduce is very briefly this idea of seeing like a protocol,
+
+48
+00:07:41,659 --> 00:07:45,279
+ which is, I would say, my approach to thinking about stuff.
+
+49
+00:07:45,279 --> 00:07:47,199
+ So I'll talk a bit about that.
+
+50
+00:07:47,199 --> 00:07:53,860
+ And then I want to discuss two services that are pretty much the fundamental services that
+
+51
+00:07:53,860 --> 00:07:57,839
+ the protocol is trying to provide, which is first the block production service and then
+
+52
+00:07:57,839 --> 00:08:09,179
+ a consensus service. So let me start here. So the idea of seeing like a protocol is you
+
+53
+00:08:09,179 --> 00:08:15,519
+ have this abstract object, the Ethereum protocol that sort of lives in the sky, that's a network
+
+54
+00:08:15,519 --> 00:08:20,259
+ of all these machines. And when you're a protocol designer, like when you're trying to make
+
+55
+00:08:20,259 --> 00:08:26,959
+ upgrades to Ethereum, you realize that, okay, there are things that the protocol sees, that
+
+56
+00:08:26,959 --> 00:08:31,120
+ protocol acknowledges that it can work with, and there are things it doesn't really see.
+
+57
+00:08:32,319 --> 00:08:36,240
+ And it feels like the art of protocol development is just trying to push the
+
+58
+00:08:36,240 --> 00:08:41,919
+ boundary of what the protocol sees and trying to make it more robust and understand more
+
+59
+00:08:41,919 --> 00:08:45,840
+ of what's happening in its environment. So this metaphor of, okay, it can see that,
+
+60
+00:08:45,840 --> 00:08:50,000
+ it cannot see that, I'll use that throughout the talk.
+
+61
+00:08:50,000 --> 00:08:58,720
+ I wrote a post about this about a year ago, and I was trying to start from the main question
+
+62
+00:08:58,720 --> 00:09:01,820
+ of where does this protocol credibility come from?
+
+63
+00:09:01,820 --> 00:09:06,580
+ So there's always like calls in the Ethereum community to say, oh, we need to enshrine
+
+64
+00:09:06,580 --> 00:09:10,639
+ this, we need to think about that, Ethereum should go in that direction or shouldn't go
+
+65
+00:09:10,639 --> 00:09:12,240
+ in that direction as well.
+
+66
+00:09:12,240 --> 00:09:18,480
+ There are legitimate reasons to try and scale back also the protocol development, let's
+
+67
+00:09:18,480 --> 00:09:19,480
+ say.
+
+68
+00:09:19,480 --> 00:09:25,800
+ the main reason why we want to go in the direction of more updates and more protocol features
+
+69
+00:09:26,759 --> 00:09:31,240
+ is because we consider that when something is in protocol it makes it credible so it's
+
+70
+00:09:31,240 --> 00:09:36,759
+ only it that gives a super power to the to the mechanism that we are trying to enshrine
+
+71
+00:09:37,399 --> 00:09:43,560
+ and so i wanted to question where is this coming from and how far should we go with it or how far
+
+72
+00:09:43,560 --> 00:09:48,680
+ should the ethereum community go with that and so what should the protocol see like how much should
+
+73
+00:09:48,679 --> 00:09:54,679
+ we build in terms of features and services. So yeah, I encourage you to check out this post.
+
+74
+00:09:55,719 --> 00:10:05,079
+ But a brief TLDR is for me, how the protocol kind of gets that special power is that it's set up
+
+75
+00:10:05,079 --> 00:10:10,039
+ first. So it's not like the primary object, the primary object that sits behind it is this
+
+76
+00:10:10,039 --> 00:10:14,679
+ diffuse community of people that I'm a part of, and you're also a part of,
+
+77
+00:10:14,679 --> 00:10:19,799
+ and this community is trying to set up the protocol so that it achieves goals in a way
+
+78
+00:10:19,799 --> 00:10:25,319
+ that's more automated, but in a way that it reduces coordination costs. We all agree to
+
+79
+00:10:25,319 --> 00:10:28,199
+ participate in the protocol along certain rules that are
+
+80
+00:10:28,919 --> 00:10:35,479
+ spelled out in the specification or in the client code that you run. So that gives the protocol a
+
+81
+00:10:35,479 --> 00:10:44,359
+ lot of power, having this community at the back. But the way it sort of goes from being that thing
+
+82
+00:10:44,360 --> 00:10:49,000
+ in the sky to an actual thing that runs on your computer is like you have validators and you have
+
+83
+00:10:49,000 --> 00:10:54,519
+ two nodes that are supposed to do this work of running the protocol and running these services
+
+84
+00:10:56,039 --> 00:11:00,600
+ and so if the goal of the protocol is this decentralized provision of block space for
+
+85
+00:11:00,600 --> 00:11:06,440
+ users to achieve maximal welfare then you you want to question okay is that actually what's
+
+86
+00:11:06,440 --> 00:11:11,320
+ happening so when you have validators that are untrusted that are very decentralized
+
+87
+00:11:11,320 --> 00:11:17,400
+ potentially a large sale that you don't know the extent of. Do you actually achieve this?
+
+88
+00:11:17,400 --> 00:11:22,680
+ Or are there ways for people to deviate and to maybe extract more rent than they should?
+
+89
+00:11:24,520 --> 00:11:31,560
+ And so what do these validators do exactly? So I discussed that a bit. The consensus service is the
+
+90
+00:11:32,120 --> 00:11:38,360
+ kind of service that is there to give finality to the chain, make sure that we all agree on
+
+91
+00:11:38,360 --> 00:11:44,039
+ the state and the history of Ethereum and what's happened at the ledger. And then the block
+
+92
+00:11:44,039 --> 00:11:49,639
+ construction service, in a sense, like the liveness, I think that it keeps adding more
+
+93
+00:11:49,639 --> 00:11:55,879
+ useful things, more user transactions, more ways for the users to do it. And there's a service
+
+94
+00:11:55,879 --> 00:12:00,200
+ that's kind of very related to this block construction service, which is the protocol
+
+95
+00:12:00,200 --> 00:12:07,080
+ also tries to be neutral in terms of who can get on chain. And so you have this censorship
+
+96
+00:12:07,080 --> 00:12:12,200
+ present service that tries to say you know you shouldn't be like prevented from going on chain
+
+97
+00:12:12,200 --> 00:12:19,000
+ uh for reasons x y or z uh and so that's also important to to have this neutrality
+
+98
+00:12:21,960 --> 00:12:27,960
+ and so the problem now is okay you have a protocol with its great aims and and grand
+
+99
+00:12:28,520 --> 00:12:34,360
+ um plans uh but you also have the validators who are running it and so you you you're constantly
+
+100
+00:12:34,360 --> 00:12:41,399
+ trying to figure out the games that the validators are going to play, or that they may deviate from
+
+101
+00:12:41,399 --> 00:12:47,159
+ things that the protocol would want them to do. And so the way that we try to control this,
+
+102
+00:12:47,159 --> 00:12:54,200
+ or the way that we try to improve the situation, is I think in two ways. The first is to give more
+
+103
+00:12:54,200 --> 00:12:58,759
+ introspection to the protocol, so allow it to see more things that are happening, like what
+
+104
+00:12:58,759 --> 00:13:03,480
+ are validators doing, what are users doing, etc. And I'll give a specific example, because right
+
+105
+00:13:03,480 --> 00:13:08,519
+ now it's a bit abstract and the second way is okay now that you get these signals that are credible
+
+106
+00:13:08,519 --> 00:13:13,800
+ like the protocol knows what's going on uh you can act upon this signal so you give a protocol like
+
+107
+00:13:13,800 --> 00:13:20,440
+ ways to to to act upon this so you give it agency and uh and the main ways you do that is is with
+
+108
+00:13:20,440 --> 00:13:24,920
+ essentially crypto economic mechanisms of having uh rewards and penalties and trying
+
+109
+00:13:24,920 --> 00:13:31,000
+ to shepherd the behavior of this uh emergent system in in the direction that it likes
+
+110
+00:13:33,480 --> 00:13:42,039
+ So yeah, I know that the questions are happening in a separate chat room.
+
+111
+00:13:42,039 --> 00:13:47,700
+ I'm not monitoring that, but if there's anything, feel free to stop me, Mario or Josh.
+
+112
+00:13:47,700 --> 00:13:50,879
+ I'll try to make some poses as well.
+
+113
+00:13:50,879 --> 00:13:52,279
+ Otherwise, no.
+
+114
+00:13:52,279 --> 00:13:54,180
+ Yeah, thank you.
+
+115
+00:13:54,180 --> 00:13:56,700
+ No questions so far.
+
+116
+00:13:56,700 --> 00:13:58,300
+ Okay, cool.
+
+117
+00:13:58,300 --> 00:13:59,300
+ Right.
+
+118
+00:13:59,299 --> 00:14:03,459
+ So, okay, that was the abstract part.
+
+119
+00:14:03,459 --> 00:14:07,859
+ Now I'll try to be a bit more concrete and to tell you, okay, what do we mean with these
+
+120
+00:14:07,859 --> 00:14:08,859
+ services?
+
+121
+00:14:08,859 --> 00:14:09,859
+ What are people actually doing?
+
+122
+00:14:09,859 --> 00:14:10,859
+ What are the validators doing?
+
+123
+00:14:10,859 --> 00:14:14,319
+ And so the first one I want to talk about is the block reduction studies.
+
+124
+00:14:14,319 --> 00:14:21,359
+ So how do blocks get added on chain and what goes into these blocks essentially?
+
+125
+00:14:21,359 --> 00:14:27,919
+ And so one mental model that I'm trying to argue for here is to think of validators as
+
+126
+00:14:27,919 --> 00:14:36,479
+ the meeting point between the protocol on one side that regulates the supply of gas. So the protocol
+
+127
+00:14:36,479 --> 00:14:42,879
+ says, you know, I am willing to supply some amount of block space that's consistent with general aims
+
+128
+00:14:42,879 --> 00:14:49,199
+ of keeping the nodes light enough for people to run them and for the system to stay decentralized.
+
+129
+00:14:49,199 --> 00:14:54,480
+ And on the other side, you have users who have a demand for this block space. So the supply of gas
+
+130
+00:14:54,480 --> 00:15:00,399
+ on one side and the demand for gas on the other side. The demand is represented by transactions,
+
+131
+00:15:00,399 --> 00:15:07,680
+ so transactions come in and they're asking for gas and we're trying to allocate the best use of gas
+
+132
+00:15:07,680 --> 00:15:11,759
+ to these transactions. And the validators, they're really like the ones that sit in the middle and
+
+133
+00:15:11,759 --> 00:15:19,279
+ that are provided with the responsibility, airdropped the responsibility of making that
+
+134
+00:15:19,279 --> 00:15:25,039
+ allocation and what comes out of this is blocks. So, they decide what goes into the blocks and
+
+135
+00:15:25,039 --> 00:15:33,120
+ which transactions are being served. So it's not completely unconstrained, like they don't have...
+
+136
+00:15:33,120 --> 00:15:36,159
+ So first, there is the gas limit, of course, the protocol doesn't give them
+
+137
+00:15:37,039 --> 00:15:44,240
+ infinite amounts of gas that they can just execute for the transactions to consume. But another
+
+138
+00:15:44,240 --> 00:15:52,720
+ Another constraint that's now very important and that went online in August 2021 is EIP-1559.
+
+139
+00:15:52,720 --> 00:16:01,480
+ And so this is a fee market mechanism that essentially says the protocol is able to know
+
+140
+00:16:01,480 --> 00:16:02,639
+ how much demand there is.
+
+141
+00:16:02,639 --> 00:16:09,060
+ So by demand, I mean like how much money people are willing to pay to get on chain.
+
+142
+00:16:09,060 --> 00:16:12,379
+ This signal comes to it credibly.
+
+143
+00:16:12,379 --> 00:16:16,700
+ And so it's going to mandate for the users that you have to pay at least this much to
+
+144
+00:16:16,700 --> 00:16:17,700
+ get on chain.
+
+145
+00:16:17,700 --> 00:16:20,139
+ So before EIP-1559, there was no such thing.
+
+146
+00:16:20,139 --> 00:16:24,759
+ The validator could just include any transaction they want, even a transaction that pays no
+
+147
+00:16:24,759 --> 00:16:27,019
+ fee, for instance.
+
+148
+00:16:27,019 --> 00:16:32,679
+ But after EIP-1559, you can think of it as almost like an Uber search pricing type of
+
+149
+00:16:32,679 --> 00:16:33,679
+ mechanism.
+
+150
+00:16:33,679 --> 00:16:37,759
+ So when the demand is high, suddenly the protocol jacks up the prices, understands that, okay,
+
+151
+00:16:37,759 --> 00:16:42,039
+ there's many people waiting, there's a lot of demand, people are willing to pay.
+
+152
+00:16:42,039 --> 00:16:46,839
+ So the minimum price that people need to pay to get on chain rises.
+
+153
+00:16:46,839 --> 00:16:52,719
+ The way we get this credible signal is essentially by having these double-sized blocks and saying
+
+154
+00:16:52,719 --> 00:16:56,259
+ that we want to target a half-full block.
+
+155
+00:16:56,259 --> 00:16:59,919
+ And so we see if we are above target it means, okay, too many people want to go on chain,
+
+156
+00:16:59,919 --> 00:17:03,860
+ so the price goes up according to the formula here.
+
+157
+00:17:03,860 --> 00:17:08,579
+ And if not enough people want to go on chain, maybe because the price is too high, we reduce
+
+158
+00:17:08,579 --> 00:17:09,579
+ the price.
+
+159
+00:17:09,579 --> 00:17:17,759
+ And over time, on average, we are going to be able to supply the target amount of gas.
+
+160
+00:17:17,759 --> 00:17:20,919
+ And so it's set at 15 million.
+
+161
+00:17:20,919 --> 00:17:25,399
+ So that's one constraint that the protocol has imposed.
+
+162
+00:17:25,399 --> 00:17:28,659
+ And it's it's a really clear example of this idea.
+
+163
+00:17:28,659 --> 00:17:33,519
+ The protocol gets introspection of how much people are willing to pay for using it, like
+
+164
+00:17:33,519 --> 00:17:41,759
+ people want to get on chain and it acts upon it by mandating this minimum payment for the user
+
+165
+00:17:41,759 --> 00:17:48,639
+ which has improved UX and has made the job of wallet much easier.
+
+166
+00:17:52,720 --> 00:18:02,639
+ And so okay, we kind of also have this other thrust in it, like this other branch of things
+
+167
+00:18:02,640 --> 00:18:03,700
+ we want to escape, right?
+
+168
+00:18:03,700 --> 00:18:05,540
+ We want to have more transactions.
+
+169
+00:18:05,540 --> 00:18:07,800
+ So it's kind of nice,
+
+170
+00:18:07,800 --> 00:18:10,500
+ but it doesn't do anything in terms of allowing more people
+
+171
+00:18:10,500 --> 00:18:14,600
+ to go on chain it just tries to provide good pricing
+
+172
+00:18:14,600 --> 00:18:17,640
+ or like objective pricing for them.
+
+173
+00:18:17,640 --> 00:18:21,060
+ And so what we really want is then to maximize
+
+174
+00:18:21,060 --> 00:18:22,780
+ the capacity of the system.
+
+175
+00:18:22,780 --> 00:18:26,180
+ And so the idea of the Diachrome community
+
+176
+00:18:26,180 --> 00:18:28,860
+ that was to go into this world of centric roadmap.
+
+177
+00:18:28,859 --> 00:18:33,859
+ So allow these L2s to become like the way that it scales.
+
+178
+00:18:36,619 --> 00:18:41,619
+ And so what this means is before this EIP-4844
+
+179
+00:18:42,819 --> 00:18:45,139
+ that came online just a month ago,
+
+180
+00:18:46,019 --> 00:18:47,859
+ the protocol wasn't really making the distinction
+
+181
+00:18:47,859 --> 00:18:51,519
+ between users like you and me who are just going
+
+182
+00:18:51,519 --> 00:18:53,779
+ to send transactions with a huge sum,
+
+183
+00:18:53,779 --> 00:18:56,179
+ it's a swap or mini swap or something,
+
+184
+00:18:56,180 --> 00:18:59,420
+ and rollups who were like publishing all of this data
+
+185
+00:18:59,420 --> 00:19:00,259
+ on chain.
+
+186
+00:19:00,259 --> 00:19:03,060
+ So the protocol was kind of blind to that thing.
+
+187
+00:19:03,060 --> 00:19:05,420
+ And so now with the IP for it go forward,
+
+188
+00:19:05,420 --> 00:19:08,620
+ what has actually happened is the idea that, okay,
+
+189
+00:19:08,620 --> 00:19:10,580
+ we're going to create like a special facility
+
+190
+00:19:10,580 --> 00:19:14,000
+ for the rollups, which are almost like power users
+
+191
+00:19:15,140 --> 00:19:17,259
+ to post their data.
+
+192
+00:19:17,259 --> 00:19:19,880
+ And the reason why it's a special facility
+
+193
+00:19:19,880 --> 00:19:21,820
+ is that the data they post it doesn't really have
+
+194
+00:19:21,820 --> 00:19:24,980
+ the same dynamics as the data you and I post.
+
+195
+00:19:24,980 --> 00:19:26,660
+ When I send a transaction,
+
+196
+00:19:26,660 --> 00:19:29,120
+ I use the call data to call the function
+
+197
+00:19:29,120 --> 00:19:31,400
+ that needs to kind of stay in the history.
+
+198
+00:19:31,400 --> 00:19:33,039
+ But for the roll-ups, what they really care about
+
+199
+00:19:33,039 --> 00:19:36,319
+ is for the data to be widely available at some point
+
+200
+00:19:36,319 --> 00:19:38,759
+ but you don't really need to store it over time.
+
+201
+00:19:38,759 --> 00:19:41,720
+ And so that's what the special facility is doing.
+
+202
+00:19:41,720 --> 00:19:43,720
+ And so here again, it's an example of
+
+203
+00:19:43,720 --> 00:19:46,160
+ we are allowing the protocol to have more introspection.
+
+204
+00:19:46,160 --> 00:19:48,799
+ Like we say, it's not just like these dumb users
+
+205
+00:19:48,799 --> 00:19:51,680
+ or retail users that are using you,
+
+206
+00:19:51,680 --> 00:19:52,799
+ but there's also like these roll-ups
+
+207
+00:19:52,799 --> 00:19:57,220
+ which have specific needs in terms of the services
+
+208
+00:19:57,220 --> 00:19:58,059
+ they want to use.
+
+209
+00:19:58,059 --> 00:20:01,059
+ And so we are going to create a very specific facility
+
+210
+00:20:01,059 --> 00:20:04,139
+ for the Rolex to do that.
+
+211
+00:20:04,139 --> 00:20:06,559
+ So now again, we have this new market
+
+212
+00:20:06,559 --> 00:20:09,659
+ and we've kind of increased the ability for the protocol
+
+213
+00:20:09,659 --> 00:20:13,399
+ to serve distinct demands.
+
+214
+00:20:17,559 --> 00:20:18,859
+ Yeah, so that's exciting.
+
+215
+00:20:18,859 --> 00:20:28,139
+ um and so moving now to like let's say the the more difficult and esoteric topics of protocol
+
+216
+00:20:28,139 --> 00:20:34,939
+ uh proposal builder's passion yeah before yeah before we move on um got a nice question here
+
+217
+00:20:34,939 --> 00:20:41,659
+ uh from somebody in the discord uh referring to what you said about community setting goals for
+
+218
+00:20:41,660 --> 00:20:46,940
+ for the protocol, do you feel that unbundling validator roles
+
+219
+00:20:46,940 --> 00:20:50,460
+ into different sub-roles, like proposer, attester, delegator,
+
+220
+00:20:50,460 --> 00:20:53,279
+ et cetera, would help the community to better exercise
+
+221
+00:20:53,279 --> 00:20:56,080
+ control over validators on the long term,
+
+222
+00:20:56,080 --> 00:20:59,660
+ or ensuring that validators act as the community would
+
+223
+00:20:59,660 --> 00:21:00,500
+ want them to?
+
+224
+00:21:00,500 --> 00:21:03,420
+ And yeah, would you give your thoughts on that?
+
+225
+00:21:03,420 --> 00:21:04,880
+ JAVIER D' Yeah, I can give some
+
+226
+00:21:04,880 --> 00:21:08,900
+ puts now, and I think over the course of this talk,
+
+227
+00:21:08,900 --> 00:21:11,519
+ I will talk a bit more about unbundling specifically.
+
+228
+00:21:11,660 --> 00:21:17,100
+ But in a way, I do think it uses more control as a community.
+
+229
+00:21:17,100 --> 00:21:19,640
+ And the reason is that when you're
+
+230
+00:21:19,640 --> 00:21:24,019
+ trying to fit a very big object into a very specific door,
+
+231
+00:21:24,019 --> 00:21:24,860
+ it's just harder.
+
+232
+00:21:24,860 --> 00:21:28,900
+ So the ability to unbundle these different things
+
+233
+00:21:28,900 --> 00:21:31,320
+ does, I think, amplify the control
+
+234
+00:21:31,320 --> 00:21:34,420
+ that the community has on the protocols.
+
+235
+00:21:34,420 --> 00:21:37,620
+ For instance, if we had said, we want
+
+236
+00:21:37,620 --> 00:21:41,440
+ to remain blind to roll-ups existing on Ethereum,
+
+237
+00:21:41,440 --> 00:21:43,720
+ we're not going to do anything special for them.
+
+238
+00:21:44,880 --> 00:21:47,860
+ We are not really, like we're staying at a point
+
+239
+00:21:47,860 --> 00:21:51,039
+ in this design space, but my opinion is very suboptimal.
+
+240
+00:21:51,039 --> 00:21:55,519
+ So by unbundling, like by creating these different gadgets
+
+241
+00:21:55,519 --> 00:21:59,180
+ and facilities, I think we do exercise this control
+
+242
+00:21:59,180 --> 00:22:04,180
+ and also allow ourselves to decentralize reactors
+
+243
+00:22:05,400 --> 00:22:06,680
+ that exist outside of the protocol.
+
+244
+00:22:06,680 --> 00:22:08,820
+ But maybe that point will be a bit clearer
+
+245
+00:22:08,820 --> 00:22:11,019
+ as I go through the slides.
+
+246
+00:22:11,440 --> 00:22:12,900
+ Cool, thank you.
+
+247
+00:22:12,900 --> 00:22:18,600
+ So it's a nice question also to have in mind as we go through all these different
+
+248
+00:22:18,600 --> 00:22:19,600
+ levels.
+
+249
+00:22:19,600 --> 00:22:22,779
+ Great, all right, looking forward to it.
+
+250
+00:22:22,779 --> 00:22:23,779
+ Good.
+
+251
+00:22:23,779 --> 00:22:31,320
+ Yeah, so yes, speaking of control, so here I'm picturing what the app room kind of has
+
+252
+00:22:31,320 --> 00:22:32,320
+ control over.
+
+253
+00:22:32,320 --> 00:22:37,660
+ So it sees what the validators are doing to some extent, it sees the validators filling
+
+254
+00:22:37,660 --> 00:22:42,460
+ the blocks with more gas it sees the validators doing stuff on the consensus failure that
+
+255
+00:22:42,460 --> 00:22:48,779
+ i'll discuss in the next section and it it has the ability to give rewards and penalties to
+
+256
+00:22:48,779 --> 00:22:55,019
+ these validators that's kind of how it keeps them in check it but it has also partial control over
+
+257
+00:22:55,019 --> 00:23:00,220
+ the way that validators are building the blocks but not full control partial control because
+
+258
+00:23:00,220 --> 00:23:05,580
+ of the ip1559 because of the gas limit for instance but it doesn't necessarily see everything
+
+259
+00:23:05,579 --> 00:23:10,779
+ that the validators are doing. In particular it doesn't see how the validators are sequencing
+
+260
+00:23:10,779 --> 00:23:15,339
+ their blocks. So there's no rule in Ethereum in terms of you have to put this transaction first,
+
+261
+00:23:15,339 --> 00:23:24,379
+ this transaction second, etc. And that actually turned out to be an extremely valuable power
+
+262
+00:23:24,379 --> 00:23:30,460
+ to have for validators, the power to sequence the block and to even insert their own transactions.
+
+263
+00:23:30,460 --> 00:23:35,579
+ and it's something through this power or the value of that power is what people refer to as MED,
+
+264
+00:23:35,579 --> 00:23:40,940
+ so maximum extractable value it's really the value that the validator can get from being
+
+265
+00:23:40,940 --> 00:23:46,940
+ in control of the way that these blocks are being constructed and the way this control is exerted
+
+266
+00:23:46,940 --> 00:23:55,100
+ outside of the purview of the protocol. And so it was not even like the validators it was
+
+267
+00:23:55,100 --> 00:23:59,660
+ the miners first in proof-of-work so when the miners figured out that okay this thing that
+
+268
+00:23:59,660 --> 00:24:06,940
+ I have has value, they soon figured out that okay what I could do is I'm going to maybe take
+
+269
+00:24:06,940 --> 00:24:12,140
+ part in the construction of my block but I'm also going to mostly delegate the responsibility of
+
+270
+00:24:12,140 --> 00:24:18,460
+ finding out what is this most valuable block to a network of entities that are known as builders
+
+271
+00:24:19,580 --> 00:24:26,300
+ and that will try and entice me to choose the blocks that they're building. So I will say you
+
+272
+00:24:26,299 --> 00:24:31,099
+ you know, I'm not as very, I'm not very good at making the block, but you guys are the builders.
+
+273
+00:24:31,740 --> 00:24:37,899
+ And so try and tell me how much you think you can give me back in terms of value. And so you
+
+274
+00:24:37,899 --> 00:24:45,099
+ have this auction happening between the validators and the builders, and the validators are choosing
+
+275
+00:24:46,539 --> 00:24:53,899
+ which block to choose, to use as a result of this auction. What's interesting is that all of this is
+
+276
+00:24:53,900 --> 00:24:58,540
+ really happening completely outside of the view of the Ethereum protocol. So it really does not know
+
+277
+00:24:58,540 --> 00:25:06,380
+ that the validators are delegating this pretty core activity to the builders. And when I say
+
+278
+00:25:06,380 --> 00:25:12,940
+ this, I don't mean all validators. 90% of the blocks today are built from this external network
+
+279
+00:25:12,940 --> 00:25:18,620
+ of builders, but there are still 10% that are not. But it's a very significant shift in the
+
+280
+00:25:18,619 --> 00:25:24,159
+ it's a political economy of who are the parties acting on the period and what are the value
+
+281
+00:25:24,159 --> 00:25:27,000
+ flows between them.
+
+282
+00:25:27,000 --> 00:25:32,000
+ And so the natural question has been, well, should we move forward the boundary of the
+
+283
+00:25:32,000 --> 00:25:33,000
+ protocol?
+
+284
+00:25:33,000 --> 00:25:39,079
+ Should we try and get a sense of what's happening out there and potentially even enshrine parts
+
+285
+00:25:39,079 --> 00:25:43,439
+ of this delegation so that we resume control of this?
+
+286
+00:25:43,440 --> 00:25:51,420
+ So now I want to show it. These are images from a post that I'm working on, but I've
+
+287
+00:25:51,420 --> 00:25:57,660
+ not finished it quite yet, so it's the first time I'm presenting it. But yeah, I'm trying
+
+288
+00:25:57,660 --> 00:26:02,820
+ to give here the idea of what exactly is the protocol giving the validators, when it's
+
+289
+00:26:02,820 --> 00:26:10,759
+ giving it the right to make a block. And so what I'm saying here is the Ethereum protocol
+
+290
+00:26:10,759 --> 00:26:15,119
+ originates these rights and gives validator the right to propose a block, a block that
+
+291
+00:26:15,119 --> 00:26:19,099
+ contains consensus data and the execution payload.
+
+292
+00:26:19,099 --> 00:26:23,640
+ So the consensus data is all the stuff that attestation, finality, etc.
+
+293
+00:26:23,960 --> 00:26:26,059
+ I'll touch upon this later.
+
+294
+00:26:26,359 --> 00:26:28,859
+ And the execution payload is really the list of transactions.
+
+295
+00:26:28,859 --> 00:26:34,900
+ But that's the thing that the validators today are trying to get built by someone else.
+
+296
+00:26:34,900 --> 00:26:47,180
+ What we are observing today is Mere Boost, the off-chain network of builders, or rather
+
+297
+00:26:47,180 --> 00:26:52,780
+ out-of-protocol network of builders, that the validators are engaging to make, or to
+
+298
+00:26:52,780 --> 00:26:56,720
+ sequence, or to build blocks on their behalf.
+
+299
+00:26:56,720 --> 00:27:00,860
+ What happens here is the Ethereum protocol gives the validator this proposing right,
+
+300
+00:27:00,859 --> 00:27:06,859
+ The validator creates this new right, which is the right to sequence the block or to build it,
+
+301
+00:27:06,859 --> 00:27:10,219
+ and offers that right to the builder. So it says to the builder,
+
+302
+00:27:11,740 --> 00:27:15,419
+ you can make the block on my behalf, you can tell me what to put in there.
+
+303
+00:27:15,419 --> 00:27:19,740
+ The validator will still remain the proposer, that's the proposer-builder separation.
+
+304
+00:27:20,619 --> 00:27:26,219
+ I'm picturing it on the side, the validator pretends the block they made was theirs,
+
+305
+00:27:26,220 --> 00:27:31,220
+ But essentially, the builder is the one that's building it.
+
+306
+00:27:33,380 --> 00:27:36,400
+ And so the first idea to try and enshrine
+
+307
+00:27:36,400 --> 00:27:40,440
+ some of these mechanisms in the protocol is EPBS,
+
+308
+00:27:40,440 --> 00:27:43,160
+ so EnshrinePBS, and more specifically,
+
+309
+00:27:43,160 --> 00:27:46,460
+ it's what I call blockOptionEPBS.
+
+310
+00:27:46,460 --> 00:27:51,460
+ So here, the protocol gives to the validator
+
+311
+00:27:51,480 --> 00:27:54,700
+ or the beacon proposer the proposing rights,
+
+312
+00:27:54,700 --> 00:27:58,360
+ And then the validator is going to be able to commit
+
+313
+00:27:58,360 --> 00:28:02,620
+ to an execution proposer that is going to reveal
+
+314
+00:28:02,620 --> 00:28:06,380
+ the execution payload in a second step.
+
+315
+00:28:06,380 --> 00:28:11,380
+ So we are moving from the situation here
+
+316
+00:28:12,200 --> 00:28:14,039
+ where everything happened in one step,
+
+317
+00:28:14,039 --> 00:28:15,759
+ the validator proposes this big block
+
+318
+00:28:15,759 --> 00:28:20,759
+ that contains consensus data and execution payload
+
+319
+00:28:20,759 --> 00:28:24,920
+ to a protocol that moves in two steps.
+
+320
+00:28:24,920 --> 00:28:27,799
+ One where the validator reveals this beacon block that
+
+321
+00:28:27,799 --> 00:28:29,940
+ contains the consensus data.
+
+322
+00:28:29,940 --> 00:28:32,039
+ And that also contains a commitment
+
+323
+00:28:32,039 --> 00:28:34,799
+ to someone who will build the block for the execution
+
+324
+00:28:34,799 --> 00:28:35,599
+ payload for them.
+
+325
+00:28:35,599 --> 00:28:39,599
+ So what it will be execution proposal.
+
+326
+00:28:39,599 --> 00:28:42,940
+ And in this block auction, it is yes,
+
+327
+00:28:42,940 --> 00:28:46,420
+ the commitment is also to the specific contents of the blocks.
+
+328
+00:28:46,420 --> 00:28:48,900
+ So the builders tell the validator,
+
+329
+00:28:48,900 --> 00:28:52,500
+ I will be this block for you that has this transaction route.
+
+330
+00:28:52,500 --> 00:28:54,140
+ So like a hash of the transaction.
+
+331
+00:28:54,140 --> 00:28:57,540
+ So the validator does not know what the what the block contains.
+
+332
+00:28:57,540 --> 00:28:58,740
+ They only know like a hash
+
+333
+00:29:00,400 --> 00:29:02,140
+ they will be coming to that.
+
+334
+00:29:02,140 --> 00:29:06,160
+ And by this commitment, now the protocol will expect in the second step
+
+335
+00:29:06,540 --> 00:29:10,500
+ for the execution proposal to reveal the execution payload.
+
+336
+00:29:10,900 --> 00:29:13,460
+ And so that's kind of nice because, for instance,
+
+337
+00:29:13,460 --> 00:29:18,460
+ if the builder goes offline for any reason,
+
+338
+00:29:18,740 --> 00:29:22,180
+ or the execution proposer goes offline for any reason,
+
+339
+00:29:22,180 --> 00:29:24,799
+ we can still have the beacon proposer
+
+340
+00:29:24,799 --> 00:29:28,140
+ containing the consensus data,
+
+341
+00:29:28,140 --> 00:29:29,440
+ which is not the case today.
+
+342
+00:29:29,440 --> 00:29:33,100
+ So it has a failure at any point in that interaction,
+
+343
+00:29:33,100 --> 00:29:34,220
+ the whole block is lost.
+
+344
+00:29:34,220 --> 00:29:35,559
+ So when we miss a block,
+
+345
+00:29:35,559 --> 00:29:39,420
+ we miss both the consensus data and the execution payload.
+
+346
+00:29:39,420 --> 00:29:42,279
+ Another thing that's nice is that the commitment
+
+347
+00:29:42,279 --> 00:29:48,039
+ the beacon proposer is making to the execution proposer it's kind of guaranteed by the protocol
+
+348
+00:29:48,039 --> 00:29:55,000
+ so if there's a promise of a payment uh and that and if this promise is become canonical so if the
+
+349
+00:29:55,000 --> 00:30:01,319
+ beacon block it goes on chain and it's attested to uh with enough weight uh then it's on really
+
+350
+00:30:01,319 --> 00:30:08,039
+ on the builder's uh shoulders to propose the the block in time so what i'm noting here as well is
+
+351
+00:30:08,039 --> 00:30:12,279
+ is that even if we have this enshrined proposer builder
+
+352
+00:30:12,279 --> 00:30:15,700
+ separation, it's still possible for the beacon proposer
+
+353
+00:30:15,700 --> 00:30:19,980
+ to liaise with the execution proposer using MEV-BOOST.
+
+354
+00:30:19,980 --> 00:30:22,259
+ So it's still possible to kind of bypass
+
+355
+00:30:22,259 --> 00:30:24,480
+ this whole protocol infrastructure
+
+356
+00:30:24,480 --> 00:30:25,859
+ and use MEV-BOOST.
+
+357
+00:30:25,859 --> 00:30:29,159
+ So it's not really like EIP-1559 in the sense of, OK,
+
+358
+00:30:29,159 --> 00:30:30,859
+ now there's this thing that you have to do,
+
+359
+00:30:30,859 --> 00:30:33,759
+ this price you have to pay, because you kind of
+
+360
+00:30:33,759 --> 00:30:35,139
+ are able to bypass it.
+
+361
+00:30:35,140 --> 00:30:43,480
+ But it might still be good in terms of providing a decent trust minimized option for the beacon proposer,
+
+362
+00:30:43,480 --> 00:30:49,759
+ so validators, to get into contracts with the execution proposers and the builders.
+
+363
+00:30:51,340 --> 00:30:56,259
+ And so I think when people talk about EPBS, they mostly mean this version.
+
+364
+00:30:56,900 --> 00:31:01,920
+ There is a version that's interesting as well, which is slot auction EPBS.
+
+365
+00:31:01,920 --> 00:31:10,100
+ And in this version of EPBS, the beacon proposer only commits to who will propose the execution
+
+366
+00:31:10,100 --> 00:31:11,100
+ payload.
+
+367
+00:31:11,100 --> 00:31:17,220
+ So it only commits to the pseudonym or the public key of the execution proposer, but
+
+368
+00:31:17,220 --> 00:31:20,560
+ it doesn't commit to the contents of the block.
+
+369
+00:31:20,560 --> 00:31:29,720
+ And so when the execution proposer kind of wins this ticket to make the execution payload,
+
+370
+00:31:29,720 --> 00:31:36,360
+ might still realize okay I could resell the building rights to someone else. So here what
+
+371
+00:31:36,360 --> 00:31:42,360
+ I'm depicting with the dotted line is that again all of these interactions are kind of optional.
+
+372
+00:31:42,360 --> 00:31:46,759
+ So the beacon proposer would very well give themselves the execution proposing rights
+
+373
+00:31:46,759 --> 00:31:54,200
+ and then listen to offers from a builder. They could also bypass the system and have like
+
+374
+00:31:54,200 --> 00:31:57,360
+ a second system to decide who the execution proposer should be.
+
+375
+00:31:58,360 --> 00:32:01,960
+ What I'm trying to convey here is that it's a little more flexibility
+
+376
+00:32:01,960 --> 00:32:05,539
+ in terms of you don't have to convince me about what's in your blog
+
+377
+00:32:05,539 --> 00:32:08,740
+ and you don't have to commit to the contents of your blog at the time
+
+378
+00:32:08,740 --> 00:32:09,860
+ where you're making this bid.
+
+379
+00:32:09,860 --> 00:32:13,120
+ You can just buy the rights to make the execution payload
+
+380
+00:32:13,440 --> 00:32:16,279
+ and then you may be able to or you may want to resale
+
+381
+00:32:17,120 --> 00:32:19,500
+ the bidding rights on your side.
+
+382
+00:32:19,500 --> 00:32:22,900
+ And the reason I'm talking about this is because it starts to decouple
+
+383
+00:32:22,900 --> 00:32:27,780
+ a bit more the beacon proposer with the execution proposer. So the beacon proposer is still
+
+384
+00:32:27,780 --> 00:32:34,660
+ responsible for choosing who the execution proposer will be, but it's not the end-all
+
+385
+00:32:34,660 --> 00:32:42,660
+ be-all for committing to the block contents. So just as a quick comparison between the two,
+
+386
+00:32:42,660 --> 00:32:49,220
+ in block-action EPBS, the beacon proposer is committing both to who the builder will be and
+
+387
+00:32:49,220 --> 00:32:55,539
+ also to the to the block contents uh whereas in the slot auction epbs the beacon proposer is only
+
+388
+00:32:55,539 --> 00:33:00,900
+ committing to the identity of the execution proposal and not to the block content at this
+
+389
+00:33:00,900 --> 00:33:13,860
+ time and that gives a little bit more flexibility to the to the execution proposal um okay yeah um
+
+390
+00:33:13,859 --> 00:33:22,019
+ So these are two proposals for EPBS, it's two variations of EPBS, but on the same topic of
+
+391
+00:33:22,019 --> 00:33:27,459
+ trying to decouple the execution part and the consensus part of the protocol, there's another
+
+392
+00:33:27,459 --> 00:33:34,899
+ proposal that I think you've heard about when Mike and Dom came on the call here, which is
+
+393
+00:33:34,899 --> 00:33:42,019
+ execution tickets. And now you can think of execution tickets as, okay, validators are no
+
+394
+00:33:42,019 --> 00:33:48,180
+ longer choosing who the execution proposer is. The execution proposer is going to be chosen by
+
+395
+00:33:48,180 --> 00:33:54,740
+ a market that we call the execution ticket market that is created in protocol and that offers
+
+396
+00:33:55,460 --> 00:34:01,299
+ tickets to people who want it. So this market is permissionless, anybody can come to the market and
+
+397
+00:34:01,299 --> 00:34:08,500
+ buy a ticket and this ticket eventually redeems for them to become an execution proposer. So
+
+398
+00:34:08,500 --> 00:34:11,059
+ So again, we have the same separation
+
+399
+00:34:11,059 --> 00:34:13,300
+ between the proposing right and the building right.
+
+400
+00:34:13,300 --> 00:34:17,559
+ So if I own a ticket that gives me eventually the right
+
+401
+00:34:17,559 --> 00:34:21,559
+ to propose a block, I am still able to outsource
+
+402
+00:34:21,559 --> 00:34:26,039
+ or to resell the building rights that come with that ticket.
+
+403
+00:34:26,039 --> 00:34:29,300
+ And that means we might still see stuff like MEV Boost
+
+404
+00:34:29,300 --> 00:34:32,619
+ and the relay infrastructure in that model.
+
+405
+00:34:32,619 --> 00:34:37,219
+ So what's nice and what I depict under the arrow
+
+406
+00:34:37,219 --> 00:34:45,779
+ the bottom here is that because this market is essentially a protocol gadget, we have introspection
+
+407
+00:34:45,779 --> 00:34:52,179
+ over who comes to the market and how much they are willing to pay. And that introspection is credible,
+
+408
+00:34:52,179 --> 00:34:58,099
+ or at least we can make it credible. And if it's credible it means we can capture the value that
+
+409
+00:34:58,099 --> 00:35:06,579
+ people are paying when they are coming to the market. So here's the distinction between
+
+410
+00:35:06,579 --> 00:35:13,460
+ slot auction epbs and execution tickets um we can do this with it market because all of this
+
+411
+00:35:13,460 --> 00:35:18,739
+ infrastructure is really entranian protocol in the slot auction epbs we can't do the burn just
+
+412
+00:35:18,739 --> 00:35:23,619
+ like naive we can't say oh you know whatever amount you're getting here as a beacon composer
+
+413
+00:35:23,619 --> 00:35:28,819
+ we are going to burn it because the beacon proposer can totally misrepresent the value
+
+414
+00:35:28,819 --> 00:35:33,860
+ uh of the bid they received for for the person to to become an execution proposal and so the
+
+415
+00:35:33,860 --> 00:35:41,220
+ ability to say you know it's only going to give you as a validator the beacon proposing rights
+
+416
+00:35:41,220 --> 00:35:46,500
+ and the addiction proposing rights are going to be given to this protocol structure called
+
+417
+00:35:46,500 --> 00:35:52,660
+ the efficient ticket market that allows you to to create this this burn and this
+
+418
+00:35:53,380 --> 00:36:00,980
+ value value capture and this then really also decouples the the roles of the validator as
+
+419
+00:36:00,980 --> 00:36:05,039
+ as someone who's here to provide the consensus data
+
+420
+00:36:05,039 --> 00:36:07,039
+ and the execution proposer as someone who's here
+
+421
+00:36:07,039 --> 00:36:10,639
+ to make the blocks and sequence them, et cetera.
+
+422
+00:36:14,360 --> 00:36:18,260
+ Cool, so yeah, I know it's a bit a lot
+
+423
+00:36:18,260 --> 00:36:20,860
+ and I think spending probably more time
+
+424
+00:36:20,860 --> 00:36:23,380
+ on this will be helpful.
+
+425
+00:36:23,380 --> 00:36:26,280
+ I'm hoping to publish the post soon enough,
+
+426
+00:36:26,280 --> 00:36:30,559
+ but I hope it's at least a nice insight.
+
+427
+00:36:30,980 --> 00:36:41,400
+ To sum up where we are, we started with this picture of the validators providing the consensus
+
+428
+00:36:41,400 --> 00:36:48,940
+ service and the block construction service, and we ended up at this picture where now
+
+429
+00:36:48,940 --> 00:36:54,480
+ we have a network of beacon proposers, so the validators in our system who are responsible
+
+430
+00:36:54,480 --> 00:36:59,260
+ for this consensus service, and a network of execution proposers who are responsible
+
+431
+00:36:59,260 --> 00:37:00,960
+ for this block-constructed service.
+
+432
+00:37:02,420 --> 00:37:03,780
+ The issue now is that, well,
+
+433
+00:37:03,780 --> 00:37:06,600
+ we know the builders are typically more centralized,
+
+434
+00:37:06,600 --> 00:37:08,980
+ so these execution proposals should also,
+
+435
+00:37:08,980 --> 00:37:11,180
+ we should expect them to be centralized
+
+436
+00:37:11,180 --> 00:37:13,140
+ and sophisticated entities.
+
+437
+00:37:13,140 --> 00:37:16,420
+ And these entities are now responsible, in a way,
+
+438
+00:37:16,420 --> 00:37:20,020
+ for providing the censorship resistance of the chain,
+
+439
+00:37:20,020 --> 00:37:23,080
+ which is not necessarily the best solution.
+
+440
+00:37:23,080 --> 00:37:26,720
+ I think it would be more comfortable if the validators,
+
+441
+00:37:26,719 --> 00:37:29,659
+ where everyone's providing that service.
+
+442
+00:37:30,519 --> 00:37:32,379
+ And the reason why is because
+
+443
+00:37:32,379 --> 00:37:35,399
+ like we want this decentralization of the operators
+
+444
+00:37:35,399 --> 00:37:38,000
+ because that allows the system as a whole
+
+445
+00:37:38,000 --> 00:37:40,559
+ to express a wider set of preferences.
+
+446
+00:37:40,559 --> 00:37:43,199
+ So that means when you have like this
+
+447
+00:37:43,199 --> 00:37:45,179
+ very decentralized set of validators
+
+448
+00:37:45,179 --> 00:37:46,799
+ and when the block is being made,
+
+449
+00:37:46,799 --> 00:37:48,639
+ the validators would include transactions
+
+450
+00:37:48,639 --> 00:37:51,779
+ that others for instance dislike.
+
+451
+00:37:51,779 --> 00:37:54,659
+ The validators are outsourcing the duty
+
+452
+00:37:54,659 --> 00:38:01,059
+ making a block to other people, we're kind of losing the benefit of having a well-decentralized
+
+453
+00:38:01,059 --> 00:38:06,259
+ set of operators in the first place, because the people we are outsourcing this utility to,
+
+454
+00:38:06,980 --> 00:38:13,539
+ they may not be as decentralized as the validator set. And it's the same thing in consensus,
+
+455
+00:38:13,539 --> 00:38:18,099
+ like we also really care about having a validator set that's decentralized, because
+
+456
+00:38:18,099 --> 00:38:23,139
+ we want them to be decorrelated, and that creates a lot of resilience in the system.
+
+457
+00:38:24,659 --> 00:38:30,980
+ So, yeah, allow me to say a little more about this last point.
+
+458
+00:38:30,980 --> 00:38:36,000
+ Before that, just checking if there's any questions before I move on.
+
+459
+00:38:36,000 --> 00:38:45,719
+ Yeah, I have a question around the execution tickets and block proposals.
+
+460
+00:38:45,719 --> 00:38:52,859
+ So with execution tickets, does that change the frequency a particular validator has to
+
+461
+00:38:52,860 --> 00:38:59,660
+ the rights to like proposal block or what is the mechanism for you know uh redeeming and execution
+
+462
+00:38:59,660 --> 00:39:05,900
+ ticket yeah that's a good question and it's something that's i would say it's a bit up in
+
+463
+00:39:05,900 --> 00:39:14,380
+ the air like there is uh an exit a proposal written by uh justin and mike uh which has this
+
+464
+00:39:14,380 --> 00:39:19,099
+ idea of okay there is this market that exists and you can go to the market and buy the tickets to
+
+465
+00:39:19,099 --> 00:39:25,980
+ become an execution proposer. So that means as a validator, if I want to propose a payload,
+
+466
+00:39:25,980 --> 00:39:32,779
+ so propose a set of transactions, I have to go myself to the market and buy one of these tickets.
+
+467
+00:39:32,779 --> 00:39:40,699
+ So by default, so if I compare with the slot auction EPBS for instance, in EPBS by default,
+
+468
+00:39:40,699 --> 00:39:46,380
+ the validator is the execution proposer, like they can give to themselves the right to propose
+
+469
+00:39:46,380 --> 00:39:51,660
+ the execution payload but in execution ticket it's no longer the case by default the validator
+
+470
+00:39:51,660 --> 00:39:59,180
+ is only the decon proposer and not the execution proposer and and when i say okay you need to go
+
+471
+00:39:59,180 --> 00:40:04,380
+ to market and buy a ticket uh this go to market there's been like some some thoughts around this
+
+472
+00:40:04,380 --> 00:40:11,340
+ so in the proposal by mike and justin uh imagine a market as almost like an amm an automated market
+
+473
+00:40:11,340 --> 00:40:20,380
+ maker that just has a supply of tickets and people can just go to the AMM and buy a ticket from it,
+
+474
+00:40:20,380 --> 00:40:26,059
+ so it's an autonomous structure. But I think there's still a lot of questions on what are
+
+475
+00:40:26,059 --> 00:40:32,300
+ the exact mechanics of this and how to operationalize it on-chain. So, when I want to
+
+476
+00:40:32,300 --> 00:40:37,500
+ buy a ticket, do I make a transaction that goes in one of the execution payloads or is that a
+
+477
+00:40:37,500 --> 00:40:43,340
+ transaction that lives in the consensus layer and who includes that transaction. So all of
+
+478
+00:40:43,340 --> 00:40:49,659
+ these I think are kind of unsettled questions that we need definitely a lot more thinking on.
+
+479
+00:40:52,539 --> 00:40:58,699
+ Cool. If we want to maybe just pause for one moment, the person who asked that question
+
+480
+00:40:58,699 --> 00:41:03,019
+ is typing right now, so maybe they have my follow-up, but give it just a moment.
+
+481
+00:41:07,500 --> 00:41:20,739
+ So, the follow-up is, so offline validators and double voting would then be slash retroactively
+
+482
+00:41:20,739 --> 00:41:22,800
+ with the execution tickets?
+
+483
+00:41:22,800 --> 00:41:27,260
+ I think it would kind of stay the same.
+
+484
+00:41:27,260 --> 00:41:32,659
+ It would look, from the validator side it would look pretty much what they are doing
+
+485
+00:41:32,659 --> 00:41:37,179
+ today, except when they make blocks, it wouldn't include the execution payload.
+
+486
+00:41:37,460 --> 00:41:38,960
+ That would be somebody else doing that.
+
+487
+00:41:39,619 --> 00:41:46,119
+ And so if a validator was, for instance, proposing two beacon blocks at the same
+
+488
+00:41:46,119 --> 00:41:51,899
+ height, or if a validator was making conflicting routes that are slashable,
+
+489
+00:41:53,239 --> 00:41:57,639
+ they would be slashed according to the same mechanics that take place today.
+
+490
+00:41:57,639 --> 00:42:04,039
+ So another validator would include a proof of why validator A needs to be slashed.
+
+491
+00:42:04,739 --> 00:42:07,440
+ That proof would be contained in the beacon block.
+
+492
+00:42:07,839 --> 00:42:20,299
+ So it really just separates out the, what you call the block today that has this beacon part and this execution part into sub blocks or partial blocks that are delivered in different moments.
+
+493
+00:42:20,299 --> 00:42:23,239
+ But from the slashing perspective it's pretty much the same.
+
+494
+00:42:24,799 --> 00:42:25,299
+ Thank you.
+
+495
+00:42:27,639 --> 00:42:34,799
+ All right.
+
+496
+00:42:34,799 --> 00:42:38,980
+ Cool.
+
+497
+00:42:38,980 --> 00:42:45,940
+ So really what I want to address here is what is the role of validators now?
+
+498
+00:42:45,940 --> 00:42:52,460
+ Why they delegated the role of constructing the execution payload to someone else, and
+
+499
+00:42:52,460 --> 00:42:58,699
+ if we if we do move to like this execution ticket work or this validator proposal separation
+
+500
+00:42:59,740 --> 00:43:04,940
+ yeah it's it's a very big change so let's look at what else we can think about in terms of
+
+501
+00:43:04,940 --> 00:43:09,900
+ unbundling or in terms of understanding the different roads that the protocol wants to
+
+502
+00:43:09,900 --> 00:43:17,420
+ to provide um so the content service is like very critical um the first
+
+503
+00:43:17,420 --> 00:43:24,579
+ Even that you can kind of understand it as different mechanisms that are put together.
+
+504
+00:43:24,579 --> 00:43:30,619
+ The first one is LMD ghost, so that's the fork choice rule, but that tells you at any
+
+505
+00:43:30,619 --> 00:43:34,579
+ point of time what is the current head of the chain.
+
+506
+00:43:34,579 --> 00:43:39,659
+ You have this chain that is continuously growing, people can add blocks even when you don't
+
+507
+00:43:39,659 --> 00:43:46,159
+ have finality, and so you need this fork choice rule to understand what's the current state
+
+508
+00:43:46,159 --> 00:43:52,319
+ the network and the head of the chain. You have a second service which is CasperFFG which finalizes
+
+509
+00:43:52,319 --> 00:43:58,960
+ the block so it's mechanisms of two further validators have to finalize like these epoch
+
+510
+00:43:58,960 --> 00:44:05,599
+ boundaries and then once it's final yeah only like a major safety event can happen for the
+
+511
+00:44:05,599 --> 00:44:12,480
+ finality to be undone or to be conflicted. And then the third thing is when you take part in
+
+512
+00:44:12,480 --> 00:44:19,199
+ this consensus service you have to keep adding blocks to register new consensus data. So for
+
+513
+00:44:19,199 --> 00:44:26,880
+ instance people casting their finality votes in CasperFFG or giving weights to blocks according
+
+514
+00:44:26,880 --> 00:44:32,880
+ to the LMD ghost for choice rule. So you have like these three different things that you're
+
+515
+00:44:32,880 --> 00:44:37,840
+ kind of taking part of when you are signing up for that for that service.
+
+516
+00:44:37,840 --> 00:44:46,320
+ So, yeah, the world, according to the Ethereum protocol, or the world of validation and people
+
+517
+00:44:46,320 --> 00:44:49,600
+ coming in to become validators, it's actually pretty small.
+
+518
+00:44:49,600 --> 00:44:54,660
+ So, the Ethereum protocol understands that people are depositing if, so when they do
+
+519
+00:44:54,660 --> 00:45:00,360
+ that, when they deposit 32 if, they declare, I want to sign up to become a validator, I
+
+520
+00:45:00,360 --> 00:45:05,079
+ want to sign up to provide this consensus service.
+
+521
+00:45:05,079 --> 00:45:10,639
+ And sometimes people will go so they come out of everything and if your protocol only
+
+522
+00:45:10,639 --> 00:45:16,420
+ has this viewer, okay, I'm getting a deposit of 32 if, and sometimes the deposits are coming
+
+523
+00:45:16,420 --> 00:45:21,779
+ out, and people are leaving the service.
+
+524
+00:45:21,779 --> 00:45:27,460
+ And so why do we actually need people to make these deposits?
+
+525
+00:45:27,460 --> 00:45:33,319
+ Why do we need this 32 if in the first place, so I'm really going into the, let's say, the
+
+526
+00:45:33,320 --> 00:45:41,240
+ rationale of proof-of-stake, we want people to come and give us this take, because we want to
+
+527
+00:45:41,240 --> 00:45:47,880
+ be able, as a protocol or as a community, to say we have a credible commitment to providing good
+
+528
+00:45:47,880 --> 00:45:52,280
+ service, to providing good quality of service. So the protocol can make statements such as
+
+529
+00:45:53,320 --> 00:45:59,640
+ if a finality or if a safety fault happens, if finality happens in two different places that are
+
+530
+00:45:59,639 --> 00:46:07,239
+ are conflicted, then I can make the credible commitment that many billions of dollars are
+
+531
+00:46:07,239 --> 00:46:09,599
+ going to be lost.
+
+532
+00:46:09,599 --> 00:46:14,859
+ We have this property because we have accountability and we have slashing, so we know that it varies
+
+533
+00:46:14,859 --> 00:46:17,519
+ in safety for the functionality.
+
+534
+00:46:17,519 --> 00:46:20,440
+ This is a guarantee we can make.
+
+535
+00:46:20,440 --> 00:46:28,119
+ And so, in a way, the protocol is an actor that demands capital, so that demands people
+
+536
+00:46:28,119 --> 00:46:35,000
+ to bring stake to it so that it can make that commitment. But of course, when people bring
+
+537
+00:46:35,000 --> 00:46:41,719
+ capital, there are many incentives for you to try and free your capital. So, when you stake,
+
+538
+00:46:41,719 --> 00:46:48,359
+ you kind of lock up that money, but capital tends to want to be free, it wants to be reutilized,
+
+539
+00:46:48,359 --> 00:46:53,960
+ it wants to be maximized in terms of its efficiency. And so, that is why we've seen
+
+540
+00:46:53,960 --> 00:47:01,119
+ seen the growth of liquid staking protocols that allow you to bring your capital to stake,
+
+541
+00:47:01,119 --> 00:47:07,920
+ but also have a liquid representation of it that allows you to still participate and still
+
+542
+00:47:07,920 --> 00:47:11,360
+ have activities with your capital.
+
+543
+00:47:11,360 --> 00:47:15,519
+ So make the most out of the stake that you have.
+
+544
+00:47:15,519 --> 00:47:21,960
+ And so what's interesting here is that the statement above of if x happens, why billions
+
+545
+00:47:21,960 --> 00:47:28,440
+ dollars are lost it doesn't really specify who's dollars and so when i give my stake to someone
+
+546
+00:47:28,440 --> 00:47:33,800
+ who stakes on my behalf the protocol doesn't really see that and it doesn't know that okay
+
+547
+00:47:33,800 --> 00:47:39,400
+ it's not barnaby's fault that the safety fault has happened it's barnaby who delegated to someone who
+
+548
+00:47:39,400 --> 00:47:47,639
+ made that uh that fault happens but this is kind of like not existent and so and so the world
+
+549
+00:47:47,639 --> 00:47:51,480
+ outside of Ethereum it's actually much more complicated than Ethereum thinks it is.
+
+550
+00:47:52,440 --> 00:47:59,400
+ You have this long chain of intermediation where if I'm a staker and I want to stake
+
+551
+00:47:59,400 --> 00:48:07,000
+ but not directly participate in the validation, I'm going to give my if to a deposit contract
+
+552
+00:48:07,000 --> 00:48:15,639
+ of a liquid staking protocol who's going to add that if into a pool and then allocate the if to
+
+553
+00:48:15,639 --> 00:48:21,559
+ node operators who are going to validate on my behalf to the Ethereum protocol. And so
+
+554
+00:48:22,279 --> 00:48:29,000
+ all of this infrastructure is really kind of like hidden, it doesn't exist in the eyes of the
+
+555
+00:48:29,000 --> 00:48:37,559
+ Ethereum protocol. And so really the people or the entities that are kind of treating with or
+
+556
+00:48:37,559 --> 00:48:41,000
+ or providing the service to the FUN protocol
+
+557
+00:48:41,000 --> 00:48:43,619
+ are these node operators.
+
+558
+00:48:44,719 --> 00:48:49,320
+ And so trying to understand who are these node operators
+
+559
+00:48:49,320 --> 00:48:52,420
+ or who are these protocol service providers,
+
+560
+00:48:52,420 --> 00:48:56,019
+ what we see today is really two classes of providers.
+
+561
+00:48:56,019 --> 00:48:59,980
+ So there are those that are typically called solo operators.
+
+562
+00:48:59,980 --> 00:49:04,639
+ So I would say, or I would define them as people
+
+563
+00:49:04,639 --> 00:49:07,139
+ who are a priori untrusted.
+
+564
+00:49:07,139 --> 00:49:09,159
+ So we don't know who they are exactly.
+
+565
+00:49:09,159 --> 00:49:12,599
+ They don't come with some kind of ex-ante reputation
+
+566
+00:49:12,599 --> 00:49:15,500
+ that tells me whether they are trustworthy
+
+567
+00:49:15,500 --> 00:49:16,739
+ or whether they're malicious
+
+568
+00:49:16,739 --> 00:49:20,500
+ or whether they're going to do a good job as operators.
+
+569
+00:49:20,500 --> 00:49:23,119
+ So you can think of living room validators,
+
+570
+00:49:23,119 --> 00:49:26,579
+ solo stakers who are both running their own operations
+
+571
+00:49:26,579 --> 00:49:30,019
+ and using their own capital to stake.
+
+572
+00:49:30,019 --> 00:49:33,519
+ And on the other side, you have these professional operators
+
+573
+00:49:33,519 --> 00:49:35,559
+ which are pretty trusted.
+
+574
+00:49:35,559 --> 00:49:40,440
+ they can think of registered companies, big staking providers, like the big names you see.
+
+575
+00:49:41,079 --> 00:49:46,920
+ And so when you give your stake to them, you kind of know that it comes with a trusted
+
+576
+00:49:47,880 --> 00:49:55,639
+ reputation. This is like a very black and white kind of distinction, but it's in truth it's not
+
+577
+00:49:55,639 --> 00:50:01,799
+ that binary. So it's more like you have a credible signal that maybe you learn over time of whether
+
+578
+00:50:01,800 --> 00:50:06,160
+ of a pretty untrusted operator becomes more trusted.
+
+579
+00:50:07,340 --> 00:50:12,200
+ And this valuable signal may be learned by protocols.
+
+580
+00:50:12,200 --> 00:50:15,100
+ And so in particular, it's taking protocols,
+
+581
+00:50:15,100 --> 00:50:18,700
+ they may be able to employ like a mixture of both types.
+
+582
+00:50:18,700 --> 00:50:20,400
+ So we're seeing for instance,
+
+583
+00:50:20,400 --> 00:50:24,220
+ Lido onboarding some solo operators,
+
+584
+00:50:24,220 --> 00:50:26,620
+ we see liquid-staking protocols that rocket pool,
+
+585
+00:50:26,620 --> 00:50:31,620
+ which are mostly composed of solo operators that stake.
+
+586
+00:50:31,619 --> 00:50:36,259
+ So I want to discuss a little bit some of these constructions now.
+
+587
+00:50:39,059 --> 00:50:46,420
+ So looking at the rocket pool model, the operator, so the person who's actually performing
+
+588
+00:50:46,420 --> 00:50:54,179
+ the service to the protocol, so like the consensus service, can be a solo-staker. And to do that,
+
+589
+00:50:54,980 --> 00:50:59,859
+ the solo operator only needs to put some ifs as collaterals. And then the delegator,
+
+590
+00:50:59,860 --> 00:51:05,300
+ So people who want to stake but don't want to perform the service,
+
+591
+00:51:05,300 --> 00:51:08,900
+ or who don't want to run a node and become validators themselves,
+
+592
+00:51:10,019 --> 00:51:13,460
+ send their stake to this operator and kind of fill the remainder.
+
+593
+00:51:13,460 --> 00:51:18,340
+ So I think in RocketPool, the operator can put up 8 ETH,
+
+594
+00:51:18,340 --> 00:51:22,900
+ and the delegators can then fill up the rest with 24 ETH,
+
+595
+00:51:22,900 --> 00:51:26,579
+ and the operator then stakes both on their own account,
+
+596
+00:51:26,579 --> 00:51:29,220
+ as well as on the account of the delegators.
+
+597
+00:51:29,860 --> 00:51:35,860
+ So the idea for the operator to put their own money on the line is really to align the incentives and for them to say,
+
+598
+00:51:35,860 --> 00:51:40,860
+ okay, you have to do a good job because otherwise your own money will be lost first.
+
+599
+00:51:40,860 --> 00:51:46,860
+ So if you get slashed as a RocketPool operator, the first money that gets lost is yours,
+
+600
+00:51:46,860 --> 00:51:52,860
+ and then the money of the delegators if necessary.
+
+601
+00:51:52,860 --> 00:51:54,860
+ So that's a good system.
+
+602
+00:51:54,860 --> 00:51:59,760
+ allows you to onboard untrusted operators into the operations of like,
+
+603
+00:52:00,140 --> 00:52:05,039
+ uh, liquid-staking protocols, but still it's not the most, uh, capital
+
+604
+00:52:05,039 --> 00:52:06,960
+ efficient way of going about it.
+
+605
+00:52:06,960 --> 00:52:12,260
+ So when you don't have this trust in the operator, um, you're going to have to
+
+606
+00:52:12,260 --> 00:52:17,720
+ require some kind of either collateral or more cost infrastructure to, to, to
+
+607
+00:52:17,720 --> 00:52:21,720
+ ensure that, okay, they are credible operators, they are not going to, to
+
+608
+00:52:21,719 --> 00:52:29,879
+ rug the delegators. And so the capital efficiency and the cost pressure kind of directives mean that
+
+609
+00:52:29,879 --> 00:52:36,199
+ today the liquid stacking protocols do rely a lot on professional operators. So when the professional
+
+610
+00:52:36,199 --> 00:52:43,319
+ operator comes with like reputation, that's virtual money on the line, but it makes the
+
+611
+00:52:43,320 --> 00:52:50,600
+ capital efficiency of the other protocol significantly greater.
+
+612
+00:52:50,600 --> 00:52:57,420
+ And so there was this idea in the Ethereum community, some researchers have been talking
+
+613
+00:52:57,420 --> 00:53:04,000
+ about it, it's the idea of, okay, if there is this problem of trust between operators
+
+614
+00:53:04,000 --> 00:53:10,160
+ who may be interested and delegators who are delegating to them, perhaps we can resolve
+
+615
+00:53:10,159 --> 00:53:14,319
+ the problem of trust by saying only the operator is slashable.
+
+616
+00:53:14,319 --> 00:53:16,940
+ So in RocketPool, everybody is slashable.
+
+617
+00:53:16,940 --> 00:53:20,179
+ There may be some kind of seniority of slashing.
+
+618
+00:53:20,179 --> 00:53:23,480
+ So the operator gets slashed first, and then the delegators.
+
+619
+00:53:23,480 --> 00:53:27,679
+ But in this model, only the operator can get slashed.
+
+620
+00:53:27,679 --> 00:53:30,379
+ And people who delegate to this operator,
+
+621
+00:53:30,379 --> 00:53:31,399
+ they can't get slashed.
+
+622
+00:53:31,399 --> 00:53:34,119
+ And so now, maybe that's a good model
+
+623
+00:53:34,119 --> 00:53:42,440
+ to have as much interested operators as possible working on the network.
+
+624
+00:53:43,239 --> 00:53:50,039
+ And I think this proposal, in my opinion, comes with these two premises.
+
+625
+00:53:50,039 --> 00:53:56,599
+ The first one is people want to stick, so I have some if, let's say, and I want to do something with
+
+626
+00:53:56,599 --> 00:54:01,799
+ it, I want to put it somewhere that will give me some kind of return. So there is this idea of
+
+627
+00:54:01,800 --> 00:54:08,680
+ There's an inevitability that people are trying to maximize and do something productive with their
+
+628
+00:54:08,680 --> 00:54:13,320
+ it. So they are going to put it into this liquid staking protocols because you don't want to sit
+
+629
+00:54:13,320 --> 00:54:20,039
+ on the sidelines. And then the second premise is to say, with this it's kind of a magic trick.
+
+630
+00:54:20,039 --> 00:54:26,039
+ So then you can make only the people who are actually staking, so the operators, liable. So
+
+631
+00:54:26,039 --> 00:54:30,659
+ So it's, if I get slashed for having delegated
+
+632
+00:54:30,659 --> 00:54:32,219
+ to someone who does a bad job,
+
+633
+00:54:33,259 --> 00:54:35,519
+ there's no, it doesn't exist anymore.
+
+634
+00:54:35,519 --> 00:54:39,239
+ So only the people who have real money on the line
+
+635
+00:54:39,239 --> 00:54:41,860
+ are the ones that are slashable.
+
+636
+00:54:41,860 --> 00:54:44,219
+ And so that sounds kind of nice,
+
+637
+00:54:44,219 --> 00:54:49,219
+ but I think it doesn't necessarily work for it.
+
+638
+00:54:50,179 --> 00:54:51,739
+ I think it's pretty easy actually
+
+639
+00:54:51,739 --> 00:54:58,059
+ unpack consequences that maybe are different from what we thought of.
+
+640
+00:54:58,059 --> 00:55:05,099
+ And so the first issue that I see is that people want it.
+
+641
+00:55:05,099 --> 00:55:10,779
+ So when I have Eve and when I'm looking for you, I'm going to try and find ways to get it.
+
+642
+00:55:10,779 --> 00:55:18,299
+ And so if the operator here gets a higher return for putting their money on the line,
+
+643
+00:55:18,300 --> 00:55:21,800
+ like they are slashable and the delegators are not,
+
+644
+00:55:22,280 --> 00:55:24,660
+ we should expect the money of the operator
+
+645
+00:55:24,660 --> 00:55:27,100
+ to kind of earn them a higher return.
+
+646
+00:55:27,320 --> 00:55:29,360
+ And so if I'm a staker,
+
+647
+00:55:29,460 --> 00:55:31,280
+ but I don't want to perform the operation,
+
+648
+00:55:31,980 --> 00:55:34,240
+ I could go to the operator and say,
+
+649
+00:55:34,680 --> 00:55:36,200
+ you don't have to put your own money.
+
+650
+00:55:36,300 --> 00:55:38,140
+ I can delegate some of my money to you.
+
+651
+00:55:38,220 --> 00:55:40,580
+ And so what I think would happen in that scenario
+
+652
+00:55:40,580 --> 00:55:45,080
+ is that the operators would end up
+
+653
+00:55:45,079 --> 00:55:52,179
+ getting most of their capital at stake from delegators who give them the money.
+
+654
+00:55:52,179 --> 00:55:56,840
+ So we would recreate, in a way, this operator-delegator separation.
+
+655
+00:55:56,840 --> 00:56:02,840
+ So even if the protocol was trying to enshrine some kind of operator-delegator separation
+
+656
+00:56:02,840 --> 00:56:12,239
+ in that way, the real consequence would be an unbundling which is at that layer.
+
+657
+00:56:12,239 --> 00:56:18,199
+ So the slashable layer would be unbundled between operators who maybe are putting a
+
+658
+00:56:18,199 --> 00:56:23,000
+ bit of money on the line, but most of the stake still coming from people who are chasing
+
+659
+00:56:23,000 --> 00:56:29,839
+ yield and willing to be placed under these slashable conditions.
+
+660
+00:56:29,839 --> 00:56:36,359
+ You could still have people in the non-slashable tier, so these what I call light delegators
+
+661
+00:56:36,360 --> 00:56:41,079
+ that are placing their assets with the heavy operators,
+
+662
+00:56:41,079 --> 00:56:43,460
+ even though it's not slashable.
+
+663
+00:56:43,460 --> 00:56:44,880
+ But then the question is,
+
+664
+00:56:44,880 --> 00:56:47,000
+ okay, why should they be getting it, right?
+
+665
+00:56:47,000 --> 00:56:48,800
+ So these guys on the left,
+
+666
+00:56:48,800 --> 00:56:51,620
+ like the heavy operators and the heavy delegators,
+
+667
+00:56:51,620 --> 00:56:53,579
+ they are actually providing economic security
+
+668
+00:56:53,579 --> 00:56:54,420
+ to the protocol.
+
+669
+00:56:54,420 --> 00:56:56,300
+ Like, they're helping the protocol make that claim
+
+670
+00:56:56,300 --> 00:56:58,519
+ of if something bad happens,
+
+671
+00:56:58,519 --> 00:57:00,120
+ a lot of people will lose money,
+
+672
+00:57:00,120 --> 00:57:01,519
+ including all of these people
+
+673
+00:57:01,519 --> 00:57:06,220
+ that are in the heavy stack on the left.
+
+674
+00:57:06,360 --> 00:57:10,880
+ So what does it mean for the light delegators to get it?
+
+675
+00:57:10,880 --> 00:57:13,240
+ Why are we paying them for it?
+
+676
+00:57:13,240 --> 00:57:18,480
+ What is the useful service that they are providing to the protocol?
+
+677
+00:57:18,480 --> 00:57:24,960
+ And so this is a post from Vitalik Buterin, Protocol and Stacking Pool Changes that would
+
+678
+00:57:24,960 --> 00:57:28,780
+ improve decentralization and reduce consensus over head.
+
+679
+00:57:28,780 --> 00:57:33,059
+ And in this, he mentioned that, okay, there's a few things that these light delegators that
+
+680
+00:57:33,059 --> 00:57:37,059
+ are kind of sitting on the side could be doing.
+
+681
+00:57:37,059 --> 00:57:40,340
+ One of them is they could backstop the consensus service
+
+682
+00:57:40,340 --> 00:57:43,460
+ that the heavy layer is doing.
+
+683
+00:57:43,460 --> 00:57:47,679
+ So the light delegators, they could run their own prox choice
+
+684
+00:57:47,679 --> 00:57:51,059
+ and they could kind of check whether the people on the left
+
+685
+00:57:51,059 --> 00:57:54,279
+ here are doing a good job with finalizing the chain
+
+686
+00:57:54,279 --> 00:57:58,820
+ and making sure that there's no foul play on that layer.
+
+687
+00:57:58,820 --> 00:58:01,539
+ So they come in as a second layer of defense,
+
+688
+00:58:01,539 --> 00:58:10,559
+ almost like full nodes, but in between full nodes and the heavy operators, to understand
+
+689
+00:58:10,559 --> 00:58:15,219
+ whether there is something bad happening on that layer.
+
+690
+00:58:15,219 --> 00:58:21,420
+ Another thing we could do in the third bullet point is these people on the right, so the
+
+691
+00:58:21,420 --> 00:58:27,139
+ light delegators, once in a while, they could come online and create what's called an inclusion
+
+692
+00:58:27,139 --> 00:58:35,619
+ So an inclusionist is a mechanism to bound the execution proposals, including more transactions.
+
+693
+00:58:35,619 --> 00:58:39,519
+ So I'll discuss this a little bit more further.
+
+694
+00:58:39,519 --> 00:58:46,779
+ But the idea here is that the light delegators would be responsible for forcing execution
+
+695
+00:58:46,779 --> 00:58:50,519
+ proposals to put transactions into their block.
+
+696
+00:58:50,519 --> 00:58:57,159
+ And this could be a role that the light dedicators are doing here.
+
+697
+00:58:57,159 --> 00:59:02,280
+ And so I have this post on it research that I call rainbow stacking.
+
+698
+00:59:02,280 --> 00:59:06,280
+ And so the idea of how do we organize all of these different services together?
+
+699
+00:59:06,280 --> 00:59:09,980
+ And I think this is a good way to think about it.
+
+700
+00:59:09,980 --> 00:59:14,019
+ So on the left, we have this service of economic security.
+
+701
+00:59:14,019 --> 00:59:22,099
+ the heavy operators that are validating the chain, running this FFG, making this credible commitment,
+
+702
+00:59:22,099 --> 00:59:30,019
+ so we are not going to do safety faults. And on the right, a stack that is performing these light
+
+703
+00:59:30,019 --> 00:59:37,139
+ services, so that come in as backstops or as supplements to the consensus services.
+
+704
+00:59:37,139 --> 00:59:41,460
+ And what I think would happen, or what I think should happen, is contrary to this model where
+
+705
+00:59:41,460 --> 00:59:47,780
+ where the light delegators are kind of choosing heavy operators to do services for them or
+
+706
+00:59:47,780 --> 00:59:49,840
+ doing services themselves.
+
+707
+00:59:49,840 --> 00:59:56,460
+ I think what we would see is again, an unbundling between operators and delegators on the light
+
+708
+00:59:56,460 --> 00:59:57,460
+ side.
+
+709
+00:59:57,460 --> 01:00:03,220
+ And so the service of sometimes saying, oh, this is what we believe to be the head of
+
+710
+01:00:03,220 --> 01:00:09,599
+ the chain, according to our light for choice that we run, or this is the set of transactions
+
+711
+01:00:09,599 --> 01:00:13,259
+ that we would really like to see included on chain,
+
+712
+01:00:13,259 --> 01:00:18,159
+ I think the light delegators will let some light operators
+
+713
+01:00:18,159 --> 01:00:18,960
+ do that.
+
+714
+01:00:18,960 --> 01:00:22,480
+ And so by, how do we do this?
+
+715
+01:00:22,480 --> 01:00:25,739
+ So the light delegators would sort of back
+
+716
+01:00:25,739 --> 01:00:28,639
+ the light operators, give them way to say,
+
+717
+01:00:28,639 --> 01:00:32,119
+ I believe this light operator is good at providing
+
+718
+01:00:32,119 --> 01:00:34,980
+ the service of backstopping the fault choice,
+
+719
+01:00:34,980 --> 01:00:37,139
+ or it's good at providing the service
+
+720
+01:00:37,139 --> 01:00:39,380
+ of making inclusion lists.
+
+721
+01:00:39,599 --> 01:00:47,500
+ What's kind of nice in this organization is that because this whole light layer stack
+
+722
+01:00:47,500 --> 01:00:54,279
+ is not slashable, there's not really a pressure to rebuild this whole liquid stacking protocol
+
+723
+01:00:54,279 --> 01:00:58,639
+ with all these trust assumptions and all of this chain of delegations and centralizing
+
+724
+01:00:58,639 --> 01:00:59,639
+ courses.
+
+725
+01:00:59,639 --> 01:01:05,860
+ So, the light layer, in my opinion, or at least the argument I'm trying to make, should
+
+726
+01:01:05,860 --> 01:01:12,539
+ be more friendly to these solo operators that are potentially
+
+727
+01:01:12,539 --> 01:01:18,620
+ untrusted. So I might not trust this random person on the
+
+728
+01:01:18,620 --> 01:01:21,340
+ internet to give them my money and potentially they can get
+
+729
+01:01:21,340 --> 01:01:24,280
+ slashed with it. But if I see them as an active community
+
+730
+01:01:24,280 --> 01:01:28,120
+ member on Twitter, doing a good job raising issues on the health
+
+731
+01:01:28,120 --> 01:01:31,820
+ of the network, etc, I might say, Okay, you know what, I'll
+
+732
+01:01:31,820 --> 01:01:35,460
+ back you as a light operator for you to perform that
+
+733
+01:01:35,860 --> 01:01:39,019
+ that useful service to the protocol.
+
+734
+01:01:41,140 --> 01:01:45,180
+ And so this is the picture that we looked at earlier
+
+735
+01:01:45,180 --> 01:01:48,460
+ with the problem that the censorship resistance service
+
+736
+01:01:48,460 --> 01:01:51,039
+ was kind of pegged to the block construction service,
+
+737
+01:01:51,039 --> 01:01:53,360
+ which itself is performed by this
+
+738
+01:01:53,360 --> 01:01:57,620
+ not very decentralized network of proposals or bidders.
+
+739
+01:01:57,620 --> 01:02:00,059
+ But we can redraw that pictures and say,
+
+740
+01:02:00,059 --> 01:02:03,099
+ okay, now the heavy layer is going to be responsible
+
+741
+01:02:03,099 --> 01:02:07,039
+ for this consensus service that requires this economic security
+
+742
+01:02:07,039 --> 01:02:10,860
+ and this credible commitment to good service provision,
+
+743
+01:02:10,860 --> 01:02:15,319
+ the censorship-resistant service will be done by the light layer.
+
+744
+01:02:15,319 --> 01:02:19,679
+ And that will constrain the block construction service.
+
+745
+01:02:19,679 --> 01:02:24,119
+ And that seems to me like a more proper economic organization
+
+746
+01:02:24,119 --> 01:02:33,019
+ or more resilient architecture for the provision of this.
+
+747
+01:02:33,099 --> 01:02:41,659
+ different services. I have this figure in the post, but I'll just keep it.
+
+748
+01:02:41,659 --> 01:02:47,819
+ So just one last thing before I finish. I mentioned this idea of inclusion,
+
+749
+01:02:47,819 --> 01:02:54,139
+ so the way for people who are not directly involved with the block production to force
+
+750
+01:02:54,139 --> 01:02:59,420
+ the inclusion of certain transactions. I think to me, the real definition of this
+
+751
+01:02:59,420 --> 01:03:06,780
+ mechanism is yeah a way to make the most out of the decentralization of it so we have all of these
+
+752
+01:03:06,780 --> 01:03:12,460
+ different stakeholders that are in different places around the around the world with different
+
+753
+01:03:13,099 --> 01:03:20,460
+ preferences and and having this decentralization force kind of um the block production layer to
+
+754
+01:03:20,460 --> 01:03:25,900
+ not play games to not extract rents uh with the inclusion or not of the user i think it's very
+
+755
+01:03:25,900 --> 01:03:27,360
+ very powerful.
+
+756
+01:03:27,360 --> 01:03:32,780
+ And so you have this EIP-7547 on inclusion list.
+
+757
+01:03:32,780 --> 01:03:36,579
+ Our team has also opened this open problem
+
+758
+01:03:36,579 --> 01:03:40,619
+ looking into different gadgets, so committee-based inclusion
+
+759
+01:03:40,619 --> 01:03:43,579
+ list that increase even more the pressure
+
+760
+01:03:43,579 --> 01:03:47,420
+ to include transaction.
+
+761
+01:03:47,420 --> 01:03:50,920
+ And I think the key goal here is this idea of block co-creation.
+
+762
+01:03:50,920 --> 01:03:54,099
+ So you maybe have a very centralized layer
+
+763
+01:03:54,099 --> 01:03:58,719
+ making the blocks, but you're trying to bring back
+
+764
+01:03:58,719 --> 01:04:02,239
+ the force and the pressure of decentralization
+
+765
+01:04:02,239 --> 01:04:05,199
+ on the makeup of that block.
+
+766
+01:04:05,199 --> 01:04:08,819
+ And so you're really trying to get that transaction input
+
+767
+01:04:08,819 --> 01:04:12,099
+ on chain and get the users on chain
+
+768
+01:04:12,099 --> 01:04:14,679
+ without games being played.
+
+769
+01:04:16,860 --> 01:04:19,639
+ All right, yeah, that was a bit of a rough end,
+
+770
+01:04:19,639 --> 01:04:22,579
+ but I hope you enjoyed the presentation
+
+771
+01:04:22,579 --> 01:04:24,860
+ and do check out our work at the website.
+
+772
+01:04:27,380 --> 01:04:30,440
+ Awesome, thank you so much Barnaby.
+
+773
+01:04:30,440 --> 01:04:31,460
+ Yeah, it was great.
+
+774
+01:04:32,579 --> 01:04:36,659
+ It's a lot to digest with the inclusion links,
+
+775
+01:04:36,659 --> 01:04:40,159
+ rainbows taking, let's go all the way back to the ETBS.
+
+776
+01:04:40,159 --> 01:04:41,860
+ So you have some questions on that.
+
+777
+01:04:43,159 --> 01:04:46,420
+ And that is whether there are any existing mechanisms,
+
+778
+01:04:46,420 --> 01:04:50,659
+ any ideas for addressing the bypass ability in ETBS
+
+779
+01:04:50,659 --> 01:04:55,179
+ so that developers can still build with some external tool, yeah.
+
+780
+01:04:56,719 --> 01:04:57,219
+ Right.
+
+781
+01:04:57,759 --> 01:05:03,539
+ So there was a mechanism, I mean, there still is, still, I would say, a proposal,
+
+782
+01:05:03,659 --> 01:05:10,799
+ MEV burn, so the idea here was trying to constrain the beacon proposer to,
+
+783
+01:05:11,519 --> 01:05:15,819
+ they can't pick whatever builder they want or whatever execution proposer
+
+784
+01:05:15,820 --> 01:05:22,780
+ want. So the MEdBurn mechanism was using the power of the attesters who are the other parties
+
+785
+01:05:22,780 --> 01:05:29,260
+ involved in the consensus service to kind of observe the bids that are flying on some gossip
+
+786
+01:05:29,260 --> 01:05:36,700
+ channel and force the beacon proposer to choose a bid that maximizes the value. So that's one way to
+
+787
+01:05:36,699 --> 01:05:48,039
+ to resolve the credibility problem where the proposer is in control of choosing who the
+
+788
+01:05:48,039 --> 01:05:49,759
+ builder is.
+
+789
+01:05:49,759 --> 01:05:58,139
+ I think it's a difficult mechanism and there's been a lot written about it.
+
+790
+01:05:58,139 --> 01:06:02,879
+ One of the difficulties is the auction for the bidding rights.
+
+791
+01:06:02,880 --> 01:06:05,019
+ it's kind of happening at the same time
+
+792
+01:06:05,019 --> 01:06:06,860
+ as the block value is increasing.
+
+793
+01:06:06,860 --> 01:06:10,000
+ So the auction happens, and while the auction happens,
+
+794
+01:06:10,000 --> 01:06:11,880
+ you see more and more transactions trickling
+
+795
+01:06:11,880 --> 01:06:14,039
+ into the main pool.
+
+796
+01:06:14,039 --> 01:06:17,260
+ So you're kind of trying to bid on the value
+
+797
+01:06:17,260 --> 01:06:20,760
+ of like a value that just changes
+
+798
+01:06:20,760 --> 01:06:22,720
+ while the auction is happening.
+
+799
+01:06:22,720 --> 01:06:25,680
+ And this sort of circularity, in my opinion,
+
+800
+01:06:25,680 --> 01:06:28,059
+ makes the mechanism pretty tricky
+
+801
+01:06:28,059 --> 01:06:31,160
+ to operationalizing in practice.
+
+802
+01:06:31,159 --> 01:06:34,659
+ So I don't actually think the bypassability
+
+803
+01:06:34,659 --> 01:06:36,839
+ will be fully resolved.
+
+804
+01:06:36,839 --> 01:06:40,819
+ Like even if we look at execution ticket,
+
+805
+01:06:40,819 --> 01:06:44,079
+ yeah, we have this credible bid in a sense
+
+806
+01:06:44,079 --> 01:06:45,920
+ that we have people coming to market
+
+807
+01:06:45,920 --> 01:06:49,079
+ and telling whether they wanna buy the ticket or not.
+
+808
+01:06:49,079 --> 01:06:50,179
+ But once they have a ticket
+
+809
+01:06:50,179 --> 01:06:52,399
+ and once they become the proposer,
+
+810
+01:06:52,399 --> 01:06:55,980
+ they might still want to outsource the building
+
+811
+01:06:55,980 --> 01:06:57,199
+ to someone else.
+
+812
+01:06:57,199 --> 01:07:02,039
+ And so, yeah, I think in many, many different places
+
+813
+01:07:02,039 --> 01:07:05,679
+ that we don't really see the kind of trusted stack
+
+814
+01:07:05,679 --> 01:07:08,539
+ of MEV Boost disappearing.
+
+815
+01:07:08,539 --> 01:07:11,019
+ I guess it's very difficult to do so.
+
+816
+01:07:15,299 --> 01:07:16,739
+ Thank you so much.
+
+817
+01:07:16,739 --> 01:07:17,779
+ That's really great.
+
+818
+01:07:17,779 --> 01:07:20,679
+ The next question was to elaborate on the MEV Boost,
+
+819
+01:07:20,679 --> 01:07:22,399
+ which you already kind of did.
+
+820
+01:07:22,399 --> 01:07:24,579
+ So yeah, thanks so much for covering that.
+
+821
+01:07:24,579 --> 01:07:26,199
+ Okay.
+
+822
+01:07:26,199 --> 01:07:35,799
+ Yeah, yeah, yeah. But then more about the rainbow staking where it's interesting to
+
+823
+01:07:35,799 --> 01:07:43,219
+ be able to have sort of dressless rocket pool kind of staking pool, but what are the other
+
+824
+01:07:43,219 --> 01:07:52,719
+ implications, for example, on restaking? Because people here compare it to it sounds like enshrining
+
+825
+01:07:52,719 --> 01:08:02,539
+ I think it's very interesting, Parallels, and definitely I think a lot of these ideas
+
+826
+01:08:02,539 --> 01:08:08,279
+ are coming from also observing how risk-taking has developed on Ethereum and sort of like
+
+827
+01:08:08,279 --> 01:08:10,119
+ the ideas of people around it.
+
+828
+01:08:10,119 --> 01:08:16,260
+ So just like briefly, the aspect, risk-taking is like very deep and there's many ways to
+
+829
+01:08:16,260 --> 01:08:21,880
+ think about it, but the aspect that I think is relevant here is the idea of adding more
+
+830
+01:08:21,880 --> 01:08:25,039
+ protocol services in this permission this way.
+
+831
+01:08:25,039 --> 01:08:29,600
+ So, restaking is almost like you're writing services
+
+832
+01:08:29,600 --> 01:08:32,039
+ to what the validators are doing,
+
+833
+01:08:32,039 --> 01:08:33,920
+ but in a way that the Ethereum protocol
+
+834
+01:08:33,920 --> 01:08:35,260
+ that doesn't really see it.
+
+835
+01:08:35,260 --> 01:08:39,699
+ So, I don't know as a protocol that you've restaked
+
+836
+01:08:39,699 --> 01:08:43,640
+ to promise that you would provision some eigen DA
+
+837
+01:08:45,760 --> 01:08:49,300
+ bandwidth for data availability service,
+
+838
+01:08:49,300 --> 01:08:52,320
+ that this is not something that the protocol is aware of.
+
+839
+01:08:53,539 --> 01:08:56,699
+ What I'm describing here in a way
+
+840
+01:08:56,699 --> 01:09:00,320
+ is the ability to have this interface of,
+
+841
+01:09:00,320 --> 01:09:02,400
+ okay, you have different services
+
+842
+01:09:02,400 --> 01:09:05,520
+ that we could decide to plug in the future.
+
+843
+01:09:05,520 --> 01:09:07,940
+ For instance, we might think, okay,
+
+844
+01:09:07,940 --> 01:09:09,520
+ inclusionless is a good idea to have
+
+845
+01:09:09,520 --> 01:09:11,600
+ as a in-protocol service,
+
+846
+01:09:11,600 --> 01:09:14,060
+ and that goes into the light stack.
+
+847
+01:09:14,060 --> 01:09:16,500
+ Maybe there are services in the heavy stack
+
+848
+01:09:16,500 --> 01:09:18,579
+ that make sense, so economic security
+
+849
+01:09:18,579 --> 01:09:23,579
+ is mostly useful in my opinion for safety faults, so FFG.
+
+850
+01:09:25,079 --> 01:09:27,079
+ But there's been a lot of discussions
+
+851
+01:09:27,079 --> 01:09:28,199
+ around pre-confirmation.
+
+852
+01:09:28,199 --> 01:09:30,340
+ So these need economic security
+
+853
+01:09:30,340 --> 01:09:33,039
+ because you're trying to make this credible commitment
+
+854
+01:09:33,039 --> 01:09:37,420
+ of it's a promise that has value that I make,
+
+855
+01:09:37,420 --> 01:09:38,939
+ I pre-confirm your transaction
+
+856
+01:09:38,939 --> 01:09:42,720
+ and I promise you that it will be included in this block
+
+857
+01:09:42,720 --> 01:09:43,739
+ or in that rollup.
+
+858
+01:09:43,739 --> 01:09:45,460
+ So there are different things
+
+859
+01:09:45,460 --> 01:09:47,380
+ that require economic security.
+
+860
+01:09:47,380 --> 01:09:53,859
+ are different things that require more widely decentralized set of operators that don't
+
+861
+01:09:53,859 --> 01:10:04,819
+ necessarily need to be slashable. So yeah, I think what I'm describing here is a nice interface for
+
+862
+01:10:04,819 --> 01:10:12,659
+ plugging in these new services to the protocol in a way that mirrors the risk-taking services
+
+863
+01:10:12,659 --> 01:10:18,579
+ which are out of protocol. I'm still trying to think through the links between the two,
+
+864
+01:10:18,579 --> 01:10:23,380
+ I think it it goes probably a bit deeper than this, but there's definitely something there
+
+865
+01:10:23,380 --> 01:10:28,739
+ in terms of thinking of a protocol as trying to provide all of these services in a way.
+
+866
+01:10:31,380 --> 01:10:37,380
+ Thank you. The follow-up on this is whether you could expand a bit more on the heavy services,
+
+867
+01:10:37,380 --> 01:10:44,100
+ how to think about them, but also whether pre-confirmations will fall in this heavy state.
+
+868
+01:10:45,539 --> 01:10:51,460
+ Yeah, so I think the best way to think of a heavy service is to just observe what's currently
+
+869
+01:10:51,460 --> 01:10:59,779
+ on chain today. It's really just people doing the work of signing these votes, attestations,
+
+870
+01:10:59,779 --> 01:11:05,439
+ and getting the network to come to finality.
+
+871
+01:11:06,659 --> 01:11:08,880
+ What I'm saying in the post,
+
+872
+01:11:08,939 --> 01:11:10,519
+ or what I'm maybe advocating for,
+
+873
+01:11:10,619 --> 01:11:14,500
+ is we can add these new gadgets to Ethereum.
+
+874
+01:11:14,679 --> 01:11:17,539
+ So there are many proof-of-stake protocols out there
+
+875
+01:11:17,539 --> 01:11:20,639
+ in Cosmos, in Tezos, Cardano,
+
+876
+01:11:21,259 --> 01:11:24,039
+ that have different ways of doing things.
+
+877
+01:11:24,039 --> 01:11:27,380
+ And some of them have much less, let's say,
+
+878
+01:11:27,659 --> 01:11:29,519
+ bare-bones approach to staking.
+
+879
+01:11:29,520 --> 01:11:37,440
+ So one thing that is often reproached to Ethereum is you don't have in-protocol delegation. So that
+
+880
+01:11:37,440 --> 01:11:42,240
+ means this is where you have Lido, this is where you have all of these big pools living on top.
+
+881
+01:11:44,720 --> 01:11:50,400
+ There's many historical reasons. I think it was a semi-conscious choice to go in that direction,
+
+882
+01:11:52,080 --> 01:11:57,520
+ but that doesn't mean we have to stick to it. So there is this impetus of, okay,
+
+883
+01:11:57,520 --> 01:12:01,580
+ Maybe we need the protocol to do more about this,
+
+884
+01:12:01,580 --> 01:12:02,820
+ we need to enshrine more things.
+
+885
+01:12:02,820 --> 01:12:06,080
+ So again, we've like that same drive to,
+
+886
+01:12:06,080 --> 01:12:07,960
+ if we don't see it, we can't control it,
+
+887
+01:12:07,960 --> 01:12:10,280
+ and so let's try to enshrine.
+
+888
+01:12:10,280 --> 01:12:12,520
+ And so what I'm describing here
+
+889
+01:12:12,520 --> 01:12:16,520
+ is not what I would call enshrined liquid staking,
+
+890
+01:12:16,520 --> 01:12:19,500
+ because that, in my opinion, is not possible.
+
+891
+01:12:19,500 --> 01:12:22,280
+ Like you have to, to enshrine liquid staking
+
+892
+01:12:22,280 --> 01:12:23,840
+ or to enshrine something,
+
+893
+01:12:23,840 --> 01:12:25,520
+ I'll take Lido as an example,
+
+894
+01:12:25,520 --> 01:12:27,400
+ but it's true for all of them.
+
+895
+01:12:27,399 --> 01:12:33,719
+ you would have to enshrine the ability for the protocol to curate this set of node operators,
+
+896
+01:12:33,719 --> 01:12:40,759
+ and that introduces, in my opinion, things that may be going too far. But you could still enshrine
+
+897
+01:12:40,759 --> 01:12:47,159
+ gadgets that try to lower the barriers to entry for the market of liquid-staking protocols,
+
+898
+01:12:47,159 --> 01:12:54,039
+ so that make it more competitive, so that you try to prevent dominance of one single protocol that
+
+899
+01:12:54,039 --> 01:13:00,519
+ maybe has captured some edge. So leveling the playing field, adding all of these gadgets.
+
+900
+01:13:01,159 --> 01:13:07,960
+ Okay, you can have native delegation that can be made fungible into a basket of shells.
+
+901
+01:13:08,840 --> 01:13:14,439
+ I'm thinking of a liquid stacking module which exists in Cosmos here, and that I also mentioned
+
+902
+01:13:14,439 --> 01:13:21,079
+ in the post. So there are many ideas I think that we could borrow from other protocols.
+
+903
+01:13:21,079 --> 01:13:25,239
+ which ones are kind of the ones we should settle on
+
+904
+01:13:25,239 --> 01:13:29,399
+ i don't really know uh i also need to do more research myself
+
+905
+01:13:29,399 --> 01:13:33,479
+ uh into this but i'm just kind of excited to opening it up and and it's
+
+906
+01:13:33,479 --> 01:13:37,640
+ something that's been discussed quite a bit both on twitter and
+
+907
+01:13:37,640 --> 01:13:43,880
+ via this post by vitali mike donkrad harrison um so it does feel like there
+
+908
+01:13:43,880 --> 01:13:47,399
+ is some kind of rethinking of okay we should be doing
+
+909
+01:13:47,399 --> 01:13:50,840
+ something about it and and what i'm trying to say here is
+
+910
+01:13:51,079 --> 01:13:56,359
+ This is how we should be thinking about it when we are trying to do something about it.
+
+911
+01:13:56,359 --> 01:13:58,359
+ Thanks very much.
+
+912
+01:13:58,359 --> 01:14:01,500
+ This is a very interesting topic.
+
+913
+01:14:01,500 --> 01:14:05,300
+ There is another question on the differentiation between heavy and light.
+
+914
+01:14:05,300 --> 01:14:10,300
+ Like from what you're saying, I imagine that the heavy services would be kind of similar
+
+915
+01:14:10,300 --> 01:14:15,640
+ to what the Seekers are doing today, just like running the full stack basically with
+
+916
+01:14:15,640 --> 01:14:18,079
+ all the responsibilities.
+
+917
+01:14:18,079 --> 01:14:20,180
+ And this would be the higher yield.
+
+918
+01:14:20,180 --> 01:14:25,619
+ So the question is, what is actually the motivation to run it as the light?
+
+919
+01:14:27,280 --> 01:14:32,700
+ To follow the question, why wouldn't the heavy operator continue taking the capital
+
+920
+01:14:32,700 --> 01:14:36,400
+ and run it all as heavy, slashable capital if it's higher yield?
+
+921
+01:14:36,940 --> 01:14:40,600
+ What is the incentive to run it as light, since we know that disinterested
+
+922
+01:14:40,600 --> 01:14:45,400
+ delegators often don't pay heat to small differences in risk factors?
+
+923
+01:14:45,399 --> 01:14:54,279
+ And we know that solution givings rarely affect delegators since protocols often cover those
+
+924
+01:14:54,279 --> 01:14:55,279
+ events.
+
+925
+01:14:55,279 --> 01:15:00,359
+ Right, yeah, yeah, there's many layers to these questions.
+
+926
+01:15:00,359 --> 01:15:04,000
+ Maybe I'll go in the previous direction.
+
+927
+01:15:04,000 --> 01:15:10,159
+ So if there is some kind of insurance on the risk that you're taking, like if you're staking
+
+928
+01:15:10,159 --> 01:15:14,079
+ with someone and that person said, even if I get snatched, nothing bad will happen to
+
+929
+01:15:14,079 --> 01:15:19,840
+ you, that creates moral hazard, which is this idea of, okay, if I have insurance, I'm going
+
+930
+01:15:19,840 --> 01:15:22,640
+ to be more prone to maybe having accidents or surveillance.
+
+931
+01:15:22,640 --> 01:15:31,359
+ So it will definitely lower my perception of the risk I'm taking.
+
+932
+01:15:31,359 --> 01:15:36,939
+ This is not really something I think that the protocol can really address fundamentally.
+
+933
+01:15:36,939 --> 01:15:45,259
+ not going to let people report to the protocol, oh, this delegate or this operator is offering
+
+934
+01:15:45,259 --> 01:15:53,479
+ insurance, it wouldn't be credible, it would be very difficult to control.
+
+935
+01:15:53,479 --> 01:16:02,099
+ But I do think, yeah, in terms of a distinction between heavy operators and light operators,
+
+936
+01:16:02,100 --> 01:16:05,340
+ This is also, again, something that I posted pretty recently.
+
+937
+01:16:05,340 --> 01:16:08,120
+ There's a lot of unknown unknowns and questions
+
+938
+01:16:08,120 --> 01:16:11,820
+ that I'm not myself fully clear on.
+
+939
+01:16:11,820 --> 01:16:16,180
+ But I think what could happen is very much people
+
+940
+01:16:16,180 --> 01:16:18,360
+ who are heavy delegating, they wouldn't
+
+941
+01:16:18,360 --> 01:16:23,220
+ have to choose between heavy delegating and light delegating.
+
+942
+01:16:23,220 --> 01:16:27,160
+ They could do both in the sense that they
+
+943
+01:16:27,160 --> 01:16:29,300
+ could restate their heavy delegation
+
+944
+01:16:29,300 --> 01:16:31,360
+ into the light services.
+
+945
+01:16:31,359 --> 01:16:35,399
+ So it would still kind of provide this useful service
+
+946
+01:16:35,399 --> 01:16:38,079
+ of surfacing who are the light operators
+
+947
+01:16:38,079 --> 01:16:40,960
+ that are doing a good job at censorship resistance
+
+948
+01:16:40,960 --> 01:16:44,899
+ or at backstopping the heavy operators.
+
+949
+01:16:44,899 --> 01:16:48,179
+ So from the heavy delegate perspective,
+
+950
+01:16:48,179 --> 01:16:50,359
+ it wouldn't have to really choose.
+
+951
+01:16:53,599 --> 01:16:54,639
+ I'm not sure if I understood,
+
+952
+01:16:54,639 --> 01:16:57,579
+ but I think one part of the question was
+
+953
+01:16:57,579 --> 01:16:59,399
+ why wouldn't the heavy operators
+
+954
+01:16:59,399 --> 01:17:05,559
+ become light operators themselves and crowd out these solo stackers that we would want on the
+
+955
+01:17:05,559 --> 01:17:11,479
+ light operator stage. This is again very speculative and something I'm trying to think through.
+
+956
+01:17:12,759 --> 01:17:20,759
+ But the idea here would be, yeah, I might trust Lido or Coinbase with my assets when it comes to
+
+957
+01:17:20,759 --> 01:17:26,519
+ the heavy delegation, because, okay, they run their operations well, it's kind of like money
+
+958
+01:17:26,520 --> 01:17:34,520
+ on the line, etc. But when it comes to choosing a light operator, choosing who I back as the
+
+959
+01:17:34,520 --> 01:17:41,560
+ provider for all light services, I might use different signals. I might say, again,
+
+960
+01:17:41,560 --> 01:17:48,040
+ there's this guy on Twitter that always has good takes on how the network is doing, so I'm going to
+
+961
+01:17:48,040 --> 01:17:54,520
+ back them with my stake. It's almost like not staking in that regard. It really looks like
+
+962
+01:17:54,520 --> 01:17:59,520
+ it's like token curated membership in a way.
+
+963
+01:17:59,640 --> 01:18:01,040
+ I'm just trying to say,
+
+964
+01:18:01,040 --> 01:18:02,740
+ this site operator is doing a good job.
+
+965
+01:18:02,740 --> 01:18:05,700
+ So we can't have everyone on the network
+
+966
+01:18:05,700 --> 01:18:07,120
+ trying to make an inclusion list
+
+967
+01:18:07,120 --> 01:18:09,540
+ and that would be impossible to process.
+
+968
+01:18:09,540 --> 01:18:11,860
+ So we have still this leader selection problem
+
+969
+01:18:11,860 --> 01:18:14,360
+ of figuring out who are the people
+
+970
+01:18:14,360 --> 01:18:16,840
+ who should be making the list
+
+971
+01:18:16,840 --> 01:18:19,760
+ or who should be making messages for the protocol
+
+972
+01:18:19,760 --> 01:18:22,220
+ to read and to execute on.
+
+973
+01:18:22,220 --> 01:18:27,220
+ So how do we select these leaders when it comes to the heavy operations?
+
+974
+01:18:27,220 --> 01:18:32,220
+ As a staker with money on the line, I might select conservatively.
+
+975
+01:18:32,220 --> 01:18:41,220
+ I might say I really require credibility, which means I want to go to liquid-staking protocols that are credible.
+
+976
+01:18:41,220 --> 01:18:48,220
+ So GIDO, for instance, is kind of nice. It has both professional operators, in the future also solo operators.
+
+977
+01:18:48,220 --> 01:18:52,740
+ That to me it's pretty it shows resilience, so I am willing to put my money to them.
+
+978
+01:18:52,740 --> 01:18:58,360
+ But then when it comes to the light operators, maybe I have a very different preference function
+
+979
+01:18:58,360 --> 01:19:03,480
+ based on the fact that yeah, I'm looking for different things now it's not just a money
+
+980
+01:19:03,480 --> 01:19:04,480
+ problem it's in.
+
+981
+01:19:04,480 --> 01:19:08,740
+ Yeah, I'm not sure I there was like many points in that question.
+
+982
+01:19:08,740 --> 01:19:10,460
+ I hope I answered them.
+
+983
+01:19:10,460 --> 01:19:11,760
+ Mix it up.
+
+984
+01:19:11,760 --> 01:19:19,760
+ Nic, let us know if we didn't answer all the questions, but I'm sure you also have a chance to chat with Barnaby elsewhere.
+
+985
+01:19:19,760 --> 01:19:26,760
+ But yes, all answers, thank you Barnaby.
+
+986
+01:19:26,760 --> 01:19:39,760
+ This is all very fascinating. With the delegation and voting, it reminds me, I'm having flashbacks.
+
+987
+01:19:39,760 --> 01:19:45,539
+ Like many years ago, there was a big thing, delegate proof-of-stake, it was some chains
+
+988
+01:19:45,539 --> 01:19:48,920
+ where it implemented it, like 2017 or something like that.
+
+989
+01:19:48,920 --> 01:19:58,800
+ So what is it maybe difference between those deep post designs and what would become from
+
+990
+01:19:58,800 --> 01:20:00,460
+ the proof-of-stake here?
+
+991
+01:20:00,460 --> 01:20:01,460
+ Yeah.
+
+992
+01:20:01,460 --> 01:20:02,460
+ Right.
+
+993
+01:20:02,460 --> 01:20:11,020
+ Right. I mean it's hard to say because again, I'm not claiming a specific design is better than others.
+
+994
+01:20:11,020 --> 01:20:19,619
+ I do think we want to, yeah, there's a strong will to keep this idea.
+
+995
+01:20:19,619 --> 01:20:22,340
+ It's as permissionless as possible to become a validator.
+
+996
+01:20:22,340 --> 01:20:30,340
+ So today it is permissionless, like anybody who has 32 it can just come in and stake it and be activated as a validator.
+
+997
+01:20:30,340 --> 01:20:37,619
+ At the time of, I think, when Proof-of-Stake was starting, I was just joining VEF actually,
+
+998
+01:20:37,619 --> 01:20:43,640
+ and there were discussions of, okay, early delegated Proof-of-Stake networks, they exhibit
+
+999
+01:20:43,640 --> 01:20:51,039
+ very strong power laws, you have most of the stake concentrating to a few big trusted providers.
+
+1000
+01:20:51,039 --> 01:20:56,060
+ Obviously it was very early anyways in Proof-of-Stake, and many things have changed since then.
+
+1001
+01:20:56,060 --> 01:21:02,940
+ So yeah, I feel like there's just like designs that they still look like delegated covers
+
+1002
+01:21:02,940 --> 01:21:09,440
+ take in the sense of the protocol has native representation of there are people who are
+
+1003
+01:21:09,440 --> 01:21:15,420
+ operators and there are people who are delegators, but it can be more subtle and more nuanced
+
+1004
+01:21:15,420 --> 01:21:17,760
+ about the shape of these agreements.
+
+1005
+01:21:17,760 --> 01:21:23,140
+ So it can say, and it's one thing that really good sticking module does is when I delegate
+
+1006
+01:21:23,140 --> 01:21:31,520
+ my stake to someone, I can mint that act of delegation as a share, and I can then provide
+
+1007
+01:21:31,520 --> 01:21:36,640
+ that share to a liquid staking protocol who's going to aggregate all of these shares and
+
+1008
+01:21:36,640 --> 01:21:40,079
+ kind of curate a basket of shares.
+
+1009
+01:21:40,079 --> 01:21:46,200
+ So based on its own, let's say, internal business logic of saying, oh, I'm getting too many
+
+1010
+01:21:46,199 --> 01:21:51,099
+ shells of that single operator, so I don't want more, because then I rely too much on
+
+1011
+01:21:51,099 --> 01:21:52,099
+ them.
+
+1012
+01:21:52,099 --> 01:22:00,420
+ So, there's a lot of heterogeneity in even what people call delegated proof-of-stake.
+
+1013
+01:22:00,420 --> 01:22:05,000
+ There's protocols also who have stuff that's called liquid-staking, but I don't think it's
+
+1014
+01:22:05,000 --> 01:22:09,739
+ exactly like liquid-staking protocols as we understand them in Ethereum.
+
+1015
+01:22:09,739 --> 01:22:15,760
+ So, yeah, I feel like a lot of the effort will be to translate some of these ideas into
+
+1016
+01:22:16,199 --> 01:22:22,519
+ proposal that actually makes sense in the Ethereum context. There's been work on this,
+
+1017
+01:22:22,519 --> 01:22:32,199
+ so Ericsson has a really nice post on that. It's something I'm pretty interested in. I would call
+
+1018
+01:22:32,199 --> 01:22:40,279
+ that the staking user experience, almost. How do I, as a staker, interact with the protocol
+
+1019
+01:22:40,279 --> 01:22:48,599
+ mechanisms and how should these protocol mechanisms be thought about in ways that preserve
+
+1020
+01:22:48,599 --> 01:22:55,960
+ values that the Ethereum community kind of looks for in its protocol which is, yeah,
+
+1021
+01:22:55,960 --> 01:23:03,880
+ as permissionless as possible but also useful. Amazing, thank you, thank you, Barabi, yeah it's
+
+1022
+01:23:03,880 --> 01:23:08,759
+ like I understand it's more vague definition there of like the depots or something like that
+
+1023
+01:23:08,760 --> 01:23:15,239
+ So yeah, thank you so much for answering that. Sure. We have a comment and question from Nagu,
+
+1024
+01:23:15,239 --> 01:23:26,360
+ who, by the way, wrote on our Protocol Studies Wiki whole page about ePBS, and he wants to thank
+
+1025
+01:23:26,360 --> 01:23:32,039
+ you for the article on PBS, where you said PBS is design philosophy, that it's beautiful piece
+
+1026
+01:23:32,039 --> 01:23:40,199
+ support. So he asked how long did it take to write it. And a follow-up question is whether
+
+1027
+01:23:40,199 --> 01:23:45,640
+ you have any advice on how to think about these open problems, how to analyze them, where to
+
+1028
+01:23:47,159 --> 01:23:50,519
+ study more, what to study. These are very fascinating problems.
+
+1029
+01:23:52,279 --> 01:24:00,039
+ Yeah, so I guess the first question was how long did it take me to write it? Yeah, if I remember,
+
+1030
+01:24:00,039 --> 01:24:06,800
+ about, not that long actually. So, and this is probably pretty specific to me. And I know
+
+1031
+01:24:06,800 --> 01:24:13,560
+ that many people work differently. I tend to be very quiet for a while, just accumulate
+
+1032
+01:24:13,560 --> 01:24:20,779
+ input for a long time. And then like the dam bursts and suddenly like I can just write
+
+1033
+01:24:20,779 --> 01:24:26,539
+ the whole thing. And I think this piece, I wrote the bulk of it on like a Sunday afternoon
+
+1034
+01:24:26,539 --> 01:24:31,819
+ when things kind of just clicked like the different ways then of course it took it took me
+
+1035
+01:24:31,819 --> 01:24:38,140
+ more time to to polish it i what's really nice with this community is the wide network of
+
+1036
+01:24:38,140 --> 01:24:43,739
+ collaborators and people being really available so i think i sent it to people in my team people
+
+1037
+01:24:43,739 --> 01:24:49,100
+ outside of my team to kind of give comments so that cycle also takes a bit of time but
+
+1038
+01:24:49,739 --> 01:24:54,539
+ yeah i feel like when i started being able to articulate the way these different proposals
+
+1039
+01:24:54,539 --> 01:25:02,619
+ kind of click together, then it was not very long to write it. And kind of same for the Pepsi post,
+
+1040
+01:25:02,619 --> 01:25:08,060
+ kind of same for the Rainbow Staking, just at some point it just comes in and then it would take me a
+
+1041
+01:25:08,060 --> 01:25:13,739
+ day to just put the whole thing on paper, and then more time to review and really polish it.
+
+1042
+01:25:14,300 --> 01:25:23,739
+ So yeah, so how do you get to that or how do you get more? I think the best way is to read
+
+1043
+01:25:23,739 --> 01:25:31,019
+ as much as possible, like just any paper that has been written or post or blog post or talks.
+
+1044
+01:25:31,019 --> 01:25:36,539
+ There's so many talks that are available. What's really nice is like, nice and also sometimes
+
+1045
+01:25:36,539 --> 01:25:40,939
+ terrifying is the wealth of information on all of these things, it doesn't make sense.
+
+1046
+01:25:41,500 --> 01:25:48,699
+ And one advice I often give is to make your own way through it. Don't be afraid to
+
+1047
+01:25:48,699 --> 01:25:51,859
+ to repeat arguments that people have made,
+
+1048
+01:25:51,859 --> 01:25:54,539
+ like even write them for yourself,
+
+1049
+01:25:54,539 --> 01:25:56,739
+ but always try to put your own spin on it.
+
+1050
+01:25:56,739 --> 01:26:01,079
+ So when I was doing the Epi 1559, I was simulating things.
+
+1051
+01:26:01,079 --> 01:26:02,599
+ So I'm not like a great programmer,
+
+1052
+01:26:02,599 --> 01:26:04,439
+ but I can do basic stuff.
+
+1053
+01:26:04,439 --> 01:26:06,579
+ And so my way of understanding it Epi 1559
+
+1054
+01:26:06,579 --> 01:26:09,779
+ was let me code like a little toy examples
+
+1055
+01:26:09,779 --> 01:26:12,300
+ and progressively make them richer and richer.
+
+1056
+01:26:13,460 --> 01:26:15,739
+ If you're more like an abstract person,
+
+1057
+01:26:15,739 --> 01:26:17,859
+ just try to do things.
+
+1058
+01:26:17,859 --> 01:26:18,899
+ I'm also very visual,
+
+1059
+01:26:18,899 --> 01:26:21,119
+ so I like to put all these boxes and stuff.
+
+1060
+01:26:22,840 --> 01:26:24,119
+ If you're more into data,
+
+1061
+01:26:24,119 --> 01:26:26,319
+ find a dataset that's relevant to it
+
+1062
+01:26:26,319 --> 01:26:28,939
+ and maybe just explore it,
+
+1063
+01:26:28,939 --> 01:26:30,340
+ like try to find,
+
+1064
+01:26:30,340 --> 01:26:33,139
+ can you prove empirically stuff
+
+1065
+01:26:33,139 --> 01:26:35,939
+ that people are only talking about kind of theoretically?
+
+1066
+01:26:35,939 --> 01:26:38,859
+ So yeah, the best way to go about it
+
+1067
+01:26:38,859 --> 01:26:41,920
+ is just narrow your focus to the specific thing
+
+1068
+01:26:41,920 --> 01:26:43,619
+ that you think it's kind of like curious
+
+1069
+01:26:43,619 --> 01:26:47,279
+ So I don't think people have understood it quite well enough,
+
+1070
+01:26:47,279 --> 01:26:51,019
+ and I need to bring more of that understanding,
+
+1071
+01:26:51,019 --> 01:26:53,979
+ and then just decide on what's the best angle of attack.
+
+1072
+01:26:53,979 --> 01:26:57,599
+ And that's really personal in terms of what suits you best.
+
+1073
+01:26:57,599 --> 01:27:01,920
+ And last thing is don't hesitate to reach out, both myself
+
+1074
+01:27:01,920 --> 01:27:04,760
+ and anybody I work with I know.
+
+1075
+01:27:04,760 --> 01:27:07,659
+ We obviously have limited bandwidth,
+
+1076
+01:27:07,659 --> 01:27:10,140
+ and sometimes my Telegram also is exploding,
+
+1077
+01:27:10,140 --> 01:27:12,699
+ but generally, I'm always happy to help
+
+1078
+01:27:12,699 --> 01:27:16,199
+ in as much capacity as I can to review
+
+1079
+01:27:16,199 --> 01:27:20,220
+ or to even just get on the phone and shoot through IDs.
+
+1080
+01:27:22,519 --> 01:27:25,380
+ Amazing, yeah, thank you so much for that Barnaby.
+
+1081
+01:27:25,380 --> 01:27:29,399
+ And also you are in our Discord server there,
+
+1082
+01:27:29,399 --> 01:27:32,279
+ so I believe people might think you there.
+
+1083
+01:27:32,279 --> 01:27:34,460
+ Thank you, if you have any questions.
+
+1084
+01:27:34,460 --> 01:27:37,519
+ I think this is a great point to wrap up.
+
+1085
+01:27:37,519 --> 01:27:38,760
+ We have maybe a few more minutes,
+
+1086
+01:27:38,760 --> 01:27:41,539
+ but I think we can finish it here
+
+1087
+01:27:41,539 --> 01:27:43,460
+ because we have no more questions.
+
+1088
+01:27:43,460 --> 01:27:46,340
+ And I think we should open it up
+
+1089
+01:27:46,340 --> 01:27:50,100
+ and then kind of move it over so we can do it in Discord.
+
+1090
+01:27:50,100 --> 01:27:51,260
+ Yeah.
+
+1091
+01:27:51,260 --> 01:27:52,220
+ Awesome.
+
+1092
+01:27:52,220 --> 01:27:53,920
+ Yeah, thanks so much, Barnaby, again.
+
+1093
+01:27:53,920 --> 01:27:55,760
+ I really appreciate your time.
+
+1094
+01:27:55,760 --> 01:27:58,760
+ I really appreciate you guiding us through all of this,
+
+1095
+01:27:58,760 --> 01:28:00,539
+ because it's all very new.
+
+1096
+01:28:00,539 --> 01:28:03,819
+ It's all quite complex and hard to grasp.
+
+1097
+01:28:03,819 --> 01:28:06,699
+ So yeah, thank you so much.
+
+1098
+01:28:06,699 --> 01:28:07,760
+ I really appreciate it.
+
+1099
+01:28:07,760 --> 01:28:09,539
+ And yeah, we'll see you.
+
+1100
+01:28:09,539 --> 01:28:15,380
+ will see you around the discord and uh the protocol yes sounds good thank you both and
+
+1101
+01:28:15,380 --> 01:28:20,659
+ thank you to the people who attended thanks so much barnaby it's always fascinating to
+
+1102
+01:28:20,659 --> 01:28:21,279
+ to hear you speak.
+
+1103
+01:28:22,479 --> 01:28:22,880
+ Good.
+
+1104
+01:28:23,300 --> 01:28:23,639
+ Bye-bye.
+
+1105
+01:28:24,319 --> 01:28:24,599
+ Awesome.
+
+1106
+01:28:25,180 --> 01:28:25,519
+ Bye-bye.
+
+1107
+01:28:25,779 --> 01:28:26,899
+ We'll see you next week.
+
+1108
+01:28:50,659 --> 01:29:00,659
+ So
+

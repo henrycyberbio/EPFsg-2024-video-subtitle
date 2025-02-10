@@ -1,0 +1,4264 @@
+1
+00:00:30,000 --> 00:00:59,980
+ Thank you.
+
+2
+00:01:30,000 --> 00:01:59,000
+ ¶¶
+
+3
+00:02:00,000 --> 00:02:10,000
+ ¶¶
+
+4
+00:02:10,000 --> 00:02:39,000
+ ¶¶
+
+5
+00:02:40,000 --> 00:03:09,979
+ Thank you.
+
+6
+00:03:10,000 --> 00:03:39,979
+ Thank you.
+
+7
+00:03:40,000 --> 00:04:09,979
+ Thank you.
+
+8
+00:04:10,000 --> 00:04:39,980
+ Thank you.
+
+9
+00:04:40,000 --> 00:05:09,980
+ Thank you.
+
+10
+00:05:10,000 --> 00:05:17,819
+ All right, welcome to week five of the Ethereum Protocol Fellowship Study Group.
+
+11
+00:05:18,639 --> 00:05:20,139
+ Thanks for joining us.
+
+12
+00:05:20,899 --> 00:05:27,879
+ Today's presentation will be by Dom here on the Ethereum roadmap
+
+13
+00:05:27,879 --> 00:05:32,240
+ and some of the research avenues that are taking place currently.
+
+14
+00:05:33,639 --> 00:05:36,920
+ Mario, are we able to hear you right now?
+
+15
+00:05:37,079 --> 00:05:39,199
+ Yeah, sure. Hey, everyone, can you hear me?
+
+16
+00:05:39,420 --> 00:05:39,639
+ Awesome.
+
+17
+00:05:40,000 --> 00:06:10,000
+ yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes yes
+
+18
+00:06:10,000 --> 00:06:14,160
+ new improvements and features and lots of interesting research we need to figure out
+
+19
+00:06:14,160 --> 00:06:15,620
+ before we get there.
+
+20
+00:06:15,620 --> 00:06:20,019
+ So I'm very thankful to have Domothee here today to tell us all about that.
+
+21
+00:06:20,019 --> 00:06:21,339
+ So yeah, the stage is yours.
+
+22
+00:06:21,339 --> 00:06:22,339
+ All right.
+
+23
+00:06:22,339 --> 00:06:23,339
+ Thanks for having me.
+
+24
+00:06:23,339 --> 00:06:24,339
+ All right.
+
+25
+00:06:24,339 --> 00:06:26,339
+ So you see the first slide.
+
+26
+00:06:26,339 --> 00:06:28,740
+ All right, perfect.
+
+27
+00:06:28,740 --> 00:06:30,459
+ So hi, everyone.
+
+28
+00:06:30,459 --> 00:06:35,959
+ My legal birth name is Domothee, and I like to describe myself as the mouthpiece of the
+
+29
+00:06:35,959 --> 00:06:39,660
+ Ethereum Foundation research R&D.
+
+30
+00:06:39,660 --> 00:06:46,340
+ So today I'm gonna walk you through the whole roadmap, so this whole, the whole diagram
+
+31
+00:06:46,340 --> 00:06:52,360
+ that you see from Vitalik that he updates on a yearly basis, which is, at first glance
+
+32
+00:06:52,360 --> 00:06:58,660
+ it's kind of a mess, so I'm gonna hopefully make some sense of it, having, going through
+
+33
+00:06:58,660 --> 00:07:04,360
+ all the different urges, so, hats up to Vitalik for basically outlining this whole presentation
+
+34
+00:07:04,360 --> 00:07:05,819
+ for me for free,
+
+35
+00:07:05,819 --> 00:07:08,420
+ cause I'm just gonna go down the list
+
+36
+00:07:08,420 --> 00:07:10,860
+ and from left to right and top to bottom.
+
+37
+00:07:12,840 --> 00:07:15,160
+ So yeah, at first glance it's kind of a mess
+
+38
+00:07:15,160 --> 00:07:16,379
+ from the outside perspective.
+
+39
+00:07:16,379 --> 00:07:20,680
+ So I really wanna get,
+
+40
+00:07:20,680 --> 00:07:22,040
+ like if I do my job right,
+
+41
+00:07:22,040 --> 00:07:24,120
+ you're gonna take away from this presentation
+
+42
+00:07:24,120 --> 00:07:26,180
+ that it's actually a very beautiful roadmap
+
+43
+00:07:26,180 --> 00:07:28,480
+ with all the pieces merging together
+
+44
+00:07:28,480 --> 00:07:31,439
+ to form a beautiful blockchain.
+
+45
+00:07:31,439 --> 00:07:40,000
+ So yeah, I had a little TLDR for all the urges, so I'm gonna go one by one.
+
+46
+00:07:40,000 --> 00:07:46,939
+ It started with the merge, that we all know it's the single most important event in Ethereum history.
+
+47
+00:07:46,939 --> 00:07:54,980
+ The TLDR is better proof of stake, and you'll see that I got all these slides.
+
+48
+00:07:54,980 --> 00:08:04,980
+ So the beacon chain launch, going from the beacon chain to the merge, I'm just stealing diagrams here with the execution layer and the beacon chain.
+
+49
+00:08:04,980 --> 00:08:15,980
+ Before the merge, we had this quote-unquote empty beacon chain where all the responsibility was just validators voting.
+
+50
+00:08:15,980 --> 00:08:22,980
+ My cat's going to be annoying throughout this whole presentation. I apologize in advance.
+
+51
+00:08:22,980 --> 00:08:29,060
+ um yeah so the beacon chain has almost a million active validators so that's a lot of economic
+
+52
+00:08:29,060 --> 00:08:35,620
+ security that was enhanced with the merge compared to i've seen comments in the chat
+
+53
+00:08:37,620 --> 00:08:42,899
+ compared to proof of stay proof of work before where like the whole there was no penalty as
+
+54
+00:08:42,899 --> 00:08:48,420
+ such it was just you waste hash rate and you're not gonna get rewarded whereas now you both get
+
+55
+00:08:48,419 --> 00:08:55,139
+ rewarded and you get penalties if you if you're like malicious or do anything
+
+56
+00:08:55,139 --> 00:09:00,959
+ that's not specified in the the beacon chain spec and yeah that's a hundred and
+
+57
+00:09:00,959 --> 00:09:04,559
+ ten billion dollars of economic security
+
+58
+00:09:05,579 --> 00:09:10,659
+ two words I'm just gonna go very brush the sync committee the like-minded
+
+59
+00:09:10,659 --> 00:09:16,620
+ protocol very very quickly it's basically having a million valid
+
+60
+00:09:16,620 --> 00:09:25,799
+ signatures to verify every epoch, and I think it's 512th of that, every single slot.
+
+61
+00:09:27,200 --> 00:09:33,039
+ It's very heavy for like client that don't want to verify everything, so instead we have this
+
+62
+00:09:33,039 --> 00:09:41,100
+ rotation of 512 validators that they have extra weight for what is the head of the chain,
+
+63
+00:09:41,100 --> 00:09:46,800
+ and that's what like clients basically trust in there like it's not a trustless fashion as much
+
+64
+00:09:46,800 --> 00:09:53,940
+ as verifying every single signatures but it is it is a pretty good protocol if you want to have a
+
+65
+00:09:53,940 --> 00:10:02,040
+ very light client know what block is inside the canonical chain so um there you can see this link
+
+66
+00:10:02,040 --> 00:10:09,040
+ that i added in the in the notes for on the on the github about a16z's helios client because they
+
+67
+00:10:09,039 --> 00:10:14,259
+ introduced the like client protocol very succinctly and it they actually build a
+
+68
+00:10:14,259 --> 00:10:19,860
+ client that uses that and yeah it's saying it just just keep that in the
+
+69
+00:10:19,860 --> 00:10:22,419
+ back of your mind because it's seen committee and the like client protocol
+
+70
+00:10:22,419 --> 00:10:26,199
+ it's gonna come back a little bit later
+
+71
+00:10:27,639 --> 00:10:33,179
+ another item in the future is secret leader election that it's gonna enhance
+
+72
+00:10:33,179 --> 00:10:38,179
+ it's the, like, basically the leader is the validator
+
+73
+00:10:38,579 --> 00:10:42,479
+ that is in charge of proposing a block at that very slot.
+
+74
+00:10:42,479 --> 00:10:45,839
+ And right now it's kind of a known flaw in the beacon chain
+
+75
+00:10:45,839 --> 00:10:48,679
+ that this leader is known ahead of time.
+
+76
+00:10:50,859 --> 00:10:54,219
+ Like you can, in theory it is an attack vector
+
+77
+00:10:54,219 --> 00:10:56,819
+ where like a large pool or malicious validator
+
+78
+00:10:56,819 --> 00:10:59,959
+ could correlate IPs with specific validators
+
+79
+00:10:59,959 --> 00:11:02,399
+ and then launch it denial service attack
+
+80
+00:11:02,399 --> 00:11:03,759
+ on that specific validator,
+
+81
+00:11:03,759 --> 00:11:07,199
+ so they wouldn't be able to propose a block
+
+82
+00:11:07,199 --> 00:11:11,199
+ and then all the MVV would flow into the next block.
+
+83
+00:11:11,199 --> 00:11:13,899
+ And right now, we haven't seen this sort of attack
+
+84
+00:11:13,899 --> 00:11:16,000
+ or anything near that so far,
+
+85
+00:11:16,000 --> 00:11:18,600
+ so knock on wood it's not gonna happen,
+
+86
+00:11:18,600 --> 00:11:20,579
+ but if it does happen,
+
+87
+00:11:20,579 --> 00:11:23,100
+ we're gonna have this item
+
+88
+00:11:23,100 --> 00:11:25,059
+ is gonna start being way more priority
+
+89
+00:11:25,059 --> 00:11:28,759
+ and we know the protocol called the whisk,
+
+90
+00:11:28,759 --> 00:11:32,000
+ which basically is every validator adds a random bit
+
+91
+00:11:32,000 --> 00:11:39,519
+ have had their own bit of randomness to this list of potential validators and
+
+92
+00:11:39,519 --> 00:11:44,879
+ and they're like grossly oversimplified is that you nobody knows who the next
+
+93
+00:11:44,879 --> 00:11:49,500
+ leader is except that leader himself and they reveal themselves as they reveal a
+
+94
+00:11:49,500 --> 00:11:53,360
+ block so it wouldn't be possible to attack them ahead of time because you
+
+95
+00:11:53,360 --> 00:11:56,980
+ wouldn't know who you have to attack
+
+96
+00:11:56,980 --> 00:12:06,220
+ There's the little line in the middle, so that's the present.
+
+97
+00:12:06,220 --> 00:12:09,740
+ Everything on the left of the line is what's done, and everything on the right is what's
+
+98
+00:12:09,740 --> 00:12:12,560
+ it's the progress bars, basically.
+
+99
+00:12:12,560 --> 00:12:17,560
+ So secret leader election is halfway done, because we know how to do it, but there's
+
+100
+00:12:17,560 --> 00:12:21,800
+ no urge to implement it, and it's not a high priority.
+
+101
+00:12:21,799 --> 00:12:24,019
+ And then, like I said, unless we start seeing
+
+102
+00:12:24,019 --> 00:12:27,819
+ actual serious attacks, then we know what to implement.
+
+103
+00:12:30,779 --> 00:12:33,399
+ Afterwards, I'm not sure in week three
+
+104
+00:12:33,399 --> 00:12:36,599
+ on the consensus layer, how much was talked about finality,
+
+105
+00:12:36,599 --> 00:12:40,519
+ but basically it's this new concept added to the chain
+
+106
+00:12:40,519 --> 00:12:45,519
+ after the merge, where after 12.6 minutes or two epochs,
+
+107
+00:12:46,240 --> 00:12:48,439
+ you have this block that's called finalized.
+
+108
+00:12:49,319 --> 00:12:50,799
+ What is it, green, blue, pink?
+
+109
+00:12:50,799 --> 00:12:52,799
+ I think you'd have to ask Vitalik for that.
+
+110
+00:12:52,799 --> 00:12:56,759
+ I think the blue are the big ticket items
+
+111
+00:12:56,759 --> 00:12:59,539
+ and the green are just like normal items,
+
+112
+00:12:59,539 --> 00:13:04,279
+ but like these three ones just lead to the big deal of SSF
+
+113
+00:13:04,279 --> 00:13:06,620
+ and then the pink is like,
+
+114
+00:13:06,620 --> 00:13:10,939
+ I think it's entirely for Quantum stuff.
+
+115
+00:13:10,939 --> 00:13:13,919
+ Yeah, it's just like for future.
+
+116
+00:13:17,279 --> 00:13:18,819
+ Yeah, so finality.
+
+117
+00:13:18,820 --> 00:13:21,200
+ After 12.6 minutes, the block is finalized.
+
+118
+00:13:21,200 --> 00:13:24,200
+ And then if you wanna get this block out of the chain,
+
+119
+00:13:24,200 --> 00:13:25,800
+ that's gonna cost you a lot.
+
+120
+00:13:25,800 --> 00:13:29,640
+ Like the bare minimum would be a third of the stake
+
+121
+00:13:29,640 --> 00:13:31,740
+ would have to just evaporate instantly,
+
+122
+00:13:31,740 --> 00:13:34,160
+ then it would be something very detectable.
+
+123
+00:13:34,160 --> 00:13:38,860
+ So it's something that we wanna enhance
+
+124
+00:13:38,860 --> 00:13:42,080
+ and have this finality happens every single slot,
+
+125
+00:13:42,080 --> 00:13:46,680
+ every 12 seconds or possibly longer than 12 seconds
+
+126
+00:13:46,679 --> 00:13:51,079
+ if we increase the slot time for the way to get there.
+
+127
+00:13:55,239 --> 00:13:57,919
+ I don't think sync committees are slashed,
+
+128
+00:13:57,919 --> 00:14:01,299
+ but they have heavier rewards.
+
+129
+00:14:01,299 --> 00:14:04,239
+ I'm not sure on the penalty side, that's a good question.
+
+130
+00:14:09,899 --> 00:14:12,059
+ Okay, so yeah, so there's a,
+
+131
+00:14:12,059 --> 00:14:14,620
+ SSF is an active area of research,
+
+132
+00:14:14,620 --> 00:14:16,779
+ And there's a few ways to get there.
+
+133
+00:14:16,779 --> 00:14:19,899
+ Most of it has to do with the number of signatures
+
+134
+00:14:19,899 --> 00:14:23,000
+ we have to process on the beacon chain.
+
+135
+00:14:23,000 --> 00:14:26,220
+ So right now there's a million active validators,
+
+136
+00:14:26,220 --> 00:14:29,879
+ which would be way too heavy to do in a single slot.
+
+137
+00:14:29,879 --> 00:14:34,220
+ So what we do, we can have fewer validators
+
+138
+00:14:34,220 --> 00:14:38,019
+ as with max EBIT, I'm gonna go over later,
+
+139
+00:14:38,019 --> 00:14:39,080
+ or we can have,
+
+140
+00:14:39,080 --> 00:14:51,700
+ Or you can have fewer active validators, like rotating cap, like instead of having a million
+
+141
+00:14:51,700 --> 00:14:56,100
+ validators active all at once, you can have just a fraction of that, and they periodically
+
+142
+00:14:56,100 --> 00:15:01,900
+ go in and out of sleep, which would mean that the cost of attacking finality would go down,
+
+143
+00:15:01,900 --> 00:15:08,200
+ but you would still need at least a majority of the stake, if not a super majority, but
+
+144
+00:15:08,200 --> 00:15:16,759
+ The actual slashing would go down if the active validators involved are fewer.
+
+145
+00:15:16,759 --> 00:15:22,500
+ There's an ETH research post on Vitalik that has a few solution paths for that.
+
+146
+00:15:22,500 --> 00:15:28,600
+ One of them was having big validators, like two to 13 validators instead of a million,
+
+147
+00:15:28,600 --> 00:15:36,740
+ so it's going from a million down to 8,192, and then having some sort of distributed validators
+
+148
+00:15:36,740 --> 00:15:41,259
+ this tech to keep the goal of permission-less validating.
+
+149
+00:15:42,440 --> 00:15:44,639
+ All right, I'm gonna let it go again then.
+
+150
+00:15:47,039 --> 00:15:48,240
+ That's gonna shut him up.
+
+151
+00:15:50,960 --> 00:15:53,139
+ Yeah, signature aggregation scheme is another one
+
+152
+00:15:53,139 --> 00:15:55,799
+ that I am basically grossly oversimplifying
+
+153
+00:15:55,799 --> 00:15:57,899
+ for the sake of time and simplicity.
+
+154
+00:15:58,879 --> 00:16:03,220
+ But right now, I think it's in the next slide, yeah.
+
+155
+00:16:03,220 --> 00:16:07,259
+ On the left, you have this whole subnet of validators
+
+156
+00:16:07,259 --> 00:16:09,800
+ and bit field, like if that gets aggregated
+
+157
+00:16:09,800 --> 00:16:11,040
+ into a single signature.
+
+158
+00:16:11,040 --> 00:16:15,080
+ So instead of validating every single signatures,
+
+159
+00:16:15,080 --> 00:16:17,759
+ you can collapse them into a single signature.
+
+160
+00:16:17,759 --> 00:16:21,360
+ That's just the sum of each individual validator signature.
+
+161
+00:16:22,399 --> 00:16:24,019
+ And for that, you need a bit field.
+
+162
+00:16:24,019 --> 00:16:29,019
+ So it's a one, if the affected validators did sign or not,
+
+163
+00:16:30,500 --> 00:16:31,700
+ or attest to the block.
+
+164
+00:16:31,700 --> 00:16:37,940
+ So, in the future, this slide is twofold.
+
+165
+00:16:37,940 --> 00:16:44,900
+ The first part is having this quantum-proof beacon chain, because what we use today is
+
+166
+00:16:44,900 --> 00:16:50,740
+ known to be vulnerable to quantum computers, so everything that relies on elliptic curve
+
+167
+00:16:50,740 --> 00:16:55,240
+ cryptography, namely the VLS signatures that we use on the beacon chain, that's going to
+
+168
+00:16:55,240 --> 00:17:01,020
+ have to go away if and when we get scalable quantum computers, otherwise there's a whole
+
+169
+00:17:01,019 --> 00:17:10,859
+ mess of problems that can happen. And yeah, again, Vitalik has this post on stark aggregation,
+
+170
+00:17:10,859 --> 00:17:17,740
+ because starks, for those who don't know, it's like a succinct zero-knowledge proof
+
+171
+00:17:18,619 --> 00:17:24,619
+ that relies entirely on hashes, and it's known that quantum computers can't mess with hashes,
+
+172
+00:17:24,619 --> 00:17:27,919
+ So if you just aggregate stuff with proofs
+
+173
+00:17:27,919 --> 00:17:30,699
+ that someone signed,
+
+174
+00:17:30,699 --> 00:17:33,399
+ we can have a quantum proof beacon chain
+
+175
+00:17:33,399 --> 00:17:36,899
+ as well as more of a less organized,
+
+176
+00:17:36,899 --> 00:17:40,039
+ and you see it's kind of chaotic on the right
+
+177
+00:17:40,039 --> 00:17:42,559
+ where everyone, validators aggregate signatures
+
+178
+00:17:42,559 --> 00:17:45,079
+ as they receive them until we get to the end.
+
+179
+00:17:47,199 --> 00:17:51,579
+ And then we get the final aggregated signature
+
+180
+00:17:51,579 --> 00:17:54,459
+ or rather a proof that every single validator voted
+
+181
+00:17:54,460 --> 00:17:56,059
+ with the bit field.
+
+182
+00:17:56,059 --> 00:18:00,519
+ And that's again, like quantum stuff aside,
+
+183
+00:18:00,519 --> 00:18:02,700
+ just aggregation would be cool to have
+
+184
+00:18:03,900 --> 00:18:06,460
+ because it's very hard problems
+
+185
+00:18:06,460 --> 00:18:09,000
+ to have these bits fields converge together
+
+186
+00:18:09,000 --> 00:18:11,440
+ when you, one of the previous proofs
+
+187
+00:18:11,440 --> 00:18:13,200
+ already had a validator signature
+
+188
+00:18:13,200 --> 00:18:14,799
+ then you want to aggregate them.
+
+189
+00:18:16,600 --> 00:18:18,840
+ I think that's it for the merge.
+
+190
+00:18:18,840 --> 00:18:23,740
+ I went over very quickly over every single items.
+
+191
+00:18:23,740 --> 00:18:26,359
+ If there are some questions, I can take some time to ask them.
+
+192
+00:18:26,620 --> 00:18:27,359
+ I'll show you my cat.
+
+193
+00:18:27,680 --> 00:18:29,400
+ He's the one who's been making all the noises.
+
+194
+00:18:40,900 --> 00:18:42,079
+ Fungible orange cat.
+
+195
+00:18:42,660 --> 00:18:43,759
+ They are very fungible.
+
+196
+00:18:46,160 --> 00:18:46,799
+ My heart.
+
+197
+00:18:48,299 --> 00:18:49,599
+ He just wants attention.
+
+198
+00:18:49,599 --> 00:18:57,899
+ all right next up is the surge which is uh in my opinion more interesting because it's like
+
+199
+00:18:57,899 --> 00:18:59,859
+ there's it's
+
+200
+00:19:00,939 --> 00:19:07,419
+ yeah the surge is uh gonna have more data availability for roll-offs and i'm
+
+201
+00:19:07,419 --> 00:19:13,099
+ gonna again grossly oversimplify what that means with all the polynomial magic involved
+
+202
+00:19:13,099 --> 00:19:23,099
+ So first of all, roll-ups from 10,000 feet, we have to understand what we mean by roll-ups and why Ethereum took a roll-up-centric roadmap.
+
+203
+00:19:23,099 --> 00:19:33,099
+ So basically, the scaling Ethereum, the goal has always been some form of sharding where instead of having every validator check the entire chain,
+
+204
+00:19:33,099 --> 00:19:42,099
+ then we would have shards like mini-blockchains where every validator is in charge of a smaller subset of the blockchain.
+
+205
+00:19:42,099 --> 00:19:53,219
+ But it turns out, not only is that very hard to do, but also once we do it, roll-ups are going to be way more mature and ready to scale.
+
+206
+00:19:53,859 --> 00:19:57,879
+ And they're not going to use these shards as much as we hope they would.
+
+207
+00:19:58,000 --> 00:20:03,139
+ So instead, what we do is we're going to say, okay, we're not going to scale execution just yet.
+
+208
+00:20:03,179 --> 00:20:05,119
+ We're going to focus only to data.
+
+209
+00:20:05,119 --> 00:20:12,899
+ And then this data is going to be scalable and converted to layer two execution on rollups.
+
+210
+00:20:13,179 --> 00:20:30,559
+ And the thing that's really cool is that it turns this honest majority assumption where like at least 51% of validators have to be honest into a single one of N where it only takes one participant that's honest to make sure that the rollups are participating honestly.
+
+211
+00:20:30,559 --> 00:20:33,799
+ So there's two brands of roll-ups,
+
+212
+00:20:34,000 --> 00:20:35,359
+ optimistic and zero knowledge.
+
+213
+00:20:35,839 --> 00:20:39,119
+ The optimistic one is it's pretty simple
+
+214
+00:20:39,119 --> 00:20:40,319
+ to wrap your head around.
+
+215
+00:20:40,460 --> 00:20:44,079
+ Basically, every transaction is bashed onto layer one
+
+216
+00:20:44,079 --> 00:20:45,919
+ and they're all assumed to be valid
+
+217
+00:20:45,919 --> 00:20:48,159
+ without being checked one by one.
+
+218
+00:20:48,279 --> 00:20:50,659
+ So like they're optimistically assuming
+
+219
+00:20:50,659 --> 00:20:52,379
+ that the transactions are valid.
+
+220
+00:20:52,579 --> 00:20:53,879
+ But if they're not valid,
+
+221
+00:20:53,960 --> 00:20:56,000
+ then someone can just take the data and say,
+
+222
+00:20:56,059 --> 00:20:58,259
+ hey, the sequencer is evil.
+
+223
+00:20:58,259 --> 00:21:00,419
+ He tried to print himself a bunch of data
+
+224
+00:21:00,420 --> 00:21:05,420
+ or steal funds without having the private key involved.
+
+225
+00:21:05,600 --> 00:21:08,620
+ So there's some kind of fraud proofs on layer one
+
+226
+00:21:08,620 --> 00:21:10,180
+ that's gonna rectify this,
+
+227
+00:21:10,279 --> 00:21:12,800
+ but only when there's disagreements.
+
+228
+00:21:12,800 --> 00:21:16,680
+ So it's kind of like having a legal system
+
+229
+00:21:16,680 --> 00:21:21,360
+ where you have contracts that are enforced by a court,
+
+230
+00:21:21,539 --> 00:21:23,640
+ but in reality, the mere threat
+
+231
+00:21:23,640 --> 00:21:25,580
+ of being able to enforce a contract
+
+232
+00:21:25,580 --> 00:21:28,960
+ is enough to have everyone participate honestly,
+
+233
+00:21:28,960 --> 00:21:32,920
+ because otherwise every single contract going to court
+
+234
+00:21:32,920 --> 00:21:35,299
+ every single time would not scale well as a society.
+
+235
+00:21:35,480 --> 00:21:39,039
+ So that's kind of the analogy that made it click for me early on.
+
+236
+00:21:40,299 --> 00:21:44,740
+ And zero-knowledge roll-ups are a little bit more cryptographically involved
+
+237
+00:21:44,740 --> 00:21:47,460
+ where you have these succinct proofs
+
+238
+00:21:47,460 --> 00:21:51,100
+ that are just compressed the entire execution at layer two
+
+239
+00:21:51,100 --> 00:21:53,900
+ into a short proof that can be verified by layer one.
+
+240
+00:21:53,900 --> 00:22:05,800
+ and and in both cases you need to have both all the roll-up data available on layer one like you
+
+241
+00:22:05,800 --> 00:22:10,600
+ know on optimistic roll-ups you need to be able to have the data to be able to challenge someone
+
+242
+00:22:10,600 --> 00:22:17,440
+ that's malicious and for both case also you want to be able to force the transaction inclusion so
+
+243
+00:22:17,440 --> 00:22:22,300
+ like if you have your funds on a roll-up that that has a sequencer that wants to censor you
+
+244
+00:22:22,299 --> 00:22:24,799
+ then you can go through the layer one contract
+
+245
+00:22:24,799 --> 00:22:27,799
+ and force your funds to go back to layer one
+
+246
+00:22:27,799 --> 00:22:29,399
+ or exit to a different rollup.
+
+247
+00:22:29,399 --> 00:22:34,399
+ So yes, so that's the rollups for 10,000 feet.
+
+248
+00:22:36,259 --> 00:22:38,759
+ And I see a question about converting L1 data
+
+249
+00:22:38,759 --> 00:22:40,019
+ to L2 execution.
+
+250
+00:22:40,019 --> 00:22:45,019
+ That's it's kind of like a hand wavy thing to say it's like
+
+251
+00:22:45,659 --> 00:22:48,899
+ layer one offers data on these blob space
+
+252
+00:22:48,899 --> 00:22:51,440
+ that I'm gonna go over in the next slide.
+
+253
+00:22:51,440 --> 00:22:53,000
+ And that's what roll-ups use.
+
+254
+00:22:53,000 --> 00:22:55,480
+ They just take all the execution off chain.
+
+255
+00:22:55,480 --> 00:23:00,620
+ That's verified, like verified very quickly on layer one, but the
+
+256
+00:23:00,620 --> 00:23:05,980
+ verification relies only on like mostly on data rather than actual execution.
+
+257
+00:23:05,980 --> 00:23:09,019
+ So, uh, I'm not sure how to explain that.
+
+258
+00:23:09,019 --> 00:23:13,259
+ Like, uh, it's simpler than that because you have to have this kind of mental
+
+259
+00:23:13,259 --> 00:23:19,519
+ model over data and execution and layer one, layer two, but that's the, that's
+
+260
+00:23:19,519 --> 00:23:21,799
+ a roll up, roll up some 10,000 fees.
+
+261
+00:23:21,799 --> 00:23:25,059
+ So I'm not, I'm not just grossly oversimplifying a lot of stuff
+
+262
+00:23:25,400 --> 00:23:26,619
+ in this whole presentation.
+
+263
+00:23:28,039 --> 00:23:29,119
+ Um, yeah.
+
+264
+00:23:29,180 --> 00:23:29,379
+ Okay.
+
+265
+00:23:29,379 --> 00:23:31,400
+ I have a slide about the training wheels on roll-ups.
+
+266
+00:23:31,400 --> 00:23:37,099
+ So just to be upfront that there's still a lot of like, uh, a lot of risk involved
+
+267
+00:23:37,099 --> 00:23:42,920
+ in the roll-ups today when you can see all the stuff on l2b.com, like right now
+
+268
+00:23:42,980 --> 00:23:48,500
+ there, we would love to have roll-ups fully immutable and like mature, no,
+
+269
+00:23:48,500 --> 00:23:51,039
+ no permissioned elements whatsoever,
+
+270
+00:23:51,240 --> 00:23:53,380
+ no multisig and limited governance.
+
+271
+00:23:55,599 --> 00:23:58,440
+ The trade-off space is huge for roll-ups,
+
+272
+00:23:58,660 --> 00:24:03,319
+ and the endgame is that it's going to be as trustless as Layer 1,
+
+273
+00:24:03,460 --> 00:24:05,140
+ but today it's not quite there yet,
+
+274
+00:24:05,299 --> 00:24:07,420
+ but this is what we're aiming for.
+
+275
+00:24:10,319 --> 00:24:12,759
+ All right, so before we go to the 4844,
+
+276
+00:24:12,759 --> 00:24:14,900
+ which is the big thing from last week,
+
+277
+00:24:14,900 --> 00:24:22,000
+ I need to explain quickly what is data availability sampling, and you're going to have to bear with me for that one
+
+278
+00:24:22,000 --> 00:24:30,920
+ because it's a very cool concept. It's very involved with a lot of math, but it's worth it if you put in some effort
+
+279
+00:24:30,920 --> 00:24:33,900
+ to understand just what I'm talking about.
+
+280
+00:24:34,860 --> 00:24:40,680
+ So data availability sampling is all about answering the question, is the data available?
+
+281
+00:24:40,680 --> 00:24:47,660
+ Remember, if you have an optimistic rollup, you need to have the data to prevent censorship
+
+282
+00:24:47,660 --> 00:24:52,299
+ and bad stuff from making malicious sequencers.
+
+283
+00:24:52,299 --> 00:24:56,900
+ If we know that the data is available, then we know that the rollup is safe and someone
+
+284
+00:24:56,900 --> 00:24:59,060
+ can challenge a sequencer.
+
+285
+00:24:59,060 --> 00:25:03,539
+ The naive way is to download all the data, because implicitly, if you were able to download
+
+286
+00:25:03,539 --> 00:25:10,100
+ all the data, then that means it's available.
+
+287
+00:25:10,099 --> 00:25:11,659
+ But that doesn't scale very well.
+
+288
+00:25:11,659 --> 00:25:14,079
+ We want to have way more data on layer one.
+
+289
+00:25:14,079 --> 00:25:21,079
+ So instead, what we're going to do is take this data, make it a polynomial equation,
+
+290
+00:25:21,079 --> 00:25:27,219
+ extend it by evaluating that equation at more points, and then use what's called the polynomial
+
+291
+00:25:27,219 --> 00:25:30,079
+ commitment scheme, which is in the next slide.
+
+292
+00:25:30,079 --> 00:25:32,079
+ And from there, you can do random sampling.
+
+293
+00:25:32,079 --> 00:25:37,939
+ So don't worry, I'm just going to go over all these steps one by one.
+
+294
+00:25:37,940 --> 00:25:42,740
+ this is the the idea is that you know how two points make a line and three points make it
+
+295
+00:25:42,740 --> 00:25:50,740
+ parabola and then in the case of blobs 496 point 4096 points make that big polynomial
+
+296
+00:25:51,779 --> 00:25:56,740
+ and i have this very simple example of like where the data is one three two two that's
+
+297
+00:25:57,299 --> 00:26:03,140
+ extended into a cubic equation and then you can just evaluate it at four more points that gives
+
+298
+00:26:03,140 --> 00:26:05,640
+ it's U7-21-48-92.
+
+299
+00:26:06,500 --> 00:26:09,759
+ And from there you have these eight points
+
+300
+00:26:09,759 --> 00:26:11,740
+ and you know that any four of these points
+
+301
+00:26:11,740 --> 00:26:14,040
+ are enough to reconstruct the same polynomial
+
+302
+00:26:14,040 --> 00:26:15,700
+ and then you can just reevaluate it
+
+303
+00:26:15,700 --> 00:26:18,900
+ and get the 1322 data back,
+
+304
+00:26:18,900 --> 00:26:21,380
+ which is the first piece of insight is that
+
+305
+00:26:21,380 --> 00:26:24,600
+ 50% of the extended data is enough
+
+306
+00:26:24,600 --> 00:26:26,259
+ to recover 100% of the data.
+
+307
+00:26:26,259 --> 00:26:28,160
+ So that's one of the thing to keep in mind
+
+308
+00:26:28,160 --> 00:26:32,140
+ for the next slide as we delve into this
+
+309
+00:26:32,140 --> 00:26:34,420
+ other big polynomial commitment skills.
+
+310
+00:26:34,420 --> 00:26:39,420
+ So everything in it research relies on polynomials.
+
+311
+00:26:40,259 --> 00:26:41,800
+ There's this magic everywhere.
+
+312
+00:26:41,800 --> 00:26:45,020
+ And yeah, it's kept going over the camera now.
+
+313
+00:26:46,920 --> 00:26:49,520
+ Yeah, so I'm taking the same cubic equation
+
+314
+00:26:49,520 --> 00:26:53,780
+ and basically you're gonna have to bear with me again
+
+315
+00:26:53,780 --> 00:26:57,280
+ on this black box function commit,
+
+316
+00:26:57,280 --> 00:26:59,460
+ which is kind of like a hash,
+
+317
+00:26:59,460 --> 00:27:02,340
+ but with fancier properties,
+
+318
+00:27:02,340 --> 00:27:05,380
+ but it takes all of these big polynomial
+
+319
+00:27:05,380 --> 00:27:06,799
+ with thousands of coefficients,
+
+320
+00:27:06,799 --> 00:27:10,360
+ and then it just compresses it into a single few bytes,
+
+321
+00:27:10,360 --> 00:27:13,000
+ like, yeah, like a hash that's known.
+
+322
+00:27:13,000 --> 00:27:14,940
+ And all the nodes know this commitments,
+
+323
+00:27:14,940 --> 00:27:18,220
+ and this is what they're gonna use to validate proof,
+
+324
+00:27:18,220 --> 00:27:19,660
+ what we call opening proofs.
+
+325
+00:27:22,240 --> 00:27:26,160
+ And yeah, so I have like this bullet point
+
+326
+00:27:26,160 --> 00:27:28,920
+ where your node can just ask for a random data point.
+
+327
+00:27:28,920 --> 00:27:32,360
+ So you pick between 1 and 8, and in my example, just pick 3,
+
+328
+00:27:32,500 --> 00:27:36,860
+ and then you ask the network or a validator that claims to have the data,
+
+329
+00:27:37,480 --> 00:27:39,560
+ and you say, give me the third data point,
+
+330
+00:27:39,640 --> 00:27:41,460
+ and then you receive the value 2.
+
+331
+00:27:42,600 --> 00:27:46,600
+ So the validator that you're receiving 2
+
+332
+00:27:46,600 --> 00:27:51,259
+ claims that the polynomial P evaluated at 3 is equal to 2,
+
+333
+00:27:52,100 --> 00:27:54,759
+ but not only that, he gives you a proof pi,
+
+334
+00:27:54,759 --> 00:27:58,980
+ and that's what you use to verify against the commitment
+
+335
+00:27:58,980 --> 00:28:05,140
+ to be satisfied that P of three is in fact equal to two.
+
+336
+00:28:05,220 --> 00:28:07,299
+ So you don't need to evaluate the whole commitment,
+
+337
+00:28:08,019 --> 00:28:08,839
+ the whole polynomial,
+
+338
+00:28:09,059 --> 00:28:11,460
+ because that's thousands upon thousands of coefficients.
+
+339
+00:28:12,160 --> 00:28:13,339
+ It takes too much time.
+
+340
+00:28:13,440 --> 00:28:15,460
+ So instead you just rely on these proofs.
+
+341
+00:28:17,180 --> 00:28:18,980
+ And remember from last slide,
+
+342
+00:28:19,099 --> 00:28:22,960
+ 50% of the data is enough to recover 100% of the data.
+
+343
+00:28:22,960 --> 00:28:36,960
+ So it's kind of like a little game where you can think if I'm a malicious validator and I want to convince you that I published all of the data, then you're going to ask me for a random point that I can't predict.
+
+344
+00:28:37,579 --> 00:28:44,340
+ And if I'm able to give you the data and the proof, then it means that at least this sample was available.
+
+345
+00:28:45,600 --> 00:28:51,960
+ And if I only publish 1% of the data, that's not enough, right?
+
+346
+00:28:51,960 --> 00:28:57,920
+ it's going to be a 1% chance that the sample you asked me for just happens to be one of those that
+
+347
+00:28:57,920 --> 00:29:04,440
+ I did publish. So if I want to maximize my chance of fooling you into believing that data is
+
+348
+00:29:04,440 --> 00:29:10,559
+ available when it's actually not, yeah, I'm going to have to publish something like 49.9% of the
+
+349
+00:29:10,559 --> 00:29:18,279
+ data so that you can't reconstruct the whole data. So you can think in the worst case scenario,
+
+350
+00:29:18,279 --> 00:29:23,000
+ your sample had a one in two chance of being,
+
+351
+00:29:23,180 --> 00:29:25,940
+ like just happening to be in the half
+
+352
+00:29:25,940 --> 00:29:27,559
+ that the data that I did publish.
+
+353
+00:29:28,279 --> 00:29:31,799
+ So that's not enough to be satisfied.
+
+354
+00:29:32,039 --> 00:29:34,019
+ So you just ask for another random data point
+
+355
+00:29:34,019 --> 00:29:35,019
+ that I can't predict.
+
+356
+00:29:35,099 --> 00:29:37,539
+ And then if it happens to be in the half
+
+357
+00:29:37,539 --> 00:29:38,420
+ that I did publish,
+
+358
+00:29:38,619 --> 00:29:41,819
+ then both samples are gonna compound to 25%.
+
+359
+00:29:41,819 --> 00:29:45,319
+ And then you ask for another sample that's 12.5%.
+
+360
+00:29:45,319 --> 00:29:47,660
+ And after just 30 samples,
+
+361
+00:29:47,660 --> 00:29:53,900
+ you see it's a it's a one in a billion chance of being fooled so it's at some
+
+362
+00:29:53,900 --> 00:29:59,900
+ point it's just not it's not practical to say okay I'm satisfied I didn't
+
+363
+00:29:59,900 --> 00:30:04,300
+ download the whole data I only did 30 samples but it's enough to convince me
+
+364
+00:30:04,300 --> 00:30:09,420
+ that the data is available so this is basically the the crux of data sampling
+
+365
+00:30:09,420 --> 00:30:12,259
+ that we're going to use to scale this data availability.
+
+366
+00:30:18,100 --> 00:30:23,279
+ And things that are important to know is that this proof by is very short
+
+367
+00:30:23,279 --> 00:30:25,960
+ compared to the thousands of coefficients.
+
+368
+00:30:27,039 --> 00:30:31,039
+ Verifying it is also very short in terms of computing power required.
+
+369
+00:30:31,980 --> 00:30:37,560
+ And those 30 symbols, they're independent of how much data is actually there.
+
+370
+00:30:37,559 --> 00:30:44,099
+ So even if it's just one megabyte or a thousand terabytes, those 30 samples give you that same one in a billion chance.
+
+371
+00:30:44,200 --> 00:30:46,899
+ So it's kind of a constant.
+
+372
+00:30:48,659 --> 00:30:54,500
+ It's like it's like a magical thing where it's just 30 samples enough, no matter how much data was actually there.
+
+373
+00:30:56,359 --> 00:30:56,559
+ And.
+
+374
+00:30:57,839 --> 00:31:06,980
+ Yeah, the node is was able to answer this question, is the data available just by doing a few sample checks and being satisfied without having to.
+
+375
+00:31:07,559 --> 00:31:11,000
+ get the the whole burden of downloading all of it which is the
+
+376
+00:31:12,599 --> 00:31:15,879
+ the very simple way to do it that we do presently in the blockchain
+
+377
+00:31:19,319 --> 00:31:26,039
+ and with that we can go back to eip 4844 which was just activated on mainnet recently which is
+
+378
+00:31:26,039 --> 00:31:33,559
+ the the big thing it sets the stage for this big sampling that i just talked about but right now
+
+379
+00:31:33,559 --> 00:31:39,559
+ there's no big sampling going on it we're still in that that non-fancy we need to prove meme
+
+380
+00:31:39,559 --> 00:31:45,079
+ and the above we're relying on every node downloading every single blob but the way
+
+381
+00:31:45,079 --> 00:31:50,039
+ it's constructed is that we're already doing the polynomial magic uh polynomial magic with the
+
+382
+00:31:50,039 --> 00:31:58,119
+ commitment scheme which is uh we're relying on kcg for those who want to dive deeper into it it's a
+
+383
+00:31:58,119 --> 00:32:03,159
+ it's a relatively simple uh cryptographic construction if you're willing to
+
+384
+00:32:03,559 --> 00:32:07,059
+ ignore pairings and just take them at face value.
+
+385
+00:32:07,059 --> 00:32:11,019
+ But yes, since we're downloading everything,
+
+386
+00:32:11,019 --> 00:32:14,559
+ we have to be conservative in terms of bandwidth and storage.
+
+387
+00:32:14,559 --> 00:32:17,259
+ So we started with three blocks per block
+
+388
+00:32:17,259 --> 00:32:19,259
+ with a maximum of six.
+
+389
+00:32:19,259 --> 00:32:23,019
+ And this is priced like EIP for 1,559,
+
+390
+00:32:23,019 --> 00:32:25,119
+ where if you have more than three in a block,
+
+391
+00:32:25,119 --> 00:32:27,759
+ then the next block is gonna be more expensive
+
+392
+00:32:27,759 --> 00:32:30,159
+ until it averages to three.
+
+393
+00:32:30,160 --> 00:32:34,680
+ Right now, we're doing basically an average of one blob per block,
+
+394
+00:32:35,440 --> 00:32:40,080
+ 1.16 on the screenshot from last night, but it varies a lot.
+
+395
+00:32:40,660 --> 00:32:46,400
+ And because of that, it's very cheap where blobs are still cost a single way,
+
+396
+00:32:46,519 --> 00:32:49,640
+ so that's 10 to the negative 18.
+
+397
+00:32:49,779 --> 00:32:55,220
+ I think it's an octillionth of an ETH, or rather a billionth of a Gway.
+
+398
+00:32:55,220 --> 00:32:59,420
+ So it's incredibly cheap to post data on chain right now.
+
+399
+00:32:59,420 --> 00:33:23,200
+ I put this screenshot from Etherscan from, I think it was Arbitrum, that posted six blobs in a single transaction, and it cost them 786,000 wigs, which is like .000131 wigs per blob, which is basically nothing.
+
+400
+00:33:23,200 --> 00:33:28,740
+ oh yeah we're going to the quantum after that
+
+401
+00:33:28,740 --> 00:33:39,640
+ is the blob fee also burns yes it's like the base fee the the blob fee is used to manage
+
+402
+00:33:39,640 --> 00:33:44,600
+ congestion so it's good it's also burned and you can go on ultrasound.money and they have
+
+403
+00:33:44,600 --> 00:33:50,519
+ a little widget and i think right now we're around five gui total has been burned by roll
+
+404
+00:33:50,519 --> 00:33:56,839
+ up some data so we're still under congested which is cool we have nearly cheap nearly free
+
+405
+00:33:56,839 --> 00:34:07,480
+ transactions on layer twos um yeah afterwards we have the the same quantum stuff on the on the far
+
+406
+00:34:07,480 --> 00:34:15,239
+ future because right now okay we have the the kcg commitment scheme is like almost perfect except
+
+407
+00:34:15,239 --> 00:34:20,759
+ for the fact that it's not quantum proof and it required a trusted setup so i don't know who
+
+408
+00:34:20,759 --> 00:34:28,439
+ participated here in chat but we had over 140 000 contributors which is once again a one of n
+
+409
+00:34:28,439 --> 00:34:35,879
+ assumptions so we needed to get a random secret in a way that the secret has to be thrown away
+
+410
+00:34:35,879 --> 00:34:42,839
+ in the future after you generated it otherwise you can make fake proofs and as long as a single
+
+411
+00:34:42,840 --> 00:34:49,320
+ participant of those 140,000 contributors was honest, and that's enough for the whole thing,
+
+412
+00:34:49,320 --> 00:34:55,880
+ to be honest. So it's called a trusted setup, but as far as it's concerned,
+
+413
+00:34:55,880 --> 00:35:01,240
+ there's no trust involved, it's not 140,000 contributors is a lot.
+
+414
+00:35:05,400 --> 00:35:10,840
+ Yeah, so in the future, we want to hot swap KCG for something based either on starts or lattices,
+
+415
+00:35:10,840 --> 00:35:17,480
+ which is another crazy cryptography thing that's quantum computers can't break it's probably going
+
+416
+00:35:17,480 --> 00:35:26,680
+ to be starts again because it's always starts and and the other other item in the far future or
+
+417
+00:35:27,240 --> 00:35:33,480
+ depending on how deeply involved we want to get is cross roll up into rebubble interoperability
+
+418
+00:35:35,079 --> 00:35:40,200
+ so like we know that liquidity fragmentation and it's like a it's a whole thing right now
+
+419
+00:35:40,199 --> 00:35:45,000
+ Now with roll-ups, we want to have a more seamless experience
+
+420
+00:35:45,000 --> 00:35:46,179
+ where it's all abstracted away.
+
+421
+00:35:46,179 --> 00:35:49,199
+ So there's a lot of stuff you can look up,
+
+422
+00:35:49,199 --> 00:35:51,859
+ like on based roll-ups and pre-confirmations,
+
+423
+00:35:51,859 --> 00:35:53,339
+ shared sequencing.
+
+424
+00:35:53,339 --> 00:35:56,139
+ I think some of it will come back later in other urges.
+
+425
+00:35:58,659 --> 00:36:01,279
+ Just gonna check questions while I drink water.
+
+426
+00:36:05,799 --> 00:36:09,139
+ Where is all this stuff going on, on the CL or the EL?
+
+427
+00:36:09,139 --> 00:36:15,379
+ The consensus layer receives the blobs and validates the availability.
+
+428
+00:36:15,859 --> 00:36:19,719
+ So you have this function on the consensus layer that's just a boolean,
+
+429
+00:36:19,719 --> 00:36:27,019
+ is data available, and the validators on the consensus layer,
+
+430
+00:36:27,199 --> 00:36:31,019
+ they receive the blobs, and then by the fact that they receive the blob,
+
+431
+00:36:31,119 --> 00:36:33,819
+ they know it's available, so this function is satisfied,
+
+432
+00:36:33,960 --> 00:36:35,319
+ and then they can attach to a blog.
+
+433
+00:36:35,320 --> 00:36:39,740
+ So on the execution layer, all you see is the kcg commitments,
+
+434
+00:36:39,940 --> 00:36:43,180
+ so this big commit function for polynomials.
+
+435
+00:36:44,380 --> 00:36:47,539
+ And, like, of course it has to match with the actual blob data,
+
+436
+00:36:47,660 --> 00:36:49,640
+ so that's another check that validators do,
+
+437
+00:36:49,860 --> 00:36:52,720
+ but the data lives on the consensus layer
+
+438
+00:36:52,720 --> 00:36:56,800
+ until it's pruned 18 days later or something like that.
+
+439
+00:36:58,860 --> 00:36:59,420
+ Yeah.
+
+440
+00:37:00,539 --> 00:37:03,400
+ Yeah, so now we're at the scourge,
+
+441
+00:37:03,400 --> 00:37:13,559
+ which is a one that I'm not too I'm gonna go over quickly over each item but yeah it has to
+
+442
+00:37:13,559 --> 00:37:18,079
+ all of it has to do with MEV pretty much and staking economics and
+
+443
+00:37:18,079 --> 00:37:24,380
+ so I'm just have a few slides here like talking about PBS proposal builder separation
+
+444
+00:37:24,380 --> 00:37:36,840
+ basically it's all the research on MEV concluded that MEV markets are inevitable so we have to
+
+445
+00:37:36,840 --> 00:37:43,740
+ at least tame it so solo stakers can still have access to this yield and not have to pool or
+
+446
+00:37:44,260 --> 00:37:51,960
+ be like be out earned by specialized validators so we take all the centralized elements and we
+
+447
+00:37:51,960 --> 00:37:56,579
+ put them into this corner that are builders and these builders are free to
+
+448
+00:37:56,579 --> 00:38:01,920
+ specialize and be super beefy and deal with any of the extractions and have the
+
+449
+00:38:01,920 --> 00:38:08,220
+ best optimization algorithms best bandwidth best everything and we have
+
+450
+00:38:08,220 --> 00:38:13,260
+ myth myth boost right now which is out of protocol PBS which kind of like it's
+
+451
+00:38:13,260 --> 00:38:16,560
+ band-aid solution until we can actually enshrine it.
+
+452
+00:38:22,560 --> 00:38:28,060
+ Yeah, I have it here, the sentence about minimizing the choices validators have to make.
+
+453
+00:38:28,060 --> 00:38:35,660
+ So if it weren't for PBS and MefBoost, then you would have, validators have so much choices
+
+454
+00:38:35,660 --> 00:38:41,760
+ to make about how to extract the best amount of value, which is bad because it hurts the
+
+455
+00:38:41,760 --> 00:38:43,480
+ solo stakers that can't specialize.
+
+456
+00:38:43,480 --> 00:38:49,140
+ So instead you minimize the choices made by stakers by simply having to
+
+457
+00:38:49,140 --> 00:38:51,420
+ pick the highest bid from builders.
+
+458
+00:38:52,020 --> 00:38:57,420
+ So it's kind of how we tame the decentralization concerns around MEV.
+
+459
+00:38:58,640 --> 00:39:02,520
+ And yeah, so that's MEVboost.
+
+460
+00:39:02,580 --> 00:39:05,980
+ And in the future, we want to enshrine that into the protocol directly.
+
+461
+00:39:05,980 --> 00:39:09,180
+ So we won't have to rely on trusted relays.
+
+462
+00:39:09,179 --> 00:39:17,359
+ and and we have like better goodies like burning the mbv to smooth the staking yield which is
+
+463
+00:39:17,359 --> 00:39:23,460
+ another whole topic in itself because once we have enshrined pbs then the protocol
+
+464
+00:39:23,460 --> 00:39:29,319
+ becomes aware of how much mbv is actually happening on top and like in the application
+
+465
+00:39:29,319 --> 00:39:35,000
+ layer as a it's just kind of crazy when you think about it you would be able to have some sort of
+
+466
+00:39:35,000 --> 00:39:44,440
+ mfee oracle inside the evm to to do all sorts of crazy things and and the other item is inclusion
+
+467
+00:39:44,440 --> 00:39:50,840
+ list which are making big uh big noise right now to be included in the next fork hopefully
+
+468
+00:39:50,840 --> 00:39:56,840
+ which would put which would make validators like solo stakers in charge of forcing builders to
+
+469
+00:39:56,840 --> 00:40:02,280
+ include certain transactions so that even though builders are centralized they're still restrained
+
+470
+00:40:02,280 --> 00:40:10,660
+ in what they can do, as in, they are restrained in the transactions they have to include,
+
+471
+00:40:10,660 --> 00:40:18,780
+ so they wouldn't be able to do stuff like we've seen with the MEV OFAC sentient transactions
+
+472
+00:40:18,780 --> 00:40:23,400
+ in the past, it's still a big concern today.
+
+473
+00:40:23,400 --> 00:40:27,820
+ And yeah, I have something very quickly about the endgame block production, which you can
+
+474
+00:40:27,820 --> 00:40:33,740
+ see on the italics blog that it's it's basically a like i cropped the the diagram but the three
+
+475
+00:40:33,740 --> 00:40:39,580
+ arrows come from various path that a blockchain can take and they all end up there if you want
+
+476
+00:40:39,580 --> 00:40:46,860
+ to scale to like billions of users which is which is that block production has to be centralized
+
+477
+00:40:46,860 --> 00:40:51,500
+ but validation of blocks is going to be decentralized and there's going to be enter
+
+478
+00:40:51,500 --> 00:40:57,260
+ anti-censorship protection like inclusion lists and possibly more little gadgets we can have and
+
+479
+00:40:57,820 --> 00:41:03,100
+ What kind of transactions will be in the inclusion list?
+
+480
+00:41:03,100 --> 00:41:09,580
+ Just any transaction, like a validator just sees transactions in the MemPool and puts
+
+481
+00:41:09,580 --> 00:41:16,559
+ them in the inclusion list, and then the builder is forced to include them.
+
+482
+00:41:16,559 --> 00:41:22,019
+ Right, so execution tickets.
+
+483
+00:41:22,019 --> 00:41:27,740
+ See it just says explore, so it's not a guarantee that we're actually going to get that on the
+
+484
+00:41:27,739 --> 00:41:35,659
+ it's a relatively recent idea it's from Justin Drake and you can see it's each research post
+
+485
+00:41:35,659 --> 00:41:47,399
+ but it's a very elegant way to get it's an elegant way to deal with MEV and all the distorted
+
+486
+00:41:47,399 --> 00:41:53,699
+ yield to solo stickers by basically selling the right to propose a block ahead of time
+
+487
+00:41:53,699 --> 00:41:57,399
+ Like in a lottery, so that's where the term tickets come from.
+
+488
+00:41:58,980 --> 00:42:03,599
+ And it's once again more separation,
+
+489
+00:42:03,960 --> 00:42:07,719
+ so between the idea of attesting to which block is in the chain
+
+490
+00:42:07,719 --> 00:42:09,759
+ versus proposing an actual block.
+
+491
+00:42:09,759 --> 00:42:13,739
+ So it was initially called attester-proposer separation
+
+492
+00:42:13,739 --> 00:42:16,339
+ before it got renamed to execution tickets.
+
+493
+00:42:20,939 --> 00:42:23,319
+ I'm not going to go spend too much time over it,
+
+494
+00:42:23,320 --> 00:42:25,240
+ but it's a very elegant little design,
+
+495
+00:42:25,380 --> 00:42:28,039
+ so I encourage anyone to go to the ETH research post,
+
+496
+00:42:28,120 --> 00:42:31,160
+ which is linked in the notes in the wiki.
+
+497
+00:42:32,980 --> 00:42:37,420
+ But yeah, I like that it still keeps the D-Gen MEV lottery
+
+498
+00:42:37,420 --> 00:42:39,940
+ permissionless for anyone who wants to play it,
+
+499
+00:42:40,019 --> 00:42:42,480
+ because that's something that solo stickers mention
+
+500
+00:42:42,480 --> 00:42:43,460
+ that they love today,
+
+501
+00:42:43,580 --> 00:42:47,860
+ but it's something that we would prefer not to be there,
+
+502
+00:42:47,860 --> 00:42:49,640
+ because MEV is very spiky,
+
+503
+00:42:49,920 --> 00:42:51,600
+ and that's an incentive to pull.
+
+504
+00:42:53,320 --> 00:43:01,680
+ Afterwards, I have these two little items for MBV minimization on the app layer, which
+
+505
+00:43:01,680 --> 00:43:08,960
+ is not too much of a concern of core protocol research as much, but it's just to put there
+
+506
+00:43:08,960 --> 00:43:15,820
+ as a nudge to people who develops smart contracts and dApps, just to say, hey, keep MBV in mind
+
+507
+00:43:15,820 --> 00:43:18,320
+ if you want to either capture it or prevent it.
+
+508
+00:43:18,320 --> 00:43:23,039
+ So stuff like cowswap is pretty cool and preventing sandwiching.
+
+509
+00:43:23,860 --> 00:43:27,559
+ And that's something that just happens at the app player.
+
+510
+00:43:27,700 --> 00:43:29,220
+ That's not a concern of the protocol.
+
+511
+00:43:32,000 --> 00:43:36,340
+ And then the pre-confirmations is what I mentioned briefly earlier,
+
+512
+00:43:36,500 --> 00:43:44,100
+ which is basically find a way to get builders to promise inclusion of your transaction in the next block.
+
+513
+00:43:44,099 --> 00:43:48,819
+ So it's like your transaction is confirmed before the block actually includes it.
+
+514
+00:43:49,539 --> 00:43:52,079
+ And there's various ways to do this.
+
+515
+00:43:52,799 --> 00:43:57,719
+ And yeah, it pairs well with execution tickets and various restaking schemes.
+
+516
+00:44:00,460 --> 00:44:02,779
+ Yeah, there's a few ETH research.
+
+517
+00:44:02,900 --> 00:44:04,679
+ I think they were linked in my annotated roadmap.
+
+518
+00:44:08,239 --> 00:44:12,139
+ Yeah, the next big items of discourage is staking economics,
+
+519
+00:44:12,139 --> 00:44:20,920
+ which we the big one that's possibly in the next fork if we're lucky is raising the max
+
+520
+00:44:20,920 --> 00:44:28,099
+ effective balance so right now the minimum and the maximum stake is both 32 eat so if your
+
+521
+00:44:28,099 --> 00:44:34,199
+ validators accumulated like an extra eat and your balance is 33 then you're still only earning yield
+
+522
+00:44:34,199 --> 00:44:40,139
+ on that 32 eat which is what we call your effective balance like even if your balance is 33
+
+523
+00:44:40,139 --> 00:44:46,460
+ your effective balance as far as the peak and chin is concerned is still 32. and the goal
+
+524
+00:44:46,460 --> 00:44:55,819
+ of max eb is to raise that all the way to 200 2048 so the main benefit is for soul stickers
+
+525
+00:44:55,819 --> 00:45:02,699
+ is you get automatic compounding right so like it's the example here if you go from 32 to 33 then
+
+526
+00:45:02,699 --> 00:45:08,460
+ automatically your extra heat starts become counting in your balance and earning rewards
+
+527
+00:45:10,139 --> 00:45:17,359
+ But the main goal is from a protocol perspective is that you're going to have fewer validators for the same amount of stake.
+
+528
+00:45:17,420 --> 00:45:24,420
+ So all the stuff about signature aggregation and bandwidth overhead from a large taking pool,
+
+529
+00:45:24,599 --> 00:45:29,079
+ taking thousands and thousands of validators are just going to be able to consolidate that
+
+530
+00:45:29,079 --> 00:45:33,019
+ and send a single signature instead of thousands of signatures.
+
+531
+00:45:33,019 --> 00:45:43,019
+ So that's going to drastically reduce the overhead and be one of the pathways towards single slot finality, but also remove the...
+
+532
+00:45:44,360 --> 00:45:46,280
+ Sorry, I forgot what I was going to say.
+
+533
+00:45:47,239 --> 00:45:53,159
+ Yeah, it's a path to single slot finality and reducing bandwidth requirements for nodes.
+
+534
+00:45:56,699 --> 00:45:59,719
+ Concept like blocks-based future where you have channel future blocks.
+
+535
+00:45:59,719 --> 00:46:02,879
+ it is somewhat related but
+
+536
+00:46:02,879 --> 00:46:05,679
+ execution tickets is more about the beacon
+
+537
+00:46:05,679 --> 00:46:07,000
+ proposal blocks
+
+538
+00:46:07,000 --> 00:46:11,619
+ there's a little distinction
+
+539
+00:46:11,619 --> 00:46:14,399
+ but I'm not going to go
+
+540
+00:46:14,399 --> 00:46:18,639
+ in it too deeply
+
+541
+00:46:18,639 --> 00:46:25,559
+ yeah the next item in the staking economics tracks
+
+542
+00:46:25,559 --> 00:46:26,419
+ is having
+
+543
+00:46:26,420 --> 00:46:33,240
+ exploring total stake capping so there was a somewhat controversial proposal from caspar
+
+544
+00:46:33,240 --> 00:46:39,340
+ on eth research about changing the issuance curve so that after a certain point it can
+
+545
+00:46:39,340 --> 00:46:46,260
+ possibly go negative so which is kind of weird if you think about it if you're the staking yield is
+
+546
+00:46:46,260 --> 00:46:54,460
+ negative one percent but it gets compensated by mbv and transaction fees so that you're one percent
+
+547
+00:46:54,460 --> 00:47:01,220
+ Even though you're actually paying the beacon chain for the right to be a validator. You're still net profitable from
+
+548
+00:47:02,079 --> 00:47:05,039
+ MEV and execution layer activity and
+
+549
+00:47:08,420 --> 00:47:13,960
+ Yeah, it still relates to having too many validators and meaning too much overhead
+
+550
+00:47:13,960 --> 00:47:20,920
+ But it's also economic downside to having too much of a big percentage of the stake the supply staked
+
+551
+00:47:20,920 --> 00:47:27,440
+ So, stake targeting is another little idea, like maybe we want something like 25% of the
+
+552
+00:47:27,440 --> 00:47:33,680
+ supply to be staked, and then enshrine that in the protocol directly, and then have some
+
+553
+00:47:33,680 --> 00:47:39,300
+ sort of issuance curve to reward more when there's less than 25%, and reward less when
+
+554
+00:47:39,300 --> 00:47:46,880
+ there's over 25%, but that's an active area of research.
+
+555
+00:47:46,880 --> 00:47:52,840
+ The next little item is liquid staking centralization.
+
+556
+00:47:52,840 --> 00:47:58,220
+ There's a bunch of concerns over liquid staking pools and LSTs.
+
+557
+00:47:58,220 --> 00:48:07,300
+ So, there's some ideas around enshrining a liquid staking token inside the protocol directly,
+
+558
+00:48:07,300 --> 00:48:15,119
+ which would be effectively a zero fee LST that would be less centralizing than an actual
+
+559
+00:48:15,119 --> 00:48:21,039
+ staking pool. The other idea that I've seen flow around is capping the slashing penalties.
+
+560
+00:48:21,839 --> 00:48:27,519
+ If you cap it to something like two ETH, then you can have fully trustless and risk-free LSTs
+
+561
+00:48:28,880 --> 00:48:35,199
+ with a bond of two ETHs, something like RocketPool. Right now, there's still the possibility
+
+562
+00:48:35,199 --> 00:48:40,719
+ that a RocketPool validator just messes with finality and then gets their entire stake slashed,
+
+563
+00:48:40,719 --> 00:48:45,199
+ including the stake that belongs to the pool but if we cap the slashing penalties to two
+
+564
+00:48:45,199 --> 00:48:50,559
+ each then only their bond would get slashed and then the rest goes back to the pool so that would
+
+565
+00:48:50,559 --> 00:49:00,079
+ be so it's like a relatively simple tweak to the beacon chain mechanism to make these decentralized
+
+566
+00:49:00,079 --> 00:49:02,879
+ lsts more viable than the centralized ones
+
+567
+00:49:02,880 --> 00:49:11,840
+ yes so that's the scourge the verge is another one that I'm gonna spend a bit more time on
+
+568
+00:49:11,840 --> 00:49:18,660
+ because it's uh it's another one of the next big thing which
+
+569
+00:49:18,660 --> 00:49:24,019
+ as like we got the merge we got 4844 and blob space and then vertical trees
+
+570
+00:49:24,019 --> 00:49:28,840
+ are the are the next big thing in my opinion because they're very cool
+
+571
+00:49:28,840 --> 00:49:39,519
+ and it's gonna be a very interesting upgrade. So first, I don't know who it's
+
+572
+00:49:39,519 --> 00:49:42,880
+ like too familiar with the concept of state versus history, it's pretty
+
+573
+00:49:42,880 --> 00:49:48,559
+ straightforward but just to go over it very quickly, you got this little block
+
+574
+00:49:48,559 --> 00:49:52,660
+ little blockchain here that I made in PowerPoint with the block n that's like
+
+575
+00:49:52,660 --> 00:49:56,380
+ the current block and then references the block n-1 which references
+
+576
+00:49:56,380 --> 00:50:02,220
+ block n minus two so all these pass blocks are the history that gives you the transfer and the
+
+577
+00:50:02,220 --> 00:50:09,820
+ transactions of that happened on the on ethereum and computing these transactions give you the
+
+578
+00:50:09,820 --> 00:50:13,980
+ current state so all the balances and all the contract variables and stuff like that
+
+579
+00:50:14,619 --> 00:50:21,579
+ so right now when we sync the chain you basically have to sync the history compute the state and
+
+580
+00:50:21,579 --> 00:50:23,480
+ and then you can start checking balances
+
+581
+00:50:23,480 --> 00:50:26,819
+ and validating new transactions that are coming in.
+
+582
+00:50:26,819 --> 00:50:29,380
+ And the question is, is there a better way to do this?
+
+583
+00:50:29,380 --> 00:50:32,400
+ And the answer is yes, again, with polynomial magic,
+
+584
+00:50:32,400 --> 00:50:33,239
+ as we'll see.
+
+585
+00:50:36,279 --> 00:50:39,719
+ Yeah, so today the state is,
+
+586
+00:50:39,719 --> 00:50:41,579
+ it's like computed from the history,
+
+587
+00:50:41,579 --> 00:50:42,900
+ as I said in the previous slide,
+
+588
+00:50:42,900 --> 00:50:45,559
+ but it's also structured in a tree form
+
+589
+00:50:45,559 --> 00:50:47,719
+ for reasons that we'll see.
+
+590
+00:50:47,719 --> 00:50:54,219
+ So this is the very simple state tree that I made with four participants that all have their own balances.
+
+591
+00:50:55,119 --> 00:51:02,500
+ And two becomes a node that you just hash the value of the two different children.
+
+592
+00:51:02,719 --> 00:51:04,839
+ And then you concatenate that together.
+
+593
+00:51:04,879 --> 00:51:06,500
+ And then you hash the concatenation.
+
+594
+00:51:06,500 --> 00:51:09,480
+ And then you do that all the way up to the state root.
+
+595
+00:51:10,939 --> 00:51:13,859
+ And this is what you have in block headers.
+
+596
+00:51:13,860 --> 00:51:18,180
+ So without the transaction, you have access to the state root,
+
+597
+00:51:18,380 --> 00:51:22,519
+ and that's what you can use to make what's called a state access proof.
+
+598
+00:51:22,900 --> 00:51:29,200
+ So yeah, you can prove that Bob owns 5EAT in this very simple example.
+
+599
+00:51:29,960 --> 00:51:34,680
+ You just receive the sibling node, so you just send the node.
+
+600
+00:51:35,460 --> 00:51:38,420
+ Okay, that cat knocked something over. Really annoying.
+
+601
+00:51:38,420 --> 00:51:47,300
+ So, okay, the Merkle proof is it's a very simple thing. You just show send the siblings.
+
+602
+00:51:47,300 --> 00:51:52,519
+ So you send the sibling of Alice and then you send the node for Charlie and Dave, which
+
+603
+00:51:52,519 --> 00:52:00,980
+ is just concatenated. Yeah, so yeah, the yellow nodes are the ones that are part of the proof
+
+604
+00:52:00,980 --> 00:52:05,240
+ and the green nodes are the ones that you can compute on your end to verify the proof.
+
+605
+00:52:05,239 --> 00:52:07,979
+ So if you just do the hashes all the way to the state root,
+
+606
+00:52:07,979 --> 00:52:11,119
+ then you validate that it checks out with the state root
+
+607
+00:52:11,119 --> 00:52:13,799
+ in the block header, you get the,
+
+608
+00:52:13,799 --> 00:52:15,919
+ like you're satisfied that Bob has five eth,
+
+609
+00:52:15,919 --> 00:52:19,139
+ and then, which is something that you can,
+
+610
+00:52:20,079 --> 00:52:22,159
+ you can send to something like a light client
+
+611
+00:52:22,159 --> 00:52:24,439
+ that doesn't have access to,
+
+612
+00:52:24,439 --> 00:52:26,459
+ that only checks the sync committees
+
+613
+00:52:26,459 --> 00:52:29,379
+ and the block headers on the execution layer
+
+614
+00:52:29,379 --> 00:52:31,879
+ that doesn't have to compute all the transactions.
+
+615
+00:52:31,880 --> 00:52:47,360
+ But the big takeaway is that these proofs are start becoming more and more large and unmanageable as we get a bigger and bigger state, which is like a constant thing on Ethereum.
+
+616
+00:52:47,360 --> 00:52:51,480
+ Every single transaction increases the state, basically.
+
+617
+00:52:53,039 --> 00:53:01,059
+ So instead, this is very against with the same tree, but now it's a vertical tree.
+
+618
+00:53:01,059 --> 00:53:07,940
+ So every node is basically a number it's just treated as a number and then you do polynomial magic again
+
+619
+00:53:10,019 --> 00:53:16,239
+ So instead of having being a state root now it looks like a concatenation of hashes and whatnot
+
+620
+00:53:16,239 --> 00:53:20,259
+ it's just a polynomial commitment as we've seen with the data sampling
+
+621
+00:53:21,059 --> 00:53:23,059
+ So I have this
+
+622
+00:53:24,000 --> 00:53:28,219
+ Yeah, the same example to prove that Bob owns five ETH. You just have to prove that
+
+623
+00:53:28,219 --> 00:53:34,539
+ that the the state root is a commitment that matches that the first sibling the first child
+
+624
+00:53:34,539 --> 00:53:42,539
+ is the commitment c1 with the proof of pi1 and then and then you know the commitment c1 you can
+
+625
+00:53:42,539 --> 00:53:49,179
+ go with the proof pi2 so you don't need the actual siblings which is the the biggest gain
+
+626
+00:53:51,659 --> 00:53:55,739
+ yeah so this is the next i think you don't need all these nodes you only need the path
+
+627
+00:53:55,739 --> 00:54:04,699
+ and the intermediary nodes and the the polynomial proof that like the interpolation of the polynomial
+
+628
+00:54:04,699 --> 00:54:10,219
+ actually gives you the proper value and the and the big bonus is that the proofs can actually
+
+629
+00:54:10,219 --> 00:54:16,379
+ be merged with batch openings which is another deep cryptography thing with polynomial commitments
+
+630
+00:54:16,380 --> 00:54:17,840
+ that I'm not gonna go over.
+
+631
+00:54:17,840 --> 00:54:29,519
+ Um, and yeah, so after that, once we do the transactions to Virgo trees it becomes much
+
+632
+00:54:29,519 --> 00:54:33,780
+ like the, the whole blockchain is you can have stateless validators.
+
+633
+00:54:33,780 --> 00:54:39,920
+ Um, I don't know where to start, I'm just gonna start that the Virgo proofs are much
+
+634
+00:54:39,920 --> 00:54:44,660
+ shorter like I said earlier, but also since now you don't need the siblings you can have
+
+635
+00:54:44,659 --> 00:54:54,019
+ a much wider tree uh you can have a much wider tree with like 256 children instead of the 16
+
+636
+00:54:54,019 --> 00:55:01,699
+ that we have today with the merkle patricia tree state roots and not only that but the vertical
+
+637
+00:55:01,699 --> 00:55:07,299
+ tree is also zk friendly so it's compared to the hashes that are like awkward to batch you're gonna
+
+638
+00:55:07,300 --> 00:55:14,660
+ have the you can receive proofs and just aggregate them together and it makes like clients way more
+
+639
+00:55:14,660 --> 00:55:21,220
+ maintainable as they only need to query the the like client protocol that i mentioned at the
+
+640
+00:55:21,220 --> 00:55:27,060
+ beginning of the talk and then they know that the block is inside the canonical chain and then with
+
+641
+00:55:27,060 --> 00:55:32,980
+ the these work approves they can know balances they can they can query balances and another
+
+642
+00:55:32,980 --> 00:55:37,519
+ or anyone that has the state can compute these work-up rules
+
+643
+00:55:37,519 --> 00:55:39,860
+ and satisfy the like client and say,
+
+644
+00:55:39,860 --> 00:55:41,159
+ okay, here's your balance,
+
+645
+00:55:41,159 --> 00:55:44,840
+ and you can't actually be tricked this way.
+
+646
+00:55:52,860 --> 00:55:55,659
+ And the big thing is statelessness,
+
+647
+00:55:55,659 --> 00:56:00,139
+ which is you spin up your node or your validator,
+
+648
+00:56:00,139 --> 00:56:01,940
+ and you don't actually need the history.
+
+649
+00:56:01,940 --> 00:56:04,099
+ you receive a block, block N,
+
+650
+00:56:04,440 --> 00:56:06,960
+ you have no knowledge of the state whatsoever.
+
+651
+00:56:07,220 --> 00:56:10,539
+ All you see is the state root inside the block header.
+
+652
+00:56:11,059 --> 00:56:13,400
+ And you have this new thing called the block witness,
+
+653
+00:56:13,700 --> 00:56:16,159
+ which is basically all the vertical proofs
+
+654
+00:56:16,159 --> 00:56:18,519
+ that are needed to compute the transactions.
+
+655
+00:56:19,099 --> 00:56:23,240
+ So like if you see that Bob sends five ETH to someone else,
+
+656
+00:56:23,240 --> 00:56:26,940
+ then you need a proof that he actually owns these five ETH.
+
+657
+00:56:27,320 --> 00:56:28,900
+ And that's gonna be part of the witness.
+
+658
+00:56:28,900 --> 00:56:34,599
+ So you don't actually need to compute all the previous blocks to be satisfied that Bob has five ETH.
+
+659
+00:56:34,960 --> 00:56:37,860
+ You're just gonna check this weakness and that's gonna be
+
+660
+00:56:38,760 --> 00:56:40,760
+ approved by your vocal trees.
+
+661
+00:56:40,820 --> 00:56:45,280
+ So it's like instant sync, but also it alleviates a lot of the burden around
+
+662
+00:56:45,920 --> 00:56:48,660
+ storing the entire stage, which is a lot of read and writes
+
+663
+00:56:49,340 --> 00:56:51,340
+ operations.
+
+664
+00:56:51,340 --> 00:57:02,680
+ I'm just reading the chat quickly.
+
+665
+00:57:02,680 --> 00:57:09,579
+ So yes, statelessness is a big thing, but that's only possible with the Merkle trees
+
+666
+00:57:09,579 --> 00:57:15,680
+ because Merkle proofs are way too huge and the block witness would be probably megabytes
+
+667
+00:57:15,679 --> 00:57:20,859
+ or gigabytes long if we have a lot of transactions that access a lot of the state.
+
+668
+00:57:23,859 --> 00:57:26,099
+ Are these stateless validators running somewhere?
+
+669
+00:57:26,359 --> 00:57:28,599
+ Well, not today because we don't have Oracle trees,
+
+670
+00:57:28,599 --> 00:57:34,480
+ but it would be like an option to either sync the whole state if you need it
+
+671
+00:57:34,480 --> 00:57:38,500
+ or just start syncing and checking block witnesses only.
+
+672
+00:57:42,460 --> 00:57:43,059
+ Yes.
+
+673
+00:57:43,059 --> 00:57:49,199
+ and yeah the last bullet points like clients become even lighter because they only have
+
+674
+00:57:49,199 --> 00:57:56,639
+ the sync committee and the work proofs to to check balances and stuff and another underrated
+
+675
+00:57:56,639 --> 00:58:03,480
+ aspect of statelessness is devs that have like this applications that rely on like a back end
+
+676
+00:58:03,480 --> 00:58:10,440
+ of some sort that need to index values of balances specifically to the users of their applications
+
+677
+00:58:10,440 --> 00:58:17,940
+ Like today, they have to rely mostly on centralized indexers, because if they want to keep track
+
+678
+00:58:17,940 --> 00:58:25,659
+ of user balances and other variables that's only relevant to their users, they still have
+
+679
+00:58:25,659 --> 00:58:28,820
+ to sync the entire state.
+
+680
+00:58:28,820 --> 00:58:33,440
+ And it's awkward when you want to have previous state, because you have to index everything
+
+681
+00:58:33,440 --> 00:58:39,480
+ and then keep track of balances in the past, like past state, instead of just the current state.
+
+682
+00:58:40,320 --> 00:58:45,679
+ So you can picture something like graphing the price of a token or something over time.
+
+683
+00:58:46,820 --> 00:58:52,019
+ So right now, there's a lot of reliance on the graph or interviewer for big archive nodes
+
+684
+00:58:52,019 --> 00:58:53,579
+ because it's hard to run one.
+
+685
+00:58:53,860 --> 00:59:01,300
+ But with Verkle trees, the way it's going to be structured is you can only execute blocks
+
+686
+00:59:01,300 --> 00:59:03,539
+ that are relevant to your application.
+
+687
+00:59:03,800 --> 00:59:06,080
+ So if like there's a thousand blocks in the past
+
+688
+00:59:06,080 --> 00:59:09,140
+ and only 30 of them actually touch your smart contract,
+
+689
+00:59:09,280 --> 00:59:11,740
+ then you can only execute these 30 blocks
+
+690
+00:59:11,740 --> 00:59:13,900
+ and update your state in your backend
+
+691
+00:59:13,900 --> 00:59:16,220
+ to do whatever you want with it,
+
+692
+00:59:16,360 --> 00:59:19,519
+ like displaying information to your users in your front end.
+
+693
+00:59:20,460 --> 00:59:23,240
+ So that's gonna, like I said,
+
+694
+00:59:23,280 --> 00:59:24,519
+ it's an underrated aspect
+
+695
+00:59:24,519 --> 00:59:26,440
+ that I don't see people mention enough.
+
+696
+00:59:26,560 --> 00:59:28,900
+ So it's something that I'm shouting out right now.
+
+697
+00:59:31,300 --> 00:59:40,740
+ again afterwards yeah snarky fire all the things that's the like vertical trees are cool it's a
+
+698
+00:59:40,740 --> 00:59:46,900
+ very simple verification of state access but it's still not good enough we want to we want to have
+
+699
+00:59:46,900 --> 00:59:53,220
+ zero knowledge proofs of everything so like the light client protocol is already light but it's
+
+700
+00:59:53,220 --> 00:59:59,380
+ going to be even lighter once like all the all the transitions of the sync committee from every
+
+701
+00:59:59,380 --> 01:00:05,700
+ 27 hour up to the present day it's all a single proof that you can just validate very quickly
+
+702
+01:00:05,700 --> 01:00:12,340
+ it's just a small snark and from there the next the next logical step is to snarkify the beacon
+
+703
+01:00:12,340 --> 01:00:19,140
+ chain transitions as well so that would effectively render the light client protocol obsolete
+
+704
+01:00:19,140 --> 01:00:25,700
+ if you can just have a single snark that validates the entire beacon chain signatures and balances
+
+705
+01:00:25,699 --> 01:00:32,980
+ slashings and everything and that's the consensus layer on the execution layer you want to have
+
+706
+01:00:33,539 --> 01:00:40,179
+ snark you you want to snarkify the vertical state access proofs and that would make it even faster
+
+707
+01:00:40,179 --> 01:00:47,379
+ to verify the block witnesses if you can just merge every single proof into a single snark
+
+708
+01:00:47,380 --> 01:00:57,500
+ and yeah the absolute endgame is that every all the evm execution is a stark so you receive a
+
+709
+01:00:57,500 --> 01:01:03,880
+ block and you check a stark that and then the that little proof just checks absolutely everything
+
+710
+01:01:03,880 --> 01:01:10,039
+ and you didn't have to do actual evm computation on your on yourself you just receive the block
+
+711
+01:01:10,039 --> 01:01:16,960
+ you do the data sampling for further roll-ups that i mentioned above and you verify these proofs
+
+712
+01:01:16,960 --> 01:01:23,840
+ and you're satisfied that the data is available and the execution actually checks out with the
+
+713
+01:01:23,840 --> 01:01:30,000
+ resulting state root of the next block. So this is very futuristic stuff, but it's very cool that
+
+714
+01:01:30,000 --> 01:01:36,559
+ zk-rollups are actually working on zk-evms that we can eventually bring back to the core protocol and
+
+715
+01:01:36,559 --> 01:01:45,440
+ then have a full circle, and then this is how we get scalable layer-1 execution with all these zk-proofs.
+
+716
+01:01:46,960 --> 01:01:59,559
+ The zk-evm-opcode in PreCompile, I'm just going to mention it briefly because it's super
+
+717
+01:01:59,559 --> 01:02:04,460
+ cool that the EVM could have a way to verify EVM proofs.
+
+718
+01:02:04,460 --> 01:02:14,360
+ So you can have the very simple zk-rollup supported by the EVM natively.
+
+719
+01:02:14,360 --> 01:02:21,480
+ So you can have an evm-proofs inside evm-proofs verified by this upgold up-recompile directly
+
+720
+01:02:21,480 --> 01:02:25,700
+ in the evm, so it's very futuristic stuff.
+
+721
+01:02:25,700 --> 01:02:33,160
+ Would this narcification of the state make AL2s irrelevant?
+
+722
+01:02:33,160 --> 01:02:38,620
+ They are still going to be relevant on the long term, but not as much for scalability.
+
+723
+01:02:38,620 --> 01:02:42,440
+ But I would also say it's a scalability compound.
+
+724
+01:02:42,440 --> 01:02:46,679
+ So if you scale layer 1, it effortlessly scales layer 2s as well.
+
+725
+01:02:46,679 --> 01:02:52,360
+ So there's this idea of fractal scaling that you can look up, that there is always going
+
+726
+01:02:52,360 --> 01:02:58,420
+ to be some layer 2s no matter what, or at least that's what I expect.
+
+727
+01:02:58,420 --> 01:03:00,320
+ Exactly, Josh.
+
+728
+01:03:00,320 --> 01:03:05,559
+ If you scale L1 it scales L2s.
+
+729
+01:03:05,559 --> 01:03:10,679
+ Which I didn't mention it, but vertical trees with statelessness, you are going to be able
+
+730
+01:03:10,679 --> 01:03:17,319
+ to easily triple the gas limit so cheaper layer one fees after statelessness which is going to
+
+731
+01:03:17,319 --> 01:03:26,559
+ be super cool too um yeah after that the the last two are very i don't have much to say so i'm just
+
+732
+01:03:26,559 --> 01:03:33,259
+ going to go over quickly the purge is all about having a simpler protocol so the the big ticket
+
+733
+01:03:33,260 --> 01:03:42,340
+ it in that one in history expiry so EIP-4444 also nicknamed the four fours which in a nutshell is
+
+734
+01:03:42,340 --> 01:03:50,280
+ that nodes are are not going to be expected to store history older than one year and this feels
+
+735
+01:03:50,280 --> 01:03:56,460
+ scary because we're used to having nodes verify the entire blockchains but it it turns out it's
+
+736
+01:03:56,460 --> 01:04:02,740
+ not that necessary with what Ethereum is trying to achieve at being a real-time settlement layer so
+
+737
+01:04:02,739 --> 01:04:08,319
+ I don't know who said it, I think it was Tim Bako in a tweet from
+
+738
+01:04:08,319 --> 01:04:11,859
+ I don't know how much time ago, but it's basically
+
+739
+01:04:11,859 --> 01:04:17,199
+ if you ask a thousand nodes what the latest block is
+
+740
+01:04:17,199 --> 01:04:18,719
+ then you're going to have some disagreement
+
+741
+01:04:18,719 --> 01:04:21,339
+ like someone didn't receive the block in time
+
+742
+01:04:21,339 --> 01:04:24,759
+ and think that the previous block is the head of the chain and stuff like that
+
+743
+01:04:24,759 --> 01:04:30,199
+ but if you ask them what's the 10,000th block ago
+
+744
+01:04:30,199 --> 01:04:38,119
+ they're all going to agree on that history. So it's like no disagreeing on history, especially
+
+745
+01:04:38,119 --> 01:04:45,719
+ on finalized blocks, it's basically impossible. So it's not that big of a deal to prune history
+
+746
+01:04:45,719 --> 01:04:49,719
+ compared to the advantages that we get from simplifying client code bases.
+
+747
+01:04:50,439 --> 01:04:58,039
+ So stuff like all the previous rules supported by earlier forks that are no longer relevant today,
+
+748
+01:04:58,039 --> 01:05:03,739
+ and you can just remove that from your code base and only focus on how the protocol actually works today.
+
+749
+01:05:04,920 --> 01:05:08,000
+ And, of course, it removes a lot of the storage requirements from nodes.
+
+750
+01:05:09,460 --> 01:05:12,960
+ And technically, the for-fors can be implemented at any point.
+
+751
+01:05:13,039 --> 01:05:14,119
+ It's not a hard fork.
+
+752
+01:05:14,179 --> 01:05:17,639
+ It's just like some kind of peer-to-peer convention between nodes.
+
+753
+01:05:18,460 --> 01:05:24,739
+ So it's before activated it, we want to have history reliably accessible by other means.
+
+754
+01:05:24,739 --> 01:05:29,739
+ So the most decentralized one is like the portal network,
+
+755
+01:05:30,879 --> 01:05:35,879
+ which is like a protocol specifically for like sharing
+
+756
+01:05:37,339 --> 01:05:42,339
+ history and like proof of state access for like clients.
+
+757
+01:05:42,599 --> 01:05:46,000
+ But there's gonna be way more options
+
+758
+01:05:46,000 --> 01:05:47,319
+ for having all the history,
+
+759
+01:05:47,319 --> 01:05:49,819
+ like it torrent or block explorers.
+
+760
+01:05:49,820 --> 01:05:59,900
+ yes, it's basically a software where we want it's a I'm not too aware of what goes on at
+
+761
+01:05:59,900 --> 01:06:07,420
+ the peer-to-peer layer but EIB 4444 it's just the nodes just stop being required to serve
+
+762
+01:06:07,420 --> 01:06:18,900
+ all the history for those who ask it yes and the next purge is State Xpiry which personally
+
+763
+01:06:18,900 --> 01:06:23,940
+ don't believe it's ever gonna happen because it breaks too much stuff and it's a way lower
+
+764
+01:06:23,940 --> 01:06:32,340
+ priority compared to the like the synchronicity between pbs and statelessness makes it a way
+
+765
+01:06:32,340 --> 01:06:39,700
+ lower priority but yeah it it it wasn't a notable change on the vitalik's update of the roadmap this
+
+766
+01:06:39,700 --> 01:06:46,820
+ year that he just downgraded it from a big ticket blue item to just a green one but yeah personally
+
+767
+01:06:46,820 --> 01:06:53,940
+ don't believe it's gonna happen because you would have to extend the length of addresses and then do
+
+768
+01:06:53,940 --> 01:07:00,340
+ all sorts of crazy stuff with periods of states and then redeploy the same tokens across state
+
+769
+01:07:00,340 --> 01:07:06,420
+ and verify a lot too much breaking changes but uh still mentioned there
+
+770
+01:07:08,740 --> 01:07:11,860
+ it's still mentioned there because it's on the roadmap and then
+
+771
+01:07:11,860 --> 01:07:18,420
+ And yeah, yeah, just want to abolish the state.
+
+772
+01:07:18,519 --> 01:07:20,820
+ Yeah, I think you can have a stateless client
+
+773
+01:07:20,820 --> 01:07:22,440
+ that's like partially stateless.
+
+774
+01:07:22,440 --> 01:07:24,400
+ So if there's a part of the state
+
+775
+01:07:24,400 --> 01:07:26,019
+ that hasn't been touched in forever,
+
+776
+01:07:26,220 --> 01:07:27,680
+ then you can just prune it locally
+
+777
+01:07:27,680 --> 01:07:31,440
+ and you can laser focus your node
+
+778
+01:07:31,440 --> 01:07:33,980
+ to have only the state that's relevant to your accounts
+
+779
+01:07:33,980 --> 01:07:36,680
+ or roll-ups that you care about and stuff like that.
+
+780
+01:07:36,980 --> 01:07:38,840
+ So that's why I think state expiry
+
+781
+01:07:38,840 --> 01:07:40,500
+ is not that big of a deal.
+
+782
+01:07:40,500 --> 01:07:42,880
+ it's not a priority right now.
+
+783
+01:07:42,880 --> 01:07:47,900
+ And then the last little items on the purge
+
+784
+01:07:47,900 --> 01:07:48,880
+ is various harmonizations.
+
+785
+01:07:49,920 --> 01:07:52,820
+ So like the execution layer uses something called RLP
+
+786
+01:07:52,820 --> 01:07:56,800
+ for the serialization of transactions and blocks,
+
+787
+01:07:57,179 --> 01:08:00,019
+ whereas on the consensus layer is SSZ.
+
+788
+01:08:00,920 --> 01:08:03,400
+ And in the future, we would like to simplify that
+
+789
+01:08:03,400 --> 01:08:06,139
+ and move everything to SSZ altogether
+
+790
+01:08:06,139 --> 01:08:10,320
+ and then phase out all transaction types
+
+791
+01:08:10,320 --> 01:08:18,800
+ like the legacy type before 1559 and possibly go towards scheme where like all the access lists are
+
+792
+01:08:18,800 --> 01:08:26,480
+ forcing transactions and stuff like that but it's it's a the way to do that is the active area of
+
+793
+01:08:26,480 --> 01:08:35,840
+ research i guess and yeah that's all i had to say about the purge and the splurge is all the rest
+
+794
+01:08:35,840 --> 01:08:40,319
+ that we want to have on the core protocol but it doesn't fit anywhere else it's just
+
+795
+01:08:40,319 --> 01:08:45,920
+ we get to splurge and have these miscellaneous goodies so the big one is
+
+796
+01:08:47,920 --> 01:08:56,159
+ eof which is evm object formats it's a lot of eips that have been benched somewhat recently
+
+797
+01:08:56,159 --> 01:09:04,560
+ but it's a work in progress to restructure some aspects of the evm and i'm i'm not actually the
+
+798
+01:09:04,560 --> 01:09:09,840
+ person to talk to about eof so i'm just gonna but i just put the link there about the overview of
+
+799
+01:09:09,840 --> 01:09:17,440
+ euf but my understanding it it makes upgrading the the evm in the future like in a forward compatible
+
+800
+01:09:17,440 --> 01:09:24,000
+ way much easier so it would be cool to have euf and the core protocol and then layer twos can
+
+801
+01:09:24,000 --> 01:09:32,320
+ innovate and like leverage that to have their own little evms upgrade stuff and try out stuff that
+
+802
+01:09:32,319 --> 01:09:36,399
+ that, like, without having to change layer one
+
+803
+01:09:36,399 --> 01:09:37,439
+ every single time.
+
+804
+01:09:39,039 --> 01:09:40,079
+ Yeah, that's it.
+
+805
+01:09:44,920 --> 01:09:46,359
+ The other big ticket item
+
+806
+01:09:46,359 --> 01:09:48,039
+ of this purchase account abstraction,
+
+807
+01:09:48,039 --> 01:09:50,079
+ which is at this point,
+
+808
+01:09:50,079 --> 01:09:52,880
+ a decade-old unsolved problem of Ethereum
+
+809
+01:09:52,880 --> 01:09:56,639
+ is that your wallet that has a private key
+
+810
+01:09:56,639 --> 01:09:59,840
+ and a balance and stuff is bad.
+
+811
+01:09:59,840 --> 01:10:05,520
+ it's very terrible like there's no way to have someone else pay for your gas fees there's no way
+
+812
+01:10:05,520 --> 01:10:11,840
+ to batch your transactions as easily like just think of having to first approve a token and then
+
+813
+01:10:11,840 --> 01:10:17,760
+ swap it in the next transaction and there's no there's a lot of concerns around key security
+
+814
+01:10:17,760 --> 01:10:24,480
+ which when you zoom out of the crypto world it's it's a kind of embarrassing that you can't do
+
+815
+01:10:24,479 --> 01:10:30,639
+ simple things like revoking a key or rotating it without like having to awkwardly move all
+
+816
+01:10:30,639 --> 01:10:39,019
+ your funds one by one which is expensive and it takes a lot of time and yeah other stuff from
+
+817
+01:10:39,019 --> 01:10:43,899
+ account abstraction is spending conditions and social recovery so you could have instead of
+
+818
+01:10:43,899 --> 01:10:49,119
+ having like a hot wallet with a key that holds fewer funds compared to your cold wallet
+
+819
+01:10:49,119 --> 01:10:56,099
+ But you could have custom spending conditions or things like I can spend x amount of funds
+
+820
+01:10:56,099 --> 01:10:57,159
+ per day.
+
+821
+01:10:57,159 --> 01:11:03,899
+ But if I want to move all too much fun at once and I need an extra key that's in cold
+
+822
+01:11:03,899 --> 01:11:09,000
+ storage, so you can have a single wallet that does all these things and put trusted guardians
+
+823
+01:11:09,000 --> 01:11:11,019
+ as recovery people.
+
+824
+01:11:11,020 --> 01:11:19,060
+ There's a lot of the design space for smart wallets, it's basically infinite, but right
+
+825
+01:11:19,060 --> 01:11:25,700
+ now all we got is these EOAs which are just terrible.
+
+826
+01:11:25,700 --> 01:11:34,620
+ The big EIPs and ERCs is 3074 for delegating a control of an EOA to a smart contract, which
+
+827
+01:11:34,619 --> 01:11:40,460
+ it's not on Vitalik's roadmap, I believe for political reasons, but I am personally bullish
+
+828
+01:11:40,460 --> 01:11:49,099
+ on 3074 for the next port. And ERC-4337 is a smart wallet standard that doesn't affect the
+
+829
+01:11:49,099 --> 01:11:54,859
+ core protocol, at least not today, but it's a very good protocol for standardizing,
+
+830
+01:11:56,460 --> 01:12:03,500
+ for having the same standards across all the EVM chains, instead of every single rollup having
+
+831
+01:12:03,500 --> 01:12:06,180
+ their own little native standard for account abstraction.
+
+832
+01:12:07,539 --> 01:12:11,920
+ And eventually it's possible to convert an EOA
+
+833
+01:12:11,920 --> 01:12:14,840
+ to a smart wallet compatible with 4337
+
+834
+01:12:14,840 --> 01:12:16,380
+ inside the protocol,
+
+835
+01:12:16,380 --> 01:12:20,279
+ which is what is meant by int protocol in training.
+
+836
+01:12:21,920 --> 01:12:23,760
+ And that would basically give us
+
+837
+01:12:23,760 --> 01:12:28,420
+ the account abstraction utopia that we so desire.
+
+838
+01:12:28,420 --> 01:12:37,980
+ and yeah endgame EIP-15509 that's always a big question that people have on the when they see
+
+839
+01:12:37,980 --> 01:12:43,000
+ the roadmap it's like what does that mean I thought 1559 was already so great so what
+
+840
+01:12:43,000 --> 01:12:49,940
+ what would make it endgame and the three main ones that I see is make it more like an automatic
+
+841
+01:12:49,939 --> 01:12:57,219
+ market maker curve um like instead of tracking the previous
+
+842
+01:12:57,219 --> 01:13:02,259
+ usage in the previous block you can just track the excess blob excess gas
+
+843
+01:13:02,259 --> 01:13:05,539
+ so if you go above the target of 15 million
+
+844
+01:13:05,539 --> 01:13:09,139
+ like if you just go by 16 million then that's gonna add
+
+845
+01:13:09,139 --> 01:13:13,699
+ a million to the excess gas that's like tracked over time
+
+846
+01:13:13,699 --> 01:13:19,379
+ and that makes it more stable because actually today it doesn't actually
+
+847
+01:13:19,380 --> 01:13:27,940
+ target 15 million it's like something like 63 64th under the target because if you go over by 12.5
+
+848
+01:13:27,940 --> 01:13:32,659
+ and then you go under by 12.5 percent then it doesn't actually get you back to zero it gets
+
+849
+01:13:32,659 --> 01:13:39,380
+ you just slightly under zero so it's like a a weird quirk of 1559 that can be enhanced with this
+
+850
+01:13:39,380 --> 01:13:48,100
+ tracking the excess gas and another another benefit is that it makes the censorship cost
+
+851
+01:13:48,100 --> 01:13:54,340
+ higher, because right now if your block builder decides to remove it, not include the transaction
+
+852
+01:13:54,900 --> 01:14:01,300
+ for whatever reason, then they just forego the priority fee, but with this design,
+
+853
+01:14:02,180 --> 01:14:08,820
+ they would have to forego the entire fee, which I'm not going to get into it, but it's like it
+
+854
+01:14:08,820 --> 01:14:16,100
+ would still burn as much ETH as 1,500 today, but the opportunity cost of censoring would be the
+
+855
+01:14:16,100 --> 01:14:23,039
+ the entire fee instead of just a priority fee from the way that the mental models, like
+
+856
+01:14:23,039 --> 01:14:28,900
+ the builder, can buy excess gas from the protocol and then make up for it by transactions.
+
+857
+01:14:29,840 --> 01:14:32,840
+ So that's something that's going to have to happen at some point.
+
+858
+01:14:33,600 --> 01:14:39,820
+ Otherwise, the two other things is multidimensional EIP-1559, like we have for Blobs today.
+
+859
+01:14:39,819 --> 01:14:44,719
+ that the pricing for Ethereum resources
+
+860
+01:14:44,719 --> 01:14:47,259
+ is two-dimensional as of last week,
+
+861
+01:14:47,340 --> 01:14:48,259
+ which is super cool.
+
+862
+01:14:48,979 --> 01:14:51,059
+ But you can go one step further
+
+863
+01:14:51,059 --> 01:14:52,479
+ and do that for more resources,
+
+864
+01:14:52,699 --> 01:14:55,399
+ like having the call data priced separately
+
+865
+01:14:55,399 --> 01:14:58,840
+ so that it doesn't affect the cost
+
+866
+01:14:58,840 --> 01:15:01,420
+ of writing or reading to the state.
+
+867
+01:15:01,579 --> 01:15:04,799
+ And then you can manage block sizes
+
+868
+01:15:04,799 --> 01:15:06,639
+ independently of computation
+
+869
+01:15:06,639 --> 01:15:07,880
+ and stuff like that.
+
+870
+01:15:07,880 --> 01:15:10,260
+ So that would make it way more efficient.
+
+871
+01:15:11,600 --> 01:15:22,260
+ And it would remove this weird quirk of bundling everything inside this single unit of gas
+
+872
+01:15:22,260 --> 01:15:26,480
+ where we have to account for the worst-case scenario of everything.
+
+873
+01:15:26,960 --> 01:15:33,340
+ So today we have to account for what's the worst-case scenario
+
+874
+01:15:33,340 --> 01:15:38,220
+ of someone writing a bunch of stuff to the state and then just destroying the storage for every
+
+875
+01:15:38,220 --> 01:15:43,180
+ single node. Like, we have to make it expensive to write to the state, but also we have to make
+
+876
+01:15:43,180 --> 01:15:48,220
+ it expensive to write a lot of call data and then make big blocks that nodes can't follow. And
+
+877
+01:15:49,100 --> 01:15:53,579
+ instead, we can have the worst-case scenario individually tailored to each resource.
+
+878
+01:15:55,260 --> 01:15:59,900
+ And that would be the benefit of multidimensional EIP-1559.
+
+879
+01:15:59,899 --> 01:16:06,239
+ and the last little thing is like a minor thing is making the base p calculation time aware
+
+880
+01:16:06,239 --> 01:16:12,359
+ because right now if you have if a validator misses a slot for whatever reason then the next
+
+881
+01:16:12,359 --> 01:16:18,439
+ block is just it's going to have more transaction to fill in and from the the perspective of the
+
+882
+01:16:18,439 --> 01:16:23,119
+ protocol that just means suddenly the demand doubled because the protocol is not aware of
+
+883
+01:16:23,119 --> 01:16:29,599
+ the miss slot it just treats it as a spike in demand but it's uh when in reality it's
+
+884
+01:16:29,599 --> 01:16:34,239
+ not actually a spike in demand it's just a like kind of a supply shortage
+
+885
+01:16:35,840 --> 01:16:42,000
+ and yeah there's eip 4396 for making time a part of the base fee calculation
+
+886
+01:16:44,720 --> 01:16:46,239
+ and i think this is the last
+
+887
+01:16:46,239 --> 01:16:56,319
+ Yeah, so this Plurge has the deep cryptography things, like fully homomorphic
+
+888
+01:16:56,319 --> 01:17:00,619
+ encryptions and one-shot signatures and all the stuff that's super futuristic, that's
+
+889
+01:17:00,619 --> 01:17:08,579
+ an active area of research, not just from Ethereum research, but also actual cryptography
+
+890
+01:17:08,579 --> 01:17:14,519
+ research that's at the very frontier of cryptography, and then figure out what we can do from that.
+
+891
+01:17:14,520 --> 01:17:19,420
+ So I think one-shot signature is the best example of that.
+
+892
+01:17:19,420 --> 01:17:28,620
+ You can have, you see Justin Drake read this paper that uses quantum computers and a bunch of other futuristic cryptography.
+
+893
+01:17:28,820 --> 01:17:35,140
+ And then you can have signatures that actually destroy themselves after you sign the message.
+
+894
+01:17:35,500 --> 01:17:43,120
+ And there's a way to potentially integrate that in the blockchain, like in the far, far future once we have quantum computers.
+
+895
+01:17:43,119 --> 01:17:48,899
+ and then that would remove the need to have slashing altogether but I need to
+
+896
+01:17:48,899 --> 01:17:53,800
+ emphasize that it's really futuristic it but it's something that's super cool and
+
+897
+01:17:53,800 --> 01:17:59,239
+ the next big thing is like encrypting the mempool altogether which would
+
+898
+01:17:59,239 --> 01:18:03,819
+ remove all the toxic MEV because you don't know what the transaction you're
+
+899
+01:18:03,819 --> 01:18:07,619
+ including actually represents so you can't sandwich someone with high
+
+900
+01:18:07,619 --> 01:18:19,059
+ slippage or extract stuff from individual users but it still it still leaves like non-toxic mbv
+
+901
+01:18:19,059 --> 01:18:26,099
+ like arbitrage between two exchanges and liquidation that still leaves it on the table
+
+902
+01:18:27,300 --> 01:18:33,460
+ so there will still be mbv existing for wanting to be at the top of the block and
+
+903
+01:18:37,619 --> 01:18:42,899
+ yeah, I'll try to remember to go back and share the paper about one-shot signatures.
+
+904
+01:18:44,819 --> 01:18:50,340
+ Yeah, the last item is BDFs, Verifiable Delay Function, which in a nutshell is just
+
+905
+01:18:50,340 --> 01:18:56,659
+ non-paralyzable proof-of-work where it's very slow to compute in one direction, so it's like
+
+906
+01:18:57,380 --> 01:19:04,099
+ you can verify that you had to wait or do some function that took you a lot of time,
+
+907
+01:19:04,100 --> 01:19:09,380
+ and then you can verify it easily after the fact it's like proof-of-work but not non-paralyzable
+
+908
+01:19:10,100 --> 01:19:16,180
+ and basically it would enhance the randomness using the beacon chain because today it's not
+
+909
+01:19:17,300 --> 01:19:22,900
+ it's not fully fully random because like the the validator in charge of proposing a block could
+
+910
+01:19:22,900 --> 01:19:28,500
+ decide to miss their slot on purpose to mess with the randomness but that's just like one bit
+
+911
+01:19:28,500 --> 01:19:39,460
+ of control over a lot of uh got more kept on the camera so yeah VDS there was some
+
+912
+01:19:39,460 --> 01:19:44,960
+ a paper recently that that proved that the construction that we were hoping for with VDS
+
+913
+01:19:44,960 --> 01:19:50,840
+ is actually weak so I don't know it's like in the far future thing it's another one of those things
+
+914
+01:19:50,840 --> 01:19:56,199
+ where it's not we don't strictly need it but it would be good to have so it's like in the end of
+
+915
+01:19:56,199 --> 01:19:59,500
+ the splurge roadmap.
+
+916
+01:20:01,739 --> 01:20:04,539
+ And yeah, that's it by presentation.
+
+917
+01:20:04,539 --> 01:20:06,319
+ Thank you for watching.
+
+918
+01:20:06,319 --> 01:20:09,119
+ I guess we have more time, like 10 minutes for question.
+
+919
+01:20:16,659 --> 01:20:18,439
+ Awesome Dom, thanks so much.
+
+920
+01:20:18,439 --> 01:20:21,699
+ Yeah, that was great presentation on the roadmap.
+
+921
+01:20:22,840 --> 01:20:25,639
+ Looks like we got a bunch of questions getting maybe typed
+
+922
+01:20:25,640 --> 01:20:33,160
+ in the chat right now um yeah let's see what we have to say here
+
+923
+01:20:41,320 --> 01:20:50,760
+ uh i'm curious do you have a a like an opinion on on what is the sort of highest priority
+
+924
+01:20:50,760 --> 01:20:52,220
+ topic
+
+925
+01:20:52,220 --> 01:20:55,760
+ on the roadmap as they're all kind of
+
+926
+01:20:55,760 --> 01:20:57,659
+ being developed and researched
+
+927
+01:20:57,659 --> 01:20:59,760
+ in parallel. What do you think
+
+928
+01:20:59,760 --> 01:21:01,520
+ is sort of the
+
+929
+01:21:01,520 --> 01:21:03,820
+ cream we should be looking
+
+930
+01:21:03,820 --> 01:21:04,119
+ at?
+
+931
+01:21:05,300 --> 01:21:07,680
+ Well, I think the next priority would be
+
+932
+01:21:07,680 --> 01:21:09,440
+ vertical trees, which are hopeful
+
+933
+01:21:09,440 --> 01:21:11,520
+ inclusion in the next work, but it's
+
+934
+01:21:11,520 --> 01:21:13,600
+ the transition
+
+935
+01:21:13,600 --> 01:21:15,539
+ between Merkel State Tree
+
+936
+01:21:15,539 --> 01:21:17,180
+ that we have today into the vertical tree
+
+937
+01:21:17,180 --> 01:21:19,380
+ still a few
+
+938
+01:21:19,380 --> 01:21:24,279
+ options that we have to weigh together, but I believe it's the big ticket item for the next
+
+939
+01:21:24,279 --> 01:21:31,180
+ fork. But yes, everything in parallel is cool. And blob space last week just alleviated a lot
+
+940
+01:21:31,180 --> 01:21:37,359
+ of the scaling concerns around layer twos. So that's a, gives us some more time to do the other
+
+941
+01:21:37,359 --> 01:21:44,940
+ big things. Yeah. It seems like Verkle is definitely like mostly researched and, and like
+
+942
+01:21:44,939 --> 01:21:49,839
+ it has a good amount of it's implementation already underway.
+
+943
+01:21:49,839 --> 01:21:51,399
+ What do you think is like,
+
+944
+01:21:52,699 --> 01:21:55,899
+ one of the topics that still has a lot of research
+
+945
+01:21:55,899 --> 01:21:56,979
+ or maybe a lot, you know,
+
+946
+01:21:56,979 --> 01:21:59,899
+ a lot of figuring out still to do that,
+
+947
+01:21:59,899 --> 01:22:03,939
+ that, you know, somebody in this study group might,
+
+948
+01:22:03,939 --> 01:22:07,199
+ you know, want to take on as like a pet project
+
+949
+01:22:07,199 --> 01:22:08,299
+ or something like that.
+
+950
+01:22:09,859 --> 01:22:13,779
+ Think enshrined PBS has a lot of like trade-offs
+
+951
+01:22:13,779 --> 01:22:18,219
+ and we've been bike-shading over various designs
+
+952
+01:22:18,219 --> 01:22:20,420
+ and there's always a trade-off to be made
+
+953
+01:22:20,420 --> 01:22:24,460
+ between latency and, I don't know,
+
+954
+01:22:24,460 --> 01:22:29,199
+ the various design proposed always have something
+
+955
+01:22:29,199 --> 01:22:30,539
+ that doesn't quite work,
+
+956
+01:22:30,539 --> 01:22:34,139
+ and it's always weird to keep things in mind,
+
+957
+01:22:34,139 --> 01:22:35,840
+ especially with inclusion lists.
+
+958
+01:22:37,019 --> 01:22:39,739
+ Inclusion lists with stateless validators
+
+959
+01:22:39,739 --> 01:22:41,079
+ doesn't mesh very well,
+
+960
+01:22:41,079 --> 01:22:43,359
+ So it's another active area of research.
+
+961
+01:22:44,380 --> 01:22:48,000
+ So my fear is that we're going to have to settle
+
+962
+01:22:48,000 --> 01:22:51,720
+ for the least bad design around enshrined PBS,
+
+963
+01:22:52,180 --> 01:22:54,079
+ which is kind of a shame
+
+964
+01:22:54,079 --> 01:22:56,640
+ because PBS itself is super cool as a concept.
+
+965
+01:22:59,380 --> 01:23:00,100
+ Cool.
+
+966
+01:23:04,199 --> 01:23:05,439
+ OXAI asks,
+
+967
+01:23:05,539 --> 01:23:07,519
+ what single thing has the most potential
+
+968
+01:23:07,519 --> 01:23:09,819
+ to simplify all of this complexity?
+
+969
+01:23:11,079 --> 01:23:16,779
+ as in like for PBS or just roadmap in general?
+
+970
+01:23:17,059 --> 01:23:20,000
+ I think it, I think they're referring to the roadmap generally.
+
+971
+01:23:22,180 --> 01:23:26,239
+ It seems like a lot of the stuff in the roadmap just adds more and more
+
+972
+01:23:26,239 --> 01:23:30,619
+ complexity to the protocol outside of like the, the,
+
+973
+01:23:30,619 --> 01:23:34,359
+ the purge stuff. Like what, what else,
+
+974
+01:23:34,579 --> 01:23:38,579
+ what is there that's maybe like reducing complexity or allowing some of this
+
+975
+01:23:38,579 --> 01:23:41,600
+ complexity to work together with itself.
+
+976
+01:23:42,899 --> 01:23:44,220
+ I'm not too sure.
+
+977
+01:23:45,340 --> 01:23:45,680
+ Yeah.
+
+978
+01:23:46,079 --> 01:23:47,340
+ Something to simplify.
+
+979
+01:23:47,340 --> 01:23:47,640
+ Yeah.
+
+980
+01:23:47,760 --> 01:23:51,720
+ Like if there's something that comes up and solve the same goals in a simpler
+
+981
+01:23:51,720 --> 01:23:57,359
+ way, then like that would be weighed very heavily compared to the other things we
+
+982
+01:23:57,359 --> 01:24:04,019
+ have planned, but like the roadmap it's pretty much, uh, no, I wouldn't say set
+
+983
+01:24:04,020 --> 01:24:06,520
+ it's a result of a lot of years of research,
+
+984
+01:24:06,520 --> 01:24:08,920
+ and then we know basically how to do stuff.
+
+985
+01:24:08,920 --> 01:24:12,580
+ And outside of this nightly picks that I mentioned around
+
+986
+01:24:12,580 --> 01:24:17,080
+ the EPBS, then I think that's pretty much the way to go.
+
+987
+01:24:17,080 --> 01:24:19,320
+ I would be surprised if something comes up and says,
+
+988
+01:24:19,320 --> 01:24:22,820
+ hey, we can solve all these things super and much simpler
+
+989
+01:24:22,820 --> 01:24:25,780
+ way, but I can't even welcome it for sure.
+
+990
+01:24:25,780 --> 01:24:27,560
+ That makes sense.
+
+991
+01:24:27,560 --> 01:24:29,980
+ I'm curious if you have any opinions
+
+992
+01:24:29,979 --> 01:24:34,539
+ any opinions on, on sort of the breadth of this roadmap and the
+
+993
+01:24:34,539 --> 01:24:39,219
+ potentials for ossification and, and the ability of cordevs to
+
+994
+01:24:39,219 --> 01:24:44,439
+ actually get all of this done before the protocol potentially
+
+995
+01:24:44,439 --> 01:24:45,279
+ ossifies?
+
+996
+01:24:47,679 --> 01:24:50,679
+ Yeah, ossification, we're not ready for ossification yet, in
+
+997
+01:24:50,679 --> 01:24:52,599
+ my opinion, but
+
+998
+01:24:53,379 --> 01:24:56,079
+ it Do you think that ossification is something that
+
+999
+01:24:56,079 --> 01:25:01,079
+ we have control over or something that is going to happen
+
+1000
+01:25:01,079 --> 01:25:05,680
+ out of the hands of people who are working on the protocol?
+
+1001
+01:25:05,680 --> 01:25:09,479
+ It really depends on how much we're ready to take
+
+1002
+01:25:09,479 --> 01:25:12,800
+ the required risks and implementation time
+
+1003
+01:25:12,800 --> 01:25:14,880
+ for the remaining items.
+
+1004
+01:25:14,880 --> 01:25:19,140
+ I think the roadmap itself is mostly ossified at this point.
+
+1005
+01:25:19,140 --> 01:25:21,640
+ So like there's a general agreement
+
+1006
+01:25:21,640 --> 01:25:22,960
+ that we're gonna do vertical trees,
+
+1007
+01:25:22,960 --> 01:25:27,399
+ even though it's super complex and kind of risky in terms of transitioning,
+
+1008
+01:25:27,939 --> 01:25:29,939
+ but it's something we know we're going to have to do.
+
+1009
+01:25:31,300 --> 01:25:35,380
+ But I think at some point, like 10, 15 years from now,
+
+1010
+01:25:35,380 --> 01:25:36,520
+ when all these things are done,
+
+1011
+01:25:36,699 --> 01:25:40,779
+ I think it's going to be much harder to go ahead and propose some change
+
+1012
+01:25:40,779 --> 01:25:45,060
+ that's on the same level of risk as the stuff we're about to undertake.
+
+1013
+01:25:46,180 --> 01:25:49,659
+ I think, like Nixo says in the chat,
+
+1014
+01:25:49,659 --> 01:25:51,579
+ ossification is not
+
+1015
+01:25:51,579 --> 01:25:54,139
+ necessarily possible. There's always
+
+1016
+01:25:54,139 --> 01:25:56,079
+ the possibility that something
+
+1017
+01:25:56,079 --> 01:25:58,019
+ happens and then we have to
+
+1018
+01:25:58,019 --> 01:25:59,859
+ change something but
+
+1019
+01:25:59,859 --> 01:26:01,479
+ there has to be a good reason.
+
+1020
+01:26:01,479 --> 01:26:03,519
+ I would rather to see
+
+1021
+01:26:03,519 --> 01:26:05,599
+ that door stay open a little bit
+
+1022
+01:26:05,599 --> 01:26:07,420
+ even though it's like an uphill
+
+1023
+01:26:07,420 --> 01:26:09,500
+ battle that's
+
+1024
+01:26:09,500 --> 01:26:11,479
+ becoming harder and harder
+
+1025
+01:26:11,479 --> 01:26:12,220
+ each fort.
+
+1026
+01:26:14,099 --> 01:26:15,119
+ Sure, yeah.
+
+1027
+01:26:15,619 --> 01:26:17,539
+ Just to clarify, ossification
+
+1028
+01:26:17,539 --> 01:26:18,899
+ is the process of
+
+1029
+01:26:18,899 --> 01:26:26,519
+ like the hardening of the protocol or making it much more challenging to, you know, make any kind
+
+1030
+01:26:26,519 --> 01:26:32,099
+ of upgrades for whatever reason it might be, you know, lots of people having a stake in what
+
+1031
+01:26:32,099 --> 01:26:39,839
+ happens and, you know, conversations and consensus being harder to reach and, you know, a number of
+
+1032
+01:26:39,839 --> 01:26:46,899
+ different ways that it might be that changes to the protocol are challenging to push through.
+
+1033
+01:26:48,899 --> 01:27:00,239
+ Cool. Any other questions from the chat here?
+
+1034
+01:27:00,239 --> 01:27:13,439
+ yeah ossification isn't necessarily a bad thing per se like you know yeah
+
+1035
+01:27:13,439 --> 01:27:27,719
+ awesome uh any last uh thoughts from you mario uh i had one more question what was the name of
+
+1036
+01:27:27,720 --> 01:27:33,560
+ the cat and like, can we make it a mascot of the EPF of the study group?
+
+1037
+01:27:33,560 --> 01:27:36,400
+ Like we were, we were still looking kind of for a mascot.
+
+1038
+01:27:36,400 --> 01:27:38,400
+ So it would it would release it with us.
+
+1039
+01:27:38,920 --> 01:27:39,140
+ Yeah.
+
+1040
+01:27:39,140 --> 01:27:41,079
+ The orange cat is Mimir.
+
+1041
+01:27:41,079 --> 01:27:42,920
+ I just put his name in the chat.
+
+1042
+01:27:43,020 --> 01:27:43,699
+ M-I-M-I-R.
+
+1043
+01:27:43,699 --> 01:27:44,420
+ Ha ha ha.
+
+1044
+01:27:45,119 --> 01:27:46,320
+ He's extremely orange.
+
+1045
+01:27:47,100 --> 01:27:47,680
+ Thank you so much.
+
+1046
+01:27:47,680 --> 01:27:47,860
+ Yeah.
+
+1047
+01:27:47,860 --> 01:27:48,400
+ We loved it.
+
+1048
+01:27:48,400 --> 01:27:49,280
+ And we loved your talk.
+
+1049
+01:27:49,280 --> 01:27:49,480
+ Yeah.
+
+1050
+01:27:49,480 --> 01:27:51,320
+ Thank you so much Dom it was it was really great.
+
+1051
+01:27:51,320 --> 01:27:56,659
+ And, and yeah, really appreciated going through all the, um, all the parts
+
+1052
+01:27:56,659 --> 01:28:01,779
+ the roadmap all the all the weeds all um especially during all those instructions
+
+1053
+01:28:01,779 --> 01:28:05,779
+ from the chat constantly asking and the cat constantly begging for attention so
+
+1054
+01:28:06,340 --> 01:28:11,619
+ we really appreciate it yeah it was great uh and thank you so much for being with us in the
+
+1055
+01:28:11,619 --> 01:28:17,939
+ discord i guess we can continue with some questions there as well um hope to have you around yeah
+
+1056
+01:28:18,500 --> 01:28:22,659
+ thank you for having me it's a really good giving this talk i love the roadmap in general
+
+1057
+01:28:22,659 --> 01:28:34,519
+ all right well we will see you all next uh on thursday for a workshop with mario on running a
+
+1058
+01:28:34,519 --> 01:28:41,340
+ node yeah so to to continue this week uh on thursday at the same time i'll see you uh with
+
+1059
+01:28:41,340 --> 01:28:47,599
+ like more practical hands-on uh um workshop and also like just to just to give you a heads up
+
+1060
+01:28:47,600 --> 01:28:57,720
+ Next week, we will also continue on Monday, and we will start the second phase of the study group,
+
+1061
+01:28:57,800 --> 01:29:04,640
+ and I'll share the exact schedule of the next five weeks in the wiki later this week.
+
+1062
+01:29:05,100 --> 01:29:10,000
+ But to give you a heads up, next week, there will be also Monday and Thursday talk at a regular time.
+
+1063
+01:29:10,000 --> 01:29:13,820
+ So I'll see you Thursday and next week, yeah.
+
+1064
+01:29:13,819 --> 01:29:20,979
+ awesome thanks everybody we'll see you on thursday thank you see you
+
+1065
+01:29:20,979 --> 01:29:23,380
+ thank you so much thanks a little dumb again
+
+1066
+01:30:13,819 --> 01:30:21,219
+ Thank you.
+

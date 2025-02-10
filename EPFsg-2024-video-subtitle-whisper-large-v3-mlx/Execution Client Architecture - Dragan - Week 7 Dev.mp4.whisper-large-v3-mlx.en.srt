@@ -1,0 +1,3804 @@
+1
+00:00:30,000 --> 00:00:59,980
+ Thank you.
+
+2
+00:01:00,000 --> 00:01:29,980
+ Thank you.
+
+3
+00:01:30,000 --> 00:01:40,000
+ ¶¶
+
+4
+00:01:40,000 --> 00:01:50,000
+ ¶¶
+
+5
+00:01:50,000 --> 00:02:00,000
+ ¶¶
+
+6
+00:02:00,000 --> 00:02:10,000
+ ¶¶
+
+7
+00:02:10,000 --> 00:02:20,000
+ ¶¶
+
+8
+00:02:20,000 --> 00:02:30,000
+ ¶¶
+
+9
+00:02:30,000 --> 00:02:59,979
+ I love you.
+
+10
+00:03:00,000 --> 00:03:29,979
+ Thank you.
+
+11
+00:04:30,000 --> 00:04:59,980
+ Thank you.
+
+12
+00:05:00,000 --> 00:05:20,100
+ All right.
+
+13
+00:05:20,100 --> 00:05:25,660
+ Welcome back to the Ethereum Protocol Fellowship study group.
+
+14
+00:05:25,660 --> 00:05:40,880
+ We are here on the seventh week, the development track today with Dragan from Reth, here to talk about the intricacies of an execution client.
+
+15
+00:05:41,480 --> 00:05:46,560
+ So, Mario, if you want to give a quick introduction for Dragan, and we will get started here.
+
+16
+00:05:46,560 --> 00:05:52,079
+ Yeah, of course. First of all, thank you so much Dragan for coming it's an honor to have you here
+
+17
+00:05:52,720 --> 00:06:01,360
+ because you really fit in our study group schedule. We had Constance and Execution Layer Specs
+
+18
+00:06:02,399 --> 00:06:07,680
+ last week in the first part of the development track and starting from the abstract level of
+
+19
+00:06:07,680 --> 00:06:13,759
+ Specs, we are now going to dive into the actual client this week, the Execution Client, and it's
+
+20
+00:06:13,759 --> 00:06:17,199
+ it's really great to have Dragan representing Red here.
+
+21
+00:06:17,199 --> 00:06:18,939
+ Red is relatively new,
+
+22
+00:06:18,939 --> 00:06:22,319
+ I believe it's the youngest execution client at this point.
+
+23
+00:06:22,319 --> 00:06:26,599
+ Before, we had a similar dive from Matt into Get,
+
+24
+00:06:26,599 --> 00:06:28,159
+ not that Get specific,
+
+25
+00:06:28,159 --> 00:06:32,060
+ but still Get is basically the oldest living client.
+
+26
+00:06:32,060 --> 00:06:35,420
+ And today we will have the comparison,
+
+27
+00:06:35,420 --> 00:06:39,000
+ the big architectural changes that Red did,
+
+28
+00:06:39,000 --> 00:06:40,459
+ because Red is very interesting,
+
+29
+00:06:40,459 --> 00:06:42,839
+ not just from the perspective of being new,
+
+30
+00:06:42,839 --> 00:06:50,679
+ in Rust, but making many interesting choices and overhauling the whole execution layer design.
+
+31
+00:06:51,719 --> 00:06:57,799
+ So it's very interesting to learn from you. Dragan is creator of RV-EVM, the Rust
+
+32
+00:06:57,799 --> 00:07:03,000
+ implementation of the EVM, and I believe the lead developer of Red, correct me if I'm wrong there,
+
+33
+00:07:03,639 --> 00:07:09,799
+ but one of the main maintainers of the Red, which, by the way, recently became
+
+34
+00:07:09,800 --> 00:07:16,040
+ uh Beta production ready uh mostly right uh so congrats on that it's it's really great and uh
+
+35
+00:07:16,040 --> 00:07:20,780
+ you're here to present it so yeah the stage is yours uh please uh feel free to share your screen
+
+36
+00:07:20,780 --> 00:07:32,900
+ and um and uh dive into the red code base uh hi hello everybody uh yeah I am before the revm and
+
+37
+00:07:32,899 --> 00:07:40,259
+ before that i was part of open ethereum and i worked on one of the rust client it got deprecated
+
+38
+00:07:40,979 --> 00:07:46,659
+ and after that revm got used by foundry and everything and judges came say hey let's build
+
+39
+00:07:46,659 --> 00:07:53,139
+ a client and judges leading the main effort around it so i joined help a little bit and
+
+40
+00:07:53,139 --> 00:08:01,699
+ And yeah, I'm there and doing RET and REVM and everything, everything between.
+
+41
+00:08:03,539 --> 00:08:06,500
+ Let's start sharing screen.
+
+42
+00:08:10,740 --> 00:08:13,319
+ Yeah, a shameful screen.
+
+43
+00:08:13,560 --> 00:08:14,639
+ Sorry about this.
+
+44
+00:08:16,680 --> 00:08:22,800
+ Let's start for...
+
+45
+00:08:23,139 --> 00:08:25,279
+ Just a second.
+
+46
+00:08:26,439 --> 00:08:27,120
+ Yeah.
+
+47
+00:08:27,939 --> 00:08:33,819
+ This is a quick presentation that Georgios did recently.
+
+48
+00:08:34,639 --> 00:08:38,139
+ It's a good-like introduction on the RET, how it started,
+
+49
+00:08:38,399 --> 00:08:43,220
+ basically where are we now and the future and hours that we want to make
+
+50
+00:08:43,220 --> 00:08:47,960
+ and where we want to basically move it.
+
+51
+00:08:47,960 --> 00:09:00,560
+ it's introduced in December 2020 it's it was in that point of time it was a few months of effort
+
+52
+00:09:00,560 --> 00:09:10,100
+ I think we just finished our off-site where we finally appeared over P2P so that was very
+
+53
+00:09:10,100 --> 00:09:17,840
+ exciting at that point of time we only had like evm that's uh used it foundry and it was very
+
+54
+00:09:17,840 --> 00:09:29,600
+ exciting times uh first release of happened in June uh basically this is where we synced the
+
+55
+00:09:29,600 --> 00:09:39,440
+ client where we successfully synced from Genesis to the tip of the chain and yeah that's where we
+
+56
+00:09:39,440 --> 00:09:40,900
+ entered alpha software.
+
+57
+00:09:43,600 --> 00:09:47,780
+ And just recently, like few weeks ago,
+
+58
+00:09:47,780 --> 00:09:49,100
+ we entered beta.
+
+59
+00:09:51,200 --> 00:09:54,060
+ Few of our requirement for entering beta
+
+60
+00:09:54,060 --> 00:09:58,560
+ was some breaking changes on database that we had.
+
+61
+00:09:58,560 --> 00:10:03,560
+ And we started auditing both the RET and our EVM
+
+62
+00:10:04,080 --> 00:10:09,080
+ so that we are more sure
+
+63
+00:10:09,080 --> 00:10:12,740
+ that the client behaves as it should be.
+
+64
+00:10:12,740 --> 00:10:16,580
+ It helps a lot when you have audits done.
+
+65
+00:10:16,580 --> 00:10:21,520
+ But even without that, there is a big user base
+
+66
+00:10:21,520 --> 00:10:24,300
+ that all the user at in production,
+
+67
+00:10:24,300 --> 00:10:29,780
+ and it was very nice to see that.
+
+68
+00:10:29,780 --> 00:10:35,040
+ If I read, those are few points, client diversity,
+
+69
+00:10:35,039 --> 00:10:44,759
+ Having fast, stable client that everybody can use for staking or just tinkering around it,
+
+70
+00:10:44,759 --> 00:10:54,379
+ or just using it for some hobby projects, or even using it for production to facilitate any provider infrastructure that they need.
+
+71
+00:10:55,620 --> 00:11:01,579
+ Talent resilience, more people knowing about core dev, knowing about core protocol.
+
+72
+00:11:02,719 --> 00:11:04,699
+ That's all it goes to see.
+
+73
+00:11:05,039 --> 00:11:15,759
+ clients stability uh yeah we need client to build the high gas per second l2 world we want to extend
+
+74
+00:11:15,759 --> 00:11:24,959
+ red to be uh to be usable by a lot of people even l2 cell trees whatever they come and codex stability
+
+75
+00:11:24,959 --> 00:11:30,879
+ it should be easy to extend rpc to extend evm with new pretty copals average around it
+
+76
+00:11:30,879 --> 00:11:43,480
+ Fastest goals, L1 Ethereum usage, fastest L2, and infrastructure for building EVM.
+
+77
+00:11:43,480 --> 00:11:54,100
+ We are very open for any contributor that wants to basically jump into the code or check
+
+78
+00:11:54,100 --> 00:12:00,580
+ for good first issues and just open pr we're very proud for that because they have good
+
+79
+00:12:01,300 --> 00:12:07,779
+ fast first response for any core contributors and that's why we have these nice stats
+
+80
+00:12:11,139 --> 00:12:16,420
+ they are basically growing we are growing the stars stars and unique contributors
+
+81
+00:12:16,419 --> 00:12:27,000
+ uh we are fast uh for syncing red from the Genesis to the tip it takes 50 hours and it
+
+82
+00:12:27,000 --> 00:12:30,639
+ is around two gigabytes two terabytes of data
+
+83
+00:12:30,639 --> 00:12:42,919
+ uh historical sync breakdown ah this was for 2023 uh we just recently with the beta switch
+
+84
+00:12:42,919 --> 00:12:49,000
+ to the static files i'll talk about that a little bit later but our archive node is
+
+85
+00:12:49,719 --> 00:13:00,279
+ around two terabytes while our full node is around one terabyte a single time in 2024 is 48
+
+86
+00:13:00,919 --> 00:13:05,399
+ while in 2023 it was 50. so even with increased
+
+87
+00:13:05,399 --> 00:13:16,500
+ state and increased like new blocks came for a year we are now a little bit faster than
+
+88
+00:13:16,500 --> 00:13:24,819
+ we were a year ago but we'll know this even more uh because we don't save all the data
+
+89
+00:13:24,820 --> 00:13:30,660
+ So 42 hours for full genesis to the tip sync is very nice.
+
+90
+00:13:35,220 --> 00:13:41,180
+ There is the Ergon and what we used from it.
+
+91
+00:13:41,400 --> 00:13:46,220
+ We have split how we sync the blocks.
+
+92
+00:13:46,580 --> 00:13:47,960
+ We have historical sync.
+
+93
+00:13:48,740 --> 00:13:52,700
+ Basically, the part of the rat is optimized to sync historical blocks.
+
+94
+00:13:52,700 --> 00:14:02,700
+ and we can see that we can have two or depending on the block this is millions of blocks we can
+
+95
+00:14:02,700 --> 00:14:11,160
+ have two giga gas per second for historical sync because we optimize on that and while on the live
+
+96
+00:14:11,160 --> 00:14:20,220
+ sync where we include block by block and check the state routes for every block it is a lot less
+
+97
+00:14:20,220 --> 00:14:28,540
+ it's 100 to 200 megabytes per second mega gas per second this is measured by mega it labs
+
+98
+00:14:30,779 --> 00:14:38,620
+ we benchmark those stuff by flood and by creo but very nice tools made by paradigm
+
+99
+00:14:40,620 --> 00:14:48,220
+ yeah we are currently transitioning we transition to the beta and we have support for the cancun and
+
+100
+00:14:48,220 --> 00:14:49,680
+ and everything like that.
+
+101
+00:14:49,680 --> 00:15:00,820
+ We are fuzzing the EVM currently, and we support OP stack.
+
+102
+00:15:00,820 --> 00:15:04,120
+ Snapshot syncs are done by the Merkle.
+
+103
+00:15:04,120 --> 00:15:08,899
+ You don't even need to sync from JS to the tip.
+
+104
+00:15:08,899 --> 00:15:13,779
+ You can just download the snapshot and just reuse it.
+
+105
+00:15:13,779 --> 00:15:16,960
+ We have good docs that are nice to read.
+
+106
+00:15:16,960 --> 00:15:21,000
+ based on RPC with all the traces that you need.
+
+107
+00:15:21,000 --> 00:15:27,600
+ Yeah, we get RET in recently just entered protocol guild.
+
+108
+00:15:27,600 --> 00:15:31,440
+ That was very nice to see.
+
+109
+00:15:31,440 --> 00:15:35,700
+ In production, this one meme that was made,
+
+110
+00:15:35,700 --> 00:15:40,740
+ I'm running Validato with RET Prism, run test net, right?
+
+111
+00:15:40,740 --> 00:15:41,780
+ Test net.
+
+112
+00:15:41,780 --> 00:15:45,060
+ So there are people running RET.
+
+113
+00:15:45,059 --> 00:15:49,459
+ And even as the validator, it's very nice to see.
+
+114
+00:15:52,159 --> 00:15:56,819
+ We target production to be production-ready in May.
+
+115
+00:15:56,819 --> 00:16:01,799
+ So there are two audits currently in progress.
+
+116
+00:16:01,799 --> 00:16:06,519
+ SimulPrior does the RET, and REVM is done by Gaudo.
+
+117
+00:16:06,519 --> 00:16:13,739
+ He's first ETH bug bounty leader on leaderboard.
+
+118
+00:16:13,740 --> 00:16:18,740
+ And there is cheat tracks for development performance.
+
+119
+00:16:19,419 --> 00:16:24,419
+ So there's few paths that we can be exploring
+
+120
+00:16:24,980 --> 00:16:27,700
+ from gTVM to Parallel-EVM
+
+121
+00:16:28,539 --> 00:16:33,539
+ to be just paralyzed our market tree calculation
+
+122
+00:16:34,000 --> 00:16:35,340
+ that's currently merged.
+
+123
+00:16:36,440 --> 00:16:41,440
+ And kernel is allowing modification
+
+124
+00:16:41,440 --> 00:16:46,440
+ modification on the current code outside of the repo.
+
+125
+00:16:46,440 --> 00:16:47,980
+ So you don't need to clone it.
+
+126
+00:16:47,980 --> 00:16:51,240
+ You need to fork it and make changes.
+
+127
+00:16:51,240 --> 00:16:56,900
+ That can be very troublesome and time-consuming.
+
+128
+00:16:56,900 --> 00:17:02,960
+ You can just use all but all these there and just extend it
+
+129
+00:17:02,960 --> 00:17:09,320
+ by RPC endpoint or Nuprix Opal.
+
+130
+00:17:09,319 --> 00:17:14,119
+ We shipped Cancun via on top of the Electro Prague.
+
+131
+00:17:14,119 --> 00:17:17,079
+ I'm basically working on EOF currently.
+
+132
+00:17:17,079 --> 00:17:20,259
+ We are looking in vertical trees, account obstruction.
+
+133
+00:17:20,259 --> 00:17:27,419
+ There are few APIs implemented as the part of the kernel,
+
+134
+00:17:27,419 --> 00:17:31,500
+ or part of the node builder, sorry.
+
+135
+00:17:31,500 --> 00:17:38,519
+ Yeah, performance, this is paths that we investigate currently.
+
+136
+00:17:39,319 --> 00:17:41,339
+ Some of them are probably going to be implemented.
+
+137
+00:17:42,980 --> 00:17:47,819
+ All right, kernel is SDK for bleeding-edge EVM infrastructure.
+
+138
+00:17:48,619 --> 00:17:53,619
+ Basically, you can make pluggable components that plug in the current node
+
+139
+00:17:53,619 --> 00:17:54,619
+ and just extend it.
+
+140
+00:17:55,599 --> 00:18:00,000
+ A few ideas to merge a lot of project that needs to be run in the parallel
+
+141
+00:18:00,000 --> 00:18:04,700
+ into one binary that can be very nicely run mainnet
+
+142
+00:18:04,700 --> 00:18:06,839
+ and everything is there.
+
+143
+00:18:06,839 --> 00:18:14,740
+ These are a few examples.
+
+144
+00:18:14,740 --> 00:18:20,039
+ I will go over them slightly.
+
+145
+00:18:20,039 --> 00:18:25,959
+ This is examples of RedKernel.
+
+146
+00:18:25,959 --> 00:18:34,079
+ And beyond, yeah, multi-node roll-ups, multi-tenants, node architecture.
+
+147
+00:18:34,079 --> 00:18:40,879
+ Sure, we'll see it will be very nice to have like breath node mainnet, top mainnet, everything
+
+148
+00:18:40,879 --> 00:18:53,960
+ running on with one command, but this is more like mid to not immediate priority, not immediate.
+
+149
+00:18:53,960 --> 00:18:55,839
+ Yeah.
+
+150
+00:18:55,839 --> 00:19:04,899
+ I'm sure if you guys have any comments or anything you want to ask or anything you want
+
+151
+00:19:04,899 --> 00:19:10,059
+ to say, just write it and I will see it to answer it.
+
+152
+00:19:10,059 --> 00:19:13,240
+ I will check chat from time to time.
+
+153
+00:19:13,240 --> 00:19:16,539
+ Mario, if you can ping me from-
+
+154
+00:19:16,539 --> 00:19:22,299
+ Yeah, most of the time our chat happens in a Discord channel, which I can send you
+
+155
+00:19:22,299 --> 00:19:23,839
+ a link to if you want to join it.
+
+156
+00:19:23,839 --> 00:19:30,959
+ But Mario and I will triage most of the questions that happen in that channel and answer what we can,
+
+157
+00:19:31,359 --> 00:19:36,039
+ and then bring up any questions that seem relevant or pertinent for you to answer.
+
+158
+00:19:36,899 --> 00:19:37,799
+ Okay, nice.
+
+159
+00:19:38,059 --> 00:19:39,240
+ That sounds great.
+
+160
+00:19:40,419 --> 00:19:40,559
+ Great.
+
+161
+00:19:41,240 --> 00:19:43,439
+ Yeah, I want to do a quick introduction.
+
+162
+00:19:43,599 --> 00:19:45,980
+ These slides were very great about that.
+
+163
+00:19:45,980 --> 00:19:53,579
+ So after that, I know that this is expected to be more technical, so I will dive into the code.
+
+164
+00:19:53,839 --> 00:19:59,379
+ and check components that are interested, that is different from the get architecture
+
+165
+00:19:59,379 --> 00:20:05,179
+ and why they are different and what the more differences that we have.
+
+166
+00:20:05,179 --> 00:20:14,899
+ So, yeah, hope that it's okay.
+
+167
+00:20:14,899 --> 00:20:20,879
+ Not RAM, but Paradym.
+
+168
+00:20:20,880 --> 00:20:27,560
+ Redd has a lot, Paradigm in general, it has a lot of projects that we work on.
+
+169
+00:20:27,560 --> 00:20:29,760
+ Redd is the client that we work on.
+
+170
+00:20:29,760 --> 00:20:36,440
+ Foundry is testing for the testing and everything around it.
+
+171
+00:20:36,440 --> 00:20:45,340
+ Alloy is, it's mostly on the Redd dependencies.
+
+172
+00:20:45,339 --> 00:20:52,439
+ Alloy allows, it gives us the primitives, big numbers, it gives us RPC types, it gives
+
+173
+00:20:52,439 --> 00:20:58,639
+ us everything around the, like, array coding, everything around it.
+
+174
+00:20:58,639 --> 00:21:03,439
+ So primitives are mostly found in the alloy.
+
+175
+00:21:03,439 --> 00:21:14,619
+ There is REVM, it's just EVM that have journaling, it has, it allows running the section, whatever
+
+176
+00:21:14,619 --> 00:21:20,939
+ intersection that is and our rat is the the guy that used all that
+
+177
+00:21:22,939 --> 00:21:30,939
+ and the main the client and binary project is divided in the binaries and the crates
+
+178
+00:21:30,939 --> 00:21:40,459
+ binaries have just uh commands and basically encapsulating everything from the crates inside
+
+179
+00:21:40,460 --> 00:21:44,120
+ it one crate.
+
+180
+00:21:44,120 --> 00:21:51,960
+ And inside, there is a lot of crates that basically, we
+
+181
+00:21:51,960 --> 00:21:58,220
+ wanted to make it to be easy navigatable,
+
+182
+00:21:58,220 --> 00:22:04,819
+ and for every crate to be reusable by other parties.
+
+183
+00:22:04,819 --> 00:22:08,740
+ For example, everything around storage is in the Site Storage,
+
+184
+00:22:08,740 --> 00:22:12,599
+ and we have database provider, codecs, everything
+
+185
+00:22:12,599 --> 00:22:16,859
+ that encapsulates saving or loading data from the database.
+
+186
+00:22:16,859 --> 00:22:20,819
+ This allows you use cases where you can use providers
+
+187
+00:22:20,819 --> 00:22:23,579
+ that are obstruction over the database,
+
+188
+00:22:23,579 --> 00:22:28,579
+ that have some utility function, get block for example,
+
+189
+00:22:29,759 --> 00:22:34,160
+ and run that as the, use just this library
+
+190
+00:22:34,160 --> 00:22:41,640
+ and run that as the standalone process that
+
+191
+00:22:41,640 --> 00:22:44,019
+ can read directly for the database.
+
+192
+00:22:44,019 --> 00:22:46,840
+ This is a very nice use case, because it gives you
+
+193
+00:22:46,840 --> 00:22:49,540
+ a lot more performant reads.
+
+194
+00:22:49,540 --> 00:22:54,580
+ You don't need to ping JSON-RPC or IPC or everything like that.
+
+195
+00:22:54,580 --> 00:22:57,380
+ You can directly read from the database, from the disk.
+
+196
+00:22:57,380 --> 00:23:16,060
+ it was yeah maybe it's better to start um I think this this slides I made last year
+
+197
+00:23:16,059 --> 00:23:25,019
+ but the few things have changed but um the main overlook is still the same
+
+198
+00:23:27,179 --> 00:23:32,619
+ uh the red is driven by the engine engine is the main brain behind the
+
+199
+00:23:34,299 --> 00:23:40,700
+ that drives every other component and it receives for choice update from the consensus layer
+
+200
+00:23:40,700 --> 00:23:46,360
+ and checks if that block or hash that is received
+
+201
+00:23:46,360 --> 00:23:48,039
+ for the consensus layer is valid
+
+202
+00:23:48,039 --> 00:23:52,200
+ or basically decides what to do with it.
+
+203
+00:23:53,360 --> 00:23:56,920
+ There is, as I said, RAT has two modes of the syncing.
+
+204
+00:23:56,920 --> 00:24:01,880
+ One is the historical sync that's done by the pipeline.
+
+205
+00:24:02,340 --> 00:24:08,700
+ Basically, pipeline executes, basically, syncs in the stages.
+
+206
+00:24:08,700 --> 00:24:17,039
+ and when you sync in the stages it you can optimize those stages and allow allows that
+
+207
+00:24:17,039 --> 00:24:24,960
+ allows you to be more optimized in basically faster and while when we are close to the tip
+
+208
+00:24:24,960 --> 00:24:32,819
+ of the of the chain we switch to the blockchain tree blockchain tree is another way that we sync
+
+209
+00:24:32,819 --> 00:24:41,299
+ to basically near the tip where state truth, validation, execution happen everything inside
+
+210
+00:24:41,299 --> 00:24:53,059
+ the memory only when the block gets canonicalized it get basically moved to the database provider
+
+211
+00:24:53,059 --> 00:25:00,339
+ is abstraction over the database that allows some helper function so that we don't need to
+
+212
+00:25:00,339 --> 00:25:11,299
+ had to directly use key validation. Downloader it's used by both the pipeline for its first two stages
+
+213
+00:25:12,179 --> 00:25:21,059
+ or by the engine if it needs to close the gap to the tip it's used to download blocks and headers
+
+214
+00:25:21,059 --> 00:25:29,619
+ from the p2p and it's basically from p2p we when we are close to the tip we push those new
+
+215
+00:25:29,619 --> 00:25:38,819
+ transactions that we receive to the section pool and the section pool basically it is ethereum's
+
+216
+00:25:38,819 --> 00:25:48,259
+ ddos protection it has n number of the section ordered by uh the the gas price that users want
+
+217
+00:25:48,259 --> 00:25:56,819
+ to pay and payload builder basically takes and first the sections build the new payload that's
+
+218
+00:25:56,819 --> 00:26:06,500
+ needed for the engine a few more components are added uh like snapshotting snapshotting is
+
+219
+00:26:06,500 --> 00:26:18,920
+ is our way how um just static file sorry static files where we move some data directly to the
+
+220
+00:26:18,920 --> 00:26:26,900
+ different kind of database that that is in the binary form and the additional component is here
+
+221
+00:26:26,900 --> 00:26:36,800
+ it's pruner it allows it allows us to have a full load basically after the blockchain tree
+
+222
+00:26:36,800 --> 00:26:46,519
+ canonicalize the block that block needs to wait for like additional two blocks 64 blocks to get
+
+223
+00:26:46,519 --> 00:26:54,680
+ finalized after it gets finalized or i think we have some buffer 10k but after it gets finalized
+
+224
+00:26:54,680 --> 00:27:04,060
+ We know that it's not going to be reorg or if we are in the full node, we can remove some data.
+
+225
+00:27:07,060 --> 00:27:19,980
+ But yeah, those components are missing, but this flow is still the same or similar that it was before.
+
+226
+00:27:24,680 --> 00:27:41,500
+ Let's jump into, yeah, I think the main difference here is the in-pipeline, I will go over it.
+
+227
+00:27:41,500 --> 00:27:50,120
+ Because the stages, how we download blocks, how we check the blocks are what's different
+
+228
+00:27:50,119 --> 00:27:53,979
+ from the get architecture.
+
+229
+00:27:53,979 --> 00:28:01,459
+ And I will go for that inside the code.
+
+230
+00:28:01,460 --> 00:28:04,940
+ Not that, RET.
+
+231
+00:28:10,759 --> 00:28:24,680
+ Creates RPC pipeline stages.
+
+232
+00:28:24,680 --> 00:28:35,080
+ yes yeah but before that we take good care of adding a lot of documentation
+
+233
+00:28:35,799 --> 00:28:40,840
+ around mostly in the code so it's easier to modify and extend
+
+234
+00:28:42,840 --> 00:28:47,960
+ so it would be good to check documentation first uh not that
+
+235
+00:28:47,960 --> 00:28:59,299
+ But it's pipeline, no, it's stages.
+
+236
+00:28:59,299 --> 00:29:05,840
+ Yeah.
+
+237
+00:29:05,840 --> 00:29:11,900
+ Stage, in general, is very simple.
+
+238
+00:29:11,900 --> 00:29:17,900
+ it have it's id it have execute like hey i need to execute you're the next for execution
+
+239
+00:29:18,540 --> 00:29:24,140
+ unbind unbind is needed if some uh real happen and we need to unbind the
+
+240
+00:29:24,940 --> 00:29:30,380
+ that stage that basically can have side block or side data
+
+241
+00:29:32,300 --> 00:29:38,860
+ and this is helper function to fetch it if it is over ready or not
+
+242
+00:29:38,859 --> 00:29:43,019
+ Where is it?
+
+243
+00:29:43,019 --> 00:29:46,019
+ The stages.
+
+244
+00:29:46,019 --> 00:29:48,019
+ Pipeline.
+
+245
+00:29:48,019 --> 00:29:53,079
+ Just a second.
+
+246
+00:29:53,079 --> 00:30:02,399
+ Okay, let's jump into the code.
+
+247
+00:30:02,399 --> 00:30:08,279
+ Maybe it's here.
+
+248
+00:30:08,279 --> 00:30:20,039
+ The pipeline basically consists of multiple stages.
+
+249
+00:30:20,039 --> 00:30:28,059
+ The pipeline is used for some of the command line interface to basically, if you want to
+
+250
+00:30:28,059 --> 00:30:34,700
+ unwind just particular stage or we want to execute just particular stage it's used for
+
+251
+00:30:34,700 --> 00:30:44,460
+ testing or use it for debugging or development or anything where you just want to, for example,
+
+252
+00:30:44,460 --> 00:30:48,940
+ run just Merkle stage, drop Merkle stage, drop those tables and just run it again.
+
+253
+00:30:50,860 --> 00:30:58,140
+ Here's a list of default setup where we have from the first to the last stage.
+
+254
+00:30:58,140 --> 00:31:07,380
+ stage. First two stages, header stage and body stage are basically network stages where
+
+255
+00:31:07,380 --> 00:31:18,900
+ they fetch in this stage headers and here they fetch bodies. They fetch it by the bundle
+
+256
+00:31:18,900 --> 00:31:27,860
+ of the end bodies and they need to wait for the p2p to for nodes that that we requested
+
+257
+00:31:28,900 --> 00:31:36,820
+ blocks to return the body or the header stage so that we need to take care if the body
+
+258
+00:31:36,820 --> 00:31:41,460
+ or is not received or we need to check if that's correct body that we see
+
+259
+00:31:42,980 --> 00:31:45,780
+ we cannot see the stages you're showing a different slide
+
+260
+00:31:45,779 --> 00:31:51,740
+ Oh, I wanted to jump into the code.
+
+261
+00:31:51,740 --> 00:31:52,940
+ Sorry.
+
+262
+00:31:52,940 --> 00:31:57,539
+ Yeah, we see different browser window.
+
+263
+00:31:57,539 --> 00:31:58,539
+ Thanks.
+
+264
+00:31:58,539 --> 00:31:59,539
+ Okay.
+
+265
+00:31:59,539 --> 00:32:00,539
+ Okay.
+
+266
+00:32:00,539 --> 00:32:02,359
+ I didn't know that.
+
+267
+00:32:02,359 --> 00:32:06,480
+ Let me stop sharing.
+
+268
+00:32:06,480 --> 00:32:11,740
+ Sorry, I jumped into share screen.
+
+269
+00:32:11,740 --> 00:32:16,859
+ uh yeah i want to check this
+
+270
+00:32:16,859 --> 00:32:21,400
+ uh can you see my
+
+271
+00:32:21,400 --> 00:32:27,859
+ no we didn't see now
+
+272
+00:32:27,859 --> 00:32:32,799
+ entire screen
+
+273
+00:32:41,740 --> 00:32:47,019
+ Okay, I need to enable it.
+
+274
+00:32:47,019 --> 00:32:51,240
+ I need to come back.
+
+275
+00:32:51,240 --> 00:32:53,079
+ I need to reopen the Chrome.
+
+276
+00:32:53,079 --> 00:32:55,960
+ Just a second.
+
+277
+00:32:55,960 --> 00:32:59,140
+ Okay, so we have a quick intermission.
+
+278
+00:32:59,140 --> 00:33:06,559
+ Folks, meanwhile, feel free to ask any questions you had so far.
+
+279
+00:33:06,559 --> 00:33:12,799
+ And it's written in different.
+
+280
+00:33:12,799 --> 00:33:15,039
+ Mario, maybe you want to talk a little bit
+
+281
+00:33:15,039 --> 00:33:18,599
+ about what the difference is between a historical sync
+
+282
+00:33:18,599 --> 00:33:22,839
+ and a live sync or a Snap sync sort of situation.
+
+283
+00:33:22,839 --> 00:33:27,779
+ Yeah, I wanted to ask Dragan so he can give more detailed
+
+284
+00:33:27,779 --> 00:33:32,399
+ explanation, because it might be more specific to the red code
+
+285
+00:33:32,399 --> 00:33:33,220
+ base in generally.
+
+286
+00:33:33,220 --> 00:33:44,319
+ it mean, like, whether the full node is pulling the current data and using them to sync or
+
+287
+00:33:44,319 --> 00:33:45,319
+ seeing it from genesis?
+
+288
+00:33:45,319 --> 00:33:50,380
+ There was some question about the live sync versus the historical sync, Dragan, but we
+
+289
+00:33:50,380 --> 00:33:52,380
+ can get into that later.
+
+290
+00:33:52,380 --> 00:33:53,380
+ Yeah.
+
+291
+00:33:53,380 --> 00:33:55,460
+ Do you want it to go?
+
+292
+00:33:55,460 --> 00:33:56,759
+ Yeah, it should be fine now.
+
+293
+00:33:56,759 --> 00:33:57,759
+ Just a second.
+
+294
+00:33:57,759 --> 00:34:03,160
+ I want to share my full screen and I jumped into VCCode.
+
+295
+00:34:04,740 --> 00:34:05,299
+ Yeah.
+
+296
+00:34:05,579 --> 00:34:06,480
+ Do you see it now?
+
+297
+00:34:07,259 --> 00:34:07,940
+ Yes, perfect.
+
+298
+00:34:08,599 --> 00:34:09,059
+ Okay.
+
+299
+00:34:09,519 --> 00:34:09,880
+ Okay.
+
+300
+00:34:10,039 --> 00:34:10,860
+ Sorry about that.
+
+301
+00:34:11,500 --> 00:34:12,480
+ I thought we had same.
+
+302
+00:34:12,480 --> 00:34:12,840
+ No problem.
+
+303
+00:34:13,019 --> 00:34:13,139
+ Yeah.
+
+304
+00:34:14,880 --> 00:34:18,639
+ Do you want maybe to go over the questions or do you want to go over them later?
+
+305
+00:34:18,639 --> 00:34:18,780
+ Yeah, yeah.
+
+306
+00:34:18,980 --> 00:34:22,079
+ We can cover some of the questions now.
+
+307
+00:34:22,079 --> 00:34:33,420
+ So yeah, the question was, let me read it properly.
+
+308
+00:34:33,420 --> 00:34:37,039
+ What is the difference between historical sync and a live sync?
+
+309
+00:34:40,539 --> 00:34:45,619
+ P historical sync is like syncing historical blocks.
+
+310
+00:34:45,619 --> 00:34:51,500
+ But live sync is syncing the blocks that come from the consensus layer.
+
+311
+00:34:51,500 --> 00:34:55,820
+ Those are the next block that's going to be proposed by consensus layer.
+
+312
+00:34:55,820 --> 00:34:59,179
+ While historical sync is syncing those blocks that are already proposed,
+
+313
+00:34:59,179 --> 00:35:01,260
+ all the known, and all the verified.
+
+314
+00:35:02,860 --> 00:35:06,300
+ So we have different kind of like assumptions here.
+
+315
+00:35:07,019 --> 00:35:10,300
+ For consensus layer, when we receive block for consensus layer,
+
+316
+00:35:10,300 --> 00:35:13,900
+ which we receive just one block, maybe multiple blocks,
+
+317
+00:35:13,900 --> 00:35:17,500
+ but they are mostly like near the tip, like the newest block.
+
+318
+00:35:17,500 --> 00:35:26,380
+ block but for the historical sync we have we all didn't know and we already know what block needs
+
+319
+00:35:26,380 --> 00:35:33,699
+ to be re-execute so we are executing everything again and we are executing them from like Genesis
+
+320
+00:35:33,699 --> 00:35:43,059
+ to the the tip or the closed tip depending on what we what tip do we have yes so it's uh getting the
+
+321
+00:35:43,059 --> 00:35:49,619
+ choice data from consensus layer versus like fetching the execution historical data and
+
+322
+00:35:49,619 --> 00:35:55,619
+ so yeah what the red does it's like the stage sync uh the different different approach the historical
+
+323
+00:35:55,619 --> 00:36:01,139
+ scene which is highly optimized and that's what you were getting into just not showing yes uh so
+
+324
+00:36:01,139 --> 00:36:07,619
+ just so you guys have the context uh this is the one of the biggest differences the red uh
+
+325
+00:36:07,619 --> 00:36:12,019
+ red architecture that it's using this stage sync and it's very interesting it's it's a different
+
+326
+00:36:12,019 --> 00:36:18,259
+ different uh than that woodkit has um yeah and there was a there was a question exactly about
+
+327
+00:36:18,259 --> 00:36:23,059
+ this how is it different from arragon and aquila and this is stage sync it's something it was
+
+328
+00:36:23,059 --> 00:36:27,699
+ pioneered by arragon so like if you can maybe summarize what are the other differences to to red
+
+329
+00:36:30,579 --> 00:36:35,139
+ uh difference from the arragon and aquila and
+
+330
+00:36:35,139 --> 00:36:44,440
+ Basically, what we introduced recently are the static files.
+
+331
+00:36:44,440 --> 00:36:51,980
+ We are using our database, key value database, that here, like, B3 inside, basically, on
+
+332
+00:36:51,980 --> 00:36:52,980
+ the hard disk.
+
+333
+00:36:52,980 --> 00:36:55,839
+ We just use it, just binary files.
+
+334
+00:36:55,839 --> 00:37:02,819
+ We put transactions, block, receipts, basically immutable data that we know it's not going
+
+335
+00:37:02,820 --> 00:37:10,100
+ be changed we put it in our format in the binary files and with that we got like a lot more database
+
+336
+00:37:10,100 --> 00:37:17,220
+ and even faster sync time for example yeah it's interesting yeah other than that
+
+337
+00:37:18,660 --> 00:37:24,820
+ uh block uh sync it to tip with the blockchain trees everything is in the memory so we don't
+
+338
+00:37:24,820 --> 00:37:28,980
+ we don't have it in temporary files and all that so uh
+
+339
+00:37:31,539 --> 00:37:36,580
+ that allows us to not store junk inside the database and
+
+340
+00:37:37,780 --> 00:37:43,780
+ basically handle everything inside the memory and that handling is just depending data that's
+
+341
+00:37:43,780 --> 00:37:51,780
+ still not verified so that's one of the differences uh cool it's very interesting
+
+342
+00:37:51,780 --> 00:37:57,220
+ because yeah uh i thought it first that it's going to have very similar but like i understand
+
+343
+00:37:57,220 --> 00:38:03,380
+ the performance uh like go with some legacy get base versus rest will be faster but i was
+
+344
+00:38:03,380 --> 00:38:07,620
+ surprised when i think that it was actually smaller at the time it looked healthy it's
+
+345
+00:38:07,620 --> 00:38:14,900
+ more now it's maybe even more than uh than uh the everyone database it's uh yeah we did a lot
+
+346
+00:38:14,900 --> 00:38:25,139
+ optimizations like uh comp uh basically compressing the data we have a custom encoding that encodes
+
+347
+00:38:25,139 --> 00:38:32,900
+ everything and even few for the for example any data and receive data we can use some compression
+
+348
+00:38:33,860 --> 00:38:41,700
+ so that it's like shrink a lot uh yeah the main difference between while while this is even
+
+349
+00:38:41,699 --> 00:38:48,980
+ possible is while the pipeline sync stage sync is valid is we don't do merkle verification on
+
+350
+00:38:48,980 --> 00:38:57,539
+ every block while the other past client get open ethereum everything like passing generation did it
+
+351
+00:38:57,539 --> 00:39:05,939
+ at every block we do it only at the end so we still verify that our state is valid and everything
+
+352
+00:39:05,940 --> 00:39:11,780
+ state root is basically there but we don't have that overhead to check into every block
+
+353
+00:39:13,940 --> 00:39:18,820
+ right yeah that's it's a lot of nice computation there uh yeah interesting so we are getting back
+
+354
+00:39:18,820 --> 00:39:23,700
+ to the stage sync now and maybe so go ahead your screen and we can continue with that and then
+
+355
+00:39:25,860 --> 00:39:26,820
+ share screen
+
+356
+00:39:26,820 --> 00:39:33,980
+ Ah, here it is.
+
+357
+00:39:33,980 --> 00:39:35,380
+ Awesome.
+
+358
+00:39:35,380 --> 00:39:41,280
+ Yeah, we're a big fan of the docs.
+
+359
+00:39:41,280 --> 00:39:49,640
+ So yeah, the pipeline has the default set of the stages, and those are used for initial
+
+360
+00:39:49,640 --> 00:39:54,059
+ sync, basically, when the pipeline is running inside the rep.
+
+361
+00:39:54,059 --> 00:39:58,860
+ Few, this header stage and body stage are two stages that are separately.
+
+362
+00:39:58,860 --> 00:40:06,139
+ We first run headers, check the hashes, check basically the parent hash, if those match or not.
+
+363
+00:40:06,779 --> 00:40:12,860
+ After that, we basically download from P2P, a little bit heavier bodies.
+
+364
+00:40:14,219 --> 00:40:19,900
+ We do sender recovery stage. Sender recovery can be expensive, so we do it here for every
+
+365
+00:40:19,900 --> 00:40:27,579
+ transaction that we receive in body stage we need to extract basically it's who sent it
+
+366
+00:40:28,700 --> 00:40:35,260
+ at that our biggest stage is our most time consuming stage execution stage
+
+367
+00:40:36,139 --> 00:40:44,539
+ here we do basically take the sender transaction and header and just execute it inside the revm
+
+368
+00:40:44,539 --> 00:40:57,900
+ them. Output of this is basically we check if the gas is same. We basically create receipts
+
+369
+00:40:57,900 --> 00:41:07,759
+ and we create the change sets. Change sets are the changes that happen between accounts
+
+370
+00:41:07,760 --> 00:41:12,760
+ in one block, so it's block-level change sets.
+
+371
+00:41:12,760 --> 00:41:15,100
+ If the executive block have three, four,
+
+372
+00:41:15,100 --> 00:41:19,980
+ two section, 100 section, we will take all those changes
+
+373
+00:41:19,980 --> 00:41:23,460
+ and make one hash map of that.
+
+374
+00:41:25,080 --> 00:41:30,080
+ After that, in the execution flow,
+
+375
+00:41:30,080 --> 00:41:32,740
+ this Merkle stage is skipped
+
+376
+00:41:32,740 --> 00:41:37,180
+ because it has its own use when it's unwinding.
+
+377
+00:41:37,760 --> 00:41:44,640
+ basically execution happens when you go from the top to the bottom,
+
+378
+00:41:44,640 --> 00:41:51,440
+ but unwind happens in different order, from the place where you want to unwind,
+
+379
+00:41:51,440 --> 00:41:53,720
+ where you find some problems, to the top.
+
+380
+00:41:56,240 --> 00:42:03,140
+ Account hashing, account stage, basically in execution stage,
+
+381
+00:42:03,139 --> 00:42:10,900
+ we have just the plain state where key value for the plain state is just address and the
+
+382
+00:42:10,900 --> 00:42:20,900
+ account information that's balance notes and balance notes and code hash while berkeley needs
+
+383
+00:42:21,699 --> 00:42:29,219
+ that hashed and while it needs that hash it it matters because of the order so we have
+
+384
+00:42:29,219 --> 00:42:36,099
+ I will go to database next and show you what exactly that means, how it's, how the database
+
+385
+00:42:36,099 --> 00:42:43,679
+ layout is, is made, but we need to take the plain state and hash it and save it in the
+
+386
+00:42:43,679 --> 00:42:49,899
+ account, hashed account table.
+
+387
+00:42:49,899 --> 00:42:54,379
+ We do that same for the storage and then we do Merkle stage.
+
+388
+00:42:54,380 --> 00:43:02,000
+ Merkle stage takes account, the storage, hashed account storages and creates basically state
+
+389
+00:43:02,000 --> 00:43:09,200
+ root and verify that state root is correct for the block that we need.
+
+390
+00:43:09,200 --> 00:43:19,340
+ After that, we have, this is helper stage it allows us to do transaction lookup.
+
+391
+00:43:19,340 --> 00:43:30,680
+ After that, those two stages allows us to access any history data.
+
+392
+00:43:30,680 --> 00:43:35,039
+ Basically, execution stage created the change sets.
+
+393
+00:43:35,039 --> 00:43:42,880
+ Basically the data that was previously there before the block get executed.
+
+394
+00:43:42,880 --> 00:43:47,620
+ While those two stages index those.
+
+395
+00:43:47,619 --> 00:44:00,619
+ thing is done so that it allows us for every block number that we want to get the account
+
+396
+00:44:00,619 --> 00:44:09,759
+ balance for example or account nodes this uh yeah this allows us that ability same for
+
+397
+00:44:09,760 --> 00:44:13,420
+ The same for the storage.
+
+398
+00:44:13,420 --> 00:44:13,920
+ Sorry.
+
+399
+00:44:17,040 --> 00:44:18,120
+ Just back.
+
+400
+00:44:18,120 --> 00:44:19,200
+ Same for the storage.
+
+401
+00:44:19,200 --> 00:44:23,440
+ Similar thing is for account.
+
+402
+00:44:23,440 --> 00:44:27,720
+ And finished it, we just announce our end.
+
+403
+00:44:27,720 --> 00:44:34,580
+ That engine can start getting new consensus layer from
+
+404
+00:44:34,580 --> 00:44:36,300
+ functions update from consensus layer.
+
+405
+00:44:39,760 --> 00:44:54,600
+ If we go inside execution stage, it's not there.
+
+406
+00:44:54,600 --> 00:45:01,240
+ Let's go this.
+
+407
+00:45:01,239 --> 00:45:09,099
+ stage is the biggest one so maybe it's better to go to send a recovery
+
+408
+00:45:09,099 --> 00:45:19,539
+ send a recovery it has like some commit threshold idea how you want to optimize this is you
+
+409
+00:45:19,539 --> 00:45:26,059
+ want to have some bounds how much data are we going to to commit how much basically ram
+
+410
+00:45:26,059 --> 00:45:32,779
+ you want to have. I think this is just amount of the transaction you want to commit.
+
+411
+00:45:34,779 --> 00:45:38,779
+ And for example, we check for execution in the send recovery.
+
+412
+00:45:40,299 --> 00:45:47,099
+ We check, we get the input that says, hey, we want to execute this stage from the block
+
+413
+00:45:47,099 --> 00:45:56,059
+ block million to the block two million or million and a half uh we take the next block
+
+414
+00:45:56,059 --> 00:46:06,400
+ range intersection basically we take blocks in that range it's empty the target is reached
+
+415
+00:46:06,400 --> 00:46:14,960
+ for everything around that, we do recovery range.
+
+416
+00:46:17,960 --> 00:46:20,720
+ For example, we want it to be very optimized.
+
+417
+00:46:20,760 --> 00:46:25,200
+ In this way it's very CPU intensive because it's done recovery.
+
+418
+00:46:25,240 --> 00:46:30,680
+ We spawn multiple Tokyo task that does everything in the parallel.
+
+419
+00:46:30,720 --> 00:46:36,119
+ Fetch the transaction that we need if it's in static file.
+
+420
+00:46:36,400 --> 00:46:41,820
+ And after that, if everything is okay, report the problems.
+
+421
+00:46:42,099 --> 00:46:53,900
+ If it's not, we update the database table that has that intersection centers.
+
+422
+00:46:55,200 --> 00:47:02,099
+ The idea for this example is to show that every stage does one thing.
+
+423
+00:47:02,099 --> 00:47:07,480
+ and every stage can optimize its parameters
+
+424
+00:47:07,480 --> 00:47:11,259
+ on the stuff that needs to be done.
+
+425
+00:47:12,500 --> 00:47:14,279
+ Instead of recovery, it's CPU-intensive,
+
+426
+00:47:14,440 --> 00:47:18,839
+ so we use a lot of Tokyo tasks to parallelize that
+
+427
+00:47:18,839 --> 00:47:22,619
+ and we want it to be as, yeah,
+
+428
+00:47:23,079 --> 00:47:26,739
+ we can optimize that a lot nicer.
+
+429
+00:47:26,739 --> 00:47:38,239
+ Execution stage is one of the biggest fun and basically takes the longest time to execute.
+
+430
+00:47:38,239 --> 00:47:47,259
+ The reason for that is basically EVM it's CPU intensive and it's to execute two billion
+
+431
+00:47:47,259 --> 00:47:56,000
+ transactions it gets input table from headers canonical header terminal difficulty basically
+
+432
+00:47:56,000 --> 00:48:05,039
+ all headers and blocks intersection it have it access plain account state and plain storage
+
+433
+00:48:06,239 --> 00:48:14,480
+ and by quotes by quotes are in separate table and updates basically are plain state and account
+
+434
+00:48:14,480 --> 00:48:24,800
+ change sets um yeah unbind it it basically unbinds the changes that it happened on the plain state
+
+435
+00:48:24,800 --> 00:48:27,480
+ and change sets got discarded.
+
+436
+00:48:35,000 --> 00:48:35,640
+ Yeah.
+
+437
+00:48:36,140 --> 00:48:37,080
+ Hashing storage.
+
+438
+00:48:42,060 --> 00:48:44,560
+ I'm not sure if there is questions around this
+
+439
+00:48:44,560 --> 00:48:48,340
+ or should I go over to the database?
+
+440
+00:48:54,800 --> 00:48:59,280
+ um there's not any maybe specific questions around what you're talking about now but
+
+441
+00:48:59,280 --> 00:49:05,280
+ there's some requests for um maybe you to go through the process of building a block
+
+442
+00:49:06,080 --> 00:49:12,160
+ and using the state transits and function in wrath maybe that fits here maybe it fits
+
+443
+00:49:13,280 --> 00:49:16,640
+ later on in the presentation uh how to build the block
+
+444
+00:49:16,639 --> 00:49:21,920
+ Okay, I will come to the payload builder.
+
+445
+00:49:21,920 --> 00:49:23,920
+ Cool.
+
+446
+00:49:23,920 --> 00:49:27,980
+ Okay, yes.
+
+447
+00:49:27,980 --> 00:49:39,139
+ Um, yeah, storage is interesting one.
+
+448
+00:49:39,139 --> 00:49:44,139
+ In storage, we have a codex that does,
+
+449
+00:49:44,179 --> 00:49:46,920
+ for the keys it needs to be encoded,
+
+450
+00:49:46,920 --> 00:49:50,159
+ while for the values it needs to be compressed.
+
+451
+00:49:50,159 --> 00:49:51,519
+ We still need to have that,
+
+452
+00:49:53,480 --> 00:49:56,500
+ we cannot compress integer and lose
+
+453
+00:49:56,500 --> 00:49:58,960
+ the greater than ability.
+
+454
+00:50:02,279 --> 00:50:05,400
+ Compact, this is for compression.
+
+455
+00:50:07,039 --> 00:50:08,239
+ For database,
+
+456
+00:50:09,139 --> 00:50:13,299
+ Static files, yeah.
+
+457
+00:50:13,299 --> 00:50:23,420
+ We have abstraction that allows us to abstractivate the database currently we just have mdbx but
+
+458
+00:50:23,420 --> 00:50:33,179
+ the idea was to replace it or have ability to switch the databases.
+
+459
+00:50:33,179 --> 00:50:45,779
+ yeah this implement this trace-based abstraction over very low-level database access where
+
+460
+00:50:45,779 --> 00:50:51,639
+ you have the section mutable to section that gives you right access cursor is interesting
+
+461
+00:50:51,639 --> 00:51:00,259
+ one that allows you to iterate over the the values or in the database this can be very
+
+462
+00:51:00,260 --> 00:51:09,320
+ faster way to fetch intersections or block or calculate the Merkle route when it's needed
+
+463
+00:51:09,320 --> 00:51:19,000
+ because accessing the values one after another is a lot faster than randomly seeking the
+
+464
+00:51:19,000 --> 00:51:22,540
+ values.
+
+465
+00:51:22,540 --> 00:51:25,460
+ This is true for the writes.
+
+466
+00:51:25,460 --> 00:51:32,340
+ So if you want to write an amount of data it's a lot faster if you can sort them and
+
+467
+00:51:32,340 --> 00:51:36,800
+ write it in sorted order.
+
+468
+00:51:36,800 --> 00:51:54,199
+ DB basically is the low-level key-value database it implements.
+
+469
+00:51:54,199 --> 00:52:01,960
+ are most interesting here basically the data layout that we have inside the red table view
+
+470
+00:52:04,039 --> 00:52:04,839
+ ah here they are
+
+471
+00:52:07,799 --> 00:52:15,399
+ um canonical headers allows us key to block number to the header hash
+
+472
+00:52:16,599 --> 00:52:18,839
+ timer difficulties used for the
+
+473
+00:52:18,840 --> 00:52:30,180
+ for the proof of work currently not used here the numbers this is utility block hash to the block
+
+474
+00:52:30,180 --> 00:52:39,900
+ number headers this is the table that uh have headers indexed by the block number block body
+
+475
+00:52:39,900 --> 00:52:45,880
+ indices we have what's interesting here we have transactions that are indexed by transaction
+
+476
+00:52:45,880 --> 00:52:55,320
+ number to the section and block body indices is basically telling us for this block number
+
+477
+00:52:55,320 --> 00:53:04,180
+ uh amount of uh what the section number basically falls into this block
+
+478
+00:53:04,179 --> 00:53:11,980
+ block uh block commerce uh
+
+479
+00:53:11,980 --> 00:53:18,940
+ block withdrawals this is for the proof of stake this for the side blocks that got included
+
+480
+00:53:18,940 --> 00:53:19,940
+ almost basically
+
+481
+00:53:19,940 --> 00:53:29,179
+ um everything is table this table is like indexed by the ordinary intersection number
+
+482
+00:53:29,179 --> 00:53:35,379
+ That's basically number of the section and number of the section that got executed.
+
+483
+00:53:35,379 --> 00:53:39,179
+ It's a lot easier to fetch one transaction if needed.
+
+484
+00:53:39,179 --> 00:53:41,679
+ The section hash number is inverse.
+
+485
+00:53:41,679 --> 00:53:49,279
+ If you want to fetch the section by the hash, we get the transaction number.
+
+486
+00:53:49,280 --> 00:53:54,280
+ This index it stores the highest
+
+487
+00:53:55,019 --> 00:53:59,740
+ to the section number of this block.
+
+488
+00:53:59,740 --> 00:54:02,280
+ Basically it's not every intersection number to the block
+
+489
+00:54:02,280 --> 00:54:04,180
+ it's the highest just.
+
+490
+00:54:04,180 --> 00:54:07,460
+ This allows us to from the section number
+
+491
+00:54:07,460 --> 00:54:09,360
+ to fetch the block number.
+
+492
+00:54:10,460 --> 00:54:13,440
+ Receipts are indexed by the section number,
+
+493
+00:54:13,440 --> 00:54:15,500
+ byte code indexed by it's hash.
+
+494
+00:54:17,400 --> 00:54:18,980
+ This is the plain state.
+
+495
+00:54:19,280 --> 00:54:27,840
+ basically execution stage updates the plain state the play state has just for the play account
+
+496
+00:54:27,840 --> 00:54:36,300
+ play state it has address and just account information account information just this
+
+497
+00:54:36,300 --> 00:54:48,360
+ balance and all while the storage has keys basically account subkey or in this
+
+498
+00:54:49,280 --> 00:54:57,960
+ yes, subkey is hash, basically, key of that storage.
+
+499
+00:54:57,960 --> 00:55:09,560
+ Because I mentioned subkeys, mdbx allows to have duplicate values inside tables.
+
+500
+00:55:09,560 --> 00:55:17,060
+ This allows us to have a little bit faster access to some values.
+
+501
+00:55:17,059 --> 00:55:29,099
+ In this case, we can have main key address and subkey basically to be hash.
+
+502
+00:55:29,099 --> 00:55:37,980
+ Account history is interesting, but first I want to talk about change sets.
+
+503
+00:55:37,980 --> 00:55:44,460
+ Account change sets, storage change sets for every block number, we have account before
+
+504
+00:55:44,460 --> 00:55:47,900
+ The section and subkey of that is address.
+
+505
+00:55:47,900 --> 00:55:52,900
+ So for every block, for every change account,
+
+506
+00:55:52,900 --> 00:55:55,480
+ we have it's previous values.
+
+507
+00:55:56,679 --> 00:56:00,559
+ Change set for the table, for every block number
+
+508
+00:56:00,559 --> 00:56:03,760
+ and address for address is account.
+
+509
+00:56:03,760 --> 00:56:08,659
+ We have storage key and previous storage value.
+
+510
+00:56:08,659 --> 00:56:12,659
+ These change sets are generated by the execution
+
+511
+00:56:12,659 --> 00:56:16,219
+ and used by the Merkle tree to,
+
+512
+00:56:16,219 --> 00:56:21,219
+ or any history tracing for RPC if you need.
+
+513
+00:56:23,559 --> 00:56:26,699
+ Format tree is used for the incremental
+
+514
+00:56:26,699 --> 00:56:28,440
+ Merkle tree calculation,
+
+515
+00:56:28,440 --> 00:56:32,539
+ because when you calculate our first Merkle tree,
+
+516
+00:56:32,539 --> 00:56:35,719
+ all the documentation, all the calculation
+
+517
+00:56:35,719 --> 00:56:38,619
+ of the Merkle tree should be incremental.
+
+518
+00:56:38,619 --> 00:56:56,099
+ And, after we have those change sets, we are doing account history, basically, for every,
+
+519
+00:56:56,099 --> 00:57:07,039
+ in this case, sharded key, for every address, and basically it contains for every account,
+
+520
+00:57:07,039 --> 00:57:11,279
+ it contains list of blocks where that account got changed.
+
+521
+00:57:12,320 --> 00:57:14,599
+ So if you want to find block
+
+522
+00:57:14,599 --> 00:57:19,239
+ account balance of the block 1 million
+
+523
+00:57:19,239 --> 00:57:21,579
+ we are checking the
+
+524
+00:57:21,579 --> 00:57:27,380
+ where that account got changed next.
+
+525
+00:57:27,900 --> 00:57:31,599
+ If this change is 1 million 1 block
+
+526
+00:57:31,599 --> 00:57:35,320
+ then we need to fetch the change set
+
+527
+00:57:35,320 --> 00:57:44,280
+ of that account so history account history and storage history as loves allows us to
+
+528
+00:57:45,240 --> 00:57:50,360
+ index the change set and find the change that happened in the history
+
+529
+00:57:54,440 --> 00:57:56,600
+ uh hashed account here storage
+
+530
+00:57:56,599 --> 00:58:08,360
+ uh are used by the market tree basically they need to have for the first calculation
+
+531
+00:58:08,360 --> 00:58:11,079
+ mca3 they need to have sorted hashed accounts
+
+532
+00:58:13,400 --> 00:58:15,079
+ days there was idea
+
+533
+00:58:17,559 --> 00:58:24,119
+ to basically merge hashed accounts and plain accounts plain basically state with hashtag
+
+534
+00:58:24,119 --> 00:58:32,039
+ state so that we only have hash state it will reduce the footprint in database for around
+
+535
+00:58:32,039 --> 00:58:39,079
+ 100 gigabytes it shouldn't matter a lot for performance you need still if you want to
+
+536
+00:58:39,079 --> 00:58:45,319
+ fetch account you still need to get you need to hash it but but for our measurements for
+
+537
+00:58:45,320 --> 00:58:52,940
+ So it leaves historical sync, main bottleneck execution sync is EVM.
+
+538
+00:58:52,940 --> 00:58:56,660
+ So it would matter a lot.
+
+539
+00:58:56,660 --> 00:59:13,200
+ Account tree, storage tree are Merkle, Patricia, basically the nodes that are needed for calculation
+
+540
+00:59:13,199 --> 00:59:28,480
+ it allows it to fetch the address it's used in execution and it's needed for the sender recovery
+
+541
+00:59:29,679 --> 00:59:39,919
+ stage checkpoints allows us to know where the stage where the stage stopped and what we need
+
+542
+00:59:39,920 --> 00:59:52,800
+ to do next. Prune checkpoints allows us to know until when we pruned our data. Basically, pruning,
+
+543
+00:59:53,599 --> 00:59:59,519
+ there are multiple parameters that can be set, but pruning mostly means that we remove
+
+544
+01:00:00,559 --> 01:00:08,559
+ change sets and indexes of those change sets. So it removes history data, so only the
+
+545
+01:00:08,559 --> 01:00:12,719
+ the tip can be fetched.
+
+546
+01:00:12,719 --> 01:00:22,239
+ And the last table is, of course, history.
+
+547
+01:00:22,239 --> 01:00:29,679
+ Do you have questions around this?
+
+548
+01:00:29,679 --> 01:00:38,519
+ Or was this too much?
+
+549
+01:00:38,519 --> 01:00:39,360
+ Can you share?
+
+550
+01:00:39,360 --> 01:00:44,360
+ No, no specific questions around that currently.
+
+551
+01:00:46,159 --> 01:00:47,000
+ Okay, cool.
+
+552
+01:00:48,420 --> 01:00:52,000
+ Yeah, I guess going back to talking about
+
+553
+01:00:53,019 --> 01:00:56,860
+ checking verifications, this is kind of back a ways ago,
+
+554
+01:00:56,860 --> 01:01:01,860
+ but do you, what sort of like drawbacks does not doing
+
+555
+01:01:03,159 --> 01:01:06,460
+ the Merkle verification checks for every block have?
+
+556
+01:01:06,460 --> 01:01:16,900
+ Drawbacks are basically, we don't have proof of the history.
+
+557
+01:01:16,900 --> 01:01:26,099
+ The get and open Ethereum basically had, you could at every point of time fetch the basically
+
+558
+01:01:26,099 --> 01:01:29,400
+ Merkle proof of every storage of account.
+
+559
+01:01:29,400 --> 01:01:30,400
+ This is removed.
+
+560
+01:01:30,400 --> 01:01:35,680
+ we only have a market proof of one point of in one point of time
+
+561
+01:01:38,079 --> 01:01:47,119
+ so we need to like um be aware when we do reorg at the tip to unbind market tree and update
+
+562
+01:01:47,119 --> 01:01:53,119
+ market maybe one drawback could be uh increased complexity but in general market tree and everything
+
+563
+01:01:53,119 --> 01:02:00,000
+ it's very complex because it's like in the end you get what just one hash and
+
+564
+01:02:00,000 --> 01:02:05,639
+ every verification depends on that cache it doesn't mean it does you don't have like
+
+565
+01:02:05,639 --> 01:02:13,359
+ intermediate steps how to get that where where is the step that you made mistake or not but yeah
+
+566
+01:02:13,359 --> 01:02:13,819
+ right
+
+567
+01:02:13,819 --> 01:02:20,639
+ you asked about yeah
+
+568
+01:02:20,639 --> 01:02:25,199
+ about verification.
+
+569
+01:02:28,159 --> 01:02:30,299
+ What kind of verification?
+
+570
+01:02:30,639 --> 01:02:32,139
+ Block verification or?
+
+571
+01:02:32,319 --> 01:02:32,759
+ Yes.
+
+572
+01:02:33,019 --> 01:02:37,099
+ So Matt was explaining the get code base
+
+573
+01:02:37,099 --> 01:02:39,559
+ from the perspective of state transition function.
+
+574
+01:02:39,559 --> 01:02:43,519
+ So basically creating a new block by verifying transaction
+
+575
+01:02:43,519 --> 01:02:46,139
+ and including them into a block, calculating the header.
+
+576
+01:02:46,139 --> 01:02:54,000
+ And, like, in reality this happens when you're asked to build a blog, but generally it's
+
+577
+01:02:54,000 --> 01:03:01,099
+ like the verification in GET, and of course it's different in RED, but if you could maybe
+
+578
+01:03:01,099 --> 01:03:08,379
+ guide us through the code base where this happens, where the, also like, some, like,
+
+579
+01:03:08,380 --> 01:03:18,619
+ um uh where the evm pre-compiles are uh which is which is specific to red and um yeah yeah there's
+
+580
+01:03:18,619 --> 01:03:25,740
+ three places where where we are executed to section one is inside the pipeline
+
+581
+01:03:27,340 --> 01:03:32,300
+ this is inside the stage all them are similar but a little bit different
+
+582
+01:03:32,300 --> 01:03:35,800
+ and most different half the handle output of the data.
+
+583
+01:03:39,060 --> 01:03:44,060
+ Where it is, metrics, stages, source.
+
+584
+01:03:46,000 --> 01:03:49,380
+ A lot of checks on the block and the sectional error
+
+585
+01:03:49,380 --> 01:03:51,680
+ are encapsulated inside REVM.
+
+586
+01:03:51,680 --> 01:03:55,120
+ So a lot of heavy lifting is done by REVM.
+
+587
+01:03:56,560 --> 01:04:01,560
+ Example here, start block here in the stages,
+
+588
+01:04:02,300 --> 01:04:08,360
+ We iterate our start block to the max block, depending on the range of the blocks that
+
+589
+01:04:08,360 --> 01:04:10,740
+ we want to execute.
+
+590
+01:04:10,740 --> 01:04:21,860
+ We fetch headers, we fetch senders of that block, and here we execute the verify receipts.
+
+591
+01:04:21,860 --> 01:04:26,680
+ Basically here we have a block and we have total difficulty that's needed for the proof
+
+592
+01:04:26,679 --> 01:04:38,919
+ work basically history execution and this is the yeah we have one to
+
+593
+01:04:38,919 --> 01:04:44,919
+ encapsulate different basically it's called processors for example to have
+
+594
+01:04:44,919 --> 01:04:50,619
+ optimist processor than to care minute or processor and to have ability to
+
+595
+01:04:50,619 --> 01:04:59,920
+ switch them when needed. For example, this is the main net. Yeah, the main processor
+
+596
+01:04:59,920 --> 01:05:14,159
+ that we have. In here it executes inner block it initialized basically array VM with it
+
+597
+01:05:14,159 --> 01:05:21,500
+ header it initialize applies uh beacon root contract call basically there is system call
+
+598
+01:05:21,500 --> 01:05:34,159
+ that's done on the with cancun that updates um consensus layer hash block hash and here
+
+599
+01:05:34,159 --> 01:05:36,440
+ Here we execute transactions.
+
+600
+01:05:36,440 --> 01:05:42,259
+ Basically this everything is done in processor.
+
+601
+01:05:42,259 --> 01:05:52,119
+ In for every block we take transaction, basically this iterator, check the gas limit for that
+
+602
+01:05:52,119 --> 01:05:56,480
+ block and transect.
+
+603
+01:05:56,480 --> 01:05:58,980
+ This is function of REVM.
+
+604
+01:05:58,980 --> 01:06:01,719
+ oh we are still here
+
+605
+01:06:01,719 --> 01:06:04,280
+ yeah
+
+606
+01:06:04,280 --> 01:06:05,159
+ we filled the
+
+607
+01:06:05,159 --> 01:06:06,679
+ resection parameters
+
+608
+01:06:06,679 --> 01:06:09,320
+ check if we need
+
+609
+01:06:09,320 --> 01:06:10,159
+ to call
+
+610
+01:06:10,159 --> 01:06:11,179
+ tracer
+
+611
+01:06:11,179 --> 01:06:12,519
+ that we are calling
+
+612
+01:06:12,519 --> 01:06:13,300
+ it inspector
+
+613
+01:06:13,300 --> 01:06:14,559
+ with REVM
+
+614
+01:06:14,559 --> 01:06:19,260
+ we basically
+
+615
+01:06:19,260 --> 01:06:21,219
+ need to
+
+616
+01:06:21,219 --> 01:06:22,199
+ add
+
+617
+01:06:22,199 --> 01:06:23,119
+ handlers
+
+618
+01:06:23,119 --> 01:06:23,800
+ for that
+
+619
+01:06:23,800 --> 01:06:25,079
+ tracing
+
+620
+01:06:25,079 --> 01:06:27,260
+ and here
+
+621
+01:06:27,260 --> 01:06:28,240
+ and here we do
+
+622
+01:06:28,240 --> 01:06:28,900
+ resect
+
+623
+01:06:28,980 --> 01:06:37,860
+ Trasect in general, we are now in REVM it validates the data that we receive from the
+
+624
+01:06:37,860 --> 01:06:47,980
+ RET it checks initial transaction gas if we are okay it checks the transaction against
+
+625
+01:06:47,980 --> 01:06:57,360
+ the state so here we until here we just check the data that we receive here fetch the account
+
+626
+01:06:57,360 --> 01:07:02,079
+ that's of a intersection, of the center of the intersection.
+
+627
+01:07:06,240 --> 01:07:08,800
+ And we start execution.
+
+628
+01:07:11,360 --> 01:07:19,599
+ Yeah, we are now in REVM still. It was recently refactored,
+
+629
+01:07:19,599 --> 01:07:24,599
+ So we have separation of the context and the logic.
+
+630
+01:07:25,299 --> 01:07:30,299
+ Context is the data, transactions, block, and pre-compiles,
+
+631
+01:07:30,400 --> 01:07:33,819
+ but the logic is handled inside the handlers,
+
+632
+01:07:35,539 --> 01:07:36,619
+ how it's called?
+
+633
+01:07:38,639 --> 01:07:41,039
+ Here, context and handlers.
+
+634
+01:07:41,039 --> 01:07:44,539
+ A handler contains the list of the functions
+
+635
+01:07:44,539 --> 01:07:46,159
+ that contain logic.
+
+636
+01:07:46,159 --> 01:07:47,799
+ So you can do anything around it.
+
+637
+01:07:47,800 --> 01:07:58,960
+ The idea is in the future to be able, it's used even now, to register new handlers that
+
+638
+01:07:58,960 --> 01:08:05,100
+ will allow you like optimist level changes or optimist logic to be implemented inside
+
+639
+01:08:05,100 --> 01:08:06,100
+ REVM.
+
+640
+01:08:06,100 --> 01:08:15,320
+ Something similar it's done on the scope of the RET, but it's a little bit nicer now.
+
+641
+01:08:15,320 --> 01:08:19,480
+ still need to do some refactoring in revm
+
+642
+01:08:20,279 --> 01:08:24,760
+ um it is transect
+
+643
+01:08:25,960 --> 01:08:30,920
+ here we are the first step first handler is loading accounts
+
+644
+01:08:30,920 --> 01:08:36,199
+ after that is loading pre-copiles for example you can have handler that
+
+645
+01:08:36,199 --> 01:08:39,720
+ loads additional pre-copiles
+
+646
+01:08:39,720 --> 01:08:48,100
+ We now deduct the caller with the maximum gas limit that it can potentially use.
+
+647
+01:08:48,280 --> 01:08:58,180
+ Idea is so that while the section is in the process, he cannot send more balance than he has.
+
+648
+01:08:58,180 --> 01:09:06,860
+ a calculated gas limit depending on the set gas limit inside the section and deducting the initial
+
+649
+01:09:06,860 --> 01:09:14,260
+ gas spend that's depending on the how much zeros and ones do you have and what type of the section
+
+650
+01:09:14,260 --> 01:09:22,579
+ and everything on that here we execute it there is at least two types of execution
+
+651
+01:09:22,579 --> 01:09:31,699
+ it broadly called to contract and creating new contract when this is finished we have
+
+652
+01:09:32,739 --> 01:09:43,779
+ here's the main loop um a few months ago we had like recursion call between the sub calls when
+
+653
+01:09:43,779 --> 01:09:49,939
+ the contract called on the additional contract this is now changed to just simple loop
+
+654
+01:09:49,939 --> 01:10:02,319
+ it's run the loop, the main loop of the EVM, here it's done, where it just loops over the
+
+655
+01:10:02,319 --> 01:10:13,059
+ stack frames, and stack frame is for example, band call or sub call, sub call, sub call,
+
+656
+01:10:13,060 --> 01:10:21,060
+ charts interpreter that checks the bytecode and executes it instructions let's go back
+
+657
+01:10:23,300 --> 01:10:24,900
+ after execution is finished
+
+658
+01:10:27,220 --> 01:10:27,940
+ we take
+
+659
+01:10:31,700 --> 01:10:40,020
+ we have some uh basically we need to handle when the last frame of the execution last color create
+
+660
+01:10:40,020 --> 01:10:47,380
+ returns we need to handle some logic there after that we reimburse caller with the gas that's not
+
+661
+01:10:47,380 --> 01:10:57,620
+ spent we reward beneficiary that's basically sending minor reward uh minor reward is sent
+
+662
+01:10:57,620 --> 01:11:06,660
+ for the proof of work while this is yeah it's sent for the board proof of stake and pro for
+
+663
+01:11:06,659 --> 01:11:15,000
+ and we handle output here that returns error if it happened or returns the byte code the
+
+664
+01:11:15,000 --> 01:11:24,279
+ bytes that got returned yeah yeah that's mostly it from the revm
+
+665
+01:11:24,279 --> 01:11:38,500
+ Now we are inside the RET, still in the processor, execute the section.
+
+666
+01:11:38,500 --> 01:11:44,979
+ When the section gets executed, we get some result outside of it.
+
+667
+01:11:44,979 --> 01:11:51,599
+ We check how much time elapsed and we commit that state inside our database.
+
+668
+01:11:51,600 --> 01:12:02,000
+ So REVM it basically doesn't commit anything if you don't want it.
+
+669
+01:12:02,000 --> 01:12:06,560
+ That it basically returns the state that got changed.
+
+670
+01:12:06,560 --> 01:12:15,860
+ After that, we communicate GAS, create receipt, and that's it.
+
+671
+01:12:15,859 --> 01:12:26,119
+ If you go back, execute inner, we check if the gas matches the gas used, and we check
+
+672
+01:12:26,119 --> 01:12:27,619
+ if the...
+
+673
+01:12:27,619 --> 01:12:36,619
+ Now, we have post-execution state change that is minor reward that was before in the proof
+
+674
+01:12:36,619 --> 01:12:38,099
+ of work.
+
+675
+01:12:38,100 --> 01:12:49,660
+ We check, do we need to prune data or not, basically not merge it or not.
+
+676
+01:12:49,660 --> 01:12:52,320
+ Merge the section.
+
+677
+01:12:52,320 --> 01:12:56,340
+ And receipts, return receipts.
+
+678
+01:12:56,340 --> 01:13:05,680
+ And here, we verify our receipts, save receipts if they are okay.
+
+679
+01:13:05,680 --> 01:13:14,480
+ So both the stages use execute and verify receipts while the block builder uses just
+
+680
+01:13:14,480 --> 01:13:24,480
+ execute, so it doesn't need to verify receipts while the execution is happening.
+
+681
+01:13:24,480 --> 01:13:27,920
+ This is in the stage.
+
+682
+01:13:27,920 --> 01:13:33,359
+ Stage is one place where REVM is used.
+
+683
+01:13:33,359 --> 01:13:39,260
+ Second place is inside the blockchain tree.
+
+684
+01:13:39,260 --> 01:13:43,899
+ blockchain tree.
+
+685
+01:13:43,899 --> 01:13:51,600
+ Event, state, block, canonical chain.
+
+686
+01:13:51,600 --> 01:13:56,460
+ This is for the blockchain tree, everything is done in the memory.
+
+687
+01:13:56,460 --> 01:14:09,800
+ So you have some pending state it's used wrap inside wrap around the database chain it's
+
+688
+01:14:09,800 --> 01:14:29,680
+ it's not extend canonical chain it's not that it is bundle state no shareable fork
+
+689
+01:14:29,680 --> 01:14:33,840
+ it's not insert but
+
+690
+01:14:37,600 --> 01:14:44,480
+ fork forgot how it's called trying to set it to sidebar here it is
+
+691
+01:14:44,480 --> 01:14:49,039
+ parent shade where we append the block to the chain that is currently inside
+
+692
+01:14:49,039 --> 01:14:52,880
+ the it's inside the chain
+
+693
+01:14:52,880 --> 01:14:56,920
+ Here we called ValidAtTheExecute.
+
+694
+01:14:56,920 --> 01:15:04,699
+ ValidAtTheExecute, we need now to have like the view on the database that you want to
+
+695
+01:15:04,699 --> 01:15:12,760
+ execute on, plus the padding state that we have inside the blockchain tree.
+
+696
+01:15:12,760 --> 01:15:21,320
+ and we wrap that inside some database straight and we call here we create executor
+
+697
+01:15:22,600 --> 01:15:28,280
+ block execution execute verify receipt we all been there
+
+698
+01:15:31,480 --> 01:15:38,680
+ yeah basically it use the processor again to verify everything to verify to execute everything
+
+699
+01:15:38,680 --> 01:15:48,920
+ because both the blockchain tree and the stages need it to have all the data it need to just
+
+700
+01:15:50,520 --> 01:15:52,440
+ verify if they are correct or not
+
+701
+01:15:57,000 --> 01:16:02,600
+ and the third place is inside the nodes
+
+702
+01:16:05,000 --> 01:16:07,880
+ payloads ethereum
+
+703
+01:16:08,680 --> 01:16:28,560
+ We have multiple builders for Optimize for Ethereum because it's a little bit different.
+
+704
+01:16:28,560 --> 01:16:30,520
+ I think that's it.
+
+705
+01:16:30,520 --> 01:16:34,640
+ Default Ethereum payload builder.
+
+706
+01:16:34,640 --> 01:16:42,500
+ We create the database, we create payload what's needed, pre-block beacon route contract
+
+707
+01:16:42,500 --> 01:16:47,700
+ call, basically this is the system call enabled inside Cancun.
+
+708
+01:16:47,700 --> 01:16:57,200
+ We get the section for the section pool here, check if we have cumulative gas used more
+
+709
+01:16:57,199 --> 01:17:00,500
+ than the set gas limit of the block that you want to build.
+
+710
+01:17:03,519 --> 01:17:12,340
+ Is AIP, if it is blob, here we create just our EVM
+
+711
+01:17:12,340 --> 01:17:16,239
+ and we use our EVM to transect.
+
+712
+01:17:17,079 --> 01:17:18,840
+ It doesn't go through the processor.
+
+713
+01:17:19,179 --> 01:17:20,880
+ It uses EVM directly.
+
+714
+01:17:20,880 --> 01:17:24,079
+ if it is error
+
+715
+01:17:24,079 --> 01:17:25,579
+ that means the same validation
+
+716
+01:17:25,579 --> 01:17:28,180
+ or some checks are not
+
+717
+01:17:28,180 --> 01:17:29,119
+ correct
+
+718
+01:17:29,119 --> 01:17:31,840
+ if it is ok then
+
+719
+01:17:31,840 --> 01:17:33,720
+ that state gets
+
+720
+01:17:33,720 --> 01:17:35,500
+ committed to the database
+
+721
+01:17:35,500 --> 01:17:37,920
+ and this is done
+
+722
+01:17:37,920 --> 01:17:39,180
+ until
+
+723
+01:17:39,180 --> 01:17:42,819
+ until we have
+
+724
+01:17:42,819 --> 01:17:47,640
+ until we have enough gas
+
+725
+01:17:47,640 --> 01:17:48,539
+ to fill the block
+
+726
+01:17:48,539 --> 01:17:55,699
+ yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes,
+
+727
+01:17:55,699 --> 01:17:59,880
+ yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes,
+
+728
+01:17:59,880 --> 01:18:00,880
+ yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes,
+
+729
+01:18:00,880 --> 01:18:01,880
+ yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes,
+
+730
+01:18:01,880 --> 01:18:02,880
+ yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes, yes,
+
+731
+01:18:02,880 --> 01:18:09,260
+ need for the header, state root, calculate the section root, here we calculate the section
+
+732
+01:18:09,260 --> 01:18:18,859
+ basically root, here we should calculate, yeah, that's mostly it.
+
+733
+01:18:18,859 --> 01:18:26,019
+ Is there any questions around this?
+
+734
+01:18:26,019 --> 01:18:33,079
+ I'm not sure if I killed listeners.
+
+735
+01:18:33,079 --> 01:18:38,739
+ We're still here with you.
+
+736
+01:18:38,739 --> 01:18:41,019
+ And there were some questions.
+
+737
+01:18:41,019 --> 01:18:43,260
+ I'm not sure if blog-building-related.
+
+738
+01:18:50,199 --> 01:18:56,000
+ Yeah, there was a question following up on the one
+
+739
+01:18:56,000 --> 01:18:59,219
+ that we discussed before on skipping
+
+740
+01:18:59,219 --> 01:19:01,599
+ the Merkle verification.
+
+741
+01:19:01,599 --> 01:19:07,800
+ So whether this also applies to storage balances,
+
+742
+01:19:07,800 --> 01:19:19,140
+ How do we get accurate accounts for a particular block when you don't calculate the Merkle?
+
+743
+01:19:19,140 --> 01:19:25,199
+ So it's basically...
+
+744
+01:19:25,199 --> 01:19:26,600
+ Yeah.
+
+745
+01:19:26,600 --> 01:19:31,340
+ I'm not sure if I understood it.
+
+746
+01:19:31,340 --> 01:19:33,520
+ Yeah, yeah, yeah.
+
+747
+01:19:33,520 --> 01:19:42,960
+ the Merkle optimization, whether it is compared to other clients, whether there is a difference
+
+748
+01:19:42,960 --> 01:19:50,920
+ how you get those basically intermediate states and all the data for particular block when
+
+749
+01:19:50,920 --> 01:19:57,060
+ you don't get it from calculating it from the Merkle data.
+
+750
+01:19:57,060 --> 01:20:04,340
+ uh for the blob we for the blobs or accounts for the blob we don't have anything that's mostly
+
+751
+01:20:04,340 --> 01:20:15,220
+ on there but in general yeah uh we check assumption is basically that we can make is
+
+752
+01:20:15,220 --> 01:20:19,620
+ for the history block that are blocked for the finalize we need to check it only once
+
+753
+01:20:19,620 --> 01:20:24,900
+ we don't need to check every previous state because if you check just the present state
+
+754
+01:20:24,899 --> 01:20:34,420
+ or present state in the tip, we know that we have correct state. After that, we just incrementally
+
+755
+01:20:35,539 --> 01:20:44,420
+ check Merkle state, Merkle-like root, and it's a lot faster algorithm.
+
+756
+01:20:44,420 --> 01:20:49,319
+ yeah can you
+
+757
+01:20:49,319 --> 01:20:51,340
+ another question here is
+
+758
+01:20:51,340 --> 01:20:54,380
+ what is the sender recovery
+
+759
+01:20:54,380 --> 01:20:55,960
+ in execution stage
+
+760
+01:20:55,960 --> 01:21:00,359
+ basically when the section is sent
+
+761
+01:21:00,359 --> 01:21:02,300
+ you only have like the
+
+762
+01:21:02,300 --> 01:21:04,380
+ the payload and you
+
+763
+01:21:04,380 --> 01:21:05,000
+ have signature
+
+764
+01:21:05,000 --> 01:21:08,380
+ from the signature you are recovering
+
+765
+01:21:08,380 --> 01:21:10,480
+ the sender basically who is
+
+766
+01:21:10,480 --> 01:21:11,920
+ the guy or girl
+
+767
+01:21:11,920 --> 01:21:13,399
+ who sent that section
+
+768
+01:21:13,399 --> 01:21:18,399
+ So that can be very CPU-intensive, and that's why we have separate stage for it.
+
+769
+01:21:18,399 --> 01:21:24,739
+ We will save that value inside the database so it's it's faster to fetch it from the database
+
+770
+01:21:24,739 --> 01:21:28,359
+ than to recalculate it again inside the SQL stage.
+
+771
+01:21:30,799 --> 01:21:37,659
+ Okay, and we were discussing the database engine mdbx.
+
+772
+01:21:37,659 --> 01:21:43,000
+ Maybe if you can tell a bit about that, like what are the main differences with leveldb or pebble?
+
+773
+01:21:43,000 --> 01:21:48,039
+ that is mostly mdbx uh basically we
+
+774
+01:21:50,920 --> 01:21:57,880
+ shrink the scope or how we use it static files for the intersections and blocks and receipts are
+
+775
+01:21:57,880 --> 01:22:04,840
+ profiti fine basically binary files saying like open the file put the section some indexing
+
+776
+01:22:04,840 --> 01:22:08,920
+ it works very nice for mdbx it allows it to have like
+
+777
+01:22:08,920 --> 01:22:16,899
+ atomic-like, atomic-like, like fetches from the hard disk level.
+
+778
+01:22:16,899 --> 01:22:23,140
+ So it allows you to have ability to open new process and read the database in read-only
+
+779
+01:22:23,140 --> 01:22:24,140
+ mode.
+
+780
+01:22:24,140 --> 01:22:26,319
+ That's one of the use cases.
+
+781
+01:22:26,319 --> 01:22:38,340
+ It is bit-tree-like database it's faster on the reads, so it's more useful for the execution.
+
+782
+01:22:38,340 --> 01:22:44,659
+ So yeah, we are investigating replacement for it.
+
+783
+01:22:44,659 --> 01:22:48,739
+ I don't think it's something that we are going to stay long-term.
+
+784
+01:22:48,739 --> 01:22:55,300
+ But for now it's working and it's basically doing the job it needs to do.
+
+785
+01:22:55,300 --> 01:22:59,039
+ So we are open for new alternatives, but for now, yeah.
+
+786
+01:22:59,039 --> 01:23:01,560
+ Yeah, interesting.
+
+787
+01:23:01,560 --> 01:23:05,060
+ Yeah, Virginia documentation in Russian, right?
+
+788
+01:23:06,180 --> 01:23:06,700
+ Yeah.
+
+789
+01:23:06,700 --> 01:23:08,100
+ We have a English one as well.
+
+790
+01:23:09,740 --> 01:23:10,260
+ Okay.
+
+791
+01:23:10,860 --> 01:23:13,320
+ I don't see any more new questions.
+
+792
+01:23:13,680 --> 01:23:16,560
+ Oh, yeah, there was, whether you could point us,
+
+793
+01:23:16,780 --> 01:23:18,300
+ yeah, we have, like, last 10 minutes.
+
+794
+01:23:18,820 --> 01:23:21,400
+ Maybe if you could show us the Engine API communication
+
+795
+01:23:21,400 --> 01:23:25,200
+ and how this block building is triggered by new payload,
+
+796
+01:23:26,120 --> 01:23:28,000
+ like, or where does this happen?
+
+797
+01:23:28,600 --> 01:23:29,120
+ Okay.
+
+798
+01:23:29,119 --> 01:23:39,800
+ The ng-api is a bit hidden because it's it is inside consensus so it's crates consensus
+
+799
+01:23:39,800 --> 01:23:49,000
+ beacon engine.
+
+800
+01:23:49,000 --> 01:23:53,059
+ Let's see.
+
+801
+01:23:53,060 --> 01:24:09,020
+ block client listeners hooks yeah be cool consider sentient here it is this
+
+802
+01:24:09,020 --> 01:24:14,280
+ may structure that has a blockchain tree that has ngc controller controls the
+
+803
+01:24:14,279 --> 01:24:24,679
+ pipeline um and a lot of basically it is quite complex because it needs to hit synchronize a lot
+
+804
+01:24:24,679 --> 01:24:32,439
+ of components from payload builder to the focus update to the blockchain tree to the pipeline
+
+805
+01:24:33,000 --> 01:24:41,960
+ and it's like control hub of everything around it it is implemented as the feature
+
+806
+01:24:44,279 --> 01:24:48,439
+ Here it is.
+
+807
+01:24:48,439 --> 01:24:56,039
+ Fork choice update.
+
+808
+01:24:56,039 --> 01:25:02,880
+ On fork choice update.
+
+809
+01:25:02,880 --> 01:25:09,539
+ It should be in that kind.
+
+810
+01:25:09,539 --> 01:25:13,699
+ Consistent state, ensure canonical update head.
+
+811
+01:25:17,399 --> 01:25:20,039
+ Process payload attributes.
+
+812
+01:25:26,159 --> 01:25:27,199
+ Yep, here it is.
+
+813
+01:25:28,659 --> 01:25:32,519
+ There's RPC part that calls this work trace update,
+
+814
+01:25:32,519 --> 01:25:34,760
+ but I think this main entry point,
+
+815
+01:25:36,359 --> 01:25:39,279
+ work with latest should be at her
+
+816
+01:25:39,279 --> 01:25:47,259
+ Basically in here, we check if the pipeline is active.
+
+817
+01:25:47,259 --> 01:25:48,939
+ If it's active, we are not receiving.
+
+818
+01:25:49,859 --> 01:25:51,500
+ We are in the syncing process.
+
+819
+01:25:53,500 --> 01:25:57,319
+ We check if we have right hook on the database.
+
+820
+01:25:59,159 --> 01:25:59,859
+ That's more.
+
+821
+01:26:01,420 --> 01:26:02,719
+ Here, make canonical.
+
+822
+01:26:03,539 --> 01:26:09,019
+ We tell the blockchain tree to make this block that we received.
+
+823
+01:26:09,279 --> 01:26:18,340
+ as canonical because fortress update has just the hash and if this has some problems or there is some
+
+824
+01:26:18,340 --> 01:26:26,099
+ i don't know uh state truth is not calculated correctly or something like that we need to go
+
+825
+01:26:26,099 --> 01:26:35,179
+ to like arrow handling or fail canonical fortress update or if it's okay we need to check outcome
+
+826
+01:26:35,180 --> 01:26:37,400
+ if it is all decanonical
+
+827
+01:26:37,400 --> 01:26:39,340
+ because it can possible
+
+828
+01:26:39,340 --> 01:26:41,240
+ it is possible to have
+
+829
+01:26:41,240 --> 01:26:42,700
+ multiple consensus layer
+
+830
+01:26:42,700 --> 01:26:45,200
+ basically connected to one execution layer
+
+831
+01:26:45,200 --> 01:26:47,100
+ so maybe they are sending
+
+832
+01:26:47,100 --> 01:26:48,539
+ the same Fuck Choice update
+
+833
+01:26:48,539 --> 01:26:51,260
+ if it is
+
+834
+01:26:51,260 --> 01:26:53,119
+ all decanonical, if it is committed
+
+835
+01:26:53,119 --> 01:26:55,060
+ that means that it is
+
+836
+01:26:55,060 --> 01:26:56,720
+ sent to the database
+
+837
+01:26:56,720 --> 01:26:59,940
+ and
+
+838
+01:26:59,940 --> 01:27:03,579
+ yeah, ensure consistent state
+
+839
+01:27:03,579 --> 01:27:14,159
+ yeah in general there is a lot of things happening here
+
+840
+01:27:14,159 --> 01:27:18,119
+ on fork choice update
+
+841
+01:27:18,119 --> 01:27:22,180
+ where is the main
+
+842
+01:27:22,180 --> 01:27:30,279
+ oh here it is ah this is the main pool yeah win plan future
+
+843
+01:27:30,279 --> 01:27:45,639
+ it is the loop over the bcox-sysengine that acts like it pulls everything that actions
+
+844
+01:27:45,639 --> 01:27:48,699
+ that need to happen.
+
+845
+01:27:48,699 --> 01:28:01,619
+ One of them is Fuck Choice Update, one of them is Process Sync Event, and I think here
+
+846
+01:28:01,619 --> 01:28:08,579
+ it will have to finalize on Hook Result.
+
+847
+01:28:08,579 --> 01:28:12,899
+ Yeah, here it is, here, yeah.
+
+848
+01:28:12,899 --> 01:28:18,019
+ If it is a forked choice update, if it is a new payload that it received from the consensus
+
+849
+01:28:18,019 --> 01:28:31,699
+ layer, if it is a new event that needs to be happening, it's configuration.
+
+850
+01:28:31,699 --> 01:28:36,119
+ I'm not sure even what's that.
+
+851
+01:28:36,119 --> 01:28:42,439
+ Maybe I'm not the best person to explore this.
+
+852
+01:28:42,439 --> 01:28:50,340
+ But yeah, if you want to dive deeper it's in Cosensus beacon engine it handles basically
+
+853
+01:28:50,340 --> 01:28:51,800
+ uh
+
+854
+01:28:51,800 --> 01:28:56,860
+ synchronization between the pipeline
+
+855
+01:28:56,860 --> 01:28:58,600
+ blockchain tree builder and
+
+856
+01:28:58,600 --> 01:29:00,600
+ everything around it even the
+
+857
+01:29:00,600 --> 01:29:01,020
+ pruner
+
+858
+01:29:01,020 --> 01:29:14,619
+ sorry that I don't
+
+859
+01:29:14,619 --> 01:29:16,600
+ have yeah yeah that's
+
+860
+01:29:16,600 --> 01:29:18,819
+ right it's all good um
+
+861
+01:29:18,819 --> 01:29:25,139
+ Thank you very much. We had a question about the tree parallel trait.
+
+862
+01:29:25,139 --> 01:29:33,039
+ Whether you can give us just an overview, we have last few minutes, of the tree-parallel.
+
+863
+01:29:33,039 --> 01:29:48,239
+ What we noticed, we had argument that implemented tree-parallel.
+
+864
+01:29:48,239 --> 01:29:50,519
+ basically we have tree and tree parallel.
+
+865
+01:29:50,519 --> 01:29:52,760
+ They do the same thing, but in different ways.
+
+866
+01:29:57,199 --> 01:30:01,119
+ We have very like optimized way to calculate
+
+867
+01:30:01,119 --> 01:30:06,119
+ mclroute from the plain state,
+
+868
+01:30:06,159 --> 01:30:09,319
+ from the basically after we finished the pipeline.
+
+869
+01:30:09,319 --> 01:30:12,059
+ But what we noticed that same calculation
+
+870
+01:30:12,059 --> 01:30:16,920
+ was not good enough for the tip,
+
+871
+01:30:16,920 --> 01:30:26,819
+ Because for the tip, basically, we need the better way to do it is to do it calculation
+
+872
+01:30:26,819 --> 01:30:27,819
+ in the parallel.
+
+873
+01:30:27,819 --> 01:30:33,699
+ I don't know exactly the algorithm it's not the thing that I worked on.
+
+874
+01:30:33,699 --> 01:30:36,800
+ So it's very new.
+
+875
+01:30:36,800 --> 01:30:42,500
+ idea is to I think just make it in parallel
+
+876
+01:30:51,020 --> 01:30:54,500
+ yeah don't have a lot to say here to be honest
+
+877
+01:30:56,000 --> 01:31:01,880
+ it's all right thank you so much yeah uh just uh just a quick quick overview
+
+878
+01:31:01,880 --> 01:31:09,859
+ yes any other personal code you guys would like to ask about maybe it would
+
+879
+01:31:09,859 --> 01:31:15,619
+ ask something more general maybe and a bit further from the red itself because
+
+880
+01:31:15,619 --> 01:31:19,980
+ there are many people you know trying to contribute up learning rest up I'm
+
+881
+01:31:19,980 --> 01:31:25,039
+ wondering but we have any any suggestions any recommendations advice
+
+882
+01:31:25,039 --> 01:31:33,600
+ for people getting into Rust and learning this unforgivable language?
+
+883
+01:31:33,600 --> 01:31:38,720
+ If you start in Rust, the book is the main resource.
+
+884
+01:31:38,720 --> 01:31:43,640
+ Basically it's official documentation it's very nice, I think every Rust developer started
+
+885
+01:31:43,640 --> 01:31:46,600
+ from there it's that good.
+
+886
+01:31:46,600 --> 01:31:58,600
+ you only know rust and want to contribute good uh labels it work on uh good first
+
+887
+01:32:00,360 --> 01:32:03,320
+ uh there are a lot of them good first
+
+888
+01:32:06,120 --> 01:32:13,640
+ uh is it is it dash or yeah yeah yeah good first issue there is a lot of like small tasks that can
+
+889
+01:32:13,640 --> 01:32:18,760
+ be done move with their scan types to alloy it's like porting and just um
+
+890
+01:32:20,360 --> 01:32:29,240
+ matt created for four days ago matt is yes uh does uh uh red already supports the the ots uh
+
+891
+01:32:29,240 --> 01:32:37,000
+ namespace for otter scan yeah we i think yeah to be honest i'm not following a lot i moved myself
+
+892
+01:32:37,000 --> 01:32:44,520
+ to the revm and i have a lot of stuff there but yeah we have water scan i think we have
+
+893
+01:32:44,520 --> 01:32:51,720
+ water scan support um it's for example there is like phase out eaters dependence replace
+
+894
+01:32:51,720 --> 01:32:56,680
+ vital provider for example always provider a new rewrite of features
+
+895
+01:32:58,760 --> 01:33:04,840
+ replace bite smooth feedback there's a lot of small like tasks that can be done but anybody
+
+896
+01:33:04,840 --> 01:33:12,319
+ we like joke around it uh there was even a lot one guy that made the script where he scanned
+
+897
+01:33:12,319 --> 01:33:18,880
+ the issues and if he if he found good first issue he would just grab it and he made like
+
+898
+01:33:18,880 --> 01:33:27,900
+ yes he made the script basically comment in the loop and it was like broken and
+
+899
+01:33:27,899 --> 01:33:33,179
+ it was trying to snipe the first good issues
+
+900
+01:33:33,179 --> 01:33:35,579
+ and spammed comments
+
+901
+01:33:35,579 --> 01:33:36,859
+ yeah exactly
+
+902
+01:33:36,859 --> 01:33:40,859
+ but either way there's a lot of good first issues
+
+903
+01:33:40,859 --> 01:33:43,259
+ that can be taken
+
+904
+01:33:43,259 --> 01:33:45,460
+ yeah awesome
+
+905
+01:33:45,460 --> 01:33:49,319
+ I'm very excited about this part of Red
+
+906
+01:33:49,319 --> 01:33:51,819
+ being so open to contributors
+
+907
+01:33:51,819 --> 01:33:52,920
+ especially
+
+908
+01:33:52,920 --> 01:33:57,319
+ how do you see it from your side as a developer
+
+909
+01:33:57,319 --> 01:34:03,639
+ like is it hard as a maintainer to to get so many uh you know questions and just prs which might be
+
+910
+01:34:03,639 --> 01:34:09,960
+ low quality or so like how are you having it go with the flow basically
+
+911
+01:34:13,479 --> 01:34:19,079
+ me as the basically maintainer uh i need to take care of my time but i want to help people
+
+912
+01:34:19,079 --> 01:34:27,000
+ because you never know i from especially revm i know that my first like user was foundry and
+
+913
+01:34:27,000 --> 01:34:34,039
+ basically i wanted to support all yeah maybe it's different they're high level users but either way
+
+914
+01:34:34,760 --> 01:34:41,800
+ you never know when somebody's going to go like you never know what happened in the space
+
+915
+01:34:41,800 --> 01:34:47,079
+ because you never know if you help this guy for a little bit he will stay here for like years
+
+916
+01:34:47,800 --> 01:34:54,680
+ or build something on top of it but he had like questions for in gmail hey something is
+
+917
+01:34:54,680 --> 01:35:01,000
+ not working and it was like one rust feature like needs to be enabled and it's not working and
+
+918
+01:35:02,440 --> 01:35:09,400
+ he built around like library out rev and everything like that i think the team that
+
+919
+01:35:09,400 --> 01:35:17,240
+ was behind foundry and the same thing that's now in direct is amazing and they they take care of
+
+920
+01:35:17,239 --> 01:35:24,519
+ that basically our telegram group is like very lively and i think there is a lot of responses
+
+921
+01:35:24,519 --> 01:35:29,639
+ a lot of questions and you're there to support that's why you have you build community at the end
+
+922
+01:35:32,279 --> 01:35:37,319
+ yeah awesome um yeah i really appreciate the openness and the community approach
+
+923
+01:35:37,319 --> 01:35:44,279
+ and uh i understand it sometimes might be maybe tough with all the contributors coming in yeah um
+
+924
+01:35:44,279 --> 01:35:49,960
+ We don't have any more questions coming, so I think we can rip up here. But thank you so much,
+
+925
+01:35:49,960 --> 01:35:54,119
+ Dragan. Yeah, I really appreciate it. It was really great insight. We learned a lot.
+
+926
+01:35:55,239 --> 01:36:00,840
+ Also, I have more to learn about the actual stage sync, because it's really nice to see it in the
+
+927
+01:36:00,840 --> 01:36:05,319
+ logs, right? Like, I'm doing this stage, executing transactions, doing this stage, doing this. It's
+
+928
+01:36:05,319 --> 01:36:10,119
+ really nice to see how the client progresses, but it's different to actually dive into the code. So
+
+929
+01:36:10,119 --> 01:36:12,960
+ So I really thank you so much, Dragan.
+
+930
+01:36:12,960 --> 01:36:13,779
+ Yeah.
+
+931
+01:36:13,779 --> 01:36:16,319
+ And yeah.
+
+932
+01:36:16,319 --> 01:36:19,840
+ Thank you for calling me.
+
+933
+01:36:19,840 --> 01:36:22,260
+ We sent you the invite to Discord.
+
+934
+01:36:22,260 --> 01:36:25,279
+ Feel free to join.
+
+935
+01:36:25,279 --> 01:36:27,840
+ We have a bunch of people eager to learn there.
+
+936
+01:36:27,840 --> 01:36:31,099
+ So if you feel like answering some questions,
+
+937
+01:36:31,099 --> 01:36:33,119
+ you're always welcome.
+
+938
+01:36:33,119 --> 01:36:33,659
+ Cool.
+
+939
+01:36:33,659 --> 01:36:35,500
+ I'll join it.
+
+940
+01:36:35,500 --> 01:36:39,019
+ For the audience, for the study group folks,
+
+941
+01:36:39,020 --> 01:36:45,420
+ will continue the week seven on Wednesday with a research track focused on vertical trees. We will
+
+942
+01:36:45,420 --> 01:36:52,380
+ have three or maybe even four speakers covering the vertical tree topics in one session, so don't
+
+943
+01:36:52,380 --> 01:37:00,860
+ miss that on Wednesday. Next week we will have Paul from Tecku explaining the consensus layer
+
+944
+01:37:00,859 --> 01:37:04,519
+ client. So after dragons execution part, we will have the
+
+945
+01:37:04,579 --> 01:37:10,159
+ consensus as well. Ah, yeah, awesome. Yeah, so really
+
+946
+01:37:10,159 --> 01:37:14,420
+ appreciate it. We have we have great insights, Dragan, and I
+
+947
+01:37:14,420 --> 01:37:16,159
+ will hope to see you around the study group.
+
+948
+01:37:19,539 --> 01:37:22,819
+ I'm glad to help. Yeah, thanks so much.
+
+949
+01:37:24,399 --> 01:37:25,819
+ Have a great day. Bye bye.
+
+950
+01:37:26,619 --> 01:37:27,899
+ Bye, everyone.
+
+951
+01:38:00,859 --> 01:38:30,839
+ Thank you.
+

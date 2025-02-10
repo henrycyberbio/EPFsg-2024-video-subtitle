@@ -1,0 +1,4948 @@
+1
+00:00:30,000 --> 00:00:59,980
+ Thank you.
+
+2
+00:01:00,000 --> 00:01:29,980
+ Thank you.
+
+3
+00:01:30,000 --> 00:01:59,000
+ ¶¶
+
+4
+00:02:00,000 --> 00:02:10,000
+ ¶¶
+
+5
+00:02:10,000 --> 00:02:20,000
+ ¶¶
+
+6
+00:02:20,000 --> 00:02:30,000
+ ¶¶
+
+7
+00:02:30,000 --> 00:02:59,979
+ I love you.
+
+8
+00:03:00,000 --> 00:03:29,979
+ Thank you.
+
+9
+00:03:30,000 --> 00:03:59,979
+ Thank you.
+
+10
+00:04:00,000 --> 00:04:12,039
+ All right, welcome back to the Ethereum Protocol Fellowship Study Group.
+
+11
+00:04:12,599 --> 00:04:20,800
+ Today, we have a special presentation from Mario on how to run a node.
+
+12
+00:04:20,800 --> 00:04:31,280
+ go deep into what the the the hardware and and process of running a node and then we'll have
+
+13
+00:04:31,280 --> 00:04:38,939
+ lots of times for questions uh after he does a demo of how to get it set up and start running
+
+14
+00:04:38,939 --> 00:04:47,379
+ a test net yeah thank you so much for the intro josh um yeah and welcome everyone to the node
+
+15
+00:04:47,379 --> 00:05:17,360
+ running workshop. Yeah, there is a lot to interrupt here. It's it's finally the time to put things in practice it's it's been a lot of theoretical knowledge, a lot of talk about the protocol architecture or the concerns execution layer, etc, etc. But today, I want to show you how it actually works, how we put it into practice. So as I, if you remember my very
+
+16
+00:05:17,360 --> 00:05:23,360
+ first presentation, I asked you, what is Ethereum? It's protocol, it's love, it's the future,
+
+17
+00:05:23,360 --> 00:05:28,160
+ and now we will become all of it, we will become Ethereum by actually running it, by actually
+
+18
+00:05:28,160 --> 00:05:34,240
+ using it. So it's pretty exciting. Yeah, it's super pale, like the camera, anyway.
+
+19
+00:05:35,280 --> 00:05:38,960
+ I am also watching the questions, feel free to drop questions in the Discord,
+
+20
+00:05:38,959 --> 00:05:42,199
+ There's dedicated thread to that.
+
+21
+00:05:42,199 --> 00:05:47,519
+ However, a part of that, you can follow the workshop.
+
+22
+00:05:47,519 --> 00:05:52,639
+ So what I will be doing is figuring it by myself,
+
+23
+00:05:52,639 --> 00:05:56,199
+ because I do this like maybe more than once a week,
+
+24
+00:05:56,199 --> 00:05:57,959
+ but it's still for you.
+
+25
+00:05:57,959 --> 00:06:02,359
+ There's so many different clients and I remember all the flags and all the niches.
+
+26
+00:06:02,359 --> 00:06:07,799
+ So, you know, I will be I will be going as it is a go to install and run it here.
+
+27
+00:06:07,800 --> 00:06:13,079
+ room and you can follow what I'm doing, you can try it yourself. If you run into any issues
+
+28
+00:06:13,079 --> 00:06:18,199
+ that I'm not able to answer during the workshop, we will have time after that. After this is
+
+29
+00:06:18,199 --> 00:06:28,040
+ over, it would switch to Jitsi for more interactive session if you wish, if you guys want to share
+
+30
+00:06:28,040 --> 00:06:33,759
+ your screen and troubleshoot, because here only I will be sharing my screen. I also brought,
+
+31
+00:06:33,759 --> 00:06:40,920
+ I was connected with my phone in case my microphone did this trouble, so we can test it later.
+
+32
+00:06:40,920 --> 00:06:45,099
+ First, I will share my screen.
+
+33
+00:06:45,099 --> 00:06:47,980
+ Yeah, awesome, awesome.
+
+34
+00:06:47,980 --> 00:06:54,819
+ So what you are looking at is Debian 12 virtual machine.
+
+35
+00:06:54,819 --> 00:06:58,399
+ So let's start with the basics, actually.
+
+36
+00:06:58,399 --> 00:07:05,919
+ Let's start with going to the workshop outline so I know what I'm supposed to talk about
+
+37
+00:07:05,919 --> 00:07:08,199
+ because I outlined it all here.
+
+38
+00:07:08,799 --> 00:07:11,539
+ So yeah, let's start with the introduction.
+
+39
+00:07:12,719 --> 00:07:16,699
+ So yeah, this is the doc with all the resources you will need.
+
+40
+00:07:17,419 --> 00:07:22,939
+ You can just click to get into all the places from here.
+
+41
+00:07:22,939 --> 00:07:32,660
+ But let's start with the short recap of what we discussed before in the fellowship, I believe,
+
+42
+00:07:32,660 --> 00:07:38,240
+ you in the study group, because I'm sure you folks understand what the node is, what the
+
+43
+00:07:38,240 --> 00:07:40,339
+ client is at this point.
+
+44
+00:07:40,339 --> 00:07:46,000
+ Just to recap, like, why you want to even do this, it's to use Ethereum, right?
+
+45
+00:07:46,000 --> 00:07:52,879
+ So we are going to take the actual implemented spec and all of the behavior that Ethereum
+
+46
+00:07:52,879 --> 00:08:00,959
+ is supposed to do, and we are going to execute it ourselves, which means there will be different
+
+47
+00:08:00,959 --> 00:08:06,100
+ stages, different operations that a client is doing, and of course it's a client pair,
+
+48
+00:08:06,100 --> 00:08:09,540
+ so there's execution and consensus client.
+
+49
+00:08:09,540 --> 00:08:17,220
+ Now, why would you want to do this as an individual is to be able to actually use Ethereum.
+
+50
+00:08:17,860 --> 00:08:27,120
+ If you are using your wallet, if you are developing smart contracts, if you are anyway interacting with Ethereum, checking transactions on Blog Explorer, for example,
+
+51
+00:08:27,120 --> 00:08:33,000
+ you're always using some third party provider, the wallet, RPC provider, etc.
+
+52
+00:08:33,180 --> 00:08:38,220
+ You're trusting someone else's node about its view on the current state of Ethereum.
+
+53
+00:08:38,220 --> 00:08:59,300
+ But this way, you can run your own client and, you know, just do it in a trustless way, because it's free, open software, so you see exactly what is being executed, what is being done, and you can verify chain on your own machine, basically.
+
+54
+00:08:59,299 --> 00:09:10,199
+ Now, first thing is to choose the client pair, to choose the actual combination of what node
+
+55
+00:09:10,199 --> 00:09:16,159
+ we want, what client implementation we want in the weeks before you learn there is many
+
+56
+00:09:16,159 --> 00:09:27,600
+ of them um a good overview is uh this one with all the different the different execution clients
+
+57
+00:09:28,399 --> 00:09:34,959
+ and consensus clients yeah and also tips on running them we might be using this later
+
+58
+00:09:34,959 --> 00:09:40,079
+ because it's full of great tips and explains basically the whole process and also some
+
+59
+00:09:40,080 --> 00:09:48,720
+ simple minimal commands for each client so how to choose the client uh is to read some of their
+
+60
+00:09:48,720 --> 00:09:56,720
+ some of their um basic documentation here maybe but also it's up to you like whether you want to
+
+61
+00:09:58,400 --> 00:10:02,320
+ invest your time in a specific language and specific code base for example you are
+
+62
+00:10:02,879 --> 00:10:07,920
+ a java developer so you might be more comfortable with best you because you understand its approach
+
+63
+00:10:07,919 --> 00:10:12,959
+ more, et cetera. So the language is one thing. Another part is the client diversity. This is
+
+64
+00:10:12,959 --> 00:10:25,039
+ more important if you are running the main node long-term or using running Validator, but
+
+65
+00:10:28,159 --> 00:10:32,879
+ we won't really care about this, and we will actually default to get, which is the majority
+
+66
+00:10:32,879 --> 00:10:43,120
+ here. I decided to use it for a default get for two reasons. First, it's most used for a reason,
+
+67
+00:10:43,120 --> 00:10:49,519
+ because it's easy to use, it works well, there won't be any surprises. And a part of this,
+
+68
+00:10:49,519 --> 00:10:54,000
+ like the easy configuration, it also has pretty good logs. It really explains well what it's
+
+69
+00:10:54,000 --> 00:10:59,919
+ actually doing, and we can learn from it. And we can, of course, if we have extra time, we will
+
+70
+00:10:59,919 --> 00:11:07,839
+ swap it for another client. The combination doesn't have to be the same. It's the same thing
+
+71
+00:11:07,839 --> 00:11:12,879
+ implemented in different languages. That may cause troubles if you don't have a proper testing, but
+
+72
+00:11:12,879 --> 00:11:18,879
+ as the week four explained us, we have pretty robust testing which ensures all the different
+
+73
+00:11:18,879 --> 00:11:26,319
+ clients should talk to each other. And does it work on ARM? Of course it runs ARM. The different
+
+74
+00:11:26,320 --> 00:11:32,379
+ clients provide binaries for different architectures, but also you can compile it yourself on an
+
+75
+00:11:32,379 --> 00:11:34,879
+ ARM machine or even REST.
+
+76
+00:11:34,879 --> 00:11:40,860
+ But, yeah, so, yeah, first thing, choosing the client pair.
+
+77
+00:11:41,040 --> 00:11:47,340
+ So I would advise you folks, you can completely go with the get and lighthouse that I will,
+
+78
+00:11:47,800 --> 00:11:53,360
+ but you can just choose any other client.
+
+79
+00:11:53,360 --> 00:11:55,820
+ I would do a little challenge.
+
+80
+00:11:56,039 --> 00:11:58,960
+ Like, I'm not sure how many people are here in the stream right now.
+
+81
+00:11:59,340 --> 00:12:02,659
+ But, you know, if we have at least, like, 20 people,
+
+82
+00:12:02,800 --> 00:12:06,159
+ we should be able to run, like, every client combination maybe.
+
+83
+00:12:06,600 --> 00:12:10,379
+ So it would be pretty cool if you want to try different combos.
+
+84
+00:12:10,759 --> 00:12:12,600
+ Like, feel free to write down in the chat, like,
+
+85
+00:12:12,620 --> 00:12:15,039
+ what combination are you going to try.
+
+86
+00:12:15,940 --> 00:12:20,740
+ And when you choose a client, you go ahead to its documentation.
+
+87
+00:12:20,740 --> 00:12:29,259
+ documentation so learning about here I had some examples uh here with uh best where you go on
+
+88
+00:12:29,259 --> 00:12:36,039
+ right so we can you can read about to open the get a lighthouse documentation in our case uh this
+
+89
+00:12:36,039 --> 00:12:44,860
+ goes to releases we go to dogs here and I before you know running the main node before investing
+
+90
+00:12:44,860 --> 00:12:49,500
+ hardware and so on, I will recommend studying the docs.
+
+91
+00:12:49,500 --> 00:12:52,539
+ In case of Lighthouse, they have this Lighthouse book.
+
+92
+00:12:52,539 --> 00:12:58,419
+ Let's see how easy it is to find the docs from their GitHub.
+
+93
+00:12:58,419 --> 00:12:59,419
+ Is it this one?
+
+94
+00:12:59,419 --> 00:13:00,419
+ No, it's not docs.
+
+95
+00:13:00,419 --> 00:13:01,419
+ These are not docs.
+
+96
+00:13:01,419 --> 00:13:02,419
+ It's the Lighthouse book.
+
+97
+00:13:02,419 --> 00:13:03,419
+ I wonder where it's the link.
+
+98
+00:13:03,419 --> 00:13:04,740
+ Here it is, Lighthouse book.
+
+99
+00:13:04,740 --> 00:13:05,740
+ Yeah.
+
+100
+00:13:05,740 --> 00:13:14,779
+ So, we opened the docs, and we will follow this.
+
+101
+00:13:14,860 --> 00:13:19,060
+ And yeah, so we choose the clients,
+
+102
+00:13:19,060 --> 00:13:23,539
+ we make ourselves familiar with what is going to happen.
+
+103
+00:13:23,539 --> 00:13:25,759
+ And yeah, we have best-seller tech for JavaScript tablets,
+
+104
+00:13:25,759 --> 00:13:28,539
+ awesome, red lighthouse for mainnet, it's pretty cool.
+
+105
+00:13:28,539 --> 00:13:32,100
+ Okay, we have three combinations already.
+
+106
+00:13:32,100 --> 00:13:33,539
+ And yeah, and the environment,
+
+107
+00:13:33,539 --> 00:13:35,060
+ this is another important thing.
+
+108
+00:13:35,060 --> 00:13:36,620
+ So many people were asking about
+
+109
+00:13:36,620 --> 00:13:38,399
+ hardware requirements and so on.
+
+110
+00:13:38,399 --> 00:13:42,279
+ For this workshop, I want to keep the hardware requirements
+
+111
+00:13:42,279 --> 00:13:43,480
+ as minimal as possible.
+
+112
+00:13:43,480 --> 00:13:48,000
+ What you are looking at right now is a KVM, a virtual machine.
+
+113
+00:13:48,759 --> 00:13:50,420
+ I don't even have an HTOC.
+
+114
+00:13:52,039 --> 00:13:56,899
+ I just did it today for the purpose of this workshop
+
+115
+00:13:56,899 --> 00:14:04,420
+ to demonstrate how to do it on a fresh system.
+
+116
+00:14:04,420 --> 00:14:06,879
+ So we have, like, yeah, three CPU cores.
+
+117
+00:14:07,120 --> 00:14:08,740
+ I've allocated six exi-memories.
+
+118
+00:14:08,899 --> 00:14:11,360
+ It will be a very, very small instance.
+
+119
+00:14:11,360 --> 00:14:17,320
+ And if you, I mean, of course, this is also doing some graphical interface, minimal graphical
+
+120
+00:14:17,320 --> 00:14:20,240
+ interface, but you can do this on a virtual server.
+
+121
+00:14:20,399 --> 00:14:27,060
+ You can just rent a small VPS for like four bucks a month, and that's enough to run a
+
+122
+00:14:27,060 --> 00:14:30,360
+ family node, for example, or just try it yourself.
+
+123
+00:14:31,019 --> 00:14:34,580
+ So regarding the environment, we are using WLinux here.
+
+124
+00:14:34,720 --> 00:14:36,740
+ It works on any Linux distro.
+
+125
+00:14:36,899 --> 00:14:37,700
+ It works in Windows.
+
+126
+00:14:37,840 --> 00:14:38,779
+ It works in Mac OS.
+
+127
+00:14:38,779 --> 00:14:41,180
+ Mac will be similar to what I'm doing here.
+
+128
+00:14:41,360 --> 00:14:47,120
+ the windows steps might be more much more different but again you go to the docs and we
+
+129
+00:14:47,120 --> 00:14:56,080
+ start with introduction installing get and um uh here you see the first goes mac os even before
+
+130
+00:14:56,080 --> 00:15:04,720
+ linux here is uh ubuntu windows so you follow the you follow the instruction specific to your
+
+131
+00:15:04,720 --> 00:15:13,279
+ system here um i will be demonstrating those for uh for debian based distros so yeah i think
+
+132
+00:15:13,279 --> 00:15:23,200
+ we can get into it by obtaining clients um uh how to for installation yeah so this so yeah this is
+
+133
+00:15:23,200 --> 00:15:27,840
+ a fresh install but i already installed some basic things yeah you see i was missing h top but yeah
+
+134
+00:15:27,840 --> 00:15:37,220
+ So in Debian, you can use your package manager, ideally.
+
+135
+00:15:37,220 --> 00:15:42,060
+ For some compilers which might be outdated in your package manager, especially in Debian,
+
+136
+00:15:42,060 --> 00:15:46,300
+ I have a bunch of outdated packages in Debian, you want to go straight to the website and
+
+137
+00:15:46,300 --> 00:15:54,060
+ download it, go lang, you can download it binary, there's REST and so on.
+
+138
+00:15:54,059 --> 00:16:04,939
+ didn't install docker either uh but uh yeah so let's see if i ins have the gpg i think i have
+
+139
+00:16:04,939 --> 00:16:11,339
+ yeah it's already installed okay cool uh because we will need that just in this in a second
+
+140
+00:16:11,340 --> 00:16:23,720
+ Maybe, yeah, Josh, can you make it, like, you know, make it make it full screen so it
+
+141
+00:16:23,720 --> 00:16:27,879
+ will do a piece of screen there.
+
+142
+00:16:28,840 --> 00:16:32,940
+ But, yeah, and let me know if the mic is okay.
+
+143
+00:16:32,940 --> 00:16:40,280
+ Let me know if you can hear me well, because there is a lot of typing and so on, so I can
+
+144
+00:16:40,279 --> 00:16:44,439
+ I guess we should phone Mike in case it's bothering you too much.
+
+145
+00:16:44,439 --> 00:16:54,959
+ Yeah it just won't disappear.
+
+146
+00:17:10,279 --> 00:17:17,160
+ Did I lose the mic?
+
+147
+00:17:17,160 --> 00:17:21,619
+ I was just trying to remove the little square there.
+
+148
+00:17:21,619 --> 00:17:24,500
+ It's okay.
+
+149
+00:17:24,500 --> 00:17:27,680
+ No, it's perfect.
+
+150
+00:17:27,680 --> 00:17:28,680
+ Awesome.
+
+151
+00:17:28,680 --> 00:17:32,519
+ I just wanted to have a bit more space in the stream.
+
+152
+00:17:32,519 --> 00:17:33,519
+ Let's go into it.
+
+153
+00:17:33,519 --> 00:17:34,920
+ So let's obtain.
+
+154
+00:17:34,920 --> 00:17:37,759
+ Yeah, if it gets too much, let me know.
+
+155
+00:17:37,759 --> 00:17:39,820
+ I will try the different things.
+
+156
+00:17:39,820 --> 00:17:43,140
+ But let's start with the obtaining clients.
+
+157
+00:17:43,140 --> 00:17:48,220
+ So the most basic way how to obtain a client is to download its compiled binary.
+
+158
+00:17:48,220 --> 00:17:55,620
+ So this is like already finished piece of software you can just run, right?
+
+159
+00:17:55,620 --> 00:17:58,820
+ We can download it and execute it.
+
+160
+00:17:58,820 --> 00:18:02,600
+ So these executables are in download pages.
+
+161
+00:18:02,599 --> 00:18:07,119
+ you saw the one for Lighthouse in the releases.
+
+162
+00:18:07,119 --> 00:18:16,819
+ Let's hit Installation, and then for the get, we saw it here, right?
+
+163
+00:18:16,819 --> 00:18:25,980
+ So let's go with get, and yeah, we choose the platform, right?
+
+164
+00:18:25,980 --> 00:18:29,219
+ And we obtain the binary.
+
+165
+00:18:29,220 --> 00:18:34,660
+ But what I'm doing here is I'm downloading already finished piece of software from already
+
+166
+00:18:34,660 --> 00:18:40,720
+ from, that I'm basically have to trust, right?
+
+167
+00:18:40,720 --> 00:18:43,600
+ This is something that was compiled by someone else.
+
+168
+00:18:43,600 --> 00:18:49,799
+ I cannot, you know, look into it, make sure that it's, that it's according to the code
+
+169
+00:18:49,799 --> 00:18:51,400
+ because it didn't compile it myself.
+
+170
+00:18:51,400 --> 00:18:54,600
+ We can demonstrate the compilation later, but I don't want to waste time on it right
+
+171
+00:18:54,600 --> 00:18:55,600
+ now.
+
+172
+00:18:55,599 --> 00:19:00,599
+ What we can do is to verify the signature of the binary.
+
+173
+00:19:03,099 --> 00:19:08,099
+ So get signs, you can also check some here,
+
+174
+00:19:08,899 --> 00:19:13,480
+ get signs, their binaries with PGP,
+
+175
+00:19:13,480 --> 00:19:17,480
+ with keys which are listed in the bottom here.
+
+176
+00:19:17,480 --> 00:19:20,819
+ See, we can import them here or download them directly.
+
+177
+00:19:20,819 --> 00:19:24,919
+ In our case, we want this Linux builder key.
+
+178
+00:19:24,920 --> 00:19:26,140
+ Yeah, okay, we have it here.
+
+179
+00:19:26,140 --> 00:19:28,120
+ So now let's import the key,
+
+180
+00:19:29,080 --> 00:19:32,680
+ and let's import a key,
+
+181
+00:19:32,680 --> 00:19:37,680
+ and yeah, yeah, I'm finally getting it.
+
+182
+00:19:40,700 --> 00:19:44,640
+ I got it released recently,
+
+183
+00:19:44,640 --> 00:19:47,340
+ and I hope it will still work.
+
+184
+00:19:47,340 --> 00:19:49,740
+ Yeah, it will keep it, it's pretty simple.
+
+185
+00:19:49,740 --> 00:19:53,660
+ gpgimport, so now we are doing the public key cryptography
+
+186
+00:19:53,660 --> 00:19:56,600
+ that all the Ethereum is based on, right?
+
+187
+00:19:56,600 --> 00:19:58,560
+ Oh wait, this is my quest builder.
+
+188
+00:19:58,560 --> 00:20:01,420
+ Did it click on the Linux one or the MacOS one?
+
+189
+00:20:14,860 --> 00:20:16,160
+ Yeah, this is the Linux builder.
+
+190
+00:20:16,160 --> 00:20:21,160
+ So now I use my local GNU PGP key chain
+
+191
+00:20:21,160 --> 00:20:32,500
+ p keychain to import a public key of this go ethereum linux builder which is a key that
+
+192
+00:20:32,500 --> 00:20:36,240
+ signs the linux binaries and it's part of my keychain.
+
+193
+00:20:36,240 --> 00:20:41,400
+ I can now use it to verify this signature here.
+
+194
+00:20:41,400 --> 00:20:46,700
+ So we have this one.
+
+195
+00:20:46,700 --> 00:20:58,039
+ This is the signature, which is, let's go bigger for the quotes.
+
+196
+00:20:58,039 --> 00:21:04,420
+ Yeah, this is the signature which is verifiable against the public key.
+
+197
+00:21:04,420 --> 00:21:11,140
+ So let's do that simply by gpg verify, and now we can actually just pass the pubkey,
+
+198
+00:21:11,140 --> 00:21:18,259
+ it will find the it will find uh uh the signature and then it will find the binary so you see we
+
+199
+00:21:18,259 --> 00:21:27,060
+ have a good signature from this builder so um so we can be we can be sure um yeah added it
+
+200
+00:21:27,700 --> 00:21:35,780
+ added to my keyring with uh with this import yeah so now we can be a bit more sure that the nobody
+
+201
+00:21:35,780 --> 00:21:40,900
+ nobody tempered with our binary because so especially if you are uh you know running some
+
+202
+00:21:41,140 --> 00:21:45,300
+ serious architecture uh some serious infrastructure uh if you're running a validator this is
+
+203
+00:21:45,300 --> 00:21:50,180
+ necessary to do this is something that ensures the integrity of the file because maybe this
+
+204
+00:21:50,180 --> 00:21:56,740
+ downloads get dot ethereum org maybe it compromise maybe there is a hacker serving malicious binaries
+
+205
+00:21:56,740 --> 00:22:02,980
+ trying to you know spy on you steal from you destroy theory and whatnot so you want to you
+
+206
+00:22:02,980 --> 00:22:09,140
+ want to make sure you you do this or you compile it yourself um to compile maybe i can do it
+
+207
+00:22:09,140 --> 00:22:18,100
+ quickly uh maybe i can do it very quickly while we it hosts um but yeah i want to demonstrate it
+
+208
+00:22:18,100 --> 00:22:23,460
+ if you are not aware of this it's very it's important step uh if we do something like this
+
+209
+00:22:23,460 --> 00:22:31,380
+ starting with yeah and to actually to yeah we can just make cat if we have yeah there are different
+
+210
+00:22:31,380 --> 00:22:37,060
+ this one interesting thing i can show you if you're if we are um compiling get you can actually
+
+211
+00:22:37,059 --> 00:22:50,259
+ get bunch of different utilities. So here we want to just clone the repo. And then I
+
+212
+00:22:50,259 --> 00:22:54,339
+ would avoid compiling lighthouses when thinking about it, because, like, Rust compilation
+
+213
+00:22:54,339 --> 00:23:03,019
+ times are terrible, so maybe it might be faster. And I hope my internet doesn't degrade too
+
+214
+00:23:03,019 --> 00:23:12,220
+ it's downloading um anyway um here in lighthouse let's head to the pre-built binaries as well
+
+215
+00:23:13,579 --> 00:23:20,779
+ and here we have information on um different releases so let's go to the releases page and
+
+216
+00:23:20,779 --> 00:23:26,059
+ look into it uh we don't want experimental three states release this is a version of
+
+217
+00:23:26,059 --> 00:23:30,779
+ lighthouse which changes are the database architecture to three states and it's just
+
+218
+00:23:30,779 --> 00:23:38,539
+ experiment right now we want the this is the latest um stable release five one oh uh we see the
+
+219
+00:23:39,339 --> 00:23:48,139
+ uh changes the change log here um and oh it's actually it's actually important hotfix so
+
+220
+00:23:49,339 --> 00:23:59,259
+ what we want to see is here so here we have um uh here uh we have uh the binaries for uh for
+
+221
+00:23:59,259 --> 00:24:11,019
+ the lighthouse so let's download it um let's it's still it takes a while anyway so let's also
+
+222
+00:24:11,019 --> 00:24:16,299
+ actually uh one thing so if you are using a vps you know if you are using if you just have a some
+
+223
+00:24:16,299 --> 00:24:21,660
+ remote branded server or if you don't have gui uh you don't need to just click on this but we can
+
+224
+00:24:21,660 --> 00:24:31,259
+ you can just get a link and download it download ourselves like this um yeah now it's downloading
+
+225
+00:24:31,259 --> 00:24:36,620
+ lighthouse but i'm going to kill it because it's actually i don't like to so i was using vget w get
+
+226
+00:24:36,620 --> 00:24:45,500
+ there but what you can do is use curl for that and you can enforce tls v 1.3 so to make sure that
+
+227
+00:24:45,500 --> 00:24:51,259
+ it's actually end-to-end encrypted with the server you are downloading it from so if you want to be
+
+228
+00:24:51,259 --> 00:25:07,759
+ fancy you can download it binaries like this yeah and we have it right here
+
+229
+00:25:07,759 --> 00:25:14,480
+ it holds yeah nothing downloads anyway let's actually unpack it now so we
+
+230
+00:25:14,480 --> 00:25:20,000
+ have both binaries now it's still still cloning the repo anyway it's a huge repo
+
+231
+00:25:20,000 --> 00:25:31,000
+ Let's un-tar it. You guys know that tar is from the tape archiver, so it's literally, like, from the tapes.
+
+232
+00:25:31,000 --> 00:25:43,000
+ Okay, yeah, and we have the .lighthouse here, amazing. Let's get rid of this, and let's bring the .org.
+
+233
+00:25:43,000 --> 00:25:59,359
+ Yeah, we have the cat binary here, and this.
+
+234
+00:25:59,359 --> 00:26:06,000
+ And now we are here in home with both our binaries with lighthouse and cat, right?
+
+235
+00:26:06,000 --> 00:26:07,819
+ So this is unpacked.
+
+236
+00:26:07,819 --> 00:26:13,359
+ it's like, oh, I didn't check the lighthouse before I didn't check the BGP key.
+
+237
+00:26:13,359 --> 00:26:18,000
+ I'm not sure if I should do that, but maybe let's show you, because, yeah, you guys, I
+
+238
+00:26:18,000 --> 00:26:21,299
+ see that you guys were, yeah, it depends.
+
+239
+00:26:21,299 --> 00:26:25,220
+ There are some key servers which might give you troubles.
+
+240
+00:26:25,220 --> 00:26:29,579
+ Download it again.
+
+241
+00:26:29,579 --> 00:26:34,480
+ And it's funny it's cloning so slow, but downloading, yeah.
+
+242
+00:26:34,480 --> 00:26:35,480
+ Let's use it.
+
+243
+00:26:35,480 --> 00:26:36,480
+ This is the key.
+
+244
+00:26:36,480 --> 00:26:40,640
+ To obtain the key, you need to get it from a key server.
+
+245
+00:26:40,640 --> 00:26:44,400
+ Maybe they also have it somewhere, but it's probably somewhere in a key server.
+
+246
+00:26:44,400 --> 00:26:53,759
+ So we go to the GPG, key server, keys, openPGP.org, maybe.
+
+247
+00:26:54,400 --> 00:26:59,039
+ Search keys, and we pass the key.
+
+248
+00:27:01,120 --> 00:27:02,160
+ Yeah, Sigma Prime.
+
+249
+00:27:02,160 --> 00:27:03,200
+ Yeah, yeah, awesome.
+
+250
+00:27:03,200 --> 00:27:03,839
+ Let's do it.
+
+251
+00:27:03,839 --> 00:27:16,599
+ it. And now you want to invert it. Yeah, okay, yes, we have it imported. We can list our
+
+252
+00:27:16,599 --> 00:27:22,879
+ keys to show you guys we have all of them. So we have the Mac builder that we accidentally
+
+253
+00:27:22,879 --> 00:27:27,379
+ did, the Linux one that we used for get, and now we have the Sigma Prime. So now we can
+
+254
+00:27:27,380 --> 00:27:34,660
+ actually get the signature that i didn't verify before oh did it do portable or or
+
+255
+00:27:36,420 --> 00:27:41,060
+ yes portable yeah so the difference here and you can maybe notice it in other software
+
+256
+00:27:41,060 --> 00:27:49,220
+ in other clients the difference here is that um this is compiled uh with different uh rest
+
+257
+00:27:49,220 --> 00:27:56,579
+ compiler um uh targets different different configuration and there are some systems some
+
+258
+00:27:56,579 --> 00:28:01,700
+ architectures like some maybe debian virtual machine which won't understand certain instructions
+
+259
+00:28:01,700 --> 00:28:08,019
+ compiled with the with the default most performance mode so this is like uh of course if
+
+260
+00:28:08,019 --> 00:28:13,539
+ you want to achieve the best performance which means like gain maybe smaller like few percent
+
+261
+00:28:13,539 --> 00:28:17,059
+ of the of the performance it's best to compile your client in your own machine
+
+262
+00:28:17,700 --> 00:28:25,299
+ hello to gentle users um yeah so we have the oh i don't have it it downloads anyway um
+
+263
+00:28:29,539 --> 00:28:33,619
+ and now we can gpg verify this one
+
+264
+00:28:33,619 --> 00:28:43,759
+ and we have a good signature from Sigma Prime, security at Sigma Prime, that's nice. Okay,
+
+265
+00:28:43,759 --> 00:28:48,739
+ so I believe that if the key server is not compromised and the github is not compromised,
+
+266
+00:28:48,740 --> 00:29:00,500
+ we have a good plant right here. So actually let me remove all of this.
+
+267
+00:29:08,900 --> 00:29:14,019
+ Now we have the get and lighthouse, it's really nice. And we are ready to launch it, basically.
+
+268
+00:29:14,019 --> 00:29:21,180
+ Here is the repo done, so we can go it here.
+
+269
+00:29:21,180 --> 00:29:25,779
+ In case you want to compile it, all it takes is to make it.
+
+270
+00:29:25,779 --> 00:29:27,700
+ I don't have it make it.
+
+271
+00:29:27,700 --> 00:29:28,980
+ Anything's still up on this first.
+
+272
+00:29:28,980 --> 00:29:35,779
+ So you want to go to, yeah, always your documentation.
+
+273
+00:29:35,779 --> 00:29:38,059
+ There's some docs on compile here.
+
+274
+00:29:41,059 --> 00:29:46,059
+ 3dst, okay, go from source, yeah.
+
+275
+00:29:47,119 --> 00:29:49,019
+ Doesn't mention all the dependencies.
+
+276
+00:29:52,559 --> 00:29:54,940
+ Yeah, I don't have to make mine anyway.
+
+277
+00:29:54,940 --> 00:30:06,279
+ I believe I have go.
+
+278
+00:30:06,279 --> 00:30:08,320
+ Yeah, it's working.
+
+279
+00:30:08,320 --> 00:30:11,620
+ This is how it's still getting a bunch of other packages.
+
+280
+00:30:11,620 --> 00:30:16,299
+ But I just wanted to show you that, like, when I say make get, it's going to compile
+
+281
+00:30:16,299 --> 00:30:26,579
+ get, it's a utility get, which is one of the things that this repository can do.
+
+282
+00:30:26,579 --> 00:30:32,000
+ It's like one binary which interacts with a bunch of other packages.
+
+283
+00:30:32,000 --> 00:30:33,700
+ Here you can see the different packages.
+
+284
+00:30:33,700 --> 00:30:45,399
+ So, for example, we can have, like, boot node to run dev peer-to-peer communicator for consensus.
+
+285
+00:30:45,400 --> 00:30:49,560
+ So to just give you an example that I can do, like, not just make CAD, but I can, I
+
+286
+00:30:49,560 --> 00:30:56,740
+ mean, I can make all, as the documentation suggests, if you want to do all the utilities.
+
+287
+00:30:56,740 --> 00:31:01,380
+ But let's just do it here.
+
+288
+00:31:01,380 --> 00:31:05,280
+ So let's go here.
+
+289
+00:31:05,280 --> 00:31:06,280
+ Here.
+
+290
+00:31:06,280 --> 00:31:07,280
+ No.
+
+291
+00:31:07,280 --> 00:31:08,280
+ Okay.
+
+292
+00:31:08,280 --> 00:31:09,280
+ Now.
+
+293
+00:31:09,280 --> 00:31:10,340
+ So, yeah.
+
+294
+00:31:10,339 --> 00:31:17,619
+ Okay, now, so yeah, you can go build each of the parts of GAT.
+
+295
+00:31:17,619 --> 00:31:22,379
+ So if you want to, for example, experiment just with the peer-to-peer stack, you go to
+
+296
+00:31:22,379 --> 00:31:29,079
+ this part and you compile this, or you can just make this is what the crawler was based
+
+297
+00:31:29,079 --> 00:31:30,079
+ on, for example.
+
+298
+00:31:30,079 --> 00:31:35,159
+ So if you want to play with crawling nodes, you can just modify and compile this utility
+
+299
+00:31:35,159 --> 00:31:36,299
+ and so on.
+
+300
+00:31:36,299 --> 00:31:41,200
+ So compiling the client gives you multiple benefits.
+
+301
+00:31:41,200 --> 00:31:46,980
+ First of all, you can just have those parts that you really want to use, exactly the same
+
+302
+00:31:46,980 --> 00:31:52,579
+ compilation, configuration that you want, with the optimizations.
+
+303
+00:31:52,579 --> 00:31:59,639
+ So it might be running a bit faster on your software and on your hardware, but most importantly,
+
+304
+00:31:59,639 --> 00:32:01,740
+ I read the code, right?
+
+305
+00:32:01,740 --> 00:32:05,019
+ Here I can see exactly what is happening.
+
+306
+00:32:05,019 --> 00:32:12,619
+ can see uh that i'm running the actual code that i read and i compiled it by myself so yeah again if
+
+307
+00:32:12,619 --> 00:32:19,660
+ you trust the compiler uh we have like a trustless setup here uh where we can run ethereum without
+
+308
+00:32:19,660 --> 00:32:25,259
+ uh anybody interfering as a free software so yeah that's that's that's uh what i wanted to explain
+
+309
+00:32:25,259 --> 00:32:31,500
+ with the compilation part but uh for developers for people who want to look into this go ahead
+
+310
+00:32:31,500 --> 00:32:36,940
+ but let's assume we have already compiled or downloaded it or whatever binaries now. We have
+
+311
+00:32:36,940 --> 00:32:43,819
+ row binaries here. So, of course, this is a technical workshop. I'm not using any
+
+312
+00:32:44,940 --> 00:32:51,259
+ third party to run this. There are these dev notes, Docker setups, and so on.
+
+313
+00:32:51,259 --> 00:32:57,579
+ And I would say that for practical purposes, if you are actually going to run your node
+
+314
+00:32:58,460 --> 00:33:04,859
+ long-term it might be even better to use something like some of these because it comes with all the
+
+315
+00:33:04,859 --> 00:33:11,259
+ packages pre-configured etc but if you want to learn how it actually works you need to look into
+
+316
+00:33:11,259 --> 00:33:16,379
+ the configuration by yourself so that's what we are going to do now we are going to look how you
+
+317
+00:33:16,379 --> 00:33:23,899
+ actually configure it manually which again might cause some issues some troubles it might be
+
+318
+00:33:23,900 --> 00:33:31,180
+ it might be problematic for someone and it doesn't come like automatic from some
+
+319
+00:33:31,180 --> 00:33:36,500
+ packager like this, but it gives you the full control and insight and of course your technical
+
+320
+00:33:36,500 --> 00:33:39,060
+ folks, so we will look into that.
+
+321
+00:33:39,060 --> 00:33:44,040
+ So yeah, we've downloaded and verified the binary, we've compiled the clients, now let's
+
+322
+00:33:44,040 --> 00:33:45,680
+ run it on a test net.
+
+323
+00:33:45,680 --> 00:33:47,440
+ So let's do it, let's run get.
+
+324
+00:33:47,440 --> 00:33:49,060
+ Check it, I'm running get.
+
+325
+00:33:49,060 --> 00:33:51,580
+ Okay, it was easy.
+
+326
+00:33:51,579 --> 00:33:54,819
+ So yeah, basically just executing the binary here.
+
+327
+00:33:54,819 --> 00:33:56,379
+ Minimize it Firefox.
+
+328
+00:33:56,379 --> 00:33:59,619
+ Whether it's better.
+
+329
+00:33:59,619 --> 00:34:00,960
+ There are any questions?
+
+330
+00:34:03,960 --> 00:34:06,539
+ Here's my little Discord thingy.
+
+331
+00:34:12,000 --> 00:34:14,000
+ No, wait, I have it.
+
+332
+00:34:18,779 --> 00:34:19,619
+ Okay.
+
+333
+00:34:21,579 --> 00:34:26,860
+ it's just running Teco as a beacon node only
+
+334
+00:34:29,139 --> 00:34:33,340
+ it's a validator it is I'm not sure exactly where did you read that in the documentation
+
+335
+00:34:33,340 --> 00:34:39,579
+ what it what does it mean but like uh we will get in there that like these uh consensus clients they
+
+336
+00:34:39,579 --> 00:34:48,679
+ come either integrated with extra package of um of um uh the validator client so there is the
+
+337
+00:34:48,679 --> 00:34:52,839
+ node itself which is connected to other beacon nodes it's making it work in the validators we're
+
+338
+00:34:52,839 --> 00:34:57,960
+ doing all these validator duties uh but now we are we start with execution part we start with get
+
+339
+00:34:57,960 --> 00:35:03,639
+ because like just like two years ago or less this would be all you need to run it through it fully
+
+340
+00:35:03,639 --> 00:35:07,799
+ so let's read the log so let's let's before we configure it let's actually look at a default
+
+341
+00:35:07,799 --> 00:35:12,359
+ configuration so we can execute it it runs the default configuration which is of course ethereum
+
+342
+00:35:12,359 --> 00:35:17,480
+ mainnet with some default values so we will first look into this and then how to how to configure
+
+343
+00:35:17,480 --> 00:35:26,679
+ how to change it um so yeah starting starting uh get on main net as default here is uh the cache
+
+344
+00:35:26,679 --> 00:35:35,079
+ that it uses for for main net um here is the peer count so it's targeting targeting maximum of 50
+
+345
+00:35:35,079 --> 00:35:49,400
+ peers uh garbage collection gas cap 50 million uh so this yeah um uh this is this is setting the
+
+346
+00:35:49,400 --> 00:35:55,000
+ the gas per node uh yeah there are different kzg libraries you can choose so it is using
+
+347
+00:35:55,000 --> 00:36:03,159
+ the go implementation of kzg which is needed for the quad for uh what what is the different yes
+
+348
+00:36:03,159 --> 00:36:07,559
+ I'm sorry, I have to break it here, but there's a question about the different kinds of data availability.
+
+349
+00:36:07,559 --> 00:36:16,199
+ I think I missed the question before. So to answer you, there is basically two kinds of things.
+
+350
+00:36:16,199 --> 00:36:23,000
+ One is like full node, which can be achieved over snapsync or full sync, and there is archive node,
+
+351
+00:36:23,000 --> 00:36:32,359
+ which is full sync, but the difference is that a full node doesn't keep all the
+
+352
+00:36:32,360 --> 00:36:39,400
+ historical states so if you want to the state is the current moment in ethereum where this user has
+
+353
+00:36:39,400 --> 00:36:47,559
+ x amount of funds this contract has this values in this database and so on so the current snapshot
+
+354
+00:36:47,559 --> 00:36:56,120
+ of the all the values in ethereum is kept only for the last or um last x amount of maybe 100
+
+355
+00:36:56,119 --> 00:37:02,599
+ blocks or something in case of a reorg but it prunes all historical states because it's
+
+356
+00:37:02,599 --> 00:37:08,839
+ completely unnecessary so the archival node keeps all these all these historical states which is
+
+357
+00:37:08,839 --> 00:37:14,920
+ only for certain purposes it's kind of useless and it's it's big amount of data so in in the
+
+358
+00:37:14,920 --> 00:37:22,839
+ default setup as here it is by default get the snapsync full node so you can see that
+
+359
+00:37:22,840 --> 00:37:30,820
+ it's ancient, so all the historical data, all the blockchain data, which is not the
+
+360
+00:37:30,820 --> 00:37:36,300
+ current state, but the blockchain, which we verify all the hashes to the current value
+
+361
+00:37:36,300 --> 00:37:44,760
+ to make sure it's a chain of blocks, that's kept in the ancient database, which is like
+
+362
+00:37:44,760 --> 00:37:47,900
+ this few hundred gigabytes of all the historical data.
+
+363
+00:37:47,900 --> 00:37:49,059
+ So this is, yeah.
+
+364
+00:37:49,059 --> 00:37:53,219
+ We can write into it, it's not doing it only.
+
+365
+00:37:53,219 --> 00:38:04,519
+ This is one small interesting thing it's using Pebble, instead of leveldb, it's not maintained
+
+366
+00:38:04,519 --> 00:38:10,279
+ right now, so get switched to Pebble, maybe you can configure this as well.
+
+367
+00:38:10,279 --> 00:38:15,599
+ Initializing the Ethereum protocol, writing default main Genesis block, this is important.
+
+368
+00:38:15,599 --> 00:38:20,159
+ So you see, we ran get on mainnet by default.
+
+369
+00:38:20,159 --> 00:38:27,920
+ So it uses it's in the get binary it has hard coded values of the Genesis block.
+
+370
+00:38:27,920 --> 00:38:32,079
+ The Genesis block itself is written in the client.
+
+371
+00:38:32,079 --> 00:38:34,599
+ So it automatically knows what to start with.
+
+372
+00:38:34,599 --> 00:38:41,480
+ And it uses this hard coded defaulted main Genesis block to initialize the database.
+
+373
+00:38:41,480 --> 00:38:43,480
+ And here you see it's values.
+
+374
+00:38:43,480 --> 00:38:49,019
+ So these are the configuration values coming from the Genesis that it's chain ID one main
+
+375
+00:38:49,019 --> 00:38:50,019
+ net, right?
+
+376
+00:38:50,019 --> 00:38:54,820
+ This was added for like, this is, this is like every, every Ethereum network has a different
+
+377
+00:38:54,820 --> 00:38:56,360
+ chain ID.
+
+378
+00:38:56,360 --> 00:39:02,159
+ So there are, you know, L2s, there are test nets, especially with higher values and every
+
+379
+00:39:02,159 --> 00:39:07,719
+ fork of Ethereum, one of the millions you can see on CoinGecko has like some different
+
+380
+00:39:07,719 --> 00:39:08,719
+ chain ID.
+
+381
+00:39:08,719 --> 00:39:15,599
+ This is important because with chain ID it's part of what you are signing with a transaction,
+
+382
+00:39:15,599 --> 00:39:19,039
+ which means it can't be replayed on another chain.
+
+383
+00:39:19,039 --> 00:39:22,019
+ It's an important protection which happens.
+
+384
+00:39:22,019 --> 00:39:27,719
+ So we see the current consensus is the proof of stake, depending on the beacon chain, merge
+
+385
+00:39:27,719 --> 00:39:30,339
+ from it has work.
+
+386
+00:39:30,339 --> 00:39:33,779
+ And here are the premarriage, the original hard forks, and their height.
+
+387
+00:39:33,780 --> 00:39:45,540
+ So you see when the Homestead DAO fork, all these pushes of fork bomb happen, Byzantium,
+
+388
+00:39:45,540 --> 00:39:49,280
+ Berlin, you see the block heights.
+
+389
+00:39:49,280 --> 00:39:57,380
+ So the client knows that at this block height, this sort of rules apply, right?
+
+390
+00:39:57,380 --> 00:40:00,360
+ And then there is the moment of the merge.
+
+391
+00:40:00,360 --> 00:40:02,060
+ Network is known to be merged.
+
+392
+00:40:02,059 --> 00:40:06,779
+ it's already known in case like you know you're some older version of client you might still be
+
+393
+00:40:06,779 --> 00:40:12,940
+ able to sync it but it will figure out that it's merged later uh and this is the the the
+
+394
+00:40:12,940 --> 00:40:19,179
+ difficulty of the network at which point the network uh merges and post merge so yeah you see
+
+395
+00:40:19,179 --> 00:40:28,779
+ all the all the fork data here um yeah the most recent block is number zero of course because we
+
+396
+00:40:28,780 --> 00:40:34,380
+ didn't it didn't have anything in the database um and then it's uh yeah it doesn't have any
+
+397
+00:40:34,380 --> 00:40:40,300
+ snapshot it's trying to build the first snapshot and as you see it enabled snapsync so by default
+
+398
+00:40:40,300 --> 00:40:45,180
+ it's running on snapscene the snapsync works in a way that it it downloads a snapshot from
+
+399
+00:40:45,180 --> 00:40:51,500
+ the network of like relatively recent state so like you know uh some finalized blocks before
+
+400
+00:40:51,500 --> 00:40:58,059
+ day old or something, and then it starts building from this moment.
+
+401
+00:40:58,059 --> 00:41:04,099
+ If we change it to it's still then it downloads all the historical data, right, and verifies
+
+402
+00:41:04,099 --> 00:41:05,099
+ everything.
+
+403
+00:41:05,099 --> 00:41:08,900
+ But it's more practical and much faster way how to do it.
+
+404
+00:41:08,900 --> 00:41:10,119
+ It's a snapshot.
+
+405
+00:41:10,119 --> 00:41:13,260
+ It's a different representation of the database.
+
+406
+00:41:13,260 --> 00:41:19,780
+ So, like, the get database, the state database, the pebble or leveldb, it's the Merkle-Patricia-3
+
+407
+00:41:19,780 --> 00:41:25,220
+ Pebble thing, level DB thing, which is very different to the snapshot, which is like basically
+
+408
+00:41:25,220 --> 00:41:29,260
+ just a database of the accounts and values, not a tree.
+
+409
+00:41:29,260 --> 00:41:34,320
+ So it needs to generate a snapshot.
+
+410
+00:41:34,320 --> 00:41:36,140
+ Clients in the network generate these snapshots.
+
+411
+00:41:36,140 --> 00:41:44,600
+ The other clients don't fetch it and then build based on them.
+
+412
+00:41:44,599 --> 00:41:51,880
+ it you we see that it needs the beacon client to sync over the engine api uh yeah this is our
+
+413
+00:41:51,880 --> 00:41:59,799
+ our uh peer-to-peer uh it's there yeah here is our our uh as it connects to the computer network
+
+414
+00:41:59,799 --> 00:42:08,839
+ it gives us uh the uh public key the identity of this node um it generates some default yeah nice
+
+415
+00:42:08,840 --> 00:42:15,480
+ the ipc is communication endpoint very fast uh gwt is the authentication we will need for the beacon
+
+416
+00:42:15,480 --> 00:42:24,120
+ we'll set it all up it also runs uh this another endpoint yeah this is it runs uh this http server
+
+417
+00:42:24,120 --> 00:42:29,240
+ is for connecting you see it has enabled authentication because it's connecting to
+
+418
+00:42:29,800 --> 00:42:34,920
+ uh the beacon node or this is where and then when i killed it when i when i send the interrupt ctrl c
+
+419
+00:42:34,920 --> 00:42:42,680
+ it's it's writing down and shutting down all the endpoints.
+
+420
+00:42:42,680 --> 00:42:45,680
+ So yeah, this is this is like a simple run of get.
+
+421
+00:42:45,680 --> 00:42:48,380
+ I want to show you what happens when it starts.
+
+422
+00:42:48,380 --> 00:42:54,800
+ So before we configure it, before we before we run into into something more.
+
+423
+00:42:54,800 --> 00:42:59,740
+ Yeah, so let's let's make it screen.
+
+424
+00:42:59,740 --> 00:43:03,400
+ I don't have screen help like that.
+
+425
+00:43:03,400 --> 00:43:10,680
+ that okay we don't need string uh let's just start let's just start okay so so uh now based
+
+426
+00:43:10,680 --> 00:43:17,639
+ on this you saw the default values you see how it behaves and now we want to um we want to um
+
+427
+00:43:19,240 --> 00:43:26,360
+ uh configure it ourselves make sure it behaves uh our our the way we want as you can see there is
+
+428
+00:43:26,360 --> 00:43:34,440
+ uh there was the default the default um uh that is the data store is dot perium in your home folder
+
+429
+00:43:34,440 --> 00:43:38,519
+ which is not ideal for me i want to have it in some more obvious way and i want to run different
+
+430
+00:43:38,519 --> 00:43:47,960
+ networks so we are going to make also a different uh get data let's also make lighthouse data um
+
+431
+00:43:48,920 --> 00:43:55,480
+ uh let me let me see uh questions quickly combination so if you're on a full node and
+
+432
+00:43:55,480 --> 00:44:02,840
+ i want to grab all for sd or something what happens so you can see all the current data
+
+433
+00:44:02,840 --> 00:44:10,440
+ you can see how much your uh your account or sd or or any other token uh what they have in
+
+434
+00:44:10,440 --> 00:44:16,920
+ database right now but if you want to know it at a block 1 million four eight seven three somewhere
+
+435
+00:44:16,920 --> 00:44:23,960
+ sitting you know five years ago uh you need to calculate it from the blockchain data you have
+
+436
+00:44:23,960 --> 00:44:32,199
+ and it's a lot of calculations so you need to archive these states for that so so so unless
+
+437
+00:44:32,199 --> 00:44:36,760
+ you want to you know calculate all the states based on the state transitions from from every
+
+438
+00:44:36,760 --> 00:44:42,199
+ transactions that you have in the blockchain data you just cache the created state you just keep it
+
+439
+00:44:42,199 --> 00:44:48,920
+ and that's like kind of naive approach actually it's it's it's uh more complex in the red and and
+
+440
+00:44:48,920 --> 00:44:54,200
+ uh ergon they have this different database where they keep like the state changes and and it's
+
+441
+00:44:54,200 --> 00:44:58,599
+ much more complex it's like two three terabytes now and and you can have you have that but you
+
+442
+00:44:58,599 --> 00:45:03,880
+ don't really need it like nobody really is i'm running it because i like it no normal users
+
+443
+00:45:03,880 --> 00:45:07,720
+ need this to interact with the network or to like you know fully verify the chain
+
+444
+00:45:10,039 --> 00:45:14,519
+ right but full node doesn't have all the full node has all the blocks has all this
+
+445
+00:45:14,519 --> 00:45:23,239
+ ancient ancient data uh so when i go to we already opened uh yeah chain data
+
+446
+00:45:25,239 --> 00:45:32,360
+ here here we have uh all the all the all the data it's of course in this level db
+
+447
+00:45:32,360 --> 00:45:37,719
+ pebble format which we cannot just read but it's all in here so you don't really uh you have you
+
+448
+00:45:37,719 --> 00:45:42,920
+ have all um you can check it exactly in the client documentation i don't want to lie but like
+
+449
+00:45:42,920 --> 00:45:48,840
+ transaction receipts, the transaction info, the blocks, since it's still now it's part of
+
+450
+00:45:48,840 --> 00:45:55,559
+ full node. The big, like for example, what you're talking about is basically for force. In the last
+
+451
+00:45:55,559 --> 00:46:06,039
+ talk from Dom, he mentioned it as a part of pro to the history expiry, the EIP-444 talks about like
+
+452
+00:46:06,039 --> 00:46:12,519
+ just you know not requiring this ancient or this like historical data to be uh to be uh
+
+453
+00:46:13,480 --> 00:46:18,199
+ part of notes which would make it easier to run uh because you don't really need it you need a
+
+454
+00:46:18,199 --> 00:46:23,880
+ current state but yes to verify everything you keep all this data same genesis but in
+
+455
+00:46:23,880 --> 00:46:29,159
+ archive node you have these extra calculated states like that's the difference you want to
+
+456
+00:46:29,159 --> 00:46:34,199
+ yeah it emphasizes the difference between the archive and um and uh if you want to
+
+457
+00:46:36,039 --> 00:46:45,000
+ So, from a full node, you can be fully offline, you can have a full node, and you generate
+
+458
+00:46:45,000 --> 00:46:47,840
+ the archive node data from it, right?
+
+459
+00:46:47,840 --> 00:46:52,980
+ You have all the data you need, you just need to do all the ridiculous calculation, which
+
+460
+00:46:52,980 --> 00:46:57,800
+ is just too much to do it every time you want to do a query for some historical data, so
+
+461
+00:46:57,800 --> 00:47:00,860
+ then you cache everything and you have an archive node.
+
+462
+00:47:00,860 --> 00:47:01,860
+ So, yeah.
+
+463
+00:47:01,860 --> 00:47:03,679
+ Okay, let's get back to this.
+
+464
+00:47:03,679 --> 00:47:11,779
+ it's the first thing I want to configure. We have the getdata, so let's use that. So
+
+465
+00:47:11,779 --> 00:47:23,559
+ first thing is it's data deer getdata. So first, we point get to store its data in this
+
+466
+00:47:23,559 --> 00:47:28,119
+ directory. So if you are, for example, running the bigger node, if you need, like, you know,
+
+467
+00:47:28,119 --> 00:47:32,239
+ terabyte of storage, you probably might have, like, external SSD, might have, like, some
+
+468
+00:47:32,239 --> 00:47:39,679
+ external drive where you want to do this, so then it would point get to something like that, like
+
+469
+00:47:41,519 --> 00:47:49,759
+ media, whatever. But in our case, we just want a local, a different local
+
+470
+00:47:50,399 --> 00:47:53,359
+ database we can differentiate between networks, et cetera.
+
+471
+00:47:53,360 --> 00:48:03,559
+ um okay uh then we can so yeah the sync mode the default uh is the snap that is the default we can
+
+472
+00:48:03,559 --> 00:48:10,559
+ change it to full if we want um if you want to start from from the genesis but let's keep it a
+
+473
+00:48:10,559 --> 00:48:15,940
+ snap uh basically even if it's default this is not a minimal configuration by the way i'm showing you
+
+474
+00:48:15,940 --> 00:48:22,860
+ some more options that come into my mind but if you want to see like the minimum viable get config
+
+475
+00:48:22,860 --> 00:48:27,019
+ you want to come here, write a node here.
+
+476
+00:48:27,019 --> 00:48:28,400
+ So what do we need to do?
+
+477
+00:48:28,400 --> 00:48:33,280
+ Yeah, I didn't specify it, but the network is main net.
+
+478
+00:48:34,200 --> 00:48:36,780
+ Actually, I should have shown you help first.
+
+479
+00:48:37,079 --> 00:48:38,120
+ Yeah, let's show the help.
+
+480
+00:48:38,640 --> 00:48:41,280
+ So here you see all the options.
+
+481
+00:48:41,460 --> 00:48:42,340
+ It's kind of overwhelming.
+
+482
+00:48:42,740 --> 00:48:45,079
+ I don't want to go through all of it,
+
+483
+00:48:45,280 --> 00:48:48,120
+ just because it's kind of, you know, you can read.
+
+484
+00:48:48,240 --> 00:48:50,099
+ So yeah, one important thing, there are commands.
+
+485
+00:48:50,099 --> 00:49:03,639
+ So I just executed get as the get node, but these are all the different commands, all the different utilities that you saw for using get via console, manipulating database, et cetera, et cetera.
+
+486
+00:49:03,639 --> 00:49:08,259
+ So, yeah, here you can see that.
+
+487
+00:49:09,519 --> 00:49:13,199
+ This is for if you have an account within Get, you can use this.
+
+488
+00:49:14,319 --> 00:49:16,379
+ These are some old ones, API.
+
+489
+00:49:16,699 --> 00:49:22,239
+ So, yeah, we want to set up the authenticated endpoint,
+
+490
+00:49:22,559 --> 00:49:26,859
+ and we also want to set up the normal HTTP, which is false,
+
+491
+00:49:27,179 --> 00:49:28,879
+ which is closed by default.
+
+492
+00:49:28,880 --> 00:49:37,360
+ So, we want to be able to talk to our nodes over the classic JSON RPC, which is this one.
+
+493
+00:49:37,360 --> 00:49:38,880
+ And yeah, the default is it.
+
+494
+00:49:38,880 --> 00:49:41,940
+ We can maybe leave it at that.
+
+495
+00:49:41,940 --> 00:49:48,760
+ Yeah, more, and also you can enable web sockets for different kinds of communications.
+
+496
+00:49:48,760 --> 00:49:54,840
+ Yeah, here is the, yeah, you can have all this config in one file, of course.
+
+497
+00:49:54,840 --> 00:49:56,300
+ You can point to that.
+
+498
+00:49:56,300 --> 00:50:01,340
+ is the pebble or level db option that i explained data the year and you can have you can split the
+
+499
+00:50:01,340 --> 00:50:08,060
+ agents the the the historical data to see different uh different directories so for example you have
+
+500
+00:50:08,060 --> 00:50:16,220
+ like a slower bigger disk with this and faster with uh with the later data oh and we and this
+
+501
+00:50:16,220 --> 00:50:22,539
+ is how we choose the network so we just pass it the network name these are the pre-configured
+
+502
+00:50:22,539 --> 00:50:31,739
+ networks right mainnet holoshki and sefolia somewhere here yes sefolia um however uh get
+
+503
+00:50:31,739 --> 00:50:36,619
+ or any of these clients they can consume they can run on any compatible network but you just need to
+
+504
+00:50:36,619 --> 00:50:42,779
+ supply the genesis and the nodes to connect to and it's able to run on another test net or someone
+
+505
+00:50:42,780 --> 00:50:45,060
+ it will demonstrate it soon.
+
+506
+00:50:45,060 --> 00:50:54,540
+ Um, yeah, security concerns when enabling HTTP API, this is a great question, and we
+
+507
+00:50:54,540 --> 00:50:58,140
+ will look into it, and let's look at the options.
+
+508
+00:50:58,140 --> 00:51:06,060
+ So yeah, so first of all, like, you are able to talk to your node.
+
+509
+00:51:06,060 --> 00:51:09,680
+ You use different namespaces based on that.
+
+510
+00:51:09,679 --> 00:51:16,559
+ can see it in the documentation here interacting with get so you see these are different namespaces
+
+511
+00:51:16,559 --> 00:51:24,559
+ which uh get enables and the most one the one that like kind of comes as potential dangerous is admin
+
+512
+00:51:24,559 --> 00:51:30,159
+ because this one actually lets you like you know manipulate your node like add peers remove peers
+
+513
+00:51:30,159 --> 00:51:37,359
+ first thing i see here um so so um this one manipulates the node itself but also debug can
+
+514
+00:51:37,360 --> 00:51:43,519
+ be dangerous because there was a question here about like um uh the archival notes but for
+
+515
+00:51:43,519 --> 00:51:52,000
+ example if you run like a debug ask about some some big piece of data from from historical moment
+
+516
+00:51:52,000 --> 00:51:56,400
+ you can you can like deduce the node you can you can really like halt it because it's going
+
+517
+00:51:56,400 --> 00:52:05,680
+ to try to calculate it so uh there are different namespaces but by default you see it's exposed
+
+518
+00:52:05,679 --> 00:52:14,000
+ only in the local host so if you trust your local machine or your local network this should be all
+
+519
+00:52:14,000 --> 00:52:21,279
+ right uh you can you know handle with firewall and so on but what you can also do is to decide
+
+520
+00:52:21,279 --> 00:52:31,519
+ which namespaces you want to use and i'm trying to find the um trying to find a comment here uh
+
+521
+00:52:31,519 --> 00:52:43,280
+ which lets you out rp secret ql http address yeah api this one i'm i'm blind yeah so http.api
+
+522
+00:52:43,280 --> 00:52:49,079
+ lets you choose only which of these namespaces you want to run so for example you only want to
+
+523
+00:52:49,079 --> 00:52:55,059
+ run it to only give you the basic information about the ethereum chain so you can you can you
+
+524
+00:52:55,059 --> 00:53:01,139
+ just choose that you can you can do it as well um so this this can add like a bit bit
+
+525
+00:53:01,139 --> 00:53:10,259
+ security as well so yeah thanks for the question um so yeah and it's most like it can be a ddos
+
+526
+00:53:10,259 --> 00:53:15,299
+ problem so yes make sure you know you run it on a machine that you don't have ddos it's locally
+
+527
+00:53:15,299 --> 00:53:22,659
+ safe and so on yeah yeah if you want to run archive mode this is where you and i enable
+
+528
+00:53:22,659 --> 00:53:30,819
+ it you need to basically uh disable the garbage collection and uh uh you can you can run uh you
+
+529
+00:53:30,819 --> 00:53:36,739
+ can just retain all the history but there are more it's just a story but for example cache
+
+530
+00:53:36,739 --> 00:53:44,739
+ pray images as well you see you can you can like cache bunch of things which is deleted by default
+
+531
+00:53:44,739 --> 00:53:49,059
+ and mostly the node doesn't need it because it's trying to be as lightweight as possible
+
+532
+00:53:49,059 --> 00:53:54,179
+ But okay, to run it with some reasonable values.
+
+533
+00:53:54,179 --> 00:54:00,400
+ So we've already started on that here.
+
+534
+00:54:00,400 --> 00:54:01,440
+ So let's continue.
+
+535
+00:54:01,440 --> 00:54:05,639
+ We want to run and this time let's run on Holoshki.
+
+536
+00:54:05,639 --> 00:54:07,799
+ So let's add it to the front.
+
+537
+00:54:07,799 --> 00:54:13,699
+ Holoshki.
+
+538
+00:54:13,699 --> 00:54:24,319
+ and uh yeah from we want to enable the http so let's enable that we can choose the port or the
+
+539
+00:54:24,319 --> 00:54:32,299
+ address uh yeah the default is 85545 i'm just demonstrating uh and there are various other
+
+540
+00:54:32,299 --> 00:54:38,339
+ things like again like for the security purposes what you can do is i could have showed it here
+
+541
+00:54:38,340 --> 00:54:39,800
+ it's better than typing it.
+
+542
+00:54:43,140 --> 00:54:45,019
+ I'm sorry, I'm a bit all over the place.
+
+543
+00:54:45,019 --> 00:54:49,100
+ So yeah, you want to choose what hosts are authenticated
+
+544
+00:54:49,100 --> 00:54:53,180
+ to connect to you, which host name is authenticated
+
+545
+00:54:53,180 --> 00:54:55,740
+ to talk to the RPC.
+
+546
+00:54:55,740 --> 00:54:58,600
+ So this is something that can also add a bit of security,
+
+547
+00:54:58,600 --> 00:55:00,760
+ but also can give you trouble if you're remote
+
+548
+00:55:00,760 --> 00:55:03,280
+ accessing your own node and you have troubles.
+
+549
+00:55:03,280 --> 00:55:06,820
+ Yeah, you can use this wildcard, but it'd be safer with that.
+
+550
+00:55:08,340 --> 00:55:15,539
+ yeah so that's it's another thing we want to do uh so this is like the json rpc but now there is the
+
+551
+00:55:15,539 --> 00:55:23,460
+ rpc which actually um uh which you actually need to be able to talk to the consensus client which
+
+552
+00:55:23,460 --> 00:55:42,260
+ is the JWT authenticated endpoint, and it's out RPC, it's enabled.
+
+553
+00:55:42,260 --> 00:55:53,320
+ So this one is going to let us point it to a place where the value should be.
+
+554
+00:55:53,320 --> 00:55:54,680
+ So let me explain this.
+
+555
+00:55:54,680 --> 00:55:58,980
+ So to communicate between the execution and client, which is crucial, it's basically
+
+556
+00:55:58,980 --> 00:56:02,620
+ like within the software it's like one piece of Ethereum talking to another, right?
+
+557
+00:56:02,620 --> 00:56:07,740
+ It's like, you know, if you split get to two binaries or something, they need to have a
+
+558
+00:56:07,740 --> 00:56:09,440
+ safe way to communicate.
+
+559
+00:56:09,440 --> 00:56:13,840
+ And we do it with this Java web token.
+
+560
+00:56:13,840 --> 00:56:22,740
+ It's basically just a random 32-bit hex, just a big number, which they need to both client
+
+561
+00:56:22,739 --> 00:56:32,019
+ both clients need to know them to be able to talk. So, we create it either with the open
+
+562
+00:56:32,019 --> 00:56:38,259
+ manually, but we don't need to do that. We just tell him that let's put it to slash temp,
+
+563
+00:56:38,259 --> 00:56:47,139
+ slash JWT. Yeah. And yeah, I think that's basically it. This is really the basic things
+
+564
+00:56:47,139 --> 00:56:51,219
+ you want to configure. If you're running the node, you want to know where your data is,
+
+565
+00:56:51,219 --> 00:56:59,779
+ you want to know where your HTTP communication is running, and this sort of default, the elder PC,
+
+566
+00:57:00,339 --> 00:57:06,419
+ the port, the default is 8551. I'm going to keep it like that just to demonstrate.
+
+567
+00:57:06,419 --> 00:57:13,299
+ So, yeah, this should be it. Let's see if it complains. No, it's running. So now you see
+
+568
+00:57:13,300 --> 00:57:25,539
+ that it's running on 1700, which is the postcode of Prague 7, Holešovice, and it's all of these
+
+569
+00:57:25,539 --> 00:57:32,019
+ hard forks and the merge happen at the moment zero in the genesis, right? So it's already done.
+
+570
+00:57:32,019 --> 00:57:35,259
+ it's done.
+
+571
+00:57:35,259 --> 00:57:40,579
+ And then the Shanghai happens that Cancun activates at one point.
+
+572
+00:57:40,579 --> 00:57:47,039
+ Okay, it's already found two peers, and it's running.
+
+573
+00:57:47,039 --> 00:57:54,679
+ But as you can see it's the post-merge network, so the consensus is beacon, but there is no
+
+574
+00:57:54,679 --> 00:57:57,320
+ beacon client seen, so we need to launch one.
+
+575
+00:57:57,320 --> 00:57:59,099
+ That's our next challenge.
+
+576
+00:57:59,099 --> 00:58:08,380
+ Let's keep the window with get in here, and let's grab it under terminal, and let's move
+
+577
+00:58:08,380 --> 00:58:09,679
+ to lighthouse.
+
+578
+00:58:09,679 --> 00:58:15,519
+ So, yeah, again, we have the lighthouse documentation here.
+
+579
+00:58:15,519 --> 00:58:21,519
+ We can get the client, and we see, yeah, so we get a JWTC grid.
+
+580
+00:58:21,519 --> 00:58:23,920
+ It was created in the temp.
+
+581
+00:58:23,920 --> 00:58:26,179
+ Yeah, it's here.
+
+582
+00:58:26,179 --> 00:58:32,899
+ uh you can read it right uh this is the value the very secret value please don't compromise my note
+
+583
+00:58:32,899 --> 00:58:37,139
+ but yeah it's just communicating within the vm in the localhost so it should be okay
+
+584
+00:58:37,779 --> 00:58:44,019
+ so we have that we have the execution node and now we want to well we don't want to do staking
+
+585
+00:58:44,019 --> 00:58:50,019
+ but we want to run the node so yeah here or the very similar example should be should be somewhere
+
+586
+00:58:50,019 --> 00:58:57,300
+ clear. Yeah. I think, like, there are these basic examples on Ethereum.org, but I did this,
+
+587
+00:58:57,300 --> 00:59:02,420
+ I wrote this around the merge. And since then, you know, maybe some flights are duplicated or
+
+588
+00:59:02,420 --> 00:59:10,179
+ renamed or something. So, like, better follow the documentation. And here you can see it's also
+
+589
+00:59:10,739 --> 00:59:15,380
+ asking us for a checkpoint sync. We will do it, but it will do it in a moment. Let's start with
+
+590
+00:59:15,380 --> 00:59:24,260
+ it's just the default. So let's run lighthouse, we have it here, you can see it's also many
+
+591
+00:59:24,260 --> 00:59:31,200
+ options it gives us, and they are mostly pretty similar to get, but also very different in
+
+592
+00:59:31,200 --> 00:59:35,260
+ the beacon part, but the basic configuration is similar. We need to choose a network, a
+
+593
+00:59:35,260 --> 00:59:42,900
+ data dir, and connect it to the API, so let's do that. So we want to lighthouse, so there
+
+594
+00:59:42,900 --> 00:59:49,220
+ are these different commands you see uh account manager beacon node uh validator client so
+
+595
+00:59:49,220 --> 00:59:55,220
+ basically vn is the beacon node bc is the valid client these are two different features two
+
+596
+00:59:55,220 --> 01:00:01,460
+ different behaviors two different modes or basically pieces of like code path within this
+
+597
+01:00:01,460 --> 01:00:08,579
+ lighthouse binary which lets us to either run the beacon node uh or run a validator client which
+
+598
+01:00:08,579 --> 01:00:14,179
+ connects to a beacon node so if we are going to stake this is something we need to do later but
+
+599
+01:00:14,179 --> 01:00:20,019
+ first we need to set up the the beacon node so it starts with that we want network polish key
+
+600
+01:00:22,259 --> 01:00:32,179
+ the execution end point uh is yeah actually the one that it says here yeah we can pretty much
+
+601
+01:00:32,179 --> 01:00:40,739
+ pretty much yeah yeah uh i the the one thing to be to be careful with if like some clients do
+
+602
+01:00:40,739 --> 01:00:47,299
+ some don't like require the protocol here uh what happens to me i just forget like okay lighthouse
+
+603
+01:00:47,299 --> 01:00:53,859
+ wants the http part there right and like in get you don't need it for example so um that's
+
+604
+01:00:53,859 --> 01:01:01,699
+ something that i always start working so yeah and the execution jwt token was in stamp jwt
+
+605
+01:01:02,179 --> 01:01:07,179
+ Okay, and we also enable the HTTP endpoint.
+
+606
+01:01:07,179 --> 01:01:08,460
+ And we are basically ready.
+
+607
+01:01:08,460 --> 01:01:11,119
+ So now we are running Lighthouse.
+
+608
+01:01:11,119 --> 01:01:15,279
+ So what is happening now, this is a funny thing that I wanted to show you.
+
+609
+01:01:15,279 --> 01:01:24,399
+ Because as I showed you before, it has the hard-coded Genesis file and it writes it down
+
+610
+01:01:24,399 --> 01:01:26,059
+ and everything.
+
+611
+01:01:26,059 --> 01:01:33,980
+ case of Holeški and Lighthouse it's a kind of kind of funny thing because Holeški network
+
+612
+01:01:33,980 --> 01:01:42,380
+ uh launched with like a huge uh uh a huge amount of validators and if you have all of these funded
+
+613
+01:01:42,380 --> 01:01:48,539
+ validators this big uh this big value uh it's a lot of space to take it's a lot of like it's a
+
+614
+01:01:48,539 --> 01:01:53,659
+ million and a half validators so it's like whatever at least million and a half um records
+
+615
+01:01:53,659 --> 01:02:01,339
+ of this it's like a huge amount of data so the the deposit uh sorry uh with uh the the genesis
+
+616
+01:02:01,339 --> 01:02:08,379
+ um in case of in case of um beacon node it's like the configuration values in some json format
+
+617
+01:02:08,379 --> 01:02:15,420
+ and the actual state in ssd format it's so big it's like 100 something megabytes so they decided
+
+618
+01:02:15,420 --> 01:02:21,259
+ that instead of putting another 100 megabyte file as a part of their binary they are just going to
+
+619
+01:02:21,260 --> 01:02:33,260
+ hard code um this aws address where you get the uh yeah so this may take time on testings with
+
+620
+01:02:33,260 --> 01:02:39,100
+ large wallet accounts this is meant for holish key so on mainnet this shouldn't happen if i go
+
+621
+01:02:39,820 --> 01:02:47,420
+ network main app he's not going to tell me uh starting from known genesis okay here he is
+
+622
+01:02:47,420 --> 01:02:49,800
+ downloading the Genesis state.
+
+623
+01:02:50,579 --> 01:02:52,180
+ And then we fail.
+
+624
+01:02:53,480 --> 01:02:56,760
+ Syncing from Genesis insecure and capital with data availability checks.
+
+625
+01:02:56,980 --> 01:02:59,599
+ You should install it from a checkpoint sync.
+
+626
+01:02:59,800 --> 01:03:00,920
+ Oh, really?
+
+627
+01:03:02,639 --> 01:03:03,700
+ That's interesting.
+
+628
+01:03:04,820 --> 01:03:07,139
+ Why is it insecure Genesis sync?
+
+629
+01:03:07,139 --> 01:03:14,940
+ So I understand why it's insecure to download a Genesis from this random
+
+630
+01:03:14,940 --> 01:03:20,220
+ server right here but i'm surprised it does the same on main net and it forces me to checkpoints
+
+631
+01:03:20,220 --> 01:03:28,780
+ because in checkpoints sync you then trust um you don't trust um the checkpoints providers but let
+
+632
+01:03:28,780 --> 01:03:35,420
+ me show you so what we can do on uh with the post merge network with the beacon uh with the
+
+633
+01:03:36,059 --> 01:03:43,420
+ beacon notes finalizing is that uh you know if there is some block finalized like some
+
+634
+01:03:43,420 --> 01:03:49,340
+ time ago, like hours or days ago, it's probably not going to be it's not probably going to be just
+
+635
+01:03:53,019 --> 01:04:00,539
+ what's it word, re-worked so easily. I don't assume that like you know the history like
+
+636
+01:04:00,539 --> 01:04:05,180
+ few days ago will change because it would require like a major slushing incident of billions and
+
+637
+01:04:05,180 --> 01:04:11,980
+ billions of dollars, so I consider this finalized moment in the history of the chain as
+
+638
+01:04:13,420 --> 01:04:23,380
+ it's like as safe as or maybe even safer as Genesis because I don't want to trust some
+
+639
+01:04:23,380 --> 01:04:30,579
+ random Genesis I'm downloading it from the server but instead we trust these endpoints so there are
+
+640
+01:04:30,579 --> 01:04:41,019
+ um different providers as you can see and what we do is that um we connect to their notes here this
+
+641
+01:04:41,019 --> 01:04:48,579
+ using beautiful Checkpoint software and you see what what um Epoch is finalized and therefore
+
+642
+01:04:49,480 --> 01:04:55,840
+ uh we can it has it's known you can you can check this data the state through the block route uh
+
+643
+01:04:55,840 --> 01:05:03,460
+ with other nodes to make sure it's safe you know and it's serving this Checkpoint here this 20
+
+644
+01:05:03,460 --> 01:05:11,440
+ it all finalized, finalized, um, uh, block as our kind of Genesis that like we, uh, that
+
+645
+01:05:11,440 --> 01:05:13,179
+ we, we start from here.
+
+646
+01:05:13,179 --> 01:05:18,720
+ So yeah, so it's kind of subjective, like, uh, so we, we call it, we call it weak subjectivity
+
+647
+01:05:18,720 --> 01:05:23,159
+ checkpoints and, uh, it should be covered in the week three.
+
+648
+01:05:23,159 --> 01:05:24,159
+ You can look into that.
+
+649
+01:05:24,159 --> 01:05:27,300
+ You can look more into the weak subjectivity.
+
+650
+01:05:27,300 --> 01:05:35,860
+ There is a good part on this somewhere here.
+
+651
+01:05:35,860 --> 01:05:39,060
+ So it says it's proof-of-stake with subjectivity.
+
+652
+01:05:39,060 --> 01:05:44,320
+ You can read about this here.
+
+653
+01:05:44,320 --> 01:05:47,580
+ So this is about the subjectivity checkpoints.
+
+654
+01:05:47,580 --> 01:05:55,180
+ So we are going to use this website, and thanks to it's take care, we are going to download
+
+655
+01:05:55,179 --> 01:05:58,419
+ We're going to download there.
+
+656
+01:05:58,419 --> 01:06:01,239
+ Let's just randomly choose one.
+
+657
+01:06:01,239 --> 01:06:06,599
+ If you do this on mainnet, you should check it between different nodes and different operators
+
+658
+01:06:06,599 --> 01:06:09,719
+ to have more security.
+
+659
+01:06:09,719 --> 01:06:13,639
+ But in our case, let's just go with one.
+
+660
+01:06:13,639 --> 01:06:18,719
+ We are on testnet, and we are actually running out of time.
+
+661
+01:06:18,719 --> 01:06:28,019
+ Yeah, and now it's checkpoints in KingHoloshki, which might take a minute, but meanwhile,
+
+662
+01:06:28,019 --> 01:06:34,699
+ we can also execute get again, and we'll see what happens.
+
+663
+01:06:34,699 --> 01:06:45,959
+ Okay, downloading the Genesis state, and get is, I don't have, I don't have, like, it's
+
+664
+01:06:45,960 --> 01:06:51,960
+ this vm i don't have like the pinning two sides i just want to show you the windows side to side
+
+665
+01:06:53,240 --> 01:07:00,920
+ this is terrible anyway okay get this looking for peers and um lighthouse
+
+666
+01:07:00,920 --> 01:07:04,199
+ already loaded the checkpoint which is really nice
+
+667
+01:07:06,599 --> 01:07:13,240
+ so let's see if my computer will will manage
+
+668
+01:07:15,960 --> 01:07:25,260
+ it's not logging new things, which is, okay, something's happening. I'm not sure if my
+
+669
+01:07:25,260 --> 01:07:45,000
+ machine can handle this. Wait. What are we doing? CPU, anyway. Yeah, it should wake up
+
+670
+01:07:45,000 --> 01:07:53,559
+ any moment execution point you see they are uh so they are uh successfully connected over the 8551
+
+671
+01:07:54,199 --> 01:08:03,000
+ port uh endpoint uh they successfully authenticated because it loaded uh the latest
+
+672
+01:08:03,000 --> 01:08:10,760
+ timestamp of the blog there and uh yeah it the uh it cannot it cannot update uh the contract
+
+673
+01:08:10,760 --> 01:08:16,199
+ it's called drag info because it is not synced so they are kind of waiting for each other um
+
+674
+01:08:18,600 --> 01:08:28,920
+ uh get wants to find more peers for sure wait for it maybe um oh what's the what's the peer count
+
+675
+01:08:28,920 --> 01:08:33,079
+ it's pretty short.
+
+676
+01:08:33,079 --> 01:08:40,260
+ MaxPierce, right, yeah, don't remember that.
+
+677
+01:08:40,260 --> 01:08:53,560
+ MaxPierce, it's three or something small, so it starts syncing sooner, it doesn't wait
+
+678
+01:08:53,560 --> 01:08:57,720
+ gather more peers. Just want to show you more what happens when you start thinking.
+
+679
+01:08:57,720 --> 01:09:09,980
+ Um, yeah. Yeah, my machine is kind of slow, so that's one thing, but let's look at our
+
+680
+01:09:09,979 --> 01:09:25,539
+ outline for the workshop to see how are we doing okay something's happening okay
+
+681
+01:09:25,539 --> 01:09:29,139
+ we are running and running on a family I wanted to demonstrate running on a
+
+682
+01:09:29,139 --> 01:09:32,699
+ family because this needs to be done using the custom Genesis and it gives
+
+683
+01:09:32,699 --> 01:09:39,139
+ you even more insight into like what the clients are actually doing and actually
+
+684
+01:09:39,140 --> 01:09:45,460
+ it might sync faster, because this doesn't look good.
+
+685
+01:09:45,460 --> 01:09:49,539
+ Although, like you see, they are just fully connected.
+
+686
+01:09:49,539 --> 01:09:55,280
+ They just need to wait a moment to wake up
+
+687
+01:09:55,280 --> 01:09:59,160
+ to connect to the network, et cetera.
+
+688
+01:09:59,160 --> 01:10:04,260
+ Yeah, to download the ephemer, to run ephemer,
+
+689
+01:10:04,260 --> 01:10:07,380
+ let's go to ephemer.dev.
+
+690
+01:10:07,380 --> 01:10:10,180
+ Yeah, it's gonna kill it now.
+
+691
+01:10:12,920 --> 01:10:15,940
+ Sorry, resources for all of you.
+
+692
+01:10:17,279 --> 01:10:22,180
+ Yeah, let's go to the project repository in the Genesis repository.
+
+693
+01:10:23,220 --> 01:10:27,739
+ So here is like a general information about a testnet and in cloning.
+
+694
+01:10:28,239 --> 01:10:30,920
+ Like it's restarting every week, so it's very small.
+
+695
+01:10:30,920 --> 01:10:34,920
+ It's like week worth of mostly empty chain data, so it can be synced
+
+696
+01:10:34,920 --> 01:10:36,840
+ very fast and very, very easily.
+
+697
+01:10:37,380 --> 01:10:51,060
+ And here is an example how to get the node working.
+
+698
+01:10:51,060 --> 01:10:53,600
+ You see it's very simple.
+
+699
+01:10:53,600 --> 01:10:55,760
+ It's just an extra comment.
+
+700
+01:10:55,760 --> 01:10:56,760
+ So let's start with that.
+
+701
+01:10:56,760 --> 01:11:02,199
+ We need to first download the latest release, which I will put it here, but it goes straight
+
+702
+01:11:02,199 --> 01:11:03,619
+ to releases.
+
+703
+01:11:03,619 --> 01:11:05,859
+ So you see the 119.
+
+704
+01:11:05,859 --> 01:11:12,179
+ 9, this chain ID, this genesis time, let's download this net all, which is all the test
+
+705
+01:11:12,179 --> 01:11:25,460
+ net data we can have. Okay, let's untar them. So it's download, and it's test net all, and
+
+706
+01:11:25,460 --> 01:11:30,739
+ here we have, oh, it just un-played it right here, it's a mess. So here you see all the
+
+707
+01:11:30,739 --> 01:11:38,739
+ different this is the fmr genesis data all you need to run fmr basically so to to read this
+
+708
+01:11:38,739 --> 01:11:45,619
+ uh to see what's happening here uh the basic is the genesis json which defines
+
+709
+01:11:47,139 --> 01:11:53,300
+ the actual network uh so here it gives balances to different accounts like for
+
+710
+01:11:53,300 --> 01:12:00,099
+ you know for initial users for for testers validate it for faucets yeah um
+
+711
+01:12:00,739 --> 01:12:09,439
+ Yeah, the difficulty, no extra data, timestamp of the Genesis importance, when the network actually starts.
+
+712
+01:12:10,159 --> 01:12:15,539
+ And to get on the top, you can also see the forks, all these accounts.
+
+713
+01:12:15,539 --> 01:12:19,779
+ Yeah, so here are the forks, which are all happening at zero.
+
+714
+01:12:20,279 --> 01:12:25,139
+ Only the Shanghai and Cancun are later.
+
+715
+01:12:26,119 --> 01:12:26,500
+ Yeah.
+
+716
+01:12:26,500 --> 01:12:34,260
+ So, this is basically the definition of a network.
+
+717
+01:12:34,260 --> 01:12:39,859
+ But then, there is also more stuff you need to pick with this to be able to run it, like
+
+718
+01:12:39,859 --> 01:12:43,899
+ information about boot notes.
+
+719
+01:12:43,899 --> 01:12:48,739
+ Which one is it?
+
+720
+01:12:48,739 --> 01:12:56,279
+ So, these are the execution layer, boot notes, write, generalization of all data routes,
+
+721
+01:12:56,279 --> 01:13:03,259
+ the beacon state in this Genesis SSE, which Lighthouse will download it there.
+
+722
+01:13:03,259 --> 01:13:07,399
+ So we have it all downloaded here, and we can point our clients to it.
+
+723
+01:13:07,399 --> 01:13:15,359
+ So to use get with this, it was running get here, on the Holoshki, and this time let's
+
+724
+01:13:15,359 --> 01:13:19,119
+ point it to this test net.
+
+725
+01:13:19,119 --> 01:13:29,619
+ And how we do it is that we need to let's make it direct through memory.
+
+726
+01:13:29,619 --> 01:13:31,300
+ So first, we need to initialize the genesis.
+
+727
+01:13:31,300 --> 01:13:36,519
+ So we need get to write down this genesis in its database.
+
+728
+01:13:36,519 --> 01:13:40,420
+ Oh, yeah, in here it's just an example.
+
+729
+01:13:40,420 --> 01:13:41,979
+ It should be fixed.
+
+730
+01:13:41,979 --> 01:13:46,720
+ There's an example with, like, the old release, but just go to the release page and use the
+
+731
+01:13:46,720 --> 01:13:47,720
+ latest one.
+
+732
+01:13:47,720 --> 01:13:50,000
+ I should fix that.
+
+733
+01:13:50,000 --> 01:13:54,560
+ It's a bad example, but it's confusing.
+
+734
+01:13:54,560 --> 01:14:00,480
+ So we want to initialize the genesis, we do it with get init, but first we point it to
+
+735
+01:14:00,480 --> 01:14:01,480
+ the data deer.
+
+736
+01:14:01,480 --> 01:14:06,520
+ So let's use the data deer memory here.
+
+737
+01:14:06,520 --> 01:14:15,079
+ And we want to init downloads, it's a JSON that I was showing you a moment ago.
+
+738
+01:14:15,079 --> 01:14:21,039
+ And now, get creates the genesis state in this database.
+
+739
+01:14:21,039 --> 01:14:29,300
+ So now, in ffmary, we see that get initialized its data there.
+
+740
+01:14:29,300 --> 01:14:31,960
+ It's basically ready to run.
+
+741
+01:14:31,960 --> 01:14:41,300
+ The next thing, so all the variables, all the values, like iteration number, chain ID,
+
+742
+01:14:41,300 --> 01:14:44,800
+ boot notes, blah, blah, blah, are in this values.
+
+743
+01:14:44,800 --> 01:14:49,820
+ So which in this, in this, um, in this document, so you, what you can
+
+744
+01:14:49,820 --> 01:14:57,800
+ easily do is source your shell to have these values right now, we know them.
+
+745
+01:14:59,060 --> 01:15:02,100
+ So now we, we, you have it loaded in your shell so you can
+
+746
+01:15:02,140 --> 01:15:04,279
+ easily, easily run these commands.
+
+747
+01:15:04,279 --> 01:15:25,399
+ Let's do again get with data-dir of the memory where we put it before.
+
+748
+01:15:25,399 --> 01:15:33,500
+ And we need to tell them boot nodes, which is boot node, e-node, and I also want to add
+
+749
+01:15:33,500 --> 01:15:39,619
+ the chain ID, just to be sure we have the right one.
+
+750
+01:15:39,619 --> 01:15:42,559
+ Okay, and it doesn't work.
+
+751
+01:15:42,559 --> 01:15:45,279
+ Ah, because chain ID is not defined.
+
+752
+01:15:45,279 --> 01:15:47,159
+ How do I...
+
+753
+01:15:47,159 --> 01:15:53,879
+ Ah, it's not chain, it's network ID or something.
+
+754
+01:15:53,880 --> 01:16:01,039
+ Network ID, right, okay, my fault.
+
+755
+01:16:01,039 --> 01:16:05,220
+ Network ID, okay, and now it's running.
+
+756
+01:16:05,220 --> 01:16:14,900
+ Now we are running on this custom Genesis that we created and downloaded.
+
+757
+01:16:14,900 --> 01:16:17,000
+ It's the ephemeris net.
+
+758
+01:16:17,000 --> 01:16:20,920
+ You see we are trying to, we already found two peers on ephemeris.
+
+759
+01:16:20,920 --> 01:16:21,920
+ That's great.
+
+760
+01:16:21,920 --> 01:16:22,920
+ Okay.
+
+761
+01:16:22,920 --> 01:16:28,880
+ Now, meanwhile, in the Lighthouse land, let's do the same for Lighthouse.
+
+762
+01:16:29,300 --> 01:16:35,500
+ Lighthouse has this beautiful dash testnet, so we can do, again, Lighthouse beacon node,
+
+763
+01:16:35,579 --> 01:16:39,340
+ and it has this flag for testnet, or you can short it to dash t,
+
+764
+01:16:39,800 --> 01:16:44,480
+ which lets me to point it to a directory with all of these values.
+
+765
+01:16:44,520 --> 01:16:48,880
+ I don't need to specify, like, oh, here is the genesis, here is the genesis state,
+
+766
+01:16:48,880 --> 01:16:57,440
+ Here is the boot notes, it finds everything in the directory like this.
+
+767
+01:16:57,440 --> 01:17:00,220
+ So it's very, very, very easy.
+
+768
+01:17:00,220 --> 01:17:03,100
+ And the rest is the same.
+
+769
+01:17:03,100 --> 01:17:07,680
+ I'm just going to copy it.
+
+770
+01:17:07,680 --> 01:17:08,680
+ Okay.
+
+771
+01:17:08,680 --> 01:17:09,680
+ Okay.
+
+772
+01:17:09,680 --> 01:17:12,420
+ We have something's happening for sure.
+
+773
+01:17:12,420 --> 01:17:13,699
+ And it's syncing.
+
+774
+01:17:13,699 --> 01:17:15,420
+ This took a while on Holoshki.
+
+775
+01:17:15,420 --> 01:17:16,760
+ Now it's happening faster.
+
+776
+01:17:16,760 --> 01:17:18,780
+ I'm glad I could show you.
+
+777
+01:17:18,780 --> 01:17:26,840
+ So yeah, again it's, yeah, get was looking for some peers.
+
+778
+01:17:26,840 --> 01:17:31,140
+ It found some that it can get the data from.
+
+779
+01:17:31,140 --> 01:17:36,800
+ And the same happened for Lighthouse that connected
+
+780
+01:17:36,800 --> 01:17:38,360
+ and wants to sync.
+
+781
+01:17:38,360 --> 01:17:43,520
+ And now it's syncing in a way that you
+
+782
+01:17:43,520 --> 01:17:45,039
+ see it can sync in a few minutes.
+
+783
+01:17:45,039 --> 01:17:45,699
+ It's amazing.
+
+784
+01:17:45,699 --> 01:17:52,739
+ it's super small and it's syncing so fast and it find out what is the what is the it it syncs to
+
+785
+01:17:52,739 --> 01:18:01,220
+ the current current or the uh the new uh new slot and then the fork choice dictates to get oh this
+
+786
+01:18:01,220 --> 01:18:05,220
+ is the new head oh no this is the new head this is the new head this is the new head right it always
+
+787
+01:18:05,220 --> 01:18:10,340
+ syncs to the next block and dictates to get where to sync from and it's also reading the
+
+788
+01:18:10,340 --> 01:18:12,619
+ the data from the executions.
+
+789
+01:18:12,619 --> 01:18:15,680
+ So yeah, this can take a second, I guess,
+
+790
+01:18:15,680 --> 01:18:17,560
+ but it's eventually going to sync.
+
+791
+01:18:17,560 --> 01:18:18,659
+ It's running.
+
+792
+01:18:18,659 --> 01:18:21,680
+ This ephemeris is very, very lightweight for it.
+
+793
+01:18:24,560 --> 01:18:26,619
+ So like, LoadStart, for example, you
+
+794
+01:18:26,619 --> 01:18:31,199
+ can use it on ephemera without downloading Genesis, anything.
+
+795
+01:18:31,199 --> 01:18:33,400
+ It just runs because it's hard-coded in there.
+
+796
+01:18:33,400 --> 01:18:35,579
+ The other clients have not included it yet.
+
+797
+01:18:35,579 --> 01:18:37,579
+ OK, so we have nine minutes.
+
+798
+01:18:37,579 --> 01:18:41,739
+ This is basically the longest it can take to sync ephemeris.
+
+799
+01:18:41,739 --> 01:18:44,739
+ It's the worst time, because the network is restarting
+
+800
+01:18:44,739 --> 01:18:47,579
+ in like one or two hours.
+
+801
+01:18:47,579 --> 01:18:53,140
+ So it's like one week minus one, two hours worth of data.
+
+802
+01:18:53,140 --> 01:18:55,680
+ But if I do this in like two hours,
+
+803
+01:18:55,680 --> 01:18:59,019
+ it's going to sync in a second, because it will be fresh work.
+
+804
+01:18:59,019 --> 01:19:04,739
+ So yeah, you can see here it's at.
+
+805
+01:19:07,579 --> 01:19:11,380
+ Here, 19-00-UTC, we started it for, I think, right?
+
+806
+01:19:11,519 --> 01:19:11,819
+ So, yeah.
+
+807
+01:19:13,640 --> 01:19:15,619
+ Okay, so that's that.
+
+808
+01:19:15,760 --> 01:19:18,260
+ So, now we have ephemera running.
+
+809
+01:19:18,559 --> 01:19:20,039
+ Let's talk to the node.
+
+810
+01:19:20,159 --> 01:19:23,680
+ Oh, now I'm wondering if I enabled HTTP here.
+
+811
+01:19:24,739 --> 01:19:25,680
+ I didn't, right?
+
+812
+01:19:25,680 --> 01:19:27,300
+ Okay, let's do that.
+
+813
+01:19:27,840 --> 01:19:30,800
+ We want HTTP as well, so we can use it.
+
+814
+01:19:30,920 --> 01:19:33,680
+ Because I want to show you how you actually communicate with the client.
+
+815
+01:19:33,680 --> 01:19:42,980
+ For that, the good start is JSON, or like, also the client documentation is pretty good,
+
+816
+01:19:42,980 --> 01:20:03,100
+ or the JSONRPC in the, um, it's also good docs, but get, let's do it, like, let's do
+
+817
+01:20:03,100 --> 01:20:09,260
+ more client-specific. Oh my god, this is syncing so slow. Oh, we can also checkpoint sync ephemera.
+
+818
+01:20:09,260 --> 01:20:14,060
+ There's a checkpoint sync provider for ephemera, which would make it faster, I guess. Maybe we can
+
+819
+01:20:14,060 --> 01:20:24,620
+ do that. Is it deteriorating when I'm running the node, by the way? Is it dying or something?
+
+820
+01:20:24,619 --> 01:20:30,579
+ it's worse than I'm syncing the node.
+
+821
+01:20:30,579 --> 01:20:39,159
+ But here, checkpointsync, you see, we can use this website, which hopefully works, yeah,
+
+822
+01:20:39,159 --> 01:20:40,739
+ to checkpointsync it.
+
+823
+01:20:40,739 --> 01:20:49,439
+ So what do we want to do here is, I just go up to this, checkpointsync-url, it's checkpointsync-sync-sync,
+
+824
+01:20:49,439 --> 01:20:51,719
+ Checkpoint sync URL.
+
+825
+01:20:51,719 --> 01:20:56,719
+ Right here it says checkpoint-center-dash-URL.
+
+826
+01:20:56,719 --> 01:20:59,099
+ That's this one.
+
+827
+01:20:59,099 --> 01:21:00,779
+ And now it's going to comply.
+
+828
+01:21:00,779 --> 01:21:03,659
+ No it's not going to comply.
+
+829
+01:21:03,659 --> 01:21:04,659
+ It works.
+
+830
+01:21:04,659 --> 01:21:12,979
+ But it's refusing to check point sync because we need to progdb first.
+
+831
+01:21:12,979 --> 01:21:13,979
+ You see?
+
+832
+01:21:13,979 --> 01:21:21,919
+ If you already started the big node, then you cannot just skip to checkpoint sync, because
+
+833
+01:21:21,919 --> 01:21:25,079
+ you need to delete the existing database first.
+
+834
+01:21:25,079 --> 01:21:31,379
+ So we are going to do that, and it will be even faster.
+
+835
+01:21:31,379 --> 01:21:34,639
+ Let's try this.
+
+836
+01:21:34,640 --> 01:21:43,200
+ And we have the HTTP for communication on 8545.
+
+837
+01:21:43,200 --> 01:21:45,980
+ And this one, it's too light.
+
+838
+01:21:45,980 --> 01:21:47,400
+ OK, awesome.
+
+839
+01:21:47,400 --> 01:21:49,640
+ What I want to show you is the communication first
+
+840
+01:21:49,640 --> 01:21:53,100
+ over Coral, simply C-O-R-O.
+
+841
+01:21:53,100 --> 01:22:07,320
+ Is there some examples here?
+
+842
+01:22:07,320 --> 01:22:12,980
+ Come on, there should be examples.
+
+843
+01:22:12,979 --> 01:22:37,799
+ So, yeah, it call, it's simple, it's called create access list, nope, okay, it's good
+
+844
+01:22:37,800 --> 01:22:41,960
+ This is just the domain, the name specific.
+
+845
+01:22:41,960 --> 01:22:46,440
+ But yeah, here, this is a good documentation with examples.
+
+846
+01:22:46,440 --> 01:22:48,480
+ So you can see all the different,
+
+847
+01:22:49,140 --> 01:22:50,800
+ all the different,
+
+848
+01:22:53,060 --> 01:22:53,900
+ oh, come on.
+
+849
+01:22:58,500 --> 01:23:00,940
+ Yeah, we can just use this,
+
+850
+01:23:00,940 --> 01:23:04,900
+ and you can see all the different,
+
+851
+01:23:05,800 --> 01:23:07,619
+ all the different,
+
+852
+01:23:07,800 --> 01:23:31,340
+ it's missing the headers actually it's not fully correct because what you want to do
+
+853
+01:23:31,340 --> 01:23:42,680
+ it's for sure post but you want to have a header that it's content type location slash
+
+854
+01:23:42,680 --> 01:23:46,340
+ it might probably want to answer.
+
+855
+01:23:46,340 --> 01:23:51,340
+ And now the, what are we requesting here?
+
+856
+01:23:52,020 --> 01:23:55,560
+ The data, let's copy it here.
+
+857
+01:24:05,020 --> 01:24:07,500
+ Yeah, sorry, I'm not used to the environment
+
+858
+01:24:07,500 --> 01:24:09,640
+ because it's just a pressure VM
+
+859
+01:24:09,640 --> 01:24:13,300
+ And I want to go localhost h.
+
+860
+01:24:15,180 --> 01:24:16,020
+ No.
+
+861
+01:24:19,140 --> 01:24:21,640
+ Okay, and we see that it,
+
+862
+01:24:21,640 --> 01:24:24,119
+ the protocol version method is not supported,
+
+863
+01:24:24,119 --> 01:24:27,400
+ but it answered, that's great, it answered.
+
+864
+01:24:27,400 --> 01:24:29,520
+ I don't know why this is not supported,
+
+865
+01:24:32,079 --> 01:24:33,180
+ which is funny,
+
+866
+01:24:33,180 --> 01:24:36,740
+ but we can ask about the syncing state, for example.
+
+867
+01:24:36,739 --> 01:24:48,079
+ it's not syncing, it's synced already, it's synced, it's synced, it's synced, it's synced,
+
+868
+01:24:48,079 --> 01:24:49,079
+ it's synced, it's synced, it's synced, it's synced, it's synced, it's synced, it's synced,
+
+869
+01:24:49,079 --> 01:24:50,079
+ it's synced, it's synced, it's synced, it's synced, it's synced, it's synced, it's synced,
+
+870
+01:24:50,079 --> 01:24:51,079
+ it's synced, it's synced, it's synced, it's synced, it's synced, it's synced, it's synced,
+
+871
+01:24:51,079 --> 01:24:52,079
+ it's synced, it's synced, it's synced, it's synced, it's synced, it's synced, it's synced,
+
+872
+01:24:52,079 --> 01:24:53,079
+ it's synced, it's synced, it's synced, it's synced, it's synced, it's synced, it's synced,
+
+873
+01:24:53,079 --> 01:24:58,920
+ yeah yeah we see we are we are synced now it's getting just the historical blocks uh the current
+
+874
+01:24:58,920 --> 01:25:05,319
+ state is achieved because we checkpoint sync so now it goes backwards uh it's lighthouse and you
+
+875
+01:25:05,319 --> 01:25:14,199
+ see um get here is happily important importing every 12 seconds new blocks so it's it's happening
+
+876
+01:25:14,199 --> 01:25:19,640
+ we don't have many peers maybe because i'm in the vm on like random internet but yeah it's uh
+
+877
+01:25:19,640 --> 01:25:25,180
+ The chain had updated every 12 seconds, so it's following the current state.
+
+878
+01:25:25,180 --> 01:25:26,180
+ So it's not syncing.
+
+879
+01:25:26,180 --> 01:25:27,180
+ That was right.
+
+880
+01:25:27,180 --> 01:25:31,400
+ I was expecting it will tell me, like, you know, what is the current head, and it's syncing
+
+881
+01:25:31,400 --> 01:25:32,400
+ and so on.
+
+882
+01:25:32,400 --> 01:25:33,740
+ But it didn't happen.
+
+883
+01:25:33,740 --> 01:25:37,940
+ Let's use some other it.
+
+884
+01:25:37,940 --> 01:25:44,660
+ We can ask just, like, for the block number, for example, right?
+
+885
+01:25:44,659 --> 01:25:52,739
+ So here I ask him the block number, and this is the current block number in hex.
+
+886
+01:25:52,739 --> 01:26:03,460
+ So you get these answers from the JSONRPC with the values are mostly encoded in hexadecimal
+
+887
+01:26:03,460 --> 01:26:08,399
+ format, it can easily decode this, and it should correspond to the current fmbrhead.
+
+888
+01:26:08,399 --> 01:26:13,500
+ So yeah, this is how you use the core role to talk to it.
+
+889
+01:26:13,500 --> 01:26:18,500
+ Of course, this can be in so many different packages.
+
+890
+01:26:18,779 --> 01:26:21,420
+ You can have it as a Python package in Web3Pi.
+
+891
+01:26:22,060 --> 01:26:25,060
+ It's mostly used, this communication with this RPC
+
+892
+01:26:25,060 --> 01:26:29,140
+ is mostly used in, this URL is good for maybe
+
+893
+01:26:29,140 --> 01:26:32,760
+ bash scripts or something that you want to quickly check.
+
+894
+01:26:33,220 --> 01:26:34,859
+ But in reality, you use the Web3Pi
+
+895
+01:26:34,859 --> 01:26:39,100
+ with something like Ethers.js on the dApps, right?
+
+896
+01:26:40,159 --> 01:26:42,539
+ Or in the backend in Python or so on,
+
+897
+01:26:42,539 --> 01:26:47,380
+ or you use some already existing tooling,
+
+898
+01:26:47,380 --> 01:26:50,060
+ which makes it easier and wraps all these answers,
+
+899
+01:26:50,060 --> 01:26:53,640
+ so you don't need to manually read all the fields
+
+900
+01:26:53,640 --> 01:26:58,279
+ and transpile it from different coding or something.
+
+901
+01:26:59,180 --> 01:27:04,180
+ Also, you can use this, of course, in your wallet.
+
+902
+01:27:09,060 --> 01:27:11,479
+ So let's maybe do that.
+
+903
+01:27:11,479 --> 01:27:23,859
+ I have a metamask here that I installed for this purpose, doing a workshop.
+
+904
+01:27:23,859 --> 01:27:31,359
+ And it has some default, Ethereum mainnet, whatnot, but we can switch to, okay, blah,
+
+905
+01:27:31,359 --> 01:27:33,239
+ blah, blah, blah, blah.
+
+906
+01:27:33,239 --> 01:27:35,879
+ Yeah, I want to switch network, add network.
+
+907
+01:27:35,880 --> 01:27:43,159
+ So here I want to add network, which is going to point to my own, oh, wait, there's some
+
+908
+01:27:43,159 --> 01:27:44,440
+ questions, I'm sorry.
+
+909
+01:27:44,440 --> 01:27:48,480
+ I'm running best on tech on Mac, nice.
+
+910
+01:27:48,480 --> 01:27:53,279
+ Yeah, if you need help, we will get to that in the end.
+
+911
+01:27:53,279 --> 01:27:55,760
+ Yeah, add network manually.
+
+912
+01:27:55,760 --> 01:28:13,159
+ So, we are doing HTTP localhost, this is where it wants the chain ID, it could not fetch,
+
+913
+01:28:13,159 --> 01:28:14,560
+ it's fine.
+
+914
+01:28:14,560 --> 01:28:16,460
+ Is the RPC correct?
+
+915
+01:28:16,460 --> 01:28:19,300
+ Did it kill it or something?
+
+916
+01:28:19,300 --> 01:28:20,300
+ No.
+
+917
+01:28:20,300 --> 01:28:22,800
+ Maybe I need to allow it.
+
+918
+01:28:22,800 --> 01:28:24,600
+ So let's try a different RPC.
+
+919
+01:28:24,600 --> 01:28:33,380
+ So let's test whether it's, it's not nice.
+
+920
+01:28:33,380 --> 01:28:36,320
+ So what you might want to do in this case
+
+921
+01:28:36,320 --> 01:28:48,760
+ is to kill get and look into the help for the HTTP, yeah,
+
+922
+01:28:48,760 --> 01:28:51,480
+ course domain.
+
+923
+01:28:51,479 --> 01:29:05,299
+ Yeah, so maybe we want to do the query domain or vhosts just
+
+924
+01:29:05,299 --> 01:29:09,659
+ to make sure that this might be the problem.
+
+925
+01:29:14,699 --> 01:29:16,699
+ OK, I'm wondering, I'm wondering.
+
+926
+01:29:16,699 --> 01:29:18,519
+ But it should work.
+
+927
+01:29:18,520 --> 01:29:20,800
+ I don't know if this always worked.
+
+928
+01:29:20,800 --> 01:29:25,800
+ I don't know if it's the chain ID.
+
+929
+01:29:25,800 --> 01:29:26,800
+ Localhost it.
+
+930
+01:29:26,800 --> 01:29:27,800
+ What am I doing?
+
+931
+01:29:27,800 --> 01:29:28,800
+ The mistake, guys.
+
+932
+01:29:28,800 --> 01:29:29,860
+ Come on, come on, help me fix this.
+
+933
+01:29:29,860 --> 01:29:30,860
+ This is gonna work.
+
+934
+01:29:30,860 --> 01:29:31,860
+ What do I want to do?
+
+935
+01:29:31,860 --> 01:29:32,860
+ Instead...
+
+936
+01:29:32,859 --> 01:29:51,859
+ Maybe I want to do it instead of 5, maybe?
+
+937
+01:29:51,859 --> 01:29:52,920
+ That's too bad.
+
+938
+01:29:59,759 --> 01:30:00,420
+ Okay.
+
+939
+01:30:03,199 --> 01:30:04,279
+ Okay, let's see.
+
+940
+01:30:04,460 --> 01:30:05,719
+ What's your problem?
+
+941
+01:30:10,779 --> 01:30:11,619
+ Shut up.
+
+942
+01:30:21,859 --> 01:30:38,559
+ it doesn't it doesn't it won't work this is weird it's not nice i think it's in my wallet
+
+943
+01:30:38,559 --> 01:30:44,339
+ i'm very mad now i don't know why it says this is happening oh my god guys any any tips any
+
+944
+01:30:44,339 --> 01:30:48,899
+ tips and tricks maybe we can try a different wallet but it always worked like this in metamask
+
+945
+01:30:48,899 --> 01:30:54,439
+ I wonder what's stopping me here.
+
+946
+01:30:54,439 --> 01:30:56,239
+ What was the chain ID?
+
+947
+01:31:06,299 --> 01:31:08,379
+ It should fetch it by itself, right?
+
+948
+01:31:08,379 --> 01:31:10,199
+ Because you can just ask.
+
+949
+01:31:10,199 --> 01:31:14,199
+ And we just did it in the other window, right?
+
+950
+01:31:18,899 --> 01:31:36,179
+ Let me try again, it will show you it block number works, it's localhost 8 5 4 5, which
+
+951
+01:31:36,180 --> 01:31:39,659
+ is also correct.
+
+952
+01:31:39,659 --> 01:31:42,500
+ So I don't know.
+
+953
+01:31:42,500 --> 01:31:52,119
+ What's due to be shame ID, which is correct.
+
+954
+01:31:52,119 --> 01:31:58,659
+ OK, that's not nice, because I can reach it over crawl,
+
+955
+01:31:58,659 --> 01:32:04,460
+ but I can't reach it in metamask for some reason.
+
+956
+01:32:04,460 --> 01:32:09,739
+ Maybe there is something I'm missing, maybe there's some browser settings or something.
+
+957
+01:32:09,739 --> 01:32:14,859
+ Yeah it's such an idiotic to have a browser wallet anyway but, okay I don't know, I'm
+
+958
+01:32:14,859 --> 01:32:21,859
+ so sorry guys, I'm so disappointed right now, I'm not sure how to, let's add ephemera here.
+
+959
+01:32:21,859 --> 01:32:24,060
+ Um, yeah.
+
+960
+01:32:24,060 --> 01:32:26,699
+ Let's add ephemera here.
+
+961
+01:32:26,699 --> 01:32:32,739
+ Ah this is disappointing, this is too bad.
+
+962
+01:32:32,739 --> 01:32:40,019
+ This is the public RPC, but it's still fine.
+
+963
+01:32:40,019 --> 01:32:43,019
+ Yeah.
+
+964
+01:32:43,019 --> 01:32:45,619
+ Maybe there is some extra conflict that I need,
+
+965
+01:32:45,619 --> 01:32:49,699
+ but I did this so many times, and I think that all I needed
+
+966
+01:32:49,699 --> 01:32:51,779
+ was just this.
+
+967
+01:32:51,779 --> 01:32:57,679
+ And I actually have my own node running, but it's
+
+968
+01:32:57,679 --> 01:32:59,340
+ missing some headers.
+
+969
+01:32:59,340 --> 01:33:00,739
+ But it should work.
+
+970
+01:33:00,739 --> 01:33:02,300
+ It should work.
+
+971
+01:33:02,739 --> 01:33:08,880
+ I don't know it's it's missing some stupid conflict I think like we have the
+
+972
+01:33:08,880 --> 01:33:14,079
+ course of sorry this is it's lighthouse
+
+973
+01:33:14,079 --> 01:33:20,139
+ um yeah we've been running it here yeah maybe the course domain is wrong or or
+
+974
+01:33:20,139 --> 01:33:23,159
+ something like that
+
+975
+01:33:32,739 --> 01:33:38,260
+ dot uh oh my god what is the address
+
+976
+01:33:39,699 --> 01:33:42,659
+ all interfaces
+
+977
+01:33:50,899 --> 01:33:56,739
+ okay nice uh maybe now let's go to one more try just because i'm
+
+978
+01:33:56,739 --> 01:33:59,779
+ getting nervous and curious and it's a search it's upon you
+
+979
+01:33:59,779 --> 01:34:02,619
+ I hope you learn something so fast.
+
+980
+01:34:02,619 --> 01:34:03,439
+ Yeah.
+
+981
+01:34:03,439 --> 01:34:05,059
+ Oh, this is good.
+
+982
+01:34:05,059 --> 01:34:09,439
+ Yeah, the course version needs to be from the Chrome extension.
+
+983
+01:34:09,439 --> 01:34:12,199
+ Oh, that's so ugly.
+
+984
+01:34:12,199 --> 01:34:14,099
+ But let's try it.
+
+985
+01:34:14,099 --> 01:34:15,619
+ Let's try it.
+
+986
+01:34:15,619 --> 01:34:18,239
+ OK, let's add a custom network again.
+
+987
+01:34:20,899 --> 01:34:25,380
+ And yeah, now I want Moz extension, which is this one.
+
+988
+01:34:25,380 --> 01:34:28,859
+ So should I just use this in the course domain?
+
+989
+01:34:29,779 --> 01:34:32,059
+ Okay, let's try it.
+
+990
+01:34:32,059 --> 01:34:37,059
+ Let's try it again.
+
+991
+01:34:37,059 --> 01:34:38,340
+ Maybe.
+
+992
+01:34:38,340 --> 01:34:45,759
+ Ah, now it's working.
+
+993
+01:34:45,759 --> 01:34:50,239
+ So okay, I did a wild card.
+
+994
+01:34:50,239 --> 01:34:53,319
+ That's probably the worst idea.
+
+995
+01:34:53,319 --> 01:35:00,359
+ um yeah and it's currently it won't let me connect because it's currently in use because i already
+
+996
+01:35:00,359 --> 01:35:08,039
+ added the network before okay now it works it calms me down but yeah uh this comes me down but
+
+997
+01:35:08,039 --> 01:35:14,519
+ yeah i what i had to do as you can see is like to enable to put the wild card uh yeah what it is i
+
+998
+01:35:14,520 --> 01:35:23,720
+ it instead of specifying the most extensions whatnot i did um wild card for the course domain
+
+999
+01:35:23,720 --> 01:35:29,720
+ which you shouldn't do guys wildcard for hosts and also i'm running on all interface instead
+
+1000
+01:35:29,720 --> 01:35:35,720
+ of local hosts it's running on all available interfaces including the local host of course but
+
+1001
+01:35:35,720 --> 01:35:40,760
+ uh this is something you shouldn't do any i'm doing this because it's in a vm and i don't mind
+
+1002
+01:35:40,760 --> 01:35:50,600
+ but you shouldn't do this in a you know uh serious setup um yeah maybe let's change it to localhost
+
+1003
+01:35:50,600 --> 01:35:58,680
+ just by killing this and i wonder if the course domains uh themselves will help it's an interesting
+
+1004
+01:35:58,680 --> 01:36:05,880
+ that's interesting piece of knowledge for sure add network again annually it's this x where it
+
+1005
+01:36:05,880 --> 01:36:17,220
+ it works. So it's the core domains that I set to the wildcard. So yeah, thank you so
+
+1006
+01:36:17,220 --> 01:36:24,680
+ much, Meldzden. It was exactly what you said with the Bessu. It was it was the core domain
+
+1007
+01:36:24,680 --> 01:36:30,699
+ issue. So it's like it's a security feature that it doesn't let you to, you know, connect
+
+1008
+01:36:30,699 --> 01:36:33,380
+ to your node from some random string interfaces
+
+1009
+01:36:33,380 --> 01:36:35,420
+ or something like that.
+
+1010
+01:36:35,420 --> 01:36:37,420
+ There is something more that I wanted to show you
+
+1011
+01:36:37,420 --> 01:36:40,420
+ with a memory, and that's like running also
+
+1012
+01:36:45,239 --> 01:36:46,420
+ the Validator part.
+
+1013
+01:36:46,420 --> 01:36:47,859
+ Let's see the workshop.
+
+1014
+01:36:47,859 --> 01:36:50,859
+ Okay, we can maybe, yeah, x, we did this,
+
+1015
+01:36:50,859 --> 01:36:51,939
+ or maybe also the console.
+
+1016
+01:36:51,939 --> 01:36:53,819
+ So there is one thing on get you can do,
+
+1017
+01:36:53,819 --> 01:36:58,819
+ and it's get attach, you need to have data,
+
+1018
+01:37:00,699 --> 01:37:06,539
+ here it was ephemery right and now we are in the console so instead of using corel
+
+1019
+01:37:06,539 --> 01:37:11,819
+ i can just talk to him directly right like oh tell me your peers here are all the peers i'm
+
+1020
+01:37:11,819 --> 01:37:17,979
+ connected to etc so this is one one one little thing i wanted to show you as well this it might
+
+1021
+01:37:17,979 --> 01:37:24,300
+ be practical like to like for example connect your node so what you what you can do is go to
+
+1022
+01:37:24,300 --> 01:37:32,940
+ ethernets.io and here you see bunch of different nodes you can even check ephemery nodes
+
+1023
+01:37:33,500 --> 01:37:42,940
+ the current iteration and here uh in help you find the um uh these are all the instances of
+
+1024
+01:37:42,940 --> 01:37:47,420
+ the peer-to-peer client that it's running so you can choose one of these and add it
+
+1025
+01:37:47,420 --> 01:37:58,319
+ it as a peer, you see? So I'm going to connect. Now I edit a peer of this eNote. I just edit
+
+1026
+01:37:58,319 --> 01:38:05,720
+ a note to connect to. It edits it to a QE, and at one point, get will try connect to
+
+1027
+01:38:05,720 --> 01:38:13,380
+ it, and it will help to maybe discover more peers and whatnot. And then when I go to stats
+
+1028
+01:38:13,380 --> 01:38:21,779
+ and i look at it or when i go to the notes part and uh you can you can see the latest latest notes
+
+1029
+01:38:21,779 --> 01:38:26,980
+ and uh okay this is if i know that you can see all the information about it what not so if you if you
+
+1030
+01:38:26,980 --> 01:38:32,420
+ then connect to this crawler you can read all these values by yourself it's nice nice way to
+
+1031
+01:38:32,420 --> 01:38:41,140
+ make sure that uh you see that uh it's uh it yeah so in this case the crawler was dialing this node
+
+1032
+01:38:41,140 --> 01:38:44,980
+ instead of the other way so you can make for example make sure that like the dialing to your
+
+1033
+01:38:44,980 --> 01:38:51,300
+ node is okay etc so that's something you can you can do after but yeah one thing how to add peers
+
+1034
+01:38:51,300 --> 01:38:57,940
+ it's like using the console because what you want to do is like you know don't have the this is
+
+1035
+01:38:57,940 --> 01:39:08,100
+ using the ipc this is using um as it said before this is trying using this ipc file as a communication
+
+1036
+01:39:08,100 --> 01:39:16,260
+ with node so what you can have is like only engine eat i know net takes cool web 3 just like these
+
+1037
+01:39:16,260 --> 01:39:25,060
+ safe safe um uh namespaces enabled on your normal node and then through ipc you can also connect to
+
+1038
+01:39:25,060 --> 01:39:32,740
+ admin and uh yeah handle your node so it's an example of this well i mean you don't have
+
+1039
+01:39:32,739 --> 01:39:38,179
+ to trust because you can verify their data so uh this and these are not notes what i was showing
+
+1040
+01:39:38,179 --> 01:39:44,340
+ it's just like instance of the crawler it's just to get get so they can gather your data more easily
+
+1041
+01:39:45,460 --> 01:39:51,059
+ so now uh let's do a little poll what do you feel like switching a client or we can maybe go to the
+
+1042
+01:39:51,059 --> 01:39:57,219
+ validator it's like one lot we are we are over 90 minutes now and the validator was one last thing i
+
+1043
+01:39:57,220 --> 01:40:04,180
+ wanted to show you i'm not sure if i can but let's look into it like it's easiest on a film
+
+1044
+01:40:04,180 --> 01:40:15,220
+ let's do it quickly uh let's go to launchpad let's go to here and let's go to offset okay
+
+1045
+01:40:15,220 --> 01:40:18,659
+ first let's get some money from the fall so it's easy i don't need to teach you that
+
+1046
+01:40:18,659 --> 01:40:33,199
+ it. Ah, it just loads. Okay. Address here. Thank you. We have it. And if we want to become
+
+1047
+01:40:33,199 --> 01:40:38,539
+ validated, we need to learn all the important things. Yeah, yeah, yeah, yeah. Don't do it.
+
+1048
+01:40:38,539 --> 01:40:41,880
+ Read it. Especially if you are using main app. But now I just want to show you how to
+
+1049
+01:40:41,880 --> 01:40:49,800
+ the deposit and uh this is actually also a good knowledge source like the staking um staking
+
+1050
+01:40:49,800 --> 01:40:55,239
+ launchpad gives you some nice information about the different clients about uh all the
+
+1051
+01:40:55,239 --> 01:41:00,199
+ responsibilities as a validator and the configuration i'm going to like skip this
+
+1052
+01:41:00,199 --> 01:41:08,199
+ because we know all of that and um here it tells you how to generate the keys so yeah this is
+
+1053
+01:41:08,199 --> 01:41:16,119
+ something i want to show you uh so the way that ethereum validator works is that uh it's using
+
+1054
+01:41:16,119 --> 01:41:24,439
+ some sort of um private key to uh sign the attestation data or publish the new new blog
+
+1055
+01:41:24,439 --> 01:41:32,119
+ you need to you need to sign this with your key you deposit 32 it uh to the deposit contract
+
+1056
+01:41:32,119 --> 01:41:40,199
+ the deposit contract is the uh it's the it's the richest one on ethereum right um
+
+1057
+01:41:40,920 --> 01:41:47,960
+ and you deposit you deposit um uh um your transaction in there
+
+1058
+01:41:48,519 --> 01:41:53,960
+ uh which then activates your volator so you see that this is the deposit contract you can read
+
+1059
+01:41:53,960 --> 01:42:01,159
+ the code here and you always make sure that you interact on mainnet with this contract on on um
+
+1060
+01:42:02,119 --> 01:42:09,159
+ So, on ephemery or test nets it's on different address, like 4242 something.
+
+1061
+01:42:09,159 --> 01:42:16,340
+ If you are using Windows or something, you can use like a GUI like this, but we can simply
+
+1062
+01:42:16,340 --> 01:42:25,659
+ generate keys using this terminal.
+
+1063
+01:42:25,659 --> 01:42:38,539
+ it. I downloaded the staking deposit CLI. So let's open it. And here we have this feature
+
+1064
+01:42:38,539 --> 01:42:44,260
+ called deposit. And we can either have it with existing or new mnemonics. You need to
+
+1065
+01:42:44,260 --> 01:42:53,939
+ make a passphrase first. Let's do it as a new one. And this lets you generate the keys
+
+1066
+01:42:53,939 --> 01:42:57,599
+ to import to your validator and then run it.
+
+1067
+01:42:57,599 --> 01:42:59,219
+ Let's run it.
+
+1068
+01:42:59,219 --> 01:43:03,759
+ And we want it in this case it's important.
+
+1069
+01:43:03,759 --> 01:43:05,279
+ We need password.
+
+1070
+01:43:05,279 --> 01:43:12,739
+ Okay, we need to write it down.
+
+1071
+01:43:12,739 --> 01:43:17,159
+ It's good to write it down even on test nets.
+
+1072
+01:43:17,159 --> 01:43:20,979
+ It happened to me, I was running it and I lost it.
+
+1073
+01:43:20,979 --> 01:43:25,299
+ I couldn't recover them and I had to deposit again it's annoying so yeah you want to
+
+1074
+01:43:27,699 --> 01:43:34,659
+ check the keys and now we have keys that we are ready to activate using
+
+1075
+01:43:37,619 --> 01:43:46,259
+ using the deposit okay so yeah it was data so the deposit data informs the website about
+
+1076
+01:43:46,260 --> 01:43:53,060
+ the data uh about our validator public keys uh that are going to the contract and it's going to
+
+1077
+01:43:53,060 --> 01:44:00,180
+ help us to make the transaction um so this is like a um it's like an easy way to walk through it yes
+
+1078
+01:44:00,820 --> 01:44:06,980
+ okay we have a 32 fm array test that's one validator i understand i understand i understand
+
+1079
+01:44:06,980 --> 01:44:11,300
+ uh it's good to i'm going it doing it fast but you can read through this to understand
+
+1080
+01:44:11,300 --> 01:44:14,779
+ and the stake is taking much better.
+
+1081
+01:44:15,860 --> 01:44:17,500
+ And let's go to deposit.
+
+1082
+01:44:20,360 --> 01:44:25,119
+ What I want to show you is that how you then import the,
+
+1083
+01:44:25,119 --> 01:44:28,520
+ oh, wait, I have 30 to eat, but I need more
+
+1084
+01:44:28,520 --> 01:44:30,220
+ because there are fees, right?
+
+1085
+01:44:30,220 --> 01:44:32,239
+ Of course, there are fees.
+
+1086
+01:44:33,880 --> 01:44:35,380
+ Where's the deposit again?
+
+1087
+01:44:35,380 --> 01:44:37,119
+ Okay, one more time.
+
+1088
+01:44:39,180 --> 01:44:40,720
+ I need the address again.
+
+1089
+01:44:41,300 --> 01:44:48,579
+ okay this is actually good point I need to change it to 38 or something
+
+1090
+01:44:52,640 --> 01:45:00,920
+ here we go okay again
+
+1091
+01:45:00,920 --> 01:45:19,720
+ it still didn't bind the previous transaction, hopefully.
+
+1092
+01:45:19,720 --> 01:45:26,079
+ Okay so this is mostly it.
+
+1093
+01:45:26,079 --> 01:45:37,420
+ So we do deposit now, just the deposit, and now the beacon here, you will see it in a
+
+1094
+01:45:37,420 --> 01:45:46,319
+ second, that there is a new validator waiting for, so the problem is that now we have to
+
+1095
+01:45:46,319 --> 01:45:49,039
+ wait, and wait a second.
+
+1096
+01:45:49,039 --> 01:46:00,380
+ So it takes hours to activate the validator on the network.
+
+1097
+01:46:00,380 --> 01:46:03,199
+ Yeah, you see it's in the QE.
+
+1098
+01:46:03,199 --> 01:46:06,880
+ It was done 43 seconds ago, and it takes 16 to 20.
+
+1099
+01:46:06,880 --> 01:46:18,359
+ So in the lifetime of this test it won't happen, because it's going to be inactive.
+
+1100
+01:46:18,359 --> 01:46:24,439
+ it's going it's so it's been pending until it will die so we don't yeah we don't want to activate
+
+1101
+01:46:24,439 --> 01:46:30,359
+ this but i want to show you this but still uh i want to show you the follow-up now when we have
+
+1102
+01:46:31,399 --> 01:46:37,079
+ we have those keys and let's pretend we are waiting for the activation um
+
+1103
+01:46:38,359 --> 01:46:43,239
+ so we go to lighthouse and this time we want to run the valid client oh but before that we need
+
+1104
+01:46:43,239 --> 01:46:56,000
+ to import the data, so we need to import the keys that we used.
+
+1105
+01:46:56,000 --> 01:47:10,920
+ So let's do account manager, import from data deer it's data lighthouse here.
+
+1106
+01:47:13,239 --> 01:47:15,239
+ Yeah, lhdata, okay.
+
+1107
+01:47:17,239 --> 01:47:23,639
+ With the testnet pointing to the memory, which is sadly in the downloads.
+
+1108
+01:47:26,439 --> 01:47:28,439
+ it's been a mess.
+
+1109
+01:47:29,819 --> 01:47:35,059
+ The directory puts us to the actual
+
+1110
+01:47:38,059 --> 01:47:40,059
+ Validated keys file.
+
+1111
+01:47:43,239 --> 01:47:53,319
+ it wasn't expected okay oh i need to do it okay now i put the password so what you want to what
+
+1112
+01:47:53,319 --> 01:47:57,399
+ you want to do if you have like thousands of validators of course is to create a
+
+1113
+01:47:57,399 --> 01:48:03,239
+ file or just reuse the password uh like there's a there's a feature for that if you're doing like
+
+1114
+01:48:03,239 --> 01:48:13,159
+ big texting but now we import it to the lighthouse database we have the validators uh validators here
+
+1115
+01:48:13,159 --> 01:48:20,319
+ So you see it's the public key, and we are now able to run the lighthouse also.
+
+1116
+01:48:20,319 --> 01:48:24,159
+ I mean, you can always just run the validator, but it's not going to help anything.
+
+1117
+01:48:24,159 --> 01:48:36,840
+ So now we need to run it as an actual valid client.
+
+1118
+01:48:36,840 --> 01:48:50,600
+ So again, we want to use the t for download, so we need the data here, which is lhdata,
+
+1119
+01:48:50,600 --> 01:48:52,819
+ and I think it could be it.
+
+1120
+01:48:52,819 --> 01:48:54,720
+ I don't know.
+
+1121
+01:48:54,720 --> 01:48:59,400
+ Wait, wait, it's going to be Knote, why?
+
+1122
+01:48:59,400 --> 01:49:00,400
+ Why?
+
+1123
+01:49:00,400 --> 01:49:03,060
+ I didn't enable the HTTP on BKnote?
+
+1124
+01:49:03,060 --> 01:49:04,060
+ I did.
+
+1125
+01:49:04,060 --> 01:49:06,640
+ Oh, I did it.
+
+1126
+01:49:06,840 --> 01:49:13,520
+ Okay, so of course, the validator is connecting to the beacon node using the HTTP endpoint.
+
+1127
+01:49:14,239 --> 01:49:16,079
+ So it needs to be enabled.
+
+1128
+01:49:17,480 --> 01:49:20,039
+ And you see here it's connected to the beacon node.
+
+1129
+01:49:21,060 --> 01:49:25,140
+ Here it's connected to the beacon node, flushing protection.
+
+1130
+01:49:26,199 --> 01:49:28,960
+ And it's awaiting activation.
+
+1131
+01:49:29,400 --> 01:49:34,699
+ So you see it's going to take a while to activate.
+
+1132
+01:49:34,699 --> 01:49:46,039
+ it's something that you want to always set up if you are running Validator.
+
+1133
+01:49:46,039 --> 01:49:48,920
+ Do I have it?
+
+1134
+01:49:48,920 --> 01:49:49,920
+ No.
+
+1135
+01:49:49,920 --> 01:49:53,159
+ I don't have it.
+
+1136
+01:49:53,159 --> 01:50:04,439
+ So, set up your address as the, as the, as a fee recipient, and now we are successfully
+
+1137
+01:50:04,439 --> 01:50:09,559
+ during the validator. I'm so sorry, I can't show you the stations, it's going to take
+
+1138
+01:50:09,559 --> 01:50:14,839
+ a while for this to deposit. If I'm clever enough, I would deposit it before the workshop,
+
+1139
+01:50:14,839 --> 01:50:20,519
+ and I actually did this morning, but it still didn't activate. So yeah, this is the best
+
+1140
+01:50:20,519 --> 01:50:25,139
+ I can do right now. Yeah, you see it's back to the beacon node and it's just waiting,
+
+1141
+01:50:25,139 --> 01:50:32,439
+ so now the validator client is sitting and waiting while the beacon node is checking
+
+1142
+01:50:32,439 --> 01:50:39,719
+ as it get this dragon uh importing new blocks and finally the beacon node is complaining that
+
+1143
+01:50:39,719 --> 01:50:47,399
+ it has only one pair it's not nice it should be work but yeah let's see it and i'm going to kill
+
+1144
+01:50:47,399 --> 01:50:56,199
+ it now because we don't need it anymore but yeah this was a family this was this was the memory uh
+
+1145
+01:50:56,199 --> 01:51:05,239
+ the ephemera setup okay uh also with validators so yeah uh we are at almost two hours i think
+
+1146
+01:51:05,239 --> 01:51:09,800
+ i think that's more than enough and i don't see any questions in discord
+
+1147
+01:51:11,559 --> 01:51:17,960
+ oh uh so no it's not going to be uh activated in the next epoch it's going to be
+
+1148
+01:51:18,519 --> 01:51:25,319
+ activated like in many many epochs uh which is looking to the execution sorry the consensus specs
+
+1149
+01:51:25,319 --> 01:51:31,159
+ where it's explained well the activation period, look for the activation period, which depends
+
+1150
+01:51:31,159 --> 01:51:38,199
+ on how many validators are in the queue, it depends, but for now it's gonna be too long to
+
+1151
+01:51:38,199 --> 01:51:44,439
+ wait for that, and I was checking the validators from the morning it was like eight hours ago,
+
+1152
+01:51:44,439 --> 01:51:47,559
+ and it's all not active yet, I should have done it yesterday, I'm sorry.
+
+1153
+01:51:47,560 --> 01:51:49,020
+ it.
+
+1154
+01:51:49,020 --> 01:51:56,560
+ Yeah, anyway, please let me know if you have any questions.
+
+1155
+01:51:56,560 --> 01:52:02,380
+ If you have something else you would like to have me demonstrate, we discussed the environment
+
+1156
+01:52:02,380 --> 01:52:05,340
+ and the clients.
+
+1157
+01:52:05,340 --> 01:52:09,980
+ We get the clients through the binary, and we compiled it.
+
+1158
+01:52:09,980 --> 01:52:12,940
+ We didn't do Docker, but if you want to do it, you can do it.
+
+1159
+01:52:12,939 --> 01:52:19,259
+ you can write your own Docker script or just use the official it's very easy you just do
+
+1160
+01:52:19,259 --> 01:52:21,500
+ docker run.
+
+1161
+01:52:21,500 --> 01:52:30,339
+ What is more problematic with the Docker setup is that you need to know how to handle the
+
+1162
+01:52:30,339 --> 01:52:37,579
+ ports and the networking, whether you want to run it as a host mode or you want to create
+
+1163
+01:52:37,579 --> 01:52:42,659
+ a custom network, for example, when you are connecting to different clients, it's best
+
+1164
+01:52:42,659 --> 01:52:44,119
+ it in some Compose file.
+
+1165
+01:52:44,119 --> 01:52:46,819
+ So yes, it's like some thing on the Docker.
+
+1166
+01:52:49,819 --> 01:52:52,519
+ As it's a custom Genesis, we did that.
+
+1167
+01:52:52,519 --> 01:52:54,159
+ We didn't try different clients.
+
+1168
+01:52:54,159 --> 01:52:56,460
+ We should try some other clients.
+
+1169
+01:52:56,460 --> 01:53:00,260
+ I suggested Nimbus and Erigon for reasons
+
+1170
+01:53:00,260 --> 01:53:02,019
+ that Nimbus is very lightweight, and I
+
+1171
+01:53:02,019 --> 01:53:05,800
+ knew that it's going to be a problem on my low hardware
+
+1172
+01:53:05,800 --> 01:53:06,599
+ here.
+
+1173
+01:53:06,599 --> 01:53:09,099
+ And also Erigon is interesting from the perspective.
+
+1174
+01:53:12,659 --> 01:53:18,720
+ The Ergon is interesting from the perspective of the way it syncs.
+
+1175
+01:53:18,720 --> 01:53:25,720
+ Like it has the stage sync, and it has interesting logs about what is happening in this moment.
+
+1176
+01:53:25,720 --> 01:53:34,500
+ So you can actually see this different paradigm of syncing, which is also using red.
+
+1177
+01:53:34,500 --> 01:53:41,139
+ We accessed the RPC, we used validators, and I didn't get to systemd setup, but maybe we
+
+1178
+01:53:41,139 --> 01:53:42,139
+ can do it later.
+
+1179
+01:53:42,140 --> 01:53:49,420
+ Now, if you feel like continuing, we can go to EPFSG workshop.
+
+1180
+01:53:53,480 --> 01:53:56,460
+ This is okay.
+
+1181
+01:53:56,680 --> 01:53:57,220
+ It's a good link.
+
+1182
+01:53:57,539 --> 01:53:59,500
+ Anyway, here, we can meet here.
+
+1183
+01:53:59,700 --> 01:54:06,220
+ If you want to continue, we'll come to this GT and off recording, we can do some more exercises.
+
+1184
+01:54:06,220 --> 01:54:12,060
+ is if you have any you know troubles with your stuff you can you can uh screen share and i can
+
+1185
+01:54:12,060 --> 01:54:16,940
+ ask you some you can ask me some questions i can do some troubleshooting but also you know if you
+
+1186
+01:54:16,940 --> 01:54:24,060
+ have any other questions like go ahead um the iterations of ephemera that's that's one week
+
+1187
+01:54:24,060 --> 01:54:28,780
+ right now we're going to make it one month uh but right now it's weekly from thursday evening
+
+1188
+01:54:28,779 --> 01:54:39,179
+ or Thursday evening. How do I look at the transaction mempool? So yeah, you're using
+
+1189
+01:54:39,179 --> 01:54:51,340
+ the RPC, as I was showing in the Ethereum board, JSON-RPC. This one is the best documentation
+
+1190
+01:54:51,340 --> 01:54:57,300
+ if you want to see all the different calls pretty well explained.
+
+1191
+01:54:57,300 --> 01:55:03,100
+ So, yeah, if you want to see blobs, you need to use the Beacon API.
+
+1192
+01:55:03,100 --> 01:55:08,739
+ Those are on the...
+
+1193
+01:55:08,739 --> 01:55:16,500
+ Yep, this one.
+
+1194
+01:55:16,500 --> 01:55:21,100
+ So, for blobs, you can read blob per slot.
+
+1195
+01:55:21,100 --> 01:55:26,380
+ in... not events... in... no?
+
+1196
+01:55:26,380 --> 01:55:30,400
+ no, it's it... wait it doesn't open?
+
+1197
+01:55:30,400 --> 01:55:32,440
+ What's happening? What's happening?
+
+1198
+01:55:32,440 --> 01:55:35,320
+ Ah, ok, now, oh my god.
+
+1199
+01:55:35,320 --> 01:55:39,560
+ Ok, uh, beacon, beacon, no no no it's...
+
+1200
+01:55:44,320 --> 01:55:46,320
+ Dammit, then which one is it?
+
+1201
+01:55:51,100 --> 01:55:54,340
+ Ah, here.
+
+1202
+01:55:54,340 --> 01:55:59,660
+ Oh, yeah.
+
+1203
+01:55:59,660 --> 01:56:05,180
+ So based on the blog, you can get blog sidecars here.
+
+1204
+01:56:05,180 --> 01:56:07,079
+ The blogs are not really interesting to users.
+
+1205
+01:56:07,079 --> 01:56:15,220
+ You don't really have a need to get them unless you are doing archiving of the layer to history
+
+1206
+01:56:15,220 --> 01:56:16,220
+ or something.
+
+1207
+01:56:16,220 --> 01:56:18,140
+ You don't need to access blogs.
+
+1208
+01:56:18,140 --> 01:56:25,300
+ What you might want to see is the transactions in Mempool, which is...
+
+1209
+01:56:25,300 --> 01:56:27,440
+ Come on, it should be...
+
+1210
+01:56:27,440 --> 01:56:32,180
+ Sorry, I'm disappointed by this talk now.
+
+1211
+01:56:32,180 --> 01:56:35,539
+ But this is just it namespace.
+
+1212
+01:56:35,539 --> 01:56:52,699
+ So you can get transaction by hash, but you don't want to do that.
+
+1213
+01:56:52,699 --> 01:57:01,500
+ What you want to do is use the takes pool in here.
+
+1214
+01:57:01,500 --> 01:57:07,039
+ it lets you look into it.
+
+1215
+01:57:07,039 --> 01:57:09,260
+ You see it takes more content, it's
+
+1216
+01:57:09,260 --> 01:57:11,899
+ what you're looking for if you want to see it.
+
+1217
+01:57:11,899 --> 01:57:14,760
+ Yeah, and of course, the session is recorded.
+
+1218
+01:57:14,760 --> 01:57:16,460
+ So this was recorded.
+
+1219
+01:57:16,460 --> 01:57:18,380
+ Now I will shut it down and switch to Jitsi
+
+1220
+01:57:18,380 --> 01:57:19,960
+ for more live sessions.
+
+1221
+01:57:19,960 --> 01:57:23,920
+ So if you have more things to ask or whatever,
+
+1222
+01:57:23,920 --> 01:57:26,140
+ we can go to the Jitsi.
+
+1223
+01:57:26,140 --> 01:57:28,539
+ So yeah, I guess that's the show.
+
+1224
+01:57:28,539 --> 01:57:30,920
+ I think that's it, guys.
+
+1225
+01:57:31,500 --> 01:57:34,260
+ All right. Thanks so much, Mario, for this.
+
+1226
+01:57:34,520 --> 01:57:37,420
+ And yeah, if you want to continue to participate
+
+1227
+01:57:37,420 --> 01:57:41,819
+ and get some hands-on assistance from Mario,
+
+1228
+01:57:42,180 --> 01:57:43,640
+ head on into the Jitsi.
+
+1229
+01:57:44,439 --> 01:57:45,340
+ Thanks, everybody.
+
+1230
+01:57:46,460 --> 01:57:48,720
+ Yeah, thank you so much for making it
+
+1231
+01:57:48,720 --> 01:57:50,420
+ through the whole two hours with me.
+
+1232
+01:57:50,539 --> 01:57:51,199
+ I appreciate it.
+
+1233
+01:57:51,220 --> 01:57:52,779
+ And I hope you learned something.
+
+1234
+01:57:52,899 --> 01:57:53,979
+ I hope it wasn't too basic
+
+1235
+01:57:53,979 --> 01:57:57,800
+ and gave you some useful skills.
+
+1236
+01:57:58,539 --> 01:58:00,779
+ Maybe, yeah.
+
+1237
+01:58:01,500 --> 01:58:13,260
+ or we'll more agency see you guys thanks josh thanks everyone bye
+

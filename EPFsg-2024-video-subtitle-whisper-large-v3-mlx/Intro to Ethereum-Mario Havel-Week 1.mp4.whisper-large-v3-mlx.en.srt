@@ -1,0 +1,3840 @@
+1
+00:00:30,000 --> 00:00:50,939
+ Thank you.
+
+2
+00:01:00,000 --> 00:01:29,980
+ Thank you.
+
+3
+00:01:30,000 --> 00:01:40,000
+ ¶¶
+
+4
+00:01:40,000 --> 00:01:50,000
+ ¶¶
+
+5
+00:01:50,000 --> 00:02:19,000
+ ¶¶
+
+6
+00:02:19,000 --> 00:02:29,000
+ ¶¶
+
+7
+00:02:29,000 --> 00:02:39,000
+ ¶¶
+
+8
+00:02:39,000 --> 00:03:08,979
+ Thank you.
+
+9
+00:03:09,000 --> 00:03:38,979
+ Thank you.
+
+10
+00:03:39,000 --> 00:04:08,979
+ Thank you.
+
+11
+00:04:09,000 --> 00:04:38,980
+ Thank you.
+
+12
+00:04:39,000 --> 00:05:08,980
+ Thank you.
+
+13
+00:05:39,000 --> 00:06:08,980
+ Let's pray.
+
+14
+00:06:09,000 --> 00:06:38,980
+ Thank you.
+
+15
+00:06:39,000 --> 00:06:49,000
+ ¶¶
+
+16
+00:06:49,000 --> 00:06:59,000
+ ¶¶
+
+17
+00:06:59,000 --> 00:07:09,000
+ ¶¶
+
+18
+00:07:09,000 --> 00:07:38,000
+ ¶¶
+
+19
+00:07:38,000 --> 00:07:48,000
+ ¶¶
+
+20
+00:07:48,000 --> 00:07:58,000
+ ¶¶
+
+21
+00:07:58,000 --> 00:08:27,980
+ Thank you.
+
+22
+00:08:28,000 --> 00:08:56,740
+ Thank you.
+
+23
+00:08:58,000 --> 00:09:13,100
+ All right, welcome to the special edition of the Protocol Fellowship study group, the
+
+24
+00:09:13,100 --> 00:09:20,019
+ Redux version of the intro to Ethereum by Mario here.
+
+25
+00:09:22,440 --> 00:09:27,220
+ So I think, I don't know, Mario, do you want to do a little introduction?
+
+26
+00:09:27,220 --> 00:09:30,660
+ like we did to the last one or just get right into it?
+
+27
+00:09:32,340 --> 00:09:36,720
+ I think we can say a few words about the study group quickly
+
+28
+00:09:36,720 --> 00:09:39,259
+ for people who are watching the recording
+
+29
+00:09:39,259 --> 00:09:42,519
+ and then have a chance to catch the first one.
+
+30
+00:09:43,500 --> 00:09:47,360
+ Just to reiterate what we said in town hall, I guess.
+
+31
+00:09:50,220 --> 00:09:51,980
+ Yeah, welcome to the study group.
+
+32
+00:09:52,139 --> 00:09:54,460
+ Welcome to the Protocol Fellowship study group, everyone.
+
+33
+00:09:54,460 --> 00:10:03,800
+ Before we dive into the first talk, just to say, well, we are very happy to have you here.
+
+34
+00:10:03,900 --> 00:10:05,620
+ We are glad that you want to learn about Ethereum.
+
+35
+00:10:06,220 --> 00:10:12,960
+ We created this program based on our experience with Ethereum Protocol Fellowship,
+
+36
+00:10:13,060 --> 00:10:16,600
+ which is more about hands-on development.
+
+37
+00:10:16,980 --> 00:10:23,360
+ And as people are starting to work on Ethereum, contribute to the actual software parts of it,
+
+38
+00:10:23,360 --> 00:10:28,200
+ And we see that there is a big information gap, big education gap.
+
+39
+00:10:28,360 --> 00:10:35,039
+ It's a pretty steep learning curve, even if you are coming from a programming computer science background to understand the Ethereum context.
+
+40
+00:10:35,039 --> 00:10:45,580
+ So we created this program to bridge the gap, to provide some educational materials and also just help you navigate on a certain path.
+
+41
+00:10:45,919 --> 00:10:51,600
+ Like we still try to mimic this experience of a core developer, of somebody who is diving into the protocol.
+
+42
+00:10:51,600 --> 00:10:56,080
+ we don't provide all the resources because it's up to you what you are interested in
+
+43
+00:10:56,080 --> 00:11:01,840
+ and what you what you want to learn about um we uh we have some basic structure of the program
+
+44
+00:11:02,800 --> 00:11:10,720
+ uh for the first uh five weeks uh we will have uh one call a week one one talk a week uh starting
+
+45
+00:11:10,720 --> 00:11:16,879
+ with this general introduction to the protocol today uh then uh we will cover the execution
+
+46
+00:11:16,879 --> 00:11:22,399
+ layer, the consensus layer, testing and security, and finally research and roadmap overview.
+
+47
+00:11:23,120 --> 00:11:29,120
+ This is the first five weeks, and in the second half, in the other five weeks, we will have two
+
+48
+00:11:29,120 --> 00:11:35,360
+ calls a week divided into two tracks, which are development and research. So, there are
+
+49
+00:11:37,039 --> 00:11:43,440
+ two different domains, and you can choose one of those, or just switch between them, or just
+
+50
+00:11:43,440 --> 00:11:47,600
+ just follow both.
+
+51
+00:11:47,600 --> 00:11:50,340
+ And those will cover, on the development side,
+
+52
+00:11:50,340 --> 00:11:53,520
+ more deeper dive into the actual client code
+
+53
+00:11:53,520 --> 00:11:55,120
+ basis and specification.
+
+54
+00:11:55,120 --> 00:11:58,540
+ And we'll show you how you can actually participate
+
+55
+00:11:58,540 --> 00:11:59,420
+ as a programmer.
+
+56
+00:11:59,420 --> 00:12:01,340
+ On the research side, you will learn
+
+57
+00:12:01,340 --> 00:12:06,200
+ about the future of Ethereum, about the improvements being
+
+58
+00:12:06,200 --> 00:12:08,940
+ researched, developed right now.
+
+59
+00:12:08,940 --> 00:12:13,380
+ So yeah, so this is the overview of the program.
+
+60
+00:12:13,379 --> 00:12:15,980
+ And with all of this, we provide, with these presentations,
+
+61
+00:12:16,179 --> 00:12:17,299
+ we provide certain resources.
+
+62
+00:12:17,740 --> 00:12:23,879
+ But our goal is to inspire you and show you all of these various domains
+
+63
+00:12:23,879 --> 00:12:29,080
+ and give you some starting points so you can actually deep dive yourself.
+
+64
+00:12:29,960 --> 00:12:35,120
+ There is a wiki, epf.wiki website coming with this program,
+
+65
+00:12:35,279 --> 00:12:37,840
+ where, as you notice, this program is coordinated.
+
+66
+00:12:37,840 --> 00:12:40,480
+ We publish these calls there to give you some resources.
+
+67
+00:12:40,480 --> 00:12:53,879
+ But what we are hoping for is to create this wiki as an actual resource, actual knowledge base with resources gathered from all around the ecosystem.
+
+68
+00:12:54,159 --> 00:13:00,019
+ Because if you already started diving into some topics, you might notice that it's really scattered all around.
+
+69
+00:13:00,279 --> 00:13:04,860
+ There are various hackMDs, research posts, and papers, and so on.
+
+70
+00:13:04,860 --> 00:13:12,940
+ it's there is not like a single place to go for this hands-on um uh protocol topics and of course
+
+71
+00:13:12,940 --> 00:13:19,500
+ there are many great other wikis which we don't want to copy we just want to um have a context
+
+72
+00:13:19,500 --> 00:13:24,300
+ and links to the all available resources for somebody who is learning about protocol wants
+
+73
+00:13:24,300 --> 00:13:31,740
+ to become a protocol core developer so uh yeah feel free to contribute if you get uh interested
+
+74
+00:13:31,740 --> 00:13:38,060
+ in one of these topics that I mentioned today or we will learn about it in coming weeks,
+
+75
+00:13:38,060 --> 00:13:46,279
+ dive into it, go about it, Google about it, find more details on it, and contribute it
+
+76
+00:13:46,279 --> 00:13:49,139
+ back to the wiki.
+
+77
+00:13:49,139 --> 00:13:52,440
+ Yeah, that's overview of the program.
+
+78
+00:13:52,440 --> 00:13:56,560
+ Took five minutes, hope it's not too long.
+
+79
+00:13:56,560 --> 00:13:57,560
+ Yeah.
+
+80
+00:13:57,560 --> 00:14:00,220
+ Let's go through it.
+
+81
+00:14:00,220 --> 00:14:02,860
+ So what did it forgot Josh? Should it add something?
+
+82
+00:14:06,540 --> 00:14:15,580
+ No, I think that is pretty sufficient. Just want to reiterate that most of the conversation is
+
+83
+00:14:15,580 --> 00:14:19,980
+ going to be happening on our Discord server. So if you aren't a part of that, please join the
+
+84
+00:14:19,980 --> 00:14:26,700
+ Discord server. During these calls, we want to try to keep as much of the conversation to that server
+
+85
+00:14:26,700 --> 00:14:33,740
+ as possible. There is a thread in the study group channel, there will be one for each
+
+86
+00:14:33,740 --> 00:14:39,900
+ of these different sessions that we can keep the conversations and questions and commentary
+
+87
+00:14:39,900 --> 00:14:46,540
+ on that thread so that everything is in one sort of centralized place and we don't lose it to the
+
+88
+00:14:46,540 --> 00:14:55,980
+ chat in the streaming platform. Yeah, and outside of that, Mario and I are here to
+
+89
+00:14:56,700 --> 00:14:59,080
+ to assist you guys through this process.
+
+90
+00:14:59,080 --> 00:15:01,140
+ And so if you have questions or comments,
+
+91
+00:15:01,300 --> 00:15:04,259
+ please feel free to ping us in that server.
+
+92
+00:15:05,080 --> 00:15:09,379
+ But yeah, looking forward to this presentation from Mario.
+
+93
+00:15:09,500 --> 00:15:10,580
+ I've seen it a couple of times
+
+94
+00:15:10,580 --> 00:15:12,300
+ and it just gets better every time.
+
+95
+00:15:13,580 --> 00:15:15,680
+ Yeah, Josh seen it so many times.
+
+96
+00:15:15,740 --> 00:15:17,820
+ The next time it should be you doing it, man.
+
+97
+00:15:18,520 --> 00:15:19,000
+ Probably.
+
+98
+00:15:20,160 --> 00:15:20,920
+ Yeah, yeah.
+
+99
+00:15:20,920 --> 00:15:21,740
+ Thank you so much, Josh.
+
+100
+00:15:21,860 --> 00:15:24,040
+ And yeah, you can use the,
+
+101
+00:15:24,220 --> 00:15:26,480
+ please use the Discord thread as Josh said,
+
+102
+00:15:26,480 --> 00:15:31,920
+ because I might ask some question during the presentation and you should ask me questions,
+
+103
+00:15:31,920 --> 00:15:37,759
+ so feel free to drop them in there so you have it all in one place. Yeah, and I should share my
+
+104
+00:15:37,759 --> 00:15:52,159
+ screen and show my presentation. Oh it's here, okay. You know if you can see it all well,
+
+105
+00:15:52,159 --> 00:15:59,199
+ i suppose so i believe that this works better than the gcp4 um yeah again by the way if you
+
+106
+00:15:59,199 --> 00:16:06,480
+ are here after monday fiasco um so sorry about that uh the problem there was not a server uh
+
+107
+00:16:06,480 --> 00:16:12,319
+ it was not the software but the server uh because we just didn't scale the bandwidth and the cpu of
+
+108
+00:16:12,319 --> 00:16:19,279
+ the machine to so many people we are very thrilled to see uh so many people coming to this study
+
+109
+00:16:19,279 --> 00:16:26,159
+ group so uh yeah excited to have you guys and excited to dive into the protocol 101 with you
+
+110
+00:16:26,720 --> 00:16:35,839
+ so in this talk uh i will give you an overview of the ethereum protocol uh of its technical
+
+111
+00:16:35,839 --> 00:16:43,039
+ parts it's the design uh and uh the way it's developed uh the way we work on this with
+
+112
+00:16:43,039 --> 00:16:51,599
+ with uh uh colleagues across many protocol teams and uh but i believe that to understand uh
+
+113
+00:16:52,719 --> 00:16:57,599
+ the protocol development what is happening on ethereum now and the way it was developed the
+
+114
+00:16:57,599 --> 00:17:04,319
+ way it was designed you need to understand certain philosophy and uh fundamentals of it so uh i in
+
+115
+00:17:04,319 --> 00:17:08,879
+ the title you can see the prehistory because i want to talk also about the history about the way
+
+116
+00:17:08,880 --> 00:17:17,600
+ not just ethereum evolved but actually where it's coming from where um where uh these these values
+
+117
+00:17:17,600 --> 00:17:25,920
+ these uh these fundamentals uh uh have been have been created have been built um these ideas are
+
+118
+00:17:25,920 --> 00:17:34,240
+ not new uh they are uh going all the way back many many years so uh to uh to have good context and
+
+119
+00:17:34,240 --> 00:17:40,319
+ to be able to grasp what is really important in the ecosystem i would like to dive all the way
+
+120
+00:17:40,319 --> 00:17:48,079
+ back to like 60s to you starting with unix creation then free software movement and uh
+
+121
+00:17:48,960 --> 00:17:54,640
+ of course the uh the donos don of modern cryptography cypherpunk movement because
+
+122
+00:17:54,640 --> 00:18:01,200
+ i believe that uh all of this and much more of course had impact on ethereum design on what we
+
+123
+00:18:01,200 --> 00:18:05,920
+ how we use it here today and uh how we see the cryptocurrency landscape today
+
+124
+00:18:06,480 --> 00:18:13,680
+ so yeah let's let's start with that i guess let me just uh show you the presentation because my face
+
+125
+00:18:13,680 --> 00:18:20,319
+ yeah you don't need to see my face it's early morning here uh and yeah so let's start with unix
+
+126
+00:18:21,360 --> 00:18:28,160
+ uh for those who uh don't recall what unix is it's uh well it's basically two things uh
+
+127
+00:18:28,160 --> 00:18:37,440
+ first it's an operating system but it's also sort of a philosophy so uh unix has been developed in
+
+128
+00:18:38,080 --> 00:18:50,240
+ uh bell labs in this research institute uh since 60s 70s and it was created by uh richie and ken
+
+129
+00:18:50,240 --> 00:18:56,240
+ thompson uh if you recall this name then it's richie ken thompson they are creators of the
+
+130
+00:18:56,240 --> 00:19:05,680
+ c language uh and even before c the b language but today the c of course powers like everything
+
+131
+00:19:05,680 --> 00:19:10,960
+ around us like the the operating system you are using the browser you are using it's all
+
+132
+00:19:10,960 --> 00:19:19,440
+ uh deep down c it's the today considered low-level language which uh uh which became very the most
+
+133
+00:19:19,440 --> 00:19:26,720
+ important building parts of of the of the mother software and uh together with the c language uh
+
+134
+00:19:26,720 --> 00:19:32,960
+ these two people created the unix operating system not just them actually it was many many developers
+
+135
+00:19:32,960 --> 00:19:39,600
+ researchers in the bell labs uh working together but this is the unix was designed together with
+
+136
+00:19:39,600 --> 00:19:47,120
+ the c language uh in a certain way it uh uh when we talk about this unix philosophy uh what we
+
+137
+00:19:47,119 --> 00:19:53,919
+ mostly mean what is the uh major part of it uh is the modularity because the operating operating
+
+138
+00:19:53,919 --> 00:20:00,000
+ system is doesn't work in a way that it's a single program that tries to do everything
+
+139
+00:20:00,639 --> 00:20:07,759
+ including the kitchen sink as we say um but rather than that it's uh separate modules separate
+
+140
+00:20:07,759 --> 00:20:13,759
+ programs each of the program does what is best at and has a clean interface which can connect
+
+141
+00:20:13,759 --> 00:20:21,519
+ to others uh if you are linux user today if you are maybe mac user today uh this is what is what
+
+142
+00:20:21,519 --> 00:20:30,240
+ is uh the core of your system uh if you use piping uh taking output you can take output of one
+
+143
+00:20:30,240 --> 00:20:36,879
+ program and use directly as an input to the other this gives you very powerful tools it's really
+
+144
+00:20:36,879 --> 00:20:42,240
+ empowering and for the user perspective it's a strong tooling but for the developers perspective
+
+145
+00:20:42,240 --> 00:20:47,599
+ it's very practical and secure because having the system divided in these modules rather than
+
+146
+00:20:47,599 --> 00:20:53,519
+ just one program it gives you uh advantages so if there is an issue
+
+147
+00:20:53,519 --> 00:20:58,160
+ uh it's in one module and you can just fix that and it doesn't break rest of the system
+
+148
+00:21:00,160 --> 00:21:03,920
+ and you can like encapsulate the complexity in these certain modules
+
+149
+00:21:04,640 --> 00:21:10,559
+ the documentary link here uh you can you can find it in the wiki it's it's phenomenal i
+
+150
+00:21:10,559 --> 00:21:16,559
+ I really recommend watching it it's just amazing how it is all the 88th Archive documentaries are
+
+151
+00:21:16,559 --> 00:21:22,319
+ able to articulate some maybe complicated topics but really clean really elegantly
+
+152
+00:21:22,319 --> 00:21:27,960
+ explained and you can see the people there Ken Thompson it's typing into pipes in in
+
+153
+00:21:27,960 --> 00:21:32,700
+ the early Unix explaining how it works it's it's really beautiful to see and it's really
+
+154
+00:21:32,700 --> 00:21:41,039
+ it catches also the spirit of this environment in early 70s, I believe,
+
+155
+00:21:41,039 --> 00:21:50,100
+ because at the time, this institute, the Bell Labs, but also MIT or similar institutions
+
+156
+00:21:50,100 --> 00:21:55,680
+ all around the world, actually, the early programmers worked in a way that, well, they
+
+157
+00:21:55,680 --> 00:22:00,120
+ collaborated. Also, the way that UNIX is created with these different modules and different
+
+158
+00:22:00,119 --> 00:22:05,239
+ people working on their part, they need to talk to each other and collaborate.
+
+159
+00:22:05,519 --> 00:22:09,719
+ They had always, you know, open door to their office, they could meet and chat.
+
+160
+00:22:09,719 --> 00:22:17,099
+ And it was a strong collaborative environment where people who've been
+
+161
+00:22:17,099 --> 00:22:22,779
+ building basically like one big thing together, but ultimately it was everybody's
+
+162
+00:22:23,099 --> 00:22:25,279
+ doing their part, collaborating with each other.
+
+163
+00:22:25,279 --> 00:22:33,039
+ So I see a big part of this culture also reflect in the Ethereum development today on a much different scale.
+
+164
+00:22:33,039 --> 00:22:35,859
+ So yeah, I really recommend this documentary.
+
+165
+00:22:35,859 --> 00:22:44,819
+ It's like, it really well explains the Unix, it's a paradigm of computing that was invented more than 50 years ago,
+
+166
+00:22:44,819 --> 00:22:45,980
+ and we still use it today.
+
+167
+00:22:45,980 --> 00:22:47,700
+ It's the way that we use computers today.
+
+168
+00:22:47,700 --> 00:22:54,580
+ didn't get anything better like from from the teletype writer to the tty that you had you have
+
+169
+00:22:54,580 --> 00:23:03,140
+ in your shell today it's literally the same thing um okay and uh continuing with this story uh we go
+
+170
+00:23:03,140 --> 00:23:13,140
+ to 80s uh with uh the dawn of free software so uh as i mentioned like people early programmers they
+
+171
+00:23:13,140 --> 00:23:14,600
+ they collaborated.
+
+172
+00:23:15,240 --> 00:23:17,720
+ Their software was, well, open,
+
+173
+00:23:17,860 --> 00:23:21,480
+ but it was because, well, to be able to run the software,
+
+174
+00:23:21,480 --> 00:23:23,880
+ to compile it, to fix it for your machine,
+
+175
+00:23:24,040 --> 00:23:25,900
+ everybody just, you know, got the source code.
+
+176
+00:23:26,520 --> 00:23:30,640
+ And these early hackers, as they called themselves,
+
+177
+00:23:31,240 --> 00:23:35,480
+ this was their way of operating.
+
+178
+00:23:36,320 --> 00:23:37,700
+ This was the way they collaborated.
+
+179
+00:23:37,880 --> 00:23:39,840
+ But, of course, then in the 80s,
+
+180
+00:23:39,839 --> 00:23:46,939
+ The commercialization of software comes, the military comes, and they create proprietary
+
+181
+00:23:46,939 --> 00:23:47,939
+ software.
+
+182
+00:23:47,939 --> 00:23:57,459
+ They close the software from its users, and now this has certain consequences.
+
+183
+00:23:57,459 --> 00:24:05,500
+ Proprietary software is, well, that which limits your freedoms as a user.
+
+184
+00:24:05,500 --> 00:24:14,799
+ So now I would compare it to a house that you buy or have built,
+
+185
+00:24:14,799 --> 00:24:21,240
+ but to change something, to open windows, go to the basement and fix the heating, whatnot,
+
+186
+00:24:21,539 --> 00:24:24,500
+ you need to ask permission, you need to get keys from the basement,
+
+187
+00:24:24,700 --> 00:24:27,319
+ from the owner or the builder or so on.
+
+188
+00:24:27,740 --> 00:24:30,140
+ And the question is whether you really own the house.
+
+189
+00:24:30,140 --> 00:24:34,319
+ If you buy something like this and now you don't have permission to do what you want with it,
+
+190
+00:24:34,319 --> 00:24:41,480
+ But the creator is controlling it, whether it's really yours.
+
+191
+00:24:41,480 --> 00:24:43,519
+ Because this is what is happening with computers today.
+
+192
+00:24:43,659 --> 00:24:46,779
+ The computer you have in front of you, the phone you have in front of you,
+
+193
+00:24:47,079 --> 00:24:50,539
+ is a multi-purpose device, it's a general-purpose device,
+
+194
+00:24:50,679 --> 00:24:55,559
+ it's a calculator which can calculate any number of operations in any way.
+
+195
+00:24:55,919 --> 00:24:58,000
+ And you should be able to control it,
+
+196
+00:24:58,039 --> 00:25:00,700
+ you should be able to tell it what you want to do with this machine.
+
+197
+00:25:01,359 --> 00:25:04,240
+ However, if you run the proprietary software,
+
+198
+00:25:04,319 --> 00:25:07,559
+ it's the developers, the creators of the software
+
+199
+00:25:07,559 --> 00:25:09,500
+ controlling your machine
+
+200
+00:25:09,500 --> 00:25:11,099
+ and you don't really have an input.
+
+201
+00:25:11,299 --> 00:25:14,039
+ You don't even know what's happening.
+
+202
+00:25:14,179 --> 00:25:17,579
+ You don't know what the proprietary operating system is coming,
+
+203
+00:25:17,740 --> 00:25:20,379
+ whether it's calling home, sending your private data
+
+204
+00:25:20,379 --> 00:25:26,659
+ or calculating pi on infinite decimal numbers
+
+205
+00:25:26,659 --> 00:25:28,519
+ as I believe Windows Vista was doing
+
+206
+00:25:28,519 --> 00:25:29,819
+ or why it was so slow.
+
+207
+00:25:29,819 --> 00:25:38,419
+ Anyway, when we don't have the freedom, we are very limited.
+
+208
+00:25:38,579 --> 00:25:41,279
+ And this is what Richard Stallman realized.
+
+209
+00:25:41,779 --> 00:25:47,899
+ So Richard Stallman is often called the last hacker of MIT because he dedicated his life to this.
+
+210
+00:25:47,960 --> 00:25:51,939
+ He's now in his 70s, and all his life he only used free software.
+
+211
+00:25:51,940 --> 00:26:00,640
+ He dedicated his life to keeping up this original hacker culture of being able to share the software.
+
+212
+00:26:01,039 --> 00:26:06,960
+ In September 1983, he started the GNU project and the free software movement,
+
+213
+00:26:07,920 --> 00:26:11,820
+ which defined the four basic freedoms of software,
+
+214
+00:26:12,240 --> 00:26:17,900
+ the ability to run it any way you want, to study the source code, to modify it and redistribute it.
+
+215
+00:26:19,180 --> 00:26:21,500
+ So he gave freedom to users.
+
+216
+00:26:21,940 --> 00:26:26,019
+ And he's been advocating based on this all his life.
+
+217
+00:26:27,220 --> 00:26:31,640
+ The project that he started, the GNU project, might sound familiar to you.
+
+218
+00:26:32,019 --> 00:26:34,940
+ If you are using Linux, you might see GNU slash Linux,
+
+219
+00:26:35,080 --> 00:26:36,400
+ because it's the operating system.
+
+220
+00:26:36,900 --> 00:26:41,299
+ The goal of GNU was to recreate a Unix experience,
+
+221
+00:26:41,700 --> 00:26:43,259
+ but in fully free software,
+
+222
+00:26:43,420 --> 00:26:47,680
+ because even though that people somewhat openly collaborated on Unix,
+
+223
+00:26:47,900 --> 00:26:49,720
+ it wasn't truly free.
+
+224
+00:26:49,720 --> 00:26:57,000
+ The GNU Project created licenses. If you go to GitHub, if you look for some of your favorite
+
+225
+00:26:57,000 --> 00:27:02,319
+ programs there, you might see that it's licensed under GPL or the GNU General Public License,
+
+226
+00:27:02,319 --> 00:27:09,900
+ which was created by Stallman, to give programmers a simple way how to license their program
+
+227
+00:27:09,900 --> 00:27:18,200
+ as a free software. And GNU Project created many core utilities. Maybe if you learned
+
+228
+00:27:18,200 --> 00:27:25,480
+ c you used gcc the gno compiler collection which is probably the most used um c compiler
+
+229
+00:27:27,080 --> 00:27:33,880
+ these days um and uh many of these core utilities is what we call uh shell the shell of the
+
+230
+00:27:33,880 --> 00:27:38,519
+ operating system but the core of the operating system was a big big task which was taking a
+
+231
+00:27:38,519 --> 00:27:46,920
+ long time until an early 90s um linus thorvald's release uh the linux uh as a kernel of an
+
+232
+00:27:46,920 --> 00:27:53,400
+ operating system under the gpl license and this could be coupled with the gnu shell creating the
+
+233
+00:27:53,400 --> 00:27:59,800
+ gnu slash linux operating system you use today so all of this was was really started by by storm
+
+234
+00:27:59,800 --> 00:28:06,440
+ and i really really much recommend uh this talk from from tedx geneva where he really nicely
+
+235
+00:28:06,440 --> 00:28:13,800
+ explains it uh puts it to context why it's important for software to be free and in ethereum
+
+236
+00:28:13,799 --> 00:28:19,480
+ in all cryptocurrencies this is fundamental because the the the whole point of ethereum
+
+237
+00:28:19,480 --> 00:28:26,680
+ is to give freedom to users to be transparent to be trustless and uh to do this we need to know
+
+238
+00:28:26,680 --> 00:28:32,200
+ what's happening there uh when i run the ethereum software uh i need to be aware that it's doing
+
+239
+00:28:32,200 --> 00:28:39,639
+ exactly what it's supposed to do it it adheres to the to the um specification and uh to what i
+
+240
+00:28:39,640 --> 00:28:47,000
+ agree are the rules of Ethereum network. Then in 90s, there is the open source movement coming.
+
+241
+00:28:47,000 --> 00:28:52,600
+ Now you might notice that until now I only talk about free software, but open source is a different
+
+242
+00:28:52,600 --> 00:28:59,640
+ part of it. The open source was created by some people from the free software community who
+
+243
+00:28:59,640 --> 00:29:04,520
+ didn't like the branding, let's say, because free software kind of sounds like a free beer.
+
+244
+00:29:04,519 --> 00:29:11,799
+ it means Libre it means like you know free man free speech but it's not really good
+
+245
+00:29:11,799 --> 00:29:17,480
+ word if you want to do business with it to you know give away free software so the open source
+
+246
+00:29:17,480 --> 00:29:25,319
+ was kind of a rebranding with also it's fundamental set it's it's it's values written out
+
+247
+00:29:25,319 --> 00:29:32,519
+ but the the open source movement talks more about the pragmatic side of it more about you know it's
+
+248
+00:29:32,519 --> 00:29:37,559
+ it's good to be open because you can be more audited, have more security, you can bring
+
+249
+00:29:37,559 --> 00:29:39,519
+ more contributors and so on.
+
+250
+00:29:39,519 --> 00:29:44,900
+ So it's more like this business pragmatic approach, which is okay, but it omits it,
+
+251
+00:29:44,900 --> 00:29:47,639
+ it forgets the importance of the freedom there.
+
+252
+00:29:47,639 --> 00:29:51,440
+ The whole point of this thing was to give the freedom to users.
+
+253
+00:29:51,440 --> 00:29:57,379
+ So we say free and open source software or FOSS, that's where you see this acronym.
+
+254
+00:29:57,379 --> 00:30:01,519
+ So for Ethereum, I believe all of these parts are important to be free and open source software
+
+255
+00:30:01,519 --> 00:30:06,879
+ enable collaboration and give freedom to users okay i've been i should i should go on it's a
+
+256
+00:30:06,879 --> 00:30:15,680
+ few minutes there um yeah um next up important important invention in 1976 important part uh
+
+257
+00:30:16,559 --> 00:30:25,599
+ uh the new directions in cryptography this paper by defian hellman uh created a new paradigm in the
+
+258
+00:30:25,599 --> 00:30:33,679
+ modern cryptography uh basically uh if yeah it's it's kind of basics for most of the people here i
+
+259
+00:30:33,679 --> 00:30:38,719
+ guess but uh this is the creation of the asymmetric cryptography or what we also call public key
+
+260
+00:30:38,719 --> 00:30:46,799
+ cryptography or key pairs because before that uh before before this paper uh the encryption
+
+261
+00:30:46,799 --> 00:30:57,599
+ was done only in a one way symmetric way so uh since um uh since the um uh i don't know caesar
+
+262
+00:30:57,599 --> 00:31:03,919
+ since the since since uh thousands of years ago people uh encrypted messages in a way that
+
+263
+00:31:03,919 --> 00:31:10,159
+ i take a message and i somehow scramble the the words i change the change the letters according
+
+264
+00:31:10,160 --> 00:31:17,200
+ to some key according to some rules uh and if i pass this to the other party uh i need to give him
+
+265
+00:31:18,160 --> 00:31:23,920
+ the ciphertext but also the rules the key how to decrypt it uh so we have a single key and single
+
+266
+00:31:23,920 --> 00:31:30,320
+ encrypted text but in in with assamu decryptography we have we have a very strong tool which enables
+
+267
+00:31:30,320 --> 00:31:37,440
+ us to use one key we call it public key to to encrypt something and it's corresponding private
+
+268
+00:31:37,440 --> 00:31:44,720
+ key which is only held uh by the by its owner uh to decrypt it only the private key can can can use
+
+269
+00:31:44,720 --> 00:31:49,759
+ a decryption but anybody can use the public key to encrypt a message this means that i can have
+
+270
+00:31:49,759 --> 00:31:56,080
+ this public key on my business card in my in my website and anybody can send me an encrypted email
+
+271
+00:31:56,080 --> 00:32:01,120
+ this was the dawn of encrypted emails uh mostly the implementation of pgp
+
+272
+00:32:01,119 --> 00:32:08,879
+ um and of course if uh this rings any bell uh this is what all the cryptocurrencies use if you ever
+
+273
+00:32:08,879 --> 00:32:15,039
+ used ethereum if you ever used bitcoin you used public key or some derivation of a public public
+
+274
+00:32:15,039 --> 00:32:23,519
+ key uh as an uh as an address and the private key is what let you spend because of another unique
+
+275
+00:32:23,519 --> 00:32:30,799
+ feature of this key pair cryptography uh which is digital signatures uh digital signatures are
+
+276
+00:32:30,799 --> 00:32:38,879
+ mathematical proof uh which work in a way that uh uh with the private key we sign data we can sign
+
+277
+00:32:38,879 --> 00:32:45,039
+ any piece of data it can be terabyte file it can be a simple message uh we sign this data
+
+278
+00:32:45,919 --> 00:32:53,440
+ and the signature is some uh mathematical proof which can be verified uh against the public key so
+
+279
+00:32:53,440 --> 00:33:00,319
+ anybody who is seeing this signature and has your public key can verify that only the owner of the
+
+280
+00:33:00,319 --> 00:33:05,759
+ private key could produce this signature this is the way as the transactions are done in interior
+
+281
+00:33:05,759 --> 00:33:10,399
+ when i send a transaction i create a proof that i'm owner of this address and i'm signing the
+
+282
+00:33:10,399 --> 00:33:16,480
+ message that i want this amount of funds to be transferred here so um to another publicly to
+
+283
+00:33:16,480 --> 00:33:24,159
+ another address right um and uh yeah this today we we take this for granted it's everywhere if you
+
+284
+00:33:24,160 --> 00:33:31,440
+ are connected using TLS, HTTPS in your browser here. That's end-to-end encryption using exactly
+
+285
+00:33:31,440 --> 00:33:37,920
+ this technique. When you are using Signal or WhatsApp it's using some form of this
+
+286
+00:33:37,920 --> 00:33:44,480
+ cryptography. So it's really everywhere today but that wasn't really true in the 70s and 80s
+
+287
+00:33:44,480 --> 00:33:51,440
+ when with the design of encrypted email with BGP, pretty good privacy tooling,
+
+288
+00:33:51,440 --> 00:33:57,440
+ This was considered dangerous, it was considered a weapon.
+
+289
+00:33:57,440 --> 00:34:13,440
+ So, the thing is that before the computers and internet spreading to houses,
+
+290
+00:34:13,440 --> 00:34:19,440
+ you know, to civilians all over the place it was mostly used really just by military.
+
+291
+00:34:19,440 --> 00:34:25,840
+ military. And now anybody can encrypt, anybody can achieve their digital privacy. And governments
+
+292
+00:34:25,840 --> 00:34:29,760
+ didn't, I don't want to say they didn't like it, they didn't have framework, they just didn't
+
+293
+00:34:29,760 --> 00:34:36,240
+ understand it, it was something completely new. And they considered cryptography a military arsenal,
+
+294
+00:34:36,400 --> 00:34:42,360
+ a weapon which cannot be used by civilians, it has to be regulated, it cannot be exported.
+
+295
+00:34:42,360 --> 00:34:51,460
+ it sorry many of these early cryptographers get into trouble because their open source free
+
+296
+00:34:51,460 --> 00:35:00,460
+ software cryptography being being uh um uh exported so for example uh phil zimmerman the
+
+297
+00:35:00,460 --> 00:35:09,680
+ creator of pgp uh uh was under threat uh that he's going to be uh that he's going to go on trial for
+
+298
+00:35:09,679 --> 00:35:15,339
+ treason or something, because he created this email encryption, which is just mathematics
+
+299
+00:35:15,339 --> 00:35:18,679
+ programmed in a software, that's it.
+
+300
+00:35:19,239 --> 00:35:28,219
+ And what he did famously, he created a book published by MIT Press, which contained the
+
+301
+00:35:28,219 --> 00:35:33,460
+ whole source code, including make files of the PGP version, like 2.7 or something.
+
+302
+00:35:33,940 --> 00:35:36,319
+ And then they could export this book.
+
+303
+00:35:36,320 --> 00:35:40,620
+ and the US doesn't have any regulation against exporting books.
+
+304
+00:35:40,800 --> 00:35:44,080
+ So now he protects himself,
+
+305
+00:35:44,080 --> 00:35:46,200
+ but we also can see that it's sort of a free speech
+
+306
+00:35:46,200 --> 00:35:49,160
+ to just talk about the rules of mathematics
+
+307
+00:35:49,160 --> 00:35:51,800
+ and write them in a language of a software
+
+308
+00:35:51,800 --> 00:35:53,700
+ or literally the programming language,
+
+309
+00:35:53,880 --> 00:35:55,120
+ just a form of language, right?
+
+310
+00:35:55,519 --> 00:35:59,200
+ So there was this community of people
+
+311
+00:35:59,200 --> 00:36:00,720
+ who've been doing these things,
+
+312
+00:36:00,820 --> 00:36:02,820
+ building the software, advocating based on it.
+
+313
+00:36:02,820 --> 00:36:07,340
+ this very popular movement called cypherpunks.
+
+314
+00:36:08,360 --> 00:36:11,300
+ Here on this picture, looking kind of scared with the mask,
+
+315
+00:36:11,380 --> 00:36:12,660
+ but we can unmask them.
+
+316
+00:36:13,920 --> 00:36:16,019
+ The cypherpunks were many different people
+
+317
+00:36:16,019 --> 00:36:21,240
+ from different academia, from business,
+
+318
+00:36:21,620 --> 00:36:23,519
+ computer scientists, programmers,
+
+319
+00:36:23,519 --> 00:36:31,760
+ or just researchers who've been building these tools.
+
+320
+00:36:31,760 --> 00:36:36,720
+ they started a cypherpunk mailing list which is a famous place where many of these tools
+
+321
+00:36:36,720 --> 00:36:40,800
+ were announced like ssh was announced there i believe bitcoin was announced there
+
+322
+00:36:41,840 --> 00:36:49,920
+ on the right here uh on the on the very right is um uh gilmore um who've been
+
+323
+00:36:52,240 --> 00:36:58,880
+ who've been uh the founder of electronic frontier foundation uh eff very important organization until
+
+324
+00:36:58,880 --> 00:37:05,599
+ until today. In the middle, Eric Hughes, the author of the Cypherpunk Manifesto, he actually
+
+325
+00:37:06,440 --> 00:37:13,099
+ wrote down these principles that the cypherpunks believed in, in a manifesto which
+
+326
+00:37:13,099 --> 00:37:21,440
+ excerpt of it is here on the slide, where he talks about that part that we build some distributed,
+
+327
+00:37:21,440 --> 00:37:28,760
+ open free software, which cannot be, which can't be, um, somehow
+
+328
+00:37:28,760 --> 00:37:34,639
+ forbidden, forgotten, because it's really, uh, uh, uh, uh,
+
+329
+00:37:34,639 --> 00:37:38,059
+ because it's free and it's, it's, uh, just form of a form of a
+
+330
+00:37:38,059 --> 00:37:42,260
+ speech form of, uh, um, uh, explanation of mathematics, for
+
+331
+00:37:42,260 --> 00:37:45,780
+ example, uh, uh, all the famously, they produced, uh,
+
+332
+00:37:45,800 --> 00:37:49,340
+ t-shirts with the cryptography code on it. So like, you know,
+
+333
+00:37:49,340 --> 00:37:55,500
+ I have illegal words on my t-shirt. This is illegal mathematical notation here.
+
+334
+00:37:57,420 --> 00:38:01,980
+ So yeah, I really recommend getting inspired by the Cypherpunk Manifesto.
+
+335
+00:38:01,980 --> 00:38:04,300
+ On the left here is Timothy C. May who
+
+336
+00:38:05,980 --> 00:38:11,420
+ was, I think, chief scientist at Intel. He has some interesting inventions there, but in this
+
+337
+00:38:11,420 --> 00:38:18,300
+ context, he, as one of the founders of the Cypherpunk Male English, Cypherpunk movement,
+
+338
+00:38:18,300 --> 00:38:27,019
+ he um he takes this idea a bit further he creates manifesto of cryptanarchy where he uh talks about
+
+339
+00:38:27,019 --> 00:38:33,660
+ uh about these tools not just as like we are able to create them and and and have privacy and
+
+340
+00:38:33,660 --> 00:38:39,580
+ protect ourselves but we can actually create a digital realm this digital world where we can
+
+341
+00:38:39,579 --> 00:38:47,920
+ can uh be completely free protected we can uh have uh digital money anonymous uh
+
+342
+00:38:48,699 --> 00:38:58,599
+ anonymous credentials uh our own reputation uh uh systems our own markets uh Etc so like uh these
+
+343
+00:38:58,599 --> 00:39:06,519
+ were the people already envisioning uh digital currencies based on cryptography uh in in well
+
+344
+00:39:06,519 --> 00:39:10,380
+ early 90s and in late 80s, we had this idea already.
+
+345
+00:39:10,679 --> 00:39:14,579
+ David Chow famously created a DigiCache, one of the cypherpunks as well.
+
+346
+00:39:15,320 --> 00:39:18,559
+ So we see these attempts and we see
+
+347
+00:39:18,559 --> 00:39:22,460
+ these ideas pointing to some
+
+348
+00:39:22,460 --> 00:39:25,320
+ uncensorable free digital platforms.
+
+349
+00:39:27,460 --> 00:39:29,579
+ Yeah, and with all of this,
+
+350
+00:39:30,780 --> 00:39:34,219
+ the question that arises, like, how Ethereum fits
+
+351
+00:39:34,219 --> 00:39:39,759
+ in all of this uh this is of course like my somewhat subjective point of view and i don't
+
+352
+00:39:39,759 --> 00:39:45,279
+ want to i want to influence your opinion and i want to ask you guys like uh i kind of described
+
+353
+00:39:45,279 --> 00:39:50,699
+ in this view on history how i see ethereum where i see it's coming from and what are its values and
+
+354
+00:39:50,699 --> 00:39:56,000
+ uh in the last part kind of what it is but i want to ask you what do you think the ethereum is can
+
+355
+00:39:56,000 --> 00:40:03,739
+ you describe ethereum in one word or one sentence write it to the discord chat i'm going to check it
+
+356
+00:40:04,219 --> 00:40:10,059
+ uh in the in the thread
+
+357
+00:40:25,339 --> 00:40:28,859
+ world computer cool cool
+
+358
+00:40:28,860 --> 00:40:35,440
+ Yeah, John Gilmore, a superlative employee. Yeah, yeah. Good. That's his credits.
+
+359
+00:40:36,720 --> 00:40:41,800
+ Non-stoppable, lovely computer. Oh, I love that. Yeah, we have many different opinions.
+
+360
+00:40:42,059 --> 00:40:47,940
+ Decentralized web, decentralized computer, trustless trust, world computer as well, and trustlessness.
+
+361
+00:40:48,360 --> 00:40:50,519
+ State machine. Oh, I love that. Cool, cool.
+
+362
+00:40:51,280 --> 00:40:56,700
+ Well, we have many different opinions, but I got to say, all of you are correct, of course.
+
+363
+00:40:56,699 --> 00:40:59,859
+ I think there is no single way
+
+364
+00:40:59,859 --> 00:41:01,699
+ we could define Ethereum
+
+365
+00:41:01,699 --> 00:41:03,859
+ because everybody
+
+366
+00:41:03,859 --> 00:41:06,059
+ sees a different part of it
+
+367
+00:41:06,059 --> 00:41:07,799
+ oh new internet it's also a cool one
+
+368
+00:41:07,799 --> 00:41:09,379
+ I believe all of this is right
+
+369
+00:41:09,379 --> 00:41:11,539
+ I believe that
+
+370
+00:41:11,539 --> 00:41:14,179
+ Ethereum is this digital
+
+371
+00:41:14,179 --> 00:41:14,919
+ realm that
+
+372
+00:41:14,919 --> 00:41:18,139
+ anybody can find their place
+
+373
+00:41:18,139 --> 00:41:19,159
+ in anybody can
+
+374
+00:41:19,159 --> 00:41:21,960
+ see it from different
+
+375
+00:41:21,960 --> 00:41:23,559
+ perspective and
+
+376
+00:41:23,559 --> 00:41:26,199
+ you know depends on what's your
+
+377
+00:41:26,199 --> 00:41:30,359
+ motivation where you're coming from what you're interested in what you're working on you have
+
+378
+00:41:30,359 --> 00:41:36,919
+ a certain tunnel vision of like what the ethereum is for you how do you envision it so this uh this
+
+379
+00:41:36,919 --> 00:41:42,359
+ little elephant here is what we are talking about and uh in this talk of course i need to focus on
+
+380
+00:41:42,359 --> 00:41:49,960
+ the whole elephant on the on the technical part of the protocol itself um i uh need to talk more
+
+381
+00:41:49,960 --> 00:42:01,880
+ about like hands-on what is it's ethereum um and uh yeah uh so because what we have all in
+
+382
+00:42:01,880 --> 00:42:07,800
+ common even if we have like different views on it uh we want to achieve these goals we want to
+
+383
+00:42:07,800 --> 00:42:14,599
+ achieve these visions and that means that we need to uh use and improve ethereum to
+
+384
+00:42:14,599 --> 00:42:21,719
+ uh to be able to get there and to answer like what is ethereum uh yeah in there there are many simple
+
+385
+00:42:21,719 --> 00:42:28,119
+ terms uh another description of what is ethereum of course you could point people to white paper
+
+386
+00:42:28,119 --> 00:42:33,799
+ if somebody asks what it here it's a description of what the theorem is uh from 10 years ago now
+
+387
+00:42:33,799 --> 00:42:40,199
+ uh and here in uh italic revealing it on bitcoin miami lineup for that conference changed quite a
+
+388
+00:42:40,199 --> 00:42:46,159
+ a lot. Yeah, so it's one way.
+
+389
+00:42:46,919 --> 00:42:51,960
+ The white paper is more of a general high level
+
+390
+00:42:51,960 --> 00:42:55,219
+ description. It's more of an idea of how this
+
+391
+00:42:55,219 --> 00:42:56,639
+ network should work.
+
+392
+00:42:56,679 --> 00:42:59,579
+ But we can take it further to yellow paper, which
+
+393
+00:42:59,579 --> 00:43:02,759
+ is the actual formal specification of
+
+394
+00:43:02,759 --> 00:43:09,319
+ Ethereum. It's written by Gavin Wood, one of the
+
+395
+00:43:09,320 --> 00:43:15,160
+ founders of Ethereum, also creator of the original C++ implementation, who actually
+
+396
+00:43:15,720 --> 00:43:22,039
+ sit down to write down how it's supposed to work, not just in theory, but practically
+
+397
+00:43:24,280 --> 00:43:31,880
+ using mathematics, using formal expressions, how it's how Ethereum is supposed to be
+
+398
+00:43:31,880 --> 00:43:38,519
+ implemented according to the specification. So that's one way, and you see here that it's
+
+399
+00:43:38,519 --> 00:43:44,880
+ it's Berlin version the current version is Paris so it's already uh out of date but uh it's always
+
+400
+00:43:44,880 --> 00:43:49,860
+ because ethereum is changing this is just like the original it was just like some original vision
+
+401
+00:43:49,860 --> 00:43:54,960
+ uh but it's not the only way where only place where it's pretty much specified it's not just
+
+402
+00:43:54,960 --> 00:44:00,840
+ Vitalik or Gavin or Rubin or these founders who define what ethereum is but it's the community so
+
+403
+00:44:00,840 --> 00:44:06,420
+ using this process of ethereum Improvement proposals anybody can propose a change to
+
+404
+00:44:06,420 --> 00:44:15,960
+ Ethereum improvement or or um uh change they believe is uh is um important to it um the
+
+405
+00:44:15,960 --> 00:44:22,200
+ EAP process is inspired by the bib process from Bitcoin Improvement proposals started by Amir
+
+406
+00:44:22,200 --> 00:44:29,159
+ Taki uh which is inspired by the similar processing Python and it's generally a community way of uh
+
+407
+00:44:29,159 --> 00:44:36,319
+ working on this big distributed project.
+
+408
+00:44:36,319 --> 00:44:41,500
+ But having yellow paper plus EIPs and you are supposed to implement something based
+
+409
+00:44:41,500 --> 00:44:43,119
+ on it, it's kind of a mess, right?
+
+410
+00:44:43,119 --> 00:44:44,719
+ Like all of these different documents.
+
+411
+00:44:44,719 --> 00:44:49,359
+ So we actually have a proper specification in these two repositories.
+
+412
+00:44:49,359 --> 00:44:52,619
+ That's the execution specs and consensus specs.
+
+413
+00:44:52,619 --> 00:44:59,339
+ with all the APIs here, that's what really defines all of the Ethereum and the way it's
+
+414
+00:44:59,339 --> 00:45:02,199
+ supposed to work.
+
+415
+00:45:02,199 --> 00:45:08,739
+ It's written in Python, and for some people, people like me, it's hard for me to read the
+
+416
+00:45:08,739 --> 00:45:15,199
+ mathematical rotations in yellow paper, and in Python it actually is even more readable.
+
+417
+00:45:15,199 --> 00:45:19,400
+ And of course you can generate tests based on this, you can test your implementation
+
+418
+00:45:19,400 --> 00:45:27,720
+ against the specification so it's a very practical and very very useful way that we specify the
+
+419
+00:45:27,720 --> 00:45:33,559
+ theorem here and of course if you are not programmer or if you just want to learn about
+
+420
+00:45:33,559 --> 00:45:39,400
+ the way it works it's pretty heavy to read the code i would recommend reading annotated
+
+421
+00:45:39,400 --> 00:45:44,200
+ specification which comes with explanation uh how it works why it works this way
+
+422
+00:45:44,199 --> 00:45:46,579
+ way, and it gives you a context.
+
+423
+00:45:46,579 --> 00:45:55,539
+ So for example, the one from Ben Eddington here, the E2 book.
+
+424
+00:45:55,539 --> 00:46:03,000
+ So there are versions of this specification, different versions of Ethereum.
+
+425
+00:46:03,000 --> 00:46:09,019
+ We also call it hard forks, the Ethereum upgrades, which have been happening well now for 10
+
+426
+00:46:09,019 --> 00:46:18,059
+ years and um starting with the frontier homestead many years ago uh uh now um you can you can see
+
+427
+00:46:18,059 --> 00:46:24,139
+ all the history all of the upgrades in uh in the ethereum org uh where you see what eips what
+
+428
+00:46:24,139 --> 00:46:33,099
+ upgrades have been coupled in each of these each of these upgrades um however um even though ethereum
+
+429
+00:46:33,099 --> 00:46:41,259
+ changes a lot is developed uh heavily over these well 10 years now it's it's always adheres to
+
+430
+00:46:41,259 --> 00:46:48,940
+ certain principles there are basic tenets that uh ethereum design must follow it was outlined
+
+431
+00:46:48,940 --> 00:46:54,860
+ in this now non-existing website uh archived there it's really nice explained there i recommend
+
+432
+00:46:54,860 --> 00:47:02,860
+ diving into that uh but the point is that these developers need to have certain values uh need to
+
+433
+00:47:03,099 --> 00:47:09,239
+ need to follow some rules, some design decisions,
+
+434
+00:47:09,819 --> 00:47:15,719
+ and we cannot take trade-offs which would disprove this.
+
+435
+00:47:16,019 --> 00:47:18,920
+ So, yeah, simplicity, universality, modularity,
+
+436
+00:47:19,139 --> 00:47:23,619
+ non-discrimination, agility, these are the basic principles
+
+437
+00:47:23,619 --> 00:47:28,059
+ in a way that Ethereum needs to be as simple as possible
+
+438
+00:47:28,059 --> 00:47:35,579
+ in a way that needs to be possible to somewhat easily implemented it needs to be you know
+
+439
+00:47:35,579 --> 00:47:42,619
+ re-implementable if you compare it to like i don't know linux kernel like i cannot imagine
+
+440
+00:47:42,619 --> 00:47:51,420
+ somebody just like writing another version of that um universality so uh ethereum also like
+
+441
+00:47:51,420 --> 00:47:57,659
+ the generalization and no features in the later part, the universality and
+
+442
+00:47:57,659 --> 00:48:05,820
+ non-generalization means that Ethereum is not discriminating, it's not
+
+443
+00:48:05,820 --> 00:48:11,579
+ biased towards certain features. Ethereum is not supposed to do a single thing but rather be a
+
+444
+00:48:11,579 --> 00:48:20,860
+ generalized platform for whatever people want to use. This means that the core protocol does not,
+
+445
+00:48:20,860 --> 00:48:30,160
+ it cannot include features which would define some user behavior or something more high-level.
+
+446
+00:48:30,160 --> 00:48:38,900
+ For example, there cannot be token standard implemented in the core protocol.
+
+447
+00:48:38,900 --> 00:48:48,960
+ With the ERCs, people create it on top of Ethereum, but it's not within the protocol
+
+448
+00:48:48,960 --> 00:48:50,019
+ itself.
+
+449
+00:48:50,019 --> 00:48:54,320
+ The modularity I already talked about, and you will see it as I show you the protocol later.
+
+450
+00:48:55,300 --> 00:49:01,940
+ But what we follow here in Ethereum is that also with the encapsulated complexity mentioned here,
+
+451
+00:49:02,300 --> 00:49:08,860
+ we encapsulate different parts of Ethereum, different parts of the network,
+
+452
+00:49:09,179 --> 00:49:13,900
+ and they talk to each other within some relatively simple API.
+
+453
+00:49:14,219 --> 00:49:16,539
+ So we are able to debug it.
+
+454
+00:49:16,539 --> 00:49:21,259
+ we are able to have more security if only one of these parts fail.
+
+455
+00:49:22,860 --> 00:49:27,880
+ And yeah, one thing I want to elaborate is the non-risk version
+
+456
+00:49:27,880 --> 00:49:30,759
+ that as the Ethereum changes,
+
+457
+00:49:30,759 --> 00:49:38,460
+ the changes are conditioned by what benefit they bring.
+
+458
+00:49:38,779 --> 00:49:43,739
+ So the developers are willing to take certain risk for certain benefit, right?
+
+459
+00:49:43,739 --> 00:49:49,439
+ if there is a small change which bring us a huge benefits it's definitely worth doing it
+
+460
+00:49:50,039 --> 00:50:01,439
+ so that's uh it is a principle and I'm sorry guys it's too early for me um yeah now I want to ask
+
+461
+00:50:01,439 --> 00:50:06,299
+ you when I talked about the different modules different parts of it here I've always mentioned
+
+462
+00:50:06,299 --> 00:50:13,019
+ like parts of the protocol and whatnot what would you consider is the heart of ethereum the the the
+
+463
+00:50:13,019 --> 00:50:18,900
+ important part we should start from let's build it here in together and
+
+464
+00:50:18,900 --> 00:50:25,780
+ let's let's see what would you consider is the is the brain the heart of it
+
+465
+00:50:25,780 --> 00:50:37,780
+ clearly yeah right right right into the group okay it's the EVM consensus people
+
+466
+00:50:37,780 --> 00:50:38,440
+ Oh, that's nice.
+
+467
+00:50:42,140 --> 00:50:43,260
+ So what else?
+
+468
+00:50:44,760 --> 00:50:46,580
+ Feel free to write.
+
+469
+00:50:46,740 --> 00:50:47,080
+ Philosophy.
+
+470
+00:50:47,440 --> 00:50:48,840
+ Okay, I'm talking more about it.
+
+471
+00:50:48,960 --> 00:50:50,780
+ It's really nice to see the people or philosophy.
+
+472
+00:50:50,980 --> 00:50:53,720
+ I mean, technically, the modular part.
+
+473
+00:50:54,360 --> 00:50:55,560
+ Okay, the data structures.
+
+474
+00:50:56,120 --> 00:51:00,660
+ Yeah, now you don't see anything because I'm waiting for you to reveal it.
+
+475
+00:51:01,320 --> 00:51:02,880
+ The peer-to-peer network.
+
+476
+00:51:03,080 --> 00:51:03,280
+ Okay.
+
+477
+00:51:04,300 --> 00:51:05,100
+ Miracle tree.
+
+478
+00:51:05,880 --> 00:51:06,260
+ Okay, guys.
+
+479
+00:51:06,260 --> 00:51:13,780
+ uh again i believe that i believe that you are right uh i believe that all of you are rights
+
+480
+00:51:13,780 --> 00:51:21,380
+ because these are all important part of ethereum uh i wanted to start from um from um from somewhere
+
+481
+00:51:21,380 --> 00:51:28,580
+ so when i ask about the heart of ethereum i wanted to start with evm uh that's like uh often often
+
+482
+00:51:28,580 --> 00:51:34,820
+ mentioned important part of ethereum and it's it's pretty much uh all of the core um very
+
+483
+00:51:34,820 --> 00:51:45,220
+ it's interior specific features so what is cvm it's well it's a basically a virtualized cpu
+
+484
+00:51:45,220 --> 00:51:53,620
+ uh now if you are using your computer here you either have x86 or arm uh based cpu with like
+
+485
+00:51:54,580 --> 00:51:59,620
+ instruction set specific to the architecture it it's a hardware which implements some instruction
+
+486
+00:51:59,619 --> 00:52:06,659
+ sets some basic assembly some basic instructions which are able to do logic arithmetic and work
+
+487
+00:52:06,659 --> 00:52:15,460
+ with data to uh to well do anything like your computer can do anything or everything um uh to
+
+488
+00:52:15,460 --> 00:52:21,859
+ be a general purpose machine so that's it's on the hardware level but in in software in in programming
+
+489
+00:52:21,859 --> 00:52:27,539
+ in computer science what we often do is virtualize these instruction sets uh we create virtual
+
+490
+00:52:27,539 --> 00:52:33,619
+ machines for example if you're a developer again maybe you worked with uh jvm the java virtual
+
+491
+00:52:33,619 --> 00:52:41,300
+ machine uh these machines are created so that if you write you know if you write a certain code it
+
+492
+00:52:41,300 --> 00:52:47,139
+ might do it might behave somewhat differently on different machines from different manufacturers
+
+493
+00:52:47,139 --> 00:52:52,659
+ which can understand some instructions slightly differently let's say uh famously said like it
+
+494
+00:52:52,659 --> 00:52:54,119
+ it works on my machine.
+
+495
+00:52:54,119 --> 00:52:56,960
+ So now if you want to replicate this experience,
+
+496
+00:52:56,960 --> 00:52:57,940
+ it works on my machine,
+
+497
+00:52:57,940 --> 00:52:59,599
+ I create a virtual environment,
+
+498
+00:52:59,599 --> 00:53:02,420
+ which is always the same on every machine,
+
+499
+00:53:02,420 --> 00:53:04,420
+ because if I execute something
+
+500
+00:53:04,420 --> 00:53:06,339
+ in this virtual environment,
+
+501
+00:53:06,339 --> 00:53:09,079
+ it will always end up in the same result.
+
+502
+00:53:09,079 --> 00:53:10,659
+ That's what EVM is.
+
+503
+00:53:10,659 --> 00:53:12,079
+ It's a virtual machine,
+
+504
+00:53:12,079 --> 00:53:15,079
+ which has its own instruction set
+
+505
+00:53:15,079 --> 00:53:17,359
+ with like 30-ish something of codes.
+
+506
+00:53:17,360 --> 00:53:24,519
+ Um, uh, and these, these can, these are Turing complete, they can do anything.
+
+507
+00:53:24,519 --> 00:53:37,240
+ Um, the, uh, the, the, the, the EVM is, is the actual execution engine, the environment where, uh, the Ethereum programs are, are, are run.
+
+508
+00:53:37,239 --> 00:53:51,019
+ And now if all of the computers, every computer running Ethereum has the same virtual machine or the same implementation, but it's implemented through the same specification can be implemented now in different languages and different ways.
+
+509
+00:53:51,459 --> 00:54:01,519
+ And if it's still follow the specification, the result of the execution, the result of the run of the program within this virtual machine will always be the same.
+
+510
+00:54:01,519 --> 00:54:04,759
+ It means that all of these Ethereum clients can agree on something.
+
+511
+00:54:04,760 --> 00:54:11,920
+ it. I would also mention here the sandwich complexity that I have in previous slide.
+
+512
+00:54:11,920 --> 00:54:19,060
+ That's how it works. So you might probably have heard about Solidity or Viper or some
+
+513
+00:54:19,060 --> 00:54:24,640
+ other of these high-level languages, which are readable and auditable. And then we have
+
+514
+00:54:24,640 --> 00:54:33,240
+ very complex compiler, which is a huge part and it's a beast. Very complex. And on the
+
+515
+00:54:33,239 --> 00:54:38,439
+ bottom, we have the EVM bytecode, the instructions for this virtual machine, which again, there is
+
+516
+00:54:38,439 --> 00:54:46,159
+ not so many of them, and it's somehow readable, somehow formally verifiable, what the actual
+
+517
+00:54:46,159 --> 00:54:51,479
+ virtual machine does. So when we have like these two non-complex pieces, with the complexity in
+
+518
+00:54:51,479 --> 00:54:57,719
+ the middle, it creates a complexity sandwich, with the EVM on the bottom. But for EVM to work,
+
+519
+00:54:57,719 --> 00:55:06,199
+ it needs some data it needs to input and output some data so for that we have um uh the state um
+
+520
+00:55:07,159 --> 00:55:14,279
+ so the data in ethereum uh the data structure database which holds all of the uh all of the
+
+521
+00:55:14,279 --> 00:55:20,119
+ aggressors its balances its current state uh the current state of the network of all of the
+
+522
+00:55:20,119 --> 00:55:29,319
+ contracts all of the uh of all um the the the code and the data of all of the contracts right
+
+523
+00:55:29,319 --> 00:55:35,079
+ uh this is what we call the state i know many of you are anarchists you don't like state in ethereum
+
+524
+00:55:35,079 --> 00:55:41,639
+ we have state because ethereum is a state machine uh state machine is a principle from uh from a
+
+525
+00:55:41,639 --> 00:55:46,599
+ computer science where we have again a machine which can result in different states and different
+
+526
+00:55:46,599 --> 00:55:55,159
+ inputs um so so evm processes uh outputs some data updates the state uh creates we call it
+
+527
+00:55:55,159 --> 00:56:02,519
+ state transition based on some input which is transactions so transactions uh are these
+
+528
+00:56:02,519 --> 00:56:08,039
+ instructions on how the state transition is supposed to happen and if it's correct if it
+
+529
+00:56:08,039 --> 00:56:13,559
+ if it works within the rules of the evm the network it uh creates a successful state
+
+530
+00:56:13,559 --> 00:56:20,920
+ transition we update the state of ethereum um if you are familiar with bitcoin design if you
+
+531
+00:56:20,920 --> 00:56:28,599
+ uh or similar utxo based uh cryptocurrencies this is where the major difference is ethereum has a
+
+532
+00:56:28,599 --> 00:56:33,880
+ single global state basically one database which has the current state the current value of
+
+533
+00:56:33,880 --> 00:56:41,480
+ everything uh in bitcoin or other currencies we have like utxos we have uh uh just unspended
+
+534
+00:56:41,480 --> 00:56:50,599
+ outputs of each transaction and uh not a single single uh single state so so this is this is uh
+
+535
+00:56:51,480 --> 00:56:57,159
+ what is one of the design decisions in ethereum one way it works this state is a big merkle tree
+
+536
+00:56:57,159 --> 00:57:04,920
+ america patricia tree and uh the transactions are um are stored in a different tree but update this
+
+537
+00:57:04,920 --> 00:57:12,200
+ thing uh they are uh the transactions of course come from mempool which is um the pool of all
+
+538
+00:57:12,200 --> 00:57:19,880
+ the transactions coming to the network and those are uh those are uh gossiped over peer-to-peer
+
+539
+00:57:19,880 --> 00:57:27,480
+ network um so the peer-to-peer is um the communication interface with other clients
+
+540
+00:57:27,480 --> 00:57:34,760
+ uh with other nodes in the network which can broadcast transactions so your
+
+541
+00:57:35,960 --> 00:57:43,000
+ uh uh your transactions uh go through um this particular network and each client which receives
+
+542
+00:57:43,000 --> 00:57:49,719
+ it verifies whether it's correct and and then if it's correct uh again broadcast it to all of
+
+543
+00:57:49,719 --> 00:57:55,159
+ these peers so um even if the network is big and decentralized that is uh the transaction
+
+544
+00:57:55,159 --> 00:58:02,440
+ spreads to all of the network and uh this all of this much more but let's say this uh
+
+545
+00:58:02,440 --> 00:58:10,119
+ is the execution layer this would be called the execution part of ethereum um if you are using
+
+546
+00:58:10,119 --> 00:58:19,239
+ some uh ethereum wallet or if you are using some dap some uh you know distal application um you are
+
+547
+00:58:19,239 --> 00:58:26,679
+ talking to this to the execution layer of ethereum using some standardized uh api it's a rpc json rpc
+
+548
+00:58:26,679 --> 00:58:34,919
+ api uh which can read the current data if you want to know you know how much eat is on this account
+
+549
+00:58:34,919 --> 00:58:40,439
+ you need to read the state so you read the data from the execution layer or if you want to write
+
+550
+00:58:40,439 --> 00:58:46,119
+ if you want to send a transaction your wallet signs it and then sends it to this client to
+
+551
+00:58:46,119 --> 00:58:51,480
+ broadcast it to the network over the uh the client receives it verifies it and sends it to the peer
+
+552
+00:58:51,480 --> 00:58:58,920
+ to peer layer so this is the execution part um now another api that uh the client implements
+
+553
+00:58:58,920 --> 00:59:08,679
+ it's engine api uh which talks to uh the consensus part of it so uh how does this execution know what
+
+554
+00:59:08,679 --> 00:59:15,000
+ is correct what is the head of the chain what all of the other uh all of the other nodes agree on
+
+555
+00:59:15,000 --> 00:59:22,679
+ uh in the i put a link to the uh bft the uh presenting fault tolerance problem
+
+556
+00:59:22,679 --> 00:59:29,719
+ in um in the in the docs and this is where it comes like uh we need to agree on what is the
+
+557
+00:59:29,719 --> 00:59:35,800
+ current state of the whole equilibrium not just as i see this one single piece of the network
+
+558
+00:59:35,800 --> 00:59:42,199
+ and uh this is uh dictated to the execution client or this execution layer by a fork choice
+
+559
+00:59:42,199 --> 00:59:51,719
+ which is of course managed by the consensus algorithm of Ethereum, the LMD Ghost, or the
+
+560
+00:59:51,719 --> 00:59:58,779
+ latest message-driven, greediest, heaviest observed sub-tree, which is very jargon-heavy
+
+561
+00:59:58,779 --> 01:00:11,319
+ way to explain this fork-trace rule and this consensus mechanism, which based on number
+
+562
+01:00:11,320 --> 01:00:18,600
+ of uh the most number of other stations the fork or the the tree chain with the with the most
+
+563
+01:00:18,600 --> 01:00:24,760
+ boats the most stations is the one which is considered canonical and um uh then it's dictated
+
+564
+01:00:24,760 --> 01:00:30,519
+ by fork choice to the to the client uh and this together with its own peer-to-peer network and
+
+565
+01:00:30,519 --> 01:00:34,840
+ some other parts with the current hard work we have the blobs with the random which dictates
+
+566
+01:00:34,840 --> 01:00:42,120
+ the randomness uh all of this this is the consensus layer so uh ethereum right now is these two
+
+567
+01:00:42,120 --> 01:00:50,680
+ layers connected to each other and um over the engine api and it's uh uh and uh yeah and the
+
+568
+01:00:50,680 --> 01:00:57,000
+ consensus also has its own api you can also communicate with this client again to learn
+
+569
+01:00:57,000 --> 01:01:02,440
+ now about state but not the theorem itself not about like accounts and transactions but about
+
+570
+01:01:02,440 --> 01:01:08,760
+ the consensus state how many validators are there how many uh what validators do what are the
+
+571
+01:01:08,760 --> 01:01:16,760
+ stations what is the finalized uh head of the chain etc we we ask uh from the beacon api of
+
+572
+01:01:16,760 --> 01:01:22,039
+ the consensus player uh if you are running a validator if you are participating in the consensus
+
+573
+01:01:22,039 --> 01:01:28,519
+ uh your beacon node or this this consensus layer verifies uh the latest block sends it to the
+
+574
+01:01:28,519 --> 01:01:36,039
+ execution layer to verify uh uh the integrity of the block and then uh if it's considered valid
+
+575
+01:01:36,039 --> 01:01:41,480
+ the validator uses its keys to to sign an attestation okay i believe that this network
+
+576
+01:01:41,480 --> 01:01:47,639
+ uh this this uh block is correct i attest to it and sends this data the signature uh to the
+
+577
+01:01:47,639 --> 01:01:53,159
+ consensus layer which where it's broadcasted over its own peer-to-peer network so the consensus
+
+578
+01:01:53,159 --> 01:02:00,199
+ has its own peer-to-peer it's a different from from execution layer this so this whole thing
+
+579
+01:02:00,199 --> 01:02:04,679
+ is like simplified overview of different parts of the protocol again from what i said before
+
+580
+01:02:04,679 --> 01:02:11,319
+ you can really like each of these boxes are huge rabbit holes you can dive into each of these and
+
+581
+01:02:12,119 --> 01:02:20,119
+ and become an expert of uh on uh literally every single box here um and to make it a bit more
+
+582
+01:02:20,119 --> 01:02:24,359
+ high level it will abstract so these are implemented in clients in the execution engine
+
+583
+01:02:24,359 --> 01:02:29,960
+ the execution client or the execution layer client and the beacon node or the consensus client and
+
+584
+01:02:29,960 --> 01:02:34,679
+ the process layer client different words for those uh each of those have their own peer-to-peer
+
+585
+01:02:34,679 --> 01:02:39,480
+ network on the right side the execution clients are only talking to the execution clients and
+
+586
+01:02:39,480 --> 01:02:43,960
+ the bq nodes are only looking for bk notes they are they have they have their own communication
+
+587
+01:02:43,960 --> 01:02:52,039
+ protocols it's dev peer-to-peer for the execution and a little peer-to-peer for the for the beacon
+
+588
+01:02:53,079 --> 01:03:00,039
+ and they have their own APIs which provide different different data and they need to be
+
+589
+01:03:00,039 --> 01:03:07,320
+ connected over the engine API so yeah this is this is this is like high-level overview of
+
+590
+01:03:07,320 --> 01:03:13,400
+ of uh what constitutes an ethereum node or ethereum client these two parts connected
+
+591
+01:03:13,400 --> 01:03:21,720
+ uh but of course this is somewhat new uh uh this is uh this is something that that happened after
+
+592
+01:03:21,720 --> 01:03:29,559
+ the merge um so to show you the the peer-to-peer network uh this is how ethereum looks like right
+
+593
+01:03:29,559 --> 01:03:34,600
+ just to give it's again something basic but just to give you an idea of on the left what is
+
+594
+01:03:34,599 --> 01:03:39,079
+ centralized if you're watching the stream right now or if you're watching the recording your
+
+595
+01:03:39,079 --> 01:03:47,159
+ computers or are uh connecting to a single server which is sending data to all of you guys um but
+
+596
+01:03:47,159 --> 01:03:52,920
+ interior it's similar to more something on the right uh maybe in the chart everybody's connected
+
+597
+01:03:52,920 --> 01:03:58,839
+ with everybody which is not really true uh you are connected to some nodes those are connected
+
+598
+01:03:58,840 --> 01:04:05,400
+ to some etc you can be connected to everyone but uh each node can be connected to tens or hundreds
+
+599
+01:04:05,400 --> 01:04:11,640
+ of different peers uh we call them peers because they are on the same level this like and this
+
+600
+01:04:11,640 --> 01:04:18,440
+ ethereum network doesn't have any any master uh no masters no single points of failures as we said
+
+601
+01:04:18,440 --> 01:04:25,720
+ so uh it has uh it has all all nodes on the on the same level everybody's peer and uh can talk
+
+602
+01:04:25,719 --> 01:04:32,919
+ to each other and can connect so so your so the client discovers the nodes around him connects
+
+603
+01:04:32,919 --> 01:04:40,119
+ to them and exchanges the gossip data over the particular layer and this way so uh yeah and to
+
+604
+01:04:40,119 --> 01:04:46,119
+ show you how the block looks like with uh this consensus execution client connected uh this wasn't
+
+605
+01:04:46,119 --> 01:04:50,519
+ the true before the merge on the left here you see the old ethereum before the merge the proof
+
+606
+01:04:50,519 --> 01:04:57,639
+ of work ethereum uh where the beacon chain and the ethereum were basically separate things they were
+
+607
+01:04:57,639 --> 01:05:04,039
+ separate networks the beacon chain was uh looking into the ethereum for the deposit contract for the
+
+608
+01:05:04,039 --> 01:05:11,320
+ validated data there but uh the ethereum itself didn't learn didn't use uh the big engine in any
+
+609
+01:05:11,320 --> 01:05:20,519
+ way in the middle this is the moment of the merge where the uh the the block from the the execution
+
+610
+01:05:20,519 --> 01:05:25,880
+ layer becomes part of the block of the beacon chain so in the execution layer we have the uh
+
+611
+01:05:25,880 --> 01:05:31,080
+ we have the transaction data you see all the transactions from zero to n and they're they're
+
+612
+01:05:31,080 --> 01:05:37,000
+ in the merkle tree and their root is in the in the in the header um and the hash of this header is
+
+613
+01:05:37,000 --> 01:05:46,119
+ the hash of the whole block, right? And the beacon chain is now, you see it holds all the
+
+614
+01:05:46,119 --> 01:05:54,280
+ attestations, attestation zero to n, so the signatures which are confirming that this
+
+615
+01:05:55,159 --> 01:06:03,559
+ execution layer block, this transaction data, this block was verified, then this deposits and exits
+
+616
+01:06:03,559 --> 01:06:12,119
+ from the from the validators um and yeah this is this is how the on the right uh yeah the the the
+
+617
+01:06:12,119 --> 01:06:18,039
+ the uh arrows are pointed to the left it might now i realize it might look a bit uh uh confusing but
+
+618
+01:06:18,039 --> 01:06:23,400
+ it's of course this is the blockchain right the in the blockchain we hash the previous we include
+
+619
+01:06:23,400 --> 01:06:29,320
+ the hash of the previous block so this block references the previous one uh so on the right
+
+620
+01:06:29,320 --> 01:06:33,880
+ here you see how the how the blocks look like today with the execution data with transaction
+
+621
+01:06:33,880 --> 01:06:42,120
+ data within the within the beacon chain and now yeah so this this this little thing this beacon
+
+622
+01:06:42,120 --> 01:06:49,720
+ and execution node like all of these ports implemented in these clients are actually
+
+623
+01:06:49,720 --> 01:06:55,400
+ written in some languages as actual programs that you can run right that's the whole point so this
+
+624
+01:06:55,400 --> 01:07:01,240
+ is where it comes together this is how you use it theory so if you want to become an ethereum user
+
+625
+01:07:01,240 --> 01:07:08,440
+ which means use ethereum privately trustlessly securely you run some of these clients which
+
+626
+01:07:08,440 --> 01:07:14,840
+ verify the the data in the network and let you interact with it let you connect to um
+
+627
+01:07:15,800 --> 01:07:21,400
+ to the actual ethereum network to send transactions to read its data without entering parties this is
+
+628
+01:07:21,400 --> 01:07:22,599
+ This is actually Ethereum.
+
+629
+01:07:23,059 --> 01:07:28,039
+ So the implementation of the execution layer of what was the bottom part in my chart
+
+630
+01:07:28,039 --> 01:07:33,360
+ is GoEthereum in Go, never mind in .NET C Sharp,
+
+631
+01:07:34,539 --> 01:07:35,420
+ Bessu in Java,
+
+632
+01:07:36,220 --> 01:07:40,059
+ Ergon in Go was originally stored as a turbo-gat,
+
+633
+01:07:40,200 --> 01:07:41,700
+ as a fork of GoEthereum,
+
+634
+01:07:41,700 --> 01:07:45,180
+ but later developed its very unique architecture,
+
+635
+01:07:46,220 --> 01:07:49,240
+ but still keeps some part of the Go code base,
+
+636
+01:07:49,960 --> 01:07:51,139
+ or it's still in Go,
+
+637
+01:07:51,400 --> 01:07:57,880
+ while a red uh is written in rust and it's basically using the arrogant architecture silkworm
+
+638
+01:07:57,880 --> 01:08:04,760
+ is uh uh rest it's an alpha red like these four on the top are production ready those are running
+
+639
+01:08:04,760 --> 01:08:11,400
+ the network the network consists of instances of the computers running the software in the first
+
+640
+01:08:11,400 --> 01:08:17,399
+ row in the second row the red is uh in alpha there are some people who are running it but it's like
+
+641
+01:08:17,399 --> 01:08:22,279
+ you know not recommended for production use silkworm is still in development it's also
+
+642
+01:08:22,279 --> 01:08:27,559
+ implementation of the array architecture in more modular way and then there is ethereum js which
+
+643
+01:08:27,559 --> 01:08:35,319
+ is in javascript typescript and uh this one is more of an experimental client for um used for
+
+644
+01:08:35,319 --> 01:08:42,199
+ testing used used for verifying the specs etc and then on the consensus layer side the upper part
+
+645
+01:08:42,199 --> 01:08:48,039
+ which drives the uh the the consensus the validators uh these are all production or
+
+646
+01:08:48,039 --> 01:08:55,239
+ declines which are again running the network um prism and go lighthouse and rust teco in java from
+
+647
+01:08:56,519 --> 01:09:02,599
+ uh nimbus and neiman roadster in typescript uh there are other clients which are not
+
+648
+01:09:02,599 --> 01:09:06,279
+ productionary which are in development and there is one proprietary client
+
+649
+01:09:06,279 --> 01:09:11,559
+ brain in the data convention and there is a client in elixir developed by lambda class which is also
+
+650
+01:09:11,560 --> 01:09:16,840
+ like in production already but uh there are others in development as well but these are those that
+
+651
+01:09:16,840 --> 01:09:22,200
+ are there are ready you can actually go to their repositories learn about them because as i said
+
+652
+01:09:22,200 --> 01:09:27,240
+ before all this is free and open source so you can actually look into the client code
+
+653
+01:09:27,240 --> 01:09:31,720
+ bases to make sure that you know they follow the specs you can contribute there
+
+654
+01:09:33,640 --> 01:09:39,320
+ and to ensure the security stability of the network uh this all of these clients need to
+
+655
+01:09:39,319 --> 01:09:45,399
+ be tested need to be heavily tested because well the network is out there running like huge amounts
+
+656
+01:09:45,399 --> 01:09:51,960
+ of money and people's funds and whatnot so we cannot just you know uh take it recklessly and
+
+657
+01:09:53,479 --> 01:09:59,799
+ uh we heavily test these clients the client teams the developers and other test
+
+658
+01:09:59,799 --> 01:10:06,840
+ teams which are dedicated just to testing and security are uh always especially before
+
+659
+01:10:06,840 --> 01:10:12,440
+ these hard-fought upgrades are heavily testing the clients. So first of all, there is the
+
+660
+01:10:12,440 --> 01:10:19,720
+ Ethereum test, which is just a basic state-transition test, like basic sets of tests
+
+661
+01:10:19,720 --> 01:10:27,079
+ that the client should pass. This is coming from the original Ethereum design with
+
+662
+01:10:27,079 --> 01:10:31,480
+ only one layer, not the consensus layer, so it tests just the execution layer,
+
+663
+01:10:31,479 --> 01:10:41,019
+ Similar to execution spec tests, which are based on the specs.
+
+664
+01:10:41,559 --> 01:10:47,899
+ Very interesting, very important is Hive, the one in the middle, lower middle.
+
+665
+01:10:48,419 --> 01:10:53,859
+ Hive is an end-to-end harness tool.
+
+666
+01:10:54,179 --> 01:10:56,719
+ It's like a huge tool which lets you do everything.
+
+667
+01:10:56,720 --> 01:11:04,640
+ it you can spin networks with different clients in it and run them together through different tests
+
+668
+01:11:04,640 --> 01:11:11,280
+ uh there are many simulations that you can run using it and uh it creates real complex and uh
+
+669
+01:11:11,280 --> 01:11:19,520
+ strong uh testing tool uh kurtosis is uh also lets you like create a local test net with different
+
+670
+01:11:19,520 --> 01:11:25,760
+ clients and then there is fuzzing which is like uh heavily testing different edge cases
+
+671
+01:11:26,720 --> 01:11:30,440
+ Mario's doing the fuzzing of different parts of the clients,
+
+672
+01:11:30,440 --> 01:11:33,760
+ and then other testing, like benchmarking, stress testing,
+
+673
+01:11:33,760 --> 01:11:37,920
+ making sure that what if we deploy a huge amount of
+
+674
+01:11:37,920 --> 01:11:40,600
+ validators or a huge amount of this or that,
+
+675
+01:11:40,600 --> 01:11:42,820
+ does it go belly up, does it survive?
+
+676
+01:11:42,820 --> 01:11:44,480
+ What if it create huge block,
+
+677
+01:11:44,480 --> 01:11:46,600
+ can the client process it?
+
+678
+01:11:46,600 --> 01:11:49,140
+ Testing the actual performance,
+
+679
+01:11:49,140 --> 01:11:50,720
+ the features of the client.
+
+680
+01:11:50,720 --> 01:11:53,760
+ Shadow forks are very important testing parts.
+
+681
+01:11:53,760 --> 01:12:03,560
+ These are like kind of the DevOps kind of like more high-level testing in a way that, like, we take part of the network.
+
+682
+01:12:03,560 --> 01:12:16,400
+ We take, like, 20 clients which are synced to mainnet, and then we put them through a hard fork as they will go in production.
+
+683
+01:12:16,640 --> 01:12:22,800
+ But they just create, like, their own fork network.
+
+684
+01:12:22,800 --> 01:12:24,680
+ and we see what happened.
+
+685
+01:12:25,079 --> 01:12:26,860
+ We see in this case on the left,
+
+686
+01:12:26,960 --> 01:12:30,820
+ you see that like two or four of these clients
+
+687
+01:12:30,820 --> 01:12:38,100
+ or client pairs went down during the shadow fork.
+
+688
+01:12:39,960 --> 01:12:42,400
+ And yeah, client test, of course,
+
+689
+01:12:42,560 --> 01:12:46,340
+ like clients are testing their clients themselves
+
+690
+01:12:46,340 --> 01:12:49,340
+ and with like continuous integration,
+
+691
+01:12:49,340 --> 01:12:55,840
+ they can test every PR, every commit to the code.
+
+692
+01:12:56,739 --> 01:13:00,119
+ So to reiterate on what I described here,
+
+693
+01:13:00,440 --> 01:13:02,520
+ how Ethereum was created and how,
+
+694
+01:13:02,900 --> 01:13:06,360
+ maybe everything that was outside of Ethereum,
+
+695
+01:13:06,500 --> 01:13:08,440
+ but how these processes in Ethereum work
+
+696
+01:13:08,440 --> 01:13:11,460
+ is that we start with some ideas, some general description,
+
+697
+01:13:11,760 --> 01:13:15,800
+ which then needs to be researched for its feasibility,
+
+698
+01:13:16,159 --> 01:13:18,340
+ for the effectivity.
+
+699
+01:13:18,340 --> 01:13:25,960
+ we figure out how to make this idea actually real in some doable practical way uh based on that it's
+
+700
+01:13:25,960 --> 01:13:32,619
+ specified uh the specification are implemented in software the software gets tested and then
+
+701
+01:13:32,619 --> 01:13:40,840
+ it gets rejected because nobody likes it uh it's really a thing that um uh some of course like many
+
+702
+01:13:40,840 --> 01:13:46,000
+ of these things are adopted running on mainnet but it's it's it's really a thing in if you are
+
+703
+01:13:46,000 --> 01:13:51,119
+ if you are ethereum researcher developer you can spend literally years like i know people who spend
+
+704
+01:13:51,119 --> 01:13:57,100
+ like three years or more working on a single thing single upgrade for ethereum which is really good
+
+705
+01:13:57,100 --> 01:14:01,960
+ and useful but it has some edge cases or something so it's still not adopted it's still being rejected
+
+706
+01:14:01,960 --> 01:14:09,460
+ and you have to come back you come back from well any point on this chart you might it rejected and
+
+707
+01:14:09,460 --> 01:14:15,279
+ go back to researching your idea you might fail at testing and you need to fix your implementation or
+
+708
+01:14:15,279 --> 01:14:20,800
+ the implementation doesn't follow the specs properly and you need to you need to um you need
+
+709
+01:14:20,800 --> 01:14:30,000
+ to fix that so yeah it's like a very uh uh iterative cycle like it's always always one uh two
+
+710
+01:14:30,000 --> 01:14:36,000
+ step forward one step back let's say uh and it's not it's not easy so now you might ask like okay
+
+711
+01:14:36,000 --> 01:14:42,800
+ how this whole process with all of these different developers all these different teams uh works uh
+
+712
+01:14:42,800 --> 01:14:45,820
+ So I showed you like here, the different clients, right?
+
+713
+01:14:45,820 --> 01:14:48,340
+ There are five, there are, I'm sorry,
+
+714
+01:14:48,680 --> 01:14:52,039
+ seven clients on this page, five clients here.
+
+715
+01:14:52,100 --> 01:14:54,039
+ I mentioned some others which are being developed.
+
+716
+01:14:54,460 --> 01:14:58,119
+ So we have these testing teams, client teams, research teams.
+
+717
+01:14:58,260 --> 01:15:01,279
+ Altogether, it's basically like 20 different teams,
+
+718
+01:15:01,600 --> 01:15:02,739
+ around 20 different teams,
+
+719
+01:15:02,860 --> 01:15:06,220
+ and like maybe 200 plus people from these different teams
+
+720
+01:15:06,220 --> 01:15:09,340
+ and independently working on Ethereum.
+
+721
+01:15:09,560 --> 01:15:11,520
+ So the question is how they all coordinate,
+
+722
+01:15:11,520 --> 01:15:16,780
+ How it's possible that we ship, how it's possible that we agree on what Ethereum is supposed to look like.
+
+723
+01:15:17,220 --> 01:15:21,180
+ So first, there are many parts to it.
+
+724
+01:15:21,600 --> 01:15:22,720
+ I'm going to start from the bottom.
+
+725
+01:15:22,960 --> 01:15:27,220
+ ETH research, it's a forum where people post their ideas.
+
+726
+01:15:27,420 --> 01:15:32,920
+ People post something coming in these first two categories.
+
+727
+01:15:32,920 --> 01:15:40,899
+ So, when I see some problem or some missing feature in Ethereum or something that should
+
+728
+01:15:40,899 --> 01:15:49,039
+ be changed, tweaked, I can post it on the research where I show outcome of my research,
+
+729
+01:15:49,039 --> 01:15:55,380
+ my ideas and the way that I tested it, the way that I proposed it, and it gets heavily
+
+730
+01:15:55,380 --> 01:15:58,079
+ discussed there.
+
+731
+01:15:58,079 --> 01:16:04,399
+ These community proposals are then formalized as EIPs that I mentioned before.
+
+732
+01:16:04,399 --> 01:16:13,340
+ The EIPs have their discussion under EAT magicians forums, another forum which is not discussing
+
+733
+01:16:13,340 --> 01:16:18,380
+ it like general research ideas, yes, like EAT research, but specific EIPs and the way
+
+734
+01:16:18,380 --> 01:16:22,640
+ they are specified.
+
+735
+01:16:22,640 --> 01:16:26,680
+ And then like EIP, it's a process about the EIPs themselves.
+
+736
+01:16:26,680 --> 01:16:31,200
+ So we also have like community, you know, editing the EIPs and making sure that, you
+
+737
+01:16:31,200 --> 01:16:33,980
+ know, they make sense, they are formally correct.
+
+738
+01:16:33,980 --> 01:16:37,420
+ This is done mostly by CAD Heredity Community.
+
+739
+01:16:37,420 --> 01:16:46,900
+ They also have this peep at EIP series with videos giving a space to like EIP champions
+
+740
+01:16:46,900 --> 01:16:50,780
+ to talk about their proposals.
+
+741
+01:16:50,779 --> 01:16:56,059
+ So these are the forum discussions, the public discussions, a lot of discussion, a lot of
+
+742
+01:16:56,059 --> 01:16:57,939
+ coordination is happening in R&D Discord.
+
+743
+01:16:57,939 --> 01:17:06,359
+ The R&D Discord is a server similar to our EPS one where people from many different teams
+
+744
+01:17:06,359 --> 01:17:10,399
+ participate in discussion and updates and so on.
+
+745
+01:17:10,399 --> 01:17:18,319
+ Here on the R&D Discord is also where you can see a release of the dev calls.
+
+746
+01:17:18,319 --> 01:17:30,239
+ So now there are different calls of developers, which are regular and maybe the most important part of this to follow if you want to learn about what's happening now in Ethereum.
+
+747
+01:17:30,359 --> 01:17:34,420
+ So there are what we call ACD calls, the all-core devs.
+
+748
+01:17:34,779 --> 01:17:40,139
+ And these are focused on either execution layer or consensus layer, always on Thursday, like today.
+
+749
+01:17:40,140 --> 01:17:55,660
+ So later today, there will be a call with maybe 50 people, representatives of different teams, discussing the current changes, the actions before the hard work.
+
+750
+01:17:55,660 --> 01:18:02,039
+ So right now, the biggest topic is planning of the upcoming DENEP upgrade.
+
+751
+01:18:02,700 --> 01:18:06,220
+ And I believe today was the deadline for the client releases.
+
+752
+01:18:06,220 --> 01:18:20,960
+ So if somebody didn't, so on these calls, they agreed, like, okay, this is a reasonable deadline for us of each of these teams to ship this feature.
+
+753
+01:18:21,440 --> 01:18:26,039
+ So they talk and they are able to coordinate using this.
+
+754
+01:18:26,039 --> 01:18:32,279
+ and then there are like not all core devs but like specific uh feature uh like calls dedicated
+
+755
+01:18:32,279 --> 01:18:39,720
+ to implementers of specific feature like we saw with 4844 or when we test uh test nets
+
+756
+01:18:39,720 --> 01:18:46,359
+ or missing t there uh when uh it was garily deprecated and and uh we were deploying the test
+
+757
+01:18:46,359 --> 01:18:53,079
+ nets or eof was a feature which was discussed like this uh there's also wallet devs coordination call
+
+758
+01:18:53,079 --> 01:18:57,079
+ for like standards for wallets which is a bit outside of the protocol but worth mentioning
+
+759
+01:18:57,640 --> 01:19:03,479
+ uh so yeah uh these are these are the regular calls it's it's worth following and it's it's
+
+760
+01:19:03,479 --> 01:19:08,840
+ a it's it's here where the coordination actually happens where people like some ideas and it's not
+
+761
+01:19:08,840 --> 01:19:14,359
+ that simple you know like people uh i would i would say argue because like it's civilized
+
+762
+01:19:14,359 --> 01:19:20,039
+ discussion but still it can be a passionate discussion which takes sometimes takes weeks
+
+763
+01:19:20,039 --> 01:19:26,199
+ and months before some some something is agreed on and uh that's very important that people come
+
+764
+01:19:26,199 --> 01:19:31,479
+ from different perspectives different backgrounds with different teams voicing their opinions and
+
+765
+01:19:31,479 --> 01:19:36,680
+ this is all public you can it's streamed on youtube and you can even participate by joining
+
+766
+01:19:36,680 --> 01:19:43,800
+ the r d discord so anybody can voice their opinion about the ethereum core uh yeah this is coordinated
+
+767
+01:19:43,800 --> 01:19:50,360
+ it uh in the pm repo so you can see all of these calls uh they are scheduled they are the topics
+
+768
+01:19:50,360 --> 01:19:56,680
+ to be discussed there you can propose a topic and so on uh you can see the recordings the uh uh the
+
+769
+01:19:57,320 --> 01:20:05,079
+ record of all of the previous uh meetings in uh the ethereum slash pm project repository
+
+770
+01:20:06,039 --> 01:20:13,720
+ this is how it looks like uh one a life hack is that if you are uh uh if you are pretending you
+
+771
+01:20:13,720 --> 01:20:18,039
+ working you know somewhere you can just put this on your screen the youtube call and act like it's
+
+772
+01:20:18,840 --> 01:20:25,240
+ uh you already call um and yeah in addition to this the people also meet in person uh because
+
+773
+01:20:25,240 --> 01:20:31,400
+ sometimes it's you know better to talk face to face and just figure out like uh things hands-on
+
+774
+01:20:31,400 --> 01:20:37,400
+ uh and this is a famous picture where uh people are clapping to the first uh merge like this is
+
+775
+01:20:37,399 --> 01:20:44,679
+ the first time that the merge was actually tested uh actually tried implement uh implemented in
+
+776
+01:20:44,679 --> 01:20:54,359
+ in greece uh it was 20 20 20 i think uh no no 2021 and then it was this was last year a year ago in
+
+777
+01:20:54,359 --> 01:21:01,239
+ austria where uh people were finishing uh withdrawals working on 4844 again like 100
+
+778
+01:21:01,239 --> 01:21:09,800
+ people meeting uh in different sessions uh uh focusing on on uh shipping the the next thing
+
+779
+01:21:10,439 --> 01:21:16,599
+ um so yeah that's that's how the developers coordinated but the question is like okay what
+
+780
+01:21:16,599 --> 01:21:20,679
+ these developers are actually developing what they are working on where is it coming from
+
+781
+01:21:20,679 --> 01:21:27,719
+ well there are researchers and uh people proposing these these new upgrades new features uh and uh
+
+782
+01:21:27,720 --> 01:21:32,600
+ there is a some loose road map of what is happening in theorem right now when i say
+
+783
+01:21:32,600 --> 01:21:40,920
+ lose road map you maybe saw this uh this is uh like the road map uh from uh uh vitalik who
+
+784
+01:21:40,920 --> 01:21:49,480
+ makes this beautiful beautiful chart however uh this is not like you know the definitive
+
+785
+01:21:49,480 --> 01:21:54,920
+ ethereum roadmap this is not like this has to happen this will happen this is just uh enumeration
+
+786
+01:21:54,920 --> 01:22:02,199
+ of the current things being worked on the current ideas uh the the landscape of the r d right now
+
+787
+01:22:02,199 --> 01:22:06,680
+ because it changes and uh maybe we'll figure out that some of these boxes actually don't
+
+788
+01:22:06,680 --> 01:22:11,960
+ fit the ethereum vision or come with some trade-offs and so on as we go along um
+
+789
+01:22:12,840 --> 01:22:19,399
+ so to give you an idea what is happening right now again like what i said about the boxes before uh
+
+790
+01:22:19,399 --> 01:22:26,439
+ in my chart of my visualization of the Ethereum there again you can deep dive and become expert
+
+791
+01:22:26,439 --> 01:22:37,239
+ in any of these boxes basically uh and uh the first big part is the merge um which was successfully
+
+792
+01:22:37,239 --> 01:22:42,359
+ finished we merged the Ethereum with the proof of stake however there are some upgrades to the
+
+793
+01:22:42,920 --> 01:22:48,359
+ uh to the proof of stake uh like single-fold finality making faster finalization so we can
+
+794
+01:22:48,359 --> 01:22:55,239
+ still improve the the closest protocol um the search uh in this case is focused on scalable
+
+795
+01:22:55,239 --> 01:23:02,519
+ scalability so to uh enable throughput of more transaction uh that includes implementing
+
+796
+01:23:02,519 --> 01:23:08,920
+ peer-to-peer implementing a data availability sharding and the 4244 the blobs which are coming
+
+797
+01:23:08,920 --> 01:23:16,599
+ in the upcoming upgrade uh scourge is focused on economics that's miv part uh so the maximum
+
+798
+01:23:16,600 --> 01:23:23,160
+ minor extractable value uh which uh which has some issues it can cause some issues in the network
+
+799
+01:23:23,160 --> 01:23:31,640
+ like uh uh like centralization or um or problem for most building blocks so there are there are
+
+800
+01:23:31,640 --> 01:23:39,160
+ proposals like uh protocol builder separation enshrined in protocol um and there's some
+
+801
+01:23:39,160 --> 01:23:45,720
+ censorship resistance and so on uh with the also uh also there is mentioned uh staking economics
+
+802
+01:23:45,720 --> 01:23:52,039
+ it's also like uh proof of stake improvements of uh exploring how we can use the uh the
+
+803
+01:23:52,600 --> 01:24:01,079
+ economics there more effectively uh diverge is the vertical tries so as i mentioned before the
+
+804
+01:24:01,079 --> 01:24:07,480
+ current state of it theorem is the merkel patricia uh three which is uh like one way
+
+805
+01:24:07,480 --> 01:24:13,480
+ we have been doing it for 10 years but now there is this proposal in testing in development for
+
+806
+01:24:13,479 --> 01:24:20,039
+ a vector commitment miracle trees which are using vectors uh to create a tree which enables like uh
+
+807
+01:24:21,000 --> 01:24:24,599
+ witnesses and more simple proofs like it proves which can be
+
+808
+01:24:25,159 --> 01:24:31,719
+ uh which can enable stateless or uh much lighter clients so more scalability um
+
+809
+01:24:33,159 --> 01:24:40,119
+ purge uh means getting rid of the technical debt and uh all the data so like there is bunch of
+
+810
+01:24:40,119 --> 01:24:47,880
+ state bunch of old data which is never going to be used but the clients the nodes are required
+
+811
+01:24:47,880 --> 01:24:56,439
+ to hold it um so we can we can actually have uh uh some improvements to to uh have the old data
+
+812
+01:24:56,439 --> 01:25:05,720
+ expire uh splurge is there uh the rest of it like evm improvements uh vdfs etc yeah so this is like
+
+813
+01:25:05,720 --> 01:25:09,960
+ a short overview to give you an idea what's happening in different tracks different urges
+
+814
+01:25:09,960 --> 01:25:17,079
+ of ethereum um ultimately all of this is trying to fight this monster of a triangle
+
+815
+01:25:17,800 --> 01:25:23,480
+ maybe you saw this before and this is the problem of uh the blockchain itself because
+
+816
+01:25:23,480 --> 01:25:32,199
+ well the whole point of ethereum is to be this distributed decentralized network which uh which
+
+817
+01:25:32,199 --> 01:25:39,000
+ is secure and uh to enable decentralization what i said before to run one of these clients to
+
+818
+01:25:39,000 --> 01:25:45,159
+ actually use ethereum in a trustless and secure way you need to run one of these clients and that
+
+819
+01:25:45,159 --> 01:25:52,760
+ can take uh to verify the uh so it means that you need to actually verify the transaction the data
+
+820
+01:25:52,760 --> 01:25:59,800
+ in the network so if i want to use ethereum i use my own client which verified all of the history
+
+821
+01:25:59,800 --> 01:26:08,640
+ the current state. However, it takes hundreds of gigabytes of data and tens or hundreds of hours
+
+822
+01:26:08,640 --> 01:26:17,400
+ of the CPU time. So it's pretty heavy to run on your laptop. And if we put more data, which needs
+
+823
+01:26:17,400 --> 01:26:22,380
+ to be verified, of course, it becomes more and more heavier. And if we keep doing this, it becomes
+
+824
+01:26:22,380 --> 01:26:29,980
+ exponentially heavy and ultimately there would be only a few uh few single single uh institutions
+
+825
+01:26:29,980 --> 01:26:36,060
+ running these nodes and that would be centralizing that would uh give us a single point of failure so
+
+826
+01:26:37,180 --> 01:26:43,340
+ ethereum needs to be decentralized ethereum is limiting itself it's limiting it's on-chain uh
+
+827
+01:26:44,140 --> 01:26:50,940
+ activity to the point where you can run this one of these clients on a raspberry pi on like very
+
+828
+01:26:50,939 --> 01:26:59,659
+ cheap low-powered 100 200 bucks device plus ssd uh so so yeah uh this is the point and now what
+
+829
+01:26:59,659 --> 01:27:04,539
+ we what these researchers are fighting is uh of course different problems but this is a big part
+
+830
+01:27:04,539 --> 01:27:11,739
+ of it to be able to run ethereum trustlessly uh and at the same time allow more data being
+
+831
+01:27:11,739 --> 01:27:19,979
+ processed which is kind of oxymoron kind of in a dilemma here but uh there are ways uh outlined
+
+832
+01:27:19,979 --> 01:27:27,419
+ here that can improve it diverge the search um yeah the purge uh which are focused on this and
+
+833
+01:27:27,419 --> 01:27:31,500
+ yeah so there are there are many different improvements to it here many different things
+
+834
+01:27:31,500 --> 01:27:38,699
+ that we can we can fix and uh ultimately uh you might think that well it's kind of an infinite
+
+835
+01:27:38,699 --> 01:27:45,579
+ fight it's an infant garden right uh it's uh never ending always growing always to be trimmed and
+
+836
+01:27:45,579 --> 01:27:52,539
+ maintained garden and uh that's somewhat true like i believe that ethereum core protocol is a garden
+
+837
+01:27:52,539 --> 01:27:59,100
+ which always needs some gardeners some people to take care of it uh and right now it needs to
+
+838
+01:27:59,100 --> 01:28:07,340
+ expand and fix many things and you know uh fix uh a big bunch of it's uh issues to get to some
+
+839
+01:28:07,340 --> 01:28:13,100
+ better state however at one point there will be beautiful garden which only needs maintenance
+
+840
+01:28:13,100 --> 01:28:18,780
+ at that moment that would be ossification uh that's something that i hope i believe we are
+
+841
+01:28:18,780 --> 01:28:27,660
+ aiming for to like some more of a final design with uh ethereum uh not allowing any more major
+
+842
+01:28:27,660 --> 01:28:35,820
+ changes only doing minor maintenance of updates so that's that's the ideal endgame here uh however
+
+843
+01:28:35,820 --> 01:28:42,620
+ still it's an infant corner which uh never really ends uh but it would be beautiful if we get to
+
+844
+01:28:42,619 --> 01:28:49,099
+ this point of the ossified not really changing ethereum uh that would be it would be a beautiful
+
+845
+01:28:49,099 --> 01:28:53,979
+ world isn't it and vitalik would be happy we need to we need to make him happy guys so
+
+846
+01:28:53,979 --> 01:28:59,019
+ yeah if you are excited about this if you're excited about ethereum about all of the this
+
+847
+01:28:59,019 --> 01:29:06,859
+ progress happening uh the different clients development uh the the research uh you are
+
+848
+01:29:06,859 --> 01:29:11,899
+ in the right place you are in the epf study group where you can learn all about it uh but yeah what
+
+849
+01:29:11,899 --> 01:29:18,059
+ now what you can uh what you can do when you when you get here so i believe i provided a lot
+
+850
+01:29:18,059 --> 01:29:25,099
+ of resources uh right now you can uh see the pro some resources from this presentation i believe
+
+851
+01:29:25,099 --> 01:29:33,819
+ all of them are in the uh uh in the wiki there uh in the week one wiki and when i say resources
+
+852
+01:29:33,819 --> 01:29:40,139
+ i also mean just you know the pictures the charts that i show you and are uh explaining different
+
+853
+01:29:40,140 --> 01:29:46,460
+ parts of the clients you can start diving into these you can learn more about it find more
+
+854
+01:29:46,460 --> 01:29:53,100
+ relevant related connected documents and share them come to share them on discord and
+
+855
+01:29:53,100 --> 01:30:04,140
+ update update them in the wiki so you can uh uh you can um uh find what makes you more interested
+
+856
+01:30:04,140 --> 01:30:10,860
+ what's your niche what's your expertise uh and and contribute uh like yeah something that i
+
+857
+01:30:10,860 --> 01:30:16,460
+ didn't mention properly before so when you when you see this this monster of a machine all of
+
+858
+01:30:16,460 --> 01:30:24,060
+ these different uh uh roadmap points or if you see the ethereum uh uh with so many parts here
+
+859
+01:30:24,060 --> 01:30:29,740
+ and the testing and so on there is not a single person who would be expert in all of these there
+
+860
+01:30:29,739 --> 01:30:34,359
+ There is not a single person who would be a developer of the whole Ethereum,
+
+861
+01:30:34,760 --> 01:30:38,599
+ but it's always being an expert in some of these parts
+
+862
+01:30:38,599 --> 01:30:40,420
+ or like an execution or consensus.
+
+863
+01:30:41,079 --> 01:30:44,639
+ So that's what the modularity allows us to like focus on.
+
+864
+01:30:44,739 --> 01:30:45,679
+ What do you like the more?
+
+865
+01:30:45,779 --> 01:30:48,279
+ What do you find the most important, exciting?
+
+866
+01:30:48,279 --> 01:30:51,779
+ And you are, maybe you have some talents for.
+
+867
+01:30:52,300 --> 01:30:54,800
+ So yeah, focus on that.
+
+868
+01:30:54,960 --> 01:30:56,179
+ Find your niche and contribute.
+
+869
+01:30:56,380 --> 01:30:59,019
+ Find these resources, write more documentation
+
+870
+01:30:59,020 --> 01:31:00,520
+ and upload it to the wiki,
+
+871
+01:31:00,640 --> 01:31:02,360
+ open a PR, learn how to use Git,
+
+872
+01:31:02,740 --> 01:31:04,600
+ learn how to actually contribute
+
+873
+01:31:04,600 --> 01:31:05,980
+ to the open source projects
+
+874
+01:31:05,980 --> 01:31:09,320
+ by contributing to our free open wiki.
+
+875
+01:31:10,120 --> 01:31:11,700
+ There are already some PRs open.
+
+876
+01:31:11,820 --> 01:31:13,440
+ If you are here, guys who opened it,
+
+877
+01:31:13,480 --> 01:31:14,080
+ thank you so much.
+
+878
+01:31:14,500 --> 01:31:16,380
+ It will be, you know, slowly reviewed
+
+879
+01:31:16,380 --> 01:31:18,140
+ that you can see the PRs
+
+880
+01:31:18,140 --> 01:31:19,540
+ which has been opened
+
+881
+01:31:19,540 --> 01:31:20,800
+ and contribute there.
+
+882
+01:31:20,920 --> 01:31:23,620
+ Maybe give your, add some content there
+
+883
+01:31:23,620 --> 01:31:25,240
+ or add your idea like,
+
+884
+01:31:25,240 --> 01:31:27,400
+ okay, maybe this should be written differently, etc.
+
+885
+01:31:27,399 --> 01:31:29,159
+ So yeah, come to contribute.
+
+886
+01:31:30,559 --> 01:31:36,979
+ And yeah, you can, at this point, we did like four EPF cohorts.
+
+887
+01:31:37,479 --> 01:31:48,339
+ And you can find projects from all the previous cohorts in the same GitHub organization that we use for the wiki.
+
+888
+01:31:48,339 --> 01:31:56,719
+ So in the it protocol follows cohort four, cohort three, in the slash project, the project directory, you see all of the projects that has been worked on.
+
+889
+01:31:56,720 --> 01:31:58,280
+ by the previous follows.
+
+890
+01:31:58,480 --> 01:31:59,960
+ And now what I mentioned
+
+891
+01:31:59,960 --> 01:32:00,500
+ at the beginning
+
+892
+01:32:00,500 --> 01:32:03,579
+ that this program is inspired by EPF
+
+893
+01:32:03,579 --> 01:32:05,060
+ is because these people
+
+894
+01:32:05,060 --> 01:32:06,880
+ spend the first weeks,
+
+895
+01:32:06,980 --> 01:32:09,520
+ first months of the fellowship program
+
+896
+01:32:09,520 --> 01:32:11,340
+ learning about the protocol
+
+897
+01:32:11,340 --> 01:32:12,520
+ and about their niche,
+
+898
+01:32:12,619 --> 01:32:13,360
+ about their domain.
+
+899
+01:32:13,880 --> 01:32:15,880
+ And if you read their projects,
+
+900
+01:32:15,880 --> 01:32:16,440
+ if you read,
+
+901
+01:32:16,560 --> 01:32:17,780
+ they write weekly updates.
+
+902
+01:32:17,920 --> 01:32:19,579
+ You can see bi-weekly
+
+903
+01:32:19,579 --> 01:32:21,420
+ or weekly documents
+
+904
+01:32:21,420 --> 01:32:23,579
+ written by many talented people
+
+905
+01:32:23,579 --> 01:32:25,100
+ who've been learning about Ethereum
+
+906
+01:32:25,100 --> 01:32:26,500
+ or different parts of it.
+
+907
+01:32:26,720 --> 01:32:33,020
+ you can you can see their learning curve you can see what they've been working on and uh maybe
+
+908
+01:32:33,020 --> 01:32:38,220
+ find the resources that they are they are mentioning there bring them to the wiki learn
+
+909
+01:32:38,220 --> 01:32:42,619
+ from them so you can follow follow their paths because that's why they created it that's why we
+
+910
+01:32:42,619 --> 01:32:49,140
+ kept it open public so you can all study it you can uh learn about their projects and uh their
+
+911
+01:32:49,140 --> 01:32:57,700
+ their journey yeah and uh yeah i believe that's that's all folks uh there is uh that's that's
+
+912
+01:32:57,700 --> 01:33:05,600
+ the week one presentation uh right now there are already resources up for the week two uh next week
+
+913
+01:33:05,600 --> 01:33:11,860
+ we will be diving into the execution layer with light plant but before that like please check out
+
+914
+01:33:11,860 --> 01:33:18,680
+ more of the resources from the week one and some pre-reading for the week two part and yeah it's
+
+915
+01:33:18,680 --> 01:33:24,700
+ been 90 minutes, I used all of my time, oh my god, yeah, so sorry to keep you up so long, guys,
+
+916
+01:33:25,140 --> 01:33:30,640
+ so let's take maybe five minutes for some questions, if there are any, and let's wrap it up,
+
+917
+01:33:32,900 --> 01:33:39,920
+ yeah, do we have any questions in the, oh, thank you so much, Josh, for sending all of the,
+
+918
+01:33:39,920 --> 01:33:50,319
+ uh all of the all of the um uh links so here uh the screenshot that this this monster of a markdown
+
+919
+01:33:50,319 --> 01:34:00,720
+ table that he uh josh uh shared there it's uh um uh it's um uh all these weekly updates so you can
+
+920
+01:34:00,720 --> 01:34:06,079
+ see what a person in the slash project you can see what project the person has been working on
+
+921
+01:34:06,079 --> 01:34:10,800
+ and if you're interested like i don't know uh contribution to lighthouse client
+
+922
+01:34:10,800 --> 01:34:16,559
+ uh creation of stealth addresses uh a creation of new beacon api so if you are interested in like
+
+923
+01:34:16,559 --> 01:34:22,720
+ different projects there you can see what's been the journey of the person in this weekly updates
+
+924
+01:34:24,399 --> 01:34:29,439
+ yeah ah yeah awesome uh
+
+925
+01:34:29,439 --> 01:34:38,000
+ If there are any questions, any more comments, feel free to go on.
+
+926
+01:34:38,000 --> 01:34:40,779
+ I think we still can have some time.
+
+927
+01:34:40,779 --> 01:34:47,539
+ Looks like there's a few people typing right now, but I'm not seeing any questions
+
+928
+01:34:47,539 --> 01:34:52,979
+ come through at the moment.
+
+929
+01:34:52,979 --> 01:35:06,179
+ So, history of it's the F missing it before it's there.
+
+930
+01:35:06,179 --> 01:35:10,379
+ Just what I was going on about.
+
+931
+01:35:10,379 --> 01:35:16,199
+ No, I don't, I'm just, I was just texting Stolman yesterday, he's a friend of mine,
+
+932
+01:35:16,199 --> 01:35:22,399
+ and I'm biased here, I pushed for the F part there.
+
+933
+01:35:22,399 --> 01:35:27,339
+ Anyway, if there are no questions right now, my camera doesn't work.
+
+934
+01:35:29,279 --> 01:35:30,839
+ No, that's horrible.
+
+935
+01:35:31,839 --> 01:35:33,739
+ Anyway, if there are no questions right now,
+
+936
+01:35:33,739 --> 01:35:37,899
+ please just feel free to ping me anytime in the Discord.
+
+937
+01:35:38,379 --> 01:35:39,939
+ I'm here for you guys.
+
+938
+01:35:42,159 --> 01:35:44,579
+ It's morning for me, so the rest of the day,
+
+939
+01:35:44,920 --> 01:35:47,559
+ I guess I'm ready to answer your questions.
+
+940
+01:35:47,699 --> 01:35:51,439
+ Feel free to put them in this thread or in a corresponding channel.
+
+941
+01:35:51,439 --> 01:35:55,719
+ On the left, you see the protocol wiki part with different parts of it.
+
+942
+01:35:55,960 --> 01:36:00,879
+ So feel free to ask there if you have anything.
+
+943
+01:36:01,259 --> 01:36:01,379
+ Yeah.
+
+944
+01:36:02,019 --> 01:36:02,460
+ Yeah.
+
+945
+01:36:02,460 --> 01:36:03,719
+ Thank you so much for your time.
+
+946
+01:36:04,039 --> 01:36:05,139
+ I really appreciate it.
+
+947
+01:36:05,219 --> 01:36:06,399
+ So many of you showed up.
+
+948
+01:36:06,539 --> 01:36:09,099
+ I had to wake up for this, so I really appreciate it.
+
+949
+01:36:09,199 --> 01:36:11,679
+ I would like to wake up somewhere or at least, like,
+
+950
+01:36:11,739 --> 01:36:14,259
+ have a public talk for so many people this early.
+
+951
+01:36:17,699 --> 01:36:18,139
+ Awesome.
+
+952
+01:36:18,139 --> 01:36:19,219
+ Thanks so much, Mario.
+
+953
+01:36:19,220 --> 01:36:25,460
+ That was a great talk once again, and we definitely got it recorded this time.
+
+954
+01:36:25,460 --> 01:36:32,220
+ So, yeah, for those of you who didn't catch it either of these two times,
+
+955
+01:36:32,420 --> 01:36:38,579
+ you can see it on the recording, and we will be back next Monday
+
+956
+01:36:38,579 --> 01:36:45,960
+ for the second week's content with LiteClient on the execution layer.
+
+957
+01:36:45,960 --> 01:36:56,640
+ yeah thank you guys see you on monday 4 p.m utc i believe yeah uh awesome yeah thanks
+
+958
+01:36:56,640 --> 01:36:57,020
+ all right
+
+959
+01:36:57,020 --> 01:37:00,760
+ see you around
+
+960
+01:37:15,960 --> 01:37:16,460
+ you
+

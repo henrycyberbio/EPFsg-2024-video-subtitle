@@ -1,0 +1,4120 @@
+1
+00:00:30,000 --> 00:00:59,980
+ Thank you.
+
+2
+00:01:00,000 --> 00:01:30,000
+ The
+
+3
+00:01:30,000 --> 00:01:40,000
+ ¶¶
+
+4
+00:01:40,000 --> 00:01:50,000
+ ¶¶
+
+5
+00:01:50,000 --> 00:02:00,000
+ ¶¶
+
+6
+00:02:00,000 --> 00:02:10,000
+ ¶¶
+
+7
+00:02:10,000 --> 00:02:20,000
+ ¶¶
+
+8
+00:02:20,000 --> 00:02:30,000
+ ¶¶
+
+9
+00:02:30,000 --> 00:02:40,000
+ ¶¶
+
+10
+00:02:40,000 --> 00:03:09,979
+ Thank you.
+
+11
+00:03:10,000 --> 00:03:39,979
+ Thank you.
+
+12
+00:04:10,000 --> 00:04:26,699
+ All right, welcome back, everybody, to another session of the Ethereum Protocol Fellowship
+
+13
+00:04:26,699 --> 00:04:28,339
+ study group.
+
+14
+00:04:28,339 --> 00:04:35,959
+ This is week seven on the research track, and today we have three guests with us, Ignacio,
+
+15
+00:04:35,959 --> 00:04:42,199
+ Guillaume and Josh from the StateOS team at the Ethereum Foundation here to talk about
+
+16
+00:04:42,199 --> 00:04:47,719
+ The Verge, which consists mostly of the upgrade to Verkle trees.
+
+17
+00:04:47,719 --> 00:04:52,779
+ So, yeah, I don't know, Mario, how you want to do this introduction here for all three
+
+18
+00:04:52,779 --> 00:04:54,139
+ of them, but good luck.
+
+19
+00:04:55,419 --> 00:04:56,539
+ Yeah, thank you so much.
+
+20
+00:04:56,539 --> 00:04:58,859
+ Thank you so much, guys, for joining us today.
+
+21
+00:04:59,179 --> 00:05:00,779
+ Yeah, it's pretty heavy on introductions.
+
+22
+00:05:01,019 --> 00:05:03,519
+ I probably won't spend too much time on it.
+
+23
+00:05:03,519 --> 00:05:07,579
+ I just want to welcome you all to the research track of this week.
+
+24
+00:05:08,639 --> 00:05:12,879
+ The Virgo trees are very interesting topic, very important topic happening right now.
+
+25
+00:05:12,959 --> 00:05:21,199
+ And it's it's kind of hard to grasp if you don't have the cryptography inside and the Virgo trees background.
+
+26
+00:05:21,539 --> 00:05:26,299
+ So we have three speakers today to cover their their parts of this research.
+
+27
+00:05:26,300 --> 00:05:34,300
+ it's Josh from the EF research team, but Josh hasn't been just Ethereum researcher, he's been
+
+28
+00:05:34,300 --> 00:05:40,379
+ doing a bunch of cool stuff even before, I believe he worked in Intel and Slack and many interesting
+
+29
+00:05:40,379 --> 00:05:45,819
+ projects. Guillaume is actually from Get team, from the go Ethereum team, so he contributes to
+
+30
+00:05:45,819 --> 00:05:53,819
+ Get but mostly works on this vertical tree migration transition, and Ignacio is from
+
+31
+00:05:53,819 --> 00:06:00,300
+ that research as well uh however the interesting uh piece about ignacio is that he actually has
+
+32
+00:06:00,300 --> 00:06:08,139
+ been followed in the epf course three so he's uh he's a prime example here of a uh successful um
+
+33
+00:06:08,139 --> 00:06:14,379
+ epf fellow as somebody who's been uh diving into ethereum and studying this similarly to
+
+34
+00:06:14,379 --> 00:06:20,300
+ many people in the audience now and uh today he's on the cutting edge of these technologies so it's
+
+35
+00:06:20,300 --> 00:06:22,759
+ it's an honor to have you here folks, all of you,
+
+36
+00:06:22,759 --> 00:06:26,319
+ and I'm very excited to see your presentation.
+
+37
+00:06:26,319 --> 00:06:29,400
+ I hope we'll manage to coordinate it.
+
+38
+00:06:29,400 --> 00:06:30,879
+ So who's starting?
+
+39
+00:06:30,879 --> 00:06:31,840
+ Who will pick it up?
+
+40
+00:06:32,920 --> 00:06:34,980
+ I will start.
+
+41
+00:06:34,980 --> 00:06:36,240
+ Okay, go ahead.
+
+42
+00:06:36,240 --> 00:06:37,240
+ The stage is yours.
+
+43
+00:06:38,120 --> 00:06:39,040
+ Okay, thank you.
+
+44
+00:06:41,639 --> 00:06:46,060
+ Okay, well, first of all, thank all for being here.
+
+45
+00:06:46,060 --> 00:06:47,660
+ We are pretty excited that more people
+
+46
+00:06:47,660 --> 00:06:49,180
+ are interested in local trees.
+
+47
+00:06:49,180 --> 00:06:54,180
+ So this presentation aims to be some,
+
+48
+00:06:54,300 --> 00:06:57,740
+ let's say, technical introduction to the topic.
+
+49
+00:06:59,000 --> 00:07:02,240
+ We won't expect everybody to understand 100%
+
+50
+00:07:02,240 --> 00:07:03,540
+ of what we'll show,
+
+51
+00:07:03,540 --> 00:07:07,360
+ because many of these things are pretty hairy,
+
+52
+00:07:07,360 --> 00:07:11,800
+ and probably if you're interested in this topic,
+
+53
+00:07:11,800 --> 00:07:14,740
+ you will come back to this slide after the talk.
+
+54
+00:07:14,740 --> 00:07:25,000
+ So, just to talk a bit more about our team, our team is composed of Guillaume, which is
+
+55
+00:07:25,000 --> 00:07:27,800
+ the team lead, and also part of the guest team.
+
+56
+00:07:27,800 --> 00:07:30,439
+ Then it's Ignacio, which is me.
+
+57
+00:07:30,439 --> 00:07:39,000
+ Then we have Sjoch, that also help us with all the community organisation, calls, moderations,
+
+58
+00:07:39,000 --> 00:07:40,660
+ and interacting with other teams
+
+59
+00:07:40,660 --> 00:07:45,040
+ because the vertical tree change really has a lot of impact.
+
+60
+00:07:45,040 --> 00:07:49,420
+ And also we have Kev that is related to a lot of work
+
+61
+00:07:49,420 --> 00:07:50,660
+ in the cryptography side.
+
+62
+00:07:51,879 --> 00:07:55,579
+ We also maintain a website, which is vertical.info
+
+63
+00:07:55,579 --> 00:07:57,959
+ where it's kind of a landing page
+
+64
+00:07:57,959 --> 00:08:00,660
+ for the vertical tree change,
+
+65
+00:08:00,660 --> 00:08:04,100
+ where you can find what vertical trees is about,
+
+66
+00:08:04,100 --> 00:08:06,639
+ what is the motivation, which is the current tasks
+
+67
+00:08:06,639 --> 00:08:10,979
+ that we and others are working.
+
+68
+00:08:10,979 --> 00:08:14,860
+ And also we have some links to some articles and videos
+
+69
+00:08:14,860 --> 00:08:17,319
+ where we talk about Virgo.
+
+70
+00:08:20,659 --> 00:08:24,319
+ So let's start a bit with the motivation of the change,
+
+71
+00:08:24,319 --> 00:08:28,019
+ which is probably the correct way of trying to understand
+
+72
+00:08:28,019 --> 00:08:30,360
+ any kind of change in the protocol,
+
+73
+00:08:31,279 --> 00:08:34,200
+ because at least with big changes,
+
+74
+00:08:34,200 --> 00:08:43,560
+ they are usually rooted in kind of defending important values of the 3D protocol.
+
+75
+00:08:43,560 --> 00:08:51,700
+ So if we kind of take a step back and think about systems or applications in general,
+
+76
+00:08:51,700 --> 00:08:56,379
+ stateful applications are usually pretty complex.
+
+77
+00:08:56,379 --> 00:09:04,200
+ Usually the state part of the system is what creates many of the big challenges, such as
+
+78
+00:09:04,200 --> 00:09:09,720
+ That's how do you access the state in an efficient way?
+
+79
+00:09:09,720 --> 00:09:14,200
+ How do you save the state?
+
+80
+00:09:14,200 --> 00:09:19,759
+ Because usually the state of the system is where most of the value is.
+
+81
+00:09:19,759 --> 00:09:25,600
+ So stateful applications are usually pretty complex.
+
+82
+00:09:25,600 --> 00:09:31,700
+ Usually state only grows with time, which is usually a pain and something that creates
+
+83
+00:09:31,700 --> 00:09:33,980
+ many problems.
+
+84
+00:09:33,980 --> 00:09:41,759
+ And if we think about what state means for Ethereum blockchain, the important effect
+
+85
+00:09:41,759 --> 00:09:49,440
+ is that they put a lot of pressure on some core values that we want to defend.
+
+86
+00:09:49,440 --> 00:09:56,399
+ Being more concrete, if you want to be a node and validate blocks, unfortunately you will
+
+87
+00:09:56,399 --> 00:10:03,480
+ need first to download all the state of the network, which is somewhat big, so it takes
+
+88
+00:10:03,480 --> 00:10:11,899
+ some time. That means that you also have to save it somewhere, of course, and from some
+
+89
+00:10:11,899 --> 00:10:20,639
+ numbers that Guillaume told me in his setup, you will need about 1.5 terabytes of disk
+
+90
+00:10:20,639 --> 00:10:30,259
+ space. So probably a good recommendation is having a two-terabyte disk. The requirement
+
+91
+00:10:30,259 --> 00:10:34,139
+ will only increase with time, which is very unfortunate.
+
+92
+00:10:34,139 --> 00:10:38,120
+ And also the way that Ethereum handles state
+
+93
+00:10:38,120 --> 00:10:42,879
+ isn't CK friendly, which also gets a bit in the way
+
+94
+00:10:42,879 --> 00:10:45,939
+ of even more future changes
+
+95
+00:10:45,939 --> 00:10:48,019
+ that we want to make through the protocol.
+
+96
+00:10:50,139 --> 00:10:55,139
+ So let's think about how we can have a better stateless world.
+
+97
+00:10:55,139 --> 00:11:06,600
+ The ideal goal here is that whenever a node wants to join the network it doesn't have
+
+98
+00:11:06,600 --> 00:11:09,360
+ to sync all the states.
+
+99
+00:11:09,360 --> 00:11:17,199
+ And indirectly that means that you don't need a huge disk for storing all the states.
+
+100
+00:11:17,199 --> 00:11:24,399
+ So the main idea is that you download the execution client and the consensus client,
+
+101
+00:11:24,399 --> 00:11:30,799
+ configure everything, you join the network, and you can start validating blocks as fast as possible
+
+102
+00:11:31,679 --> 00:11:41,199
+ without requiring a big disk. Also, part of doing this change is trying to make the protocol more
+
+103
+00:11:41,199 --> 00:11:48,240
+ CK-friendly so in the future we can use snarks to create proof of computation as to validate that
+
+104
+00:11:48,240 --> 00:11:51,980
+ that the block execution has been done correctly.
+
+105
+00:11:52,860 --> 00:11:57,860
+ So, like the main idea is that Virkle-tree
+
+106
+00:11:59,580 --> 00:12:03,240
+ kind of solve the storage problem of nodes.
+
+107
+00:12:03,240 --> 00:12:07,500
+ So at least a stateless client can avoid having
+
+108
+00:12:09,180 --> 00:12:13,680
+ even a separate storage for Ethereum state.
+
+109
+00:12:13,680 --> 00:12:16,320
+ And in the future with snarks,
+
+110
+00:12:16,320 --> 00:12:25,200
+ nodes can even verify a computational proof that the block is valid instead of doing the actual
+
+111
+00:12:25,200 --> 00:12:32,400
+ execution themselves. So this is going in the direction of trying to reduce hardware requirements
+
+112
+00:12:32,400 --> 00:12:40,800
+ for nodes. It also simplifies anyone that wants to try building a stateless client, because if you
+
+113
+00:12:40,799 --> 00:12:45,319
+ If you don't know how to deal with storing a big state,
+
+114
+00:12:45,319 --> 00:12:48,779
+ you don't have all this complexity of efficient ways
+
+115
+00:12:48,779 --> 00:12:50,240
+ of storing things in this,
+
+116
+00:12:50,240 --> 00:12:53,399
+ how to access this data efficiently and all that.
+
+117
+00:12:53,399 --> 00:12:56,839
+ You can simply access data that just fits in memory.
+
+118
+00:12:58,919 --> 00:13:00,939
+ This change also allows potentially
+
+119
+00:13:00,939 --> 00:13:04,439
+ to increase the gas limit, which is like a hot topic now.
+
+120
+00:13:05,439 --> 00:13:08,279
+ This isn't something that we'll do in the vertical fork,
+
+121
+00:13:08,279 --> 00:13:11,220
+ but it's something that maybe it will be allowed
+
+122
+00:13:11,220 --> 00:13:12,059
+ in the future.
+
+123
+00:13:13,039 --> 00:13:14,480
+ And finally,
+
+124
+00:13:17,120 --> 00:13:19,620
+ this change is also maybe pushing
+
+125
+00:13:19,620 --> 00:13:22,500
+ in the direction in which different nodes
+
+126
+00:13:22,500 --> 00:13:25,879
+ might have different more specialized roles
+
+127
+00:13:25,879 --> 00:13:27,439
+ in the protocol,
+
+128
+00:13:27,439 --> 00:13:30,579
+ which can have some interesting impact
+
+129
+00:13:30,579 --> 00:13:33,000
+ in the staking for nodes.
+
+130
+00:13:34,439 --> 00:13:37,240
+ But yeah, that's more like a research area.
+
+131
+00:13:38,279 --> 00:13:49,839
+ So, if you want to explain how Broccoli Trees work or what it's like a single way, like
+
+132
+00:13:49,839 --> 00:13:57,019
+ a simple way to explain this change is that Broccoli Trees basically introduce something
+
+133
+00:13:57,019 --> 00:14:00,699
+ new in the protocol which is called an execution witness.
+
+134
+00:14:00,700 --> 00:14:09,259
+ And this execution witness basically contains all the data that you need to verify a block.
+
+135
+00:14:09,259 --> 00:14:17,720
+ So the reason that today you need to download all the states before verifying blocks is
+
+136
+00:14:17,720 --> 00:14:23,960
+ that whenever you receive a block, let's say that you have a single block, and this block
+
+137
+00:14:23,960 --> 00:14:31,360
+ has a single transaction in which I send 10 ETH to Mario.
+
+138
+00:14:31,360 --> 00:14:37,519
+ So if you want to verify this block, that means that you will need to know my current
+
+139
+00:14:37,519 --> 00:14:45,720
+ balance because if you don't have that, you're going to verify that sending 10 ETH is a valid
+
+140
+00:14:45,720 --> 00:14:47,500
+ transaction, right?
+
+141
+00:14:47,500 --> 00:14:53,019
+ And since you cannot really predict which will be the transactions in the next block,
+
+142
+00:14:53,899 --> 00:14:59,259
+ that basically means that you need all the states to be sure that you can verify the next block.
+
+143
+00:15:00,460 --> 00:15:09,820
+ So, the idea is that whenever, like, buckle tweet happens, you can receive some extra data,
+
+144
+00:15:09,820 --> 00:15:15,899
+ apart from the block, which is called the witness, which contains all the states that is accessed
+
+145
+00:15:17,500 --> 00:15:24,779
+ in this block such that everything that you will need to validate the block will be found
+
+146
+00:15:24,779 --> 00:15:25,360
+ in this witness.
+
+147
+00:15:26,679 --> 00:15:28,600
+ This isn't really a new idea.
+
+148
+00:15:28,840 --> 00:15:34,059
+ This is something that has been explored before.
+
+149
+00:15:34,059 --> 00:15:36,620
+ Even you can do this with the current tree.
+
+150
+00:15:37,379 --> 00:15:42,759
+ But the problem is that you cannot really trust whoever gives you this data because
+
+151
+00:15:42,759 --> 00:15:47,379
+ this data can be anything, right?
+
+152
+00:15:47,379 --> 00:15:51,419
+ I can simply invent that my balance is whatever.
+
+153
+00:15:52,000 --> 00:15:55,320
+ And if you simply trust this witness data to validate the block,
+
+154
+00:15:55,860 --> 00:16:01,059
+ you might reach a false conclusion that the transaction is correct
+
+155
+00:16:01,059 --> 00:16:02,899
+ when it isn't.
+
+156
+00:16:03,500 --> 00:16:06,539
+ So what is needed is cryptographic proof
+
+157
+00:16:06,539 --> 00:16:08,399
+ that this witness data is correct,
+
+158
+00:16:09,620 --> 00:16:12,899
+ which is basically similar to a Merkle proof.
+
+159
+00:16:12,899 --> 00:16:20,919
+ But what Verkle allows is making this cryptographic proof be really small, such that the complete
+
+160
+00:16:20,919 --> 00:16:26,340
+ witness size it is small enough to make this viable.
+
+161
+00:16:26,340 --> 00:16:34,139
+ And another really interesting thing is that this witness also contains all the code that
+
+162
+00:16:34,139 --> 00:16:44,299
+ will need to execute contracts, which is something pretty weird for people because they don't
+
+163
+00:16:44,299 --> 00:16:48,840
+ actually know that the contract code doesn't really live in the tree.
+
+164
+00:16:48,840 --> 00:16:55,860
+ So yeah, to validate a block, you only need balances and storage slots.
+
+165
+00:16:55,860 --> 00:17:01,519
+ You actually need the contract code.
+
+166
+00:17:01,519 --> 00:17:07,900
+ So making Ethereum stateless sounds interesting, but unfortunately it isn't really a simple
+
+167
+00:17:07,900 --> 00:17:09,779
+ task.
+
+168
+00:17:09,779 --> 00:17:15,160
+ We need to introduce a new cryptography stack, we need to introduce a new data structure,
+
+169
+00:17:15,160 --> 00:17:20,639
+ we have to do some gas accounting changes, and we have to migrate all the data from the
+
+170
+00:17:20,639 --> 00:17:23,240
+ Merkle-Bartusza tree to the Berko tree.
+
+171
+00:17:23,240 --> 00:17:29,299
+ So now we will explore all these points in more detail.
+
+172
+00:17:29,299 --> 00:17:36,180
+ So let's start with the cryptography, which is the thing that is at the lowest layer.
+
+173
+00:17:36,180 --> 00:17:43,059
+ As usually happens in blockchains, whenever you think about some new super cool feature
+
+174
+00:17:43,059 --> 00:17:49,720
+ that seems almost impossible, you will find that there's like a cryptography scheme that
+
+175
+00:17:49,720 --> 00:17:53,500
+ is really what allows this magic to happen.
+
+176
+00:17:53,500 --> 00:18:03,259
+ In this case for BrokerTrees, the magic happens in this cryptographic proof that the witness is
+
+177
+00:18:03,259 --> 00:18:11,740
+ correct, while having this proof size be really small. So this is allowed by the cryptography
+
+178
+00:18:11,740 --> 00:18:17,099
+ that is used in BrokerTrees, it's really what allows this witness to be transmitted
+
+179
+00:18:17,099 --> 00:18:22,219
+ it within with each block, which is something that should reach every stateless client.
+
+180
+00:18:23,240 --> 00:18:32,099
+ And ultimately, this is what allows Ethereum to be to continue being a trustless
+
+181
+00:18:32,099 --> 00:18:38,659
+ protocol, so each stateless client can verify the block without trusting any other party.
+
+182
+00:18:39,839 --> 00:18:46,879
+ This is done because this cryptographic proof really gives this stateless client the
+
+183
+00:18:46,880 --> 00:18:52,560
+ guarantee that this data is correct without trusting other parties that have the full state.
+
+184
+00:18:53,520 --> 00:19:00,080
+ The basic ingredients of the cryptography are vector commitments, inner product argument,
+
+185
+00:19:00,080 --> 00:19:07,680
+ and multi-proofs. So, we will talk about them next. But before doing that,
+
+186
+00:19:07,680 --> 00:19:12,320
+ let's try to do a refresher on what cryptography we use today in the stage 3.
+
+187
+00:19:12,319 --> 00:19:19,419
+ So, today, we use something called the Merkle Patricia tree, which probably you have heard
+
+188
+00:19:19,419 --> 00:19:21,419
+ before.
+
+189
+00:19:21,419 --> 00:19:24,079
+ The kind of cryptography used here is pretty simple.
+
+190
+00:19:24,079 --> 00:19:30,919
+ We simply use Sketchhack cryptographic hash function.
+
+191
+00:19:30,919 --> 00:19:41,259
+ The way it works it's similar to a Merkle tree, but we have a different kind of structure
+
+192
+00:19:41,259 --> 00:19:43,539
+ with a different branching factor.
+
+193
+00:19:43,539 --> 00:19:46,539
+ So instead of a branching factor of two,
+
+194
+00:19:46,539 --> 00:19:50,299
+ Merkle Patricia trees have a branching factor of 16,
+
+195
+00:19:50,299 --> 00:19:51,980
+ have this extension nodes,
+
+196
+00:19:51,980 --> 00:19:56,559
+ and the way you kind of point from one parent to the child,
+
+197
+00:19:56,559 --> 00:20:01,279
+ you use, you hash the node.
+
+198
+00:20:01,279 --> 00:20:05,660
+ So hashes are a way of doing something called
+
+199
+00:20:05,660 --> 00:20:07,220
+ content addressing,
+
+200
+00:20:07,220 --> 00:20:10,579
+ which is a really deep and important concept in blockchains.
+
+201
+00:20:11,259 --> 00:20:18,220
+ So, hashes are like pointers that define kind of the identity of each node.
+
+202
+00:20:19,819 --> 00:20:26,619
+ But like the TLDR is that we use Ketchak for the cryptography of the Merkle Patricia tree.
+
+203
+00:20:28,859 --> 00:20:37,259
+ In Merkle trees, we stop using Ketchak. We use something that is called vector commitment.
+
+204
+00:20:37,259 --> 00:20:46,500
+ So, the idea here is that we have vectors of 256 elements.
+
+205
+00:20:46,500 --> 00:20:52,759
+ And each item of this vector is a scalar field element.
+
+206
+00:20:52,759 --> 00:20:59,680
+ So, this is like maybe a technical term, but you can think about this as, like, numbers.
+
+207
+00:20:59,680 --> 00:21:01,519
+ Okay?
+
+208
+00:21:01,519 --> 00:21:10,440
+ And we have a commit function which allows you to provide this vector and receive what
+
+209
+00:21:10,440 --> 00:21:12,859
+ we call a commitment.
+
+210
+00:21:12,859 --> 00:21:15,200
+ Okay?
+
+211
+00:21:15,200 --> 00:21:21,240
+ This commitment is like something similar to a hash in the sense that it's binding.
+
+212
+00:21:21,240 --> 00:21:27,480
+ So what binding means is that if you change anything about the vector, this commitment
+
+213
+00:21:27,480 --> 00:21:29,099
+ will change.
+
+214
+00:21:29,099 --> 00:21:31,119
+ So you cannot really fake.
+
+215
+00:21:31,119 --> 00:21:37,000
+ After you have a commitment, you can find another vector that maps to the same commitment.
+
+216
+00:21:37,000 --> 00:21:42,099
+ So, that is kind of a really important property.
+
+217
+00:21:42,099 --> 00:21:48,519
+ Something else that you can do is you can use this prove and verify functions.
+
+218
+00:21:48,519 --> 00:21:57,819
+ So, these functions, the prove function basically receives a vector and an index, and it will
+
+219
+00:21:57,819 --> 00:22:06,379
+ generates a pie which represents a proof that the element at that index is whatever value is in that
+
+220
+00:22:07,259 --> 00:22:16,379
+ index. So basically you can prove that the element at position two is 10 or whatever.
+
+221
+00:22:17,899 --> 00:22:23,339
+ And you also have this verify function which receives the commitment of the vector,
+
+222
+00:22:23,339 --> 00:22:28,619
+ the index, the claimed value that is in that index,
+
+223
+00:22:29,319 --> 00:22:32,459
+ the proof, and it returns false or true
+
+224
+00:22:32,459 --> 00:22:37,299
+ depending if this proof is correct
+
+225
+00:22:37,299 --> 00:22:39,720
+ that the item in this index is that value.
+
+226
+00:22:41,220 --> 00:22:43,859
+ Note that in this verify function,
+
+227
+00:22:44,179 --> 00:22:46,779
+ what the verifier needs is only the commitment.
+
+228
+00:22:47,599 --> 00:22:49,419
+ It doesn't need the vector,
+
+229
+00:22:49,799 --> 00:22:52,359
+ which is where the magic happens, okay?
+
+230
+00:22:52,359 --> 00:22:59,240
+ So the magic here is that you can verify an item in the vector only having the commitment
+
+231
+00:22:59,240 --> 00:23:05,119
+ and this proof that it's much smaller than having the full vector, right?
+
+232
+00:23:05,119 --> 00:23:09,819
+ That's kind of the main point.
+
+233
+00:23:09,819 --> 00:23:17,740
+ Going more into the gory details, this vector commitment and proving scheme is used under
+
+234
+00:23:17,740 --> 00:23:24,140
+ a setup of a new elliptic curve that we introduced in the protocol which is called bandersnatch.
+
+235
+00:23:24,940 --> 00:23:30,700
+ We also used another abstraction on top which is called banderwagon to remove the cofactor and
+
+236
+00:23:30,700 --> 00:23:41,180
+ make the group safe. The scalar field of this curve is 256, 53 bits and the base field is 255
+
+237
+00:23:41,180 --> 00:23:47,580
+ bits. This elliptic curve doesn't have pairings, which is good because it means smaller fields,
+
+238
+00:23:47,580 --> 00:23:55,980
+ so the operations can be more efficient. This bandersnatch curve it was created
+
+239
+00:23:55,980 --> 00:24:02,299
+ with an intention of being what is called an embedded curve in the VLS12-3-H1.
+
+240
+00:24:03,180 --> 00:24:08,940
+ So, basically, the base field of bandersnatch is the scalar field of VLS12-3-H1.
+
+241
+00:24:08,940 --> 00:24:24,100
+ The reason for this is that if you want to do snarks using VLS12-3-H1, that means that the elliptic core operations in Bandersnatch are basically native field operations.
+
+242
+00:24:24,360 --> 00:24:28,940
+ So in a circuit, you have to emulate fields, which is really inefficient.
+
+243
+00:24:28,940 --> 00:24:38,000
+ This inner product argument is what it's like the proven scheme that we use for this vector
+
+244
+00:24:38,000 --> 00:24:43,160
+ openings that I showed in the previous slides.
+
+245
+00:24:43,160 --> 00:24:47,940
+ An important property is that it doesn't require trusted setup.
+
+246
+00:24:47,940 --> 00:24:54,600
+ So if you kind of compare it with KCG commitments using blobs, that requires a trusted setup,
+
+247
+00:24:54,599 --> 00:25:02,459
+ which adds extra overhead whenever you are doing the configuration of the prooving scheme.
+
+248
+00:25:02,459 --> 00:25:07,199
+ We don't have to do that for Brocol trees, which is nice.
+
+249
+00:25:07,199 --> 00:25:14,019
+ We use an extra prooving scheme, which is called multi-proof, which allows to aggregate
+
+250
+00:25:14,019 --> 00:25:17,719
+ multiple openings in a single one.
+
+251
+00:25:17,719 --> 00:25:21,839
+ That is really important because it makes it even shorter.
+
+252
+00:25:21,839 --> 00:25:29,259
+ So, let's go now to the data structure and try to understand more how the Virkle tree
+
+253
+00:25:29,259 --> 00:25:31,500
+ data structure works.
+
+254
+00:25:31,500 --> 00:25:37,099
+ So, the change in the data structure of the theorem protocol it's basically switching
+
+255
+00:25:37,099 --> 00:25:41,000
+ from the Markle Patricia tree to the Virkle tree.
+
+256
+00:25:41,000 --> 00:25:46,659
+ The Virkle tree name comes from a mix of vector commitment and Markle tree.
+
+257
+00:25:46,659 --> 00:25:51,259
+ So, hopefully now that makes a bit more sense.
+
+258
+00:25:51,259 --> 00:26:01,900
+ So, if you remember how, like, these trees are using the protocol, I think that there
+
+259
+00:26:01,900 --> 00:26:07,740
+ is a really nice image here in which you can see that if you see the state root of the
+
+260
+00:26:07,740 --> 00:26:13,019
+ block header, that is the state root of the world state tree.
+
+261
+00:26:13,019 --> 00:26:17,220
+ Basically, this tree is a tree of trees.
+
+262
+00:26:17,220 --> 00:26:25,319
+ So in the leaf nodes, we have EOA accounts and smart contract accounts.
+
+263
+00:26:25,779 --> 00:26:29,680
+ So for EOA accounts, you have basically the nodes and the balance.
+
+264
+00:26:30,600 --> 00:26:41,660
+ But for smart contracts, you also have the storage root, which is basically the root of another tree that holds all the storage slots of that contract.
+
+265
+00:26:41,860 --> 00:26:45,500
+ So that's why we say that this is like a tree of trees.
+
+266
+00:26:47,220 --> 00:26:55,380
+ So this is kind of how things look like for the state storage in the protocol today.
+
+267
+00:26:58,339 --> 00:27:04,500
+ This will change. So the first thing to say is that we will stop having this tree of trees.
+
+268
+00:27:05,059 --> 00:27:13,220
+ We will have a single tree. So we will have all the balances of accounts and all the storage
+
+269
+00:27:13,220 --> 00:27:18,819
+ slots of all contracts all in the same tree. So that's kind of the first big difference.
+
+270
+00:27:20,100 --> 00:27:26,019
+ The other big difference is that the tree shape is pretty different too.
+
+271
+00:27:27,700 --> 00:27:34,019
+ We have here an image that I took from a really nice article that I invite everyone
+
+272
+00:27:34,019 --> 00:27:44,660
+ to read it in more detail, I left here the link. So, to explain this a bit, we basically have
+
+273
+00:27:46,339 --> 00:27:51,539
+ two kind of nodes. We have internal nodes which have a branching factor of 256,
+
+274
+00:27:53,539 --> 00:27:59,139
+ which is another change, another difference compared to the Merkle-Patrifici which has
+
+275
+00:27:59,140 --> 00:28:05,460
+ branching factor of 16. So this increase in branching factor allows the tree to be
+
+276
+00:28:05,460 --> 00:28:11,360
+ shallower which is really nice because that means that if you kind of think of
+
+277
+00:28:11,360 --> 00:28:15,960
+ analogy from analogy from a Merkle position tree, a Merkle position tree
+
+278
+00:28:15,960 --> 00:28:23,180
+ usually has a branching factor of two so that means that you need log in base two
+
+279
+00:28:23,180 --> 00:28:29,060
+ elements to really create a proof and if you have a branching factor of 256 then
+
+280
+00:28:29,059 --> 00:28:34,059
+ then you have log in base 256 elements.
+
+281
+00:28:34,179 --> 00:28:37,539
+ So that is much better for size.
+
+282
+00:28:40,919 --> 00:28:42,819
+ And apart from internal nodes,
+
+283
+00:28:42,819 --> 00:28:47,819
+ we have what we call extension level commitments
+
+284
+00:28:47,859 --> 00:28:50,079
+ and suffix level commitments.
+
+285
+00:28:51,440 --> 00:28:56,440
+ Basically the idea here is that the three keys are 32 bytes.
+
+286
+00:28:56,440 --> 00:29:05,160
+ 32 bytes, so that is the same as today. And the first 31 bytes defines a stem, which is a path
+
+287
+00:29:05,160 --> 00:29:13,320
+ to this extension-level commitments. And then each, in each leaf node, we have 256 values.
+
+288
+00:29:13,319 --> 00:29:27,079
+ okay so basically keys are grouped in groups of 256 values and the way that we
+
+289
+00:29:27,079 --> 00:29:35,879
+ kind of encode them in leaf nodes is with this image that I have here at the
+
+290
+00:29:35,879 --> 00:29:42,259
+ bottom which basically we do like a vector commitment of these elements we
+
+291
+00:29:42,259 --> 00:29:54,660
+ to do some really tricky construction of having two vectors to really store 256 values. And the
+
+292
+00:29:54,660 --> 00:30:04,980
+ reason for that is that, as I said before, the scalar fields are 253 bits, but unfortunately,
+
+293
+00:30:04,980 --> 00:30:13,779
+ the values that we store are 256 bits. So, that means that we need two elements, two
+
+294
+00:30:13,779 --> 00:30:23,380
+ scholars per element. But that's kind of a really hairy detail, maybe. But I just wanted to explain
+
+295
+00:30:23,380 --> 00:30:33,299
+ a bit why we have two vectors to store 256 values. So, if we compare the Merkle Patricia tree with
+
+296
+00:30:33,299 --> 00:30:40,579
+ with the vertical tree and how this might affect the proof size.
+
+297
+00:30:40,579 --> 00:30:51,399
+ So if you look at the left-hand side image, which I took from an article from Vitalik,
+
+298
+00:30:51,399 --> 00:30:59,899
+ the thing here is that despite that the branching factor is 16, you have like a semi-shallow
+
+299
+00:30:59,900 --> 00:31:07,500
+ tree, you still need all the nodes data to really create a proof.
+
+300
+00:31:07,500 --> 00:31:15,880
+ Because since we are using hashes, you need to verify the node bytes with the expected
+
+301
+00:31:15,880 --> 00:31:24,540
+ hashes, you basically need to hash all the node data.
+
+302
+00:31:24,539 --> 00:31:30,680
+ That means that even if the branch in fact is 16, it means that in each node you have
+
+303
+00:31:30,680 --> 00:31:35,339
+ up to 16 values, which can be really big.
+
+304
+00:31:35,339 --> 00:31:45,399
+ In the case of vertical trees, since we are using this vector commitment, you don't really
+
+305
+00:31:45,399 --> 00:31:48,079
+ need to provide all the vectors.
+
+306
+00:31:48,079 --> 00:31:55,539
+ If you remember the verify function only required a commitment, a small proof, and the index
+
+307
+00:31:55,539 --> 00:31:59,759
+ and value that you want to prove, but not really the rest of the vector.
+
+308
+00:31:59,759 --> 00:32:05,579
+ So that is really nice, because it means that even that we are making this branching factor
+
+309
+00:32:05,579 --> 00:32:11,619
+ bigger, that doesn't really have an impact on how you can prove a single element of that
+
+310
+00:32:11,619 --> 00:32:15,319
+ vector, or that node.
+
+311
+00:32:15,319 --> 00:32:18,480
+ So that's kind of at the core of why this thing works.
+
+312
+00:32:20,960 --> 00:32:24,919
+ Okay, so let's jump now to talk a bit more
+
+313
+00:32:24,919 --> 00:32:29,859
+ on how information are storing leaves of the tree.
+
+314
+00:32:30,720 --> 00:32:33,639
+ So if you remember, the leaves of the tree
+
+315
+00:32:33,639 --> 00:32:36,960
+ are vectors of 256 elements.
+
+316
+00:32:37,899 --> 00:32:42,720
+ So we store the usual balance, nodes, the cold hash,
+
+317
+00:32:42,720 --> 00:32:46,059
+ you know, like general information about the account.
+
+318
+00:32:47,240 --> 00:32:49,700
+ In the case of smart contracts,
+
+319
+00:32:50,059 --> 00:32:53,880
+ we have more space to store some extra things.
+
+320
+00:32:54,960 --> 00:32:56,279
+ In the current EIP,
+
+321
+00:32:56,620 --> 00:33:00,180
+ what we store are the first 64 storage slots
+
+322
+00:33:00,180 --> 00:33:05,779
+ and also the first 128 cold chunks.
+
+323
+00:33:07,079 --> 00:33:10,380
+ And I will explain what a cold chunk is soon,
+
+324
+00:33:10,539 --> 00:33:12,440
+ but just bear with me.
+
+325
+00:33:12,720 --> 00:33:22,600
+ So, the idea is that the what we call the account header, so the leaf node that corresponds
+
+326
+00:33:22,600 --> 00:33:31,319
+ to an account it has kind of the same information that we have today.
+
+327
+00:33:31,319 --> 00:33:38,680
+ In the case of smart contracts, we leverage this extra space to pack their probably information
+
+328
+00:33:38,680 --> 00:33:48,220
+ that will be accessed, which is where the call starts, the start of the call, and the
+
+329
+00:33:48,220 --> 00:33:58,320
+ first storage slots, which are probably used with some high probability on transactions.
+
+330
+00:33:58,320 --> 00:34:02,940
+ The rest of storage slots and the rest of call chunks are still stored, but not really
+
+331
+00:34:02,940 --> 00:34:04,660
+ in the lift nodes of the account.
+
+332
+00:34:04,660 --> 00:34:12,820
+ are stored in other lift-downs. I will explain that later. So, I touched a bit here on this
+
+333
+00:34:12,820 --> 00:34:19,139
+ concept of cold chunks. And if you remember, on one of the first slides, I told you that the
+
+334
+00:34:19,700 --> 00:34:29,460
+ execution witness, apart from balances and storage slots, it had also to include the necessary code
+
+335
+00:34:29,460 --> 00:34:39,780
+ to validate the block. So that goes full circle here in which you should know that the contract
+
+336
+00:34:39,780 --> 00:34:47,300
+ code is chunked. So chunking the code is part of the process of how the code is stored in the tree.
+
+337
+00:34:47,300 --> 00:35:02,800
+ The way this works is that we basically group, we basically slice the contract code in 31
+
+338
+00:35:02,800 --> 00:35:05,600
+ byte groups.
+
+339
+00:35:05,600 --> 00:35:13,080
+ With that, we create a value of 32 bytes where the first byte is a special byte that we use
+
+340
+00:35:13,079 --> 00:35:20,239
+ to really solve a particular problem that I will explain now in a minute.
+
+341
+00:35:20,239 --> 00:35:26,940
+ But basically, if you look at this image, you will see that a 32-byte code chunk has
+
+342
+00:35:26,940 --> 00:35:32,599
+ this first special byte and then 31 bytes of the code.
+
+343
+00:35:32,599 --> 00:35:40,719
+ The next code chunk has this extra byte and the next 31 bytes, you do this until the end
+
+344
+00:35:40,719 --> 00:35:48,399
+ of the control code. So, if you also remember, there are some instructions in the EVM that
+
+345
+00:35:49,759 --> 00:35:58,319
+ require more than one byte. So, for example, if you do a push two instruction, that means that
+
+346
+00:35:59,439 --> 00:36:07,759
+ or push 10 or whatever, you might find that whenever you do this chunking, there might be
+
+347
+00:36:07,760 --> 00:36:13,280
+ some bytes that are part of one chunk and there are some other bytes of the same instruction that
+
+348
+00:36:13,280 --> 00:36:20,560
+ are in the next chunk so this extra byte is basically trying to signal how many bytes
+
+349
+00:36:22,160 --> 00:36:26,800
+ from this code chunk at the start are really a continuation of a previous
+
+350
+00:36:29,360 --> 00:36:36,160
+ push x instruction in the previous chunk but it's just only that it's not really that complicated
+
+351
+00:36:36,159 --> 00:36:39,399
+ or at least more complicated than that.
+
+352
+00:36:43,079 --> 00:36:48,079
+ All right, so today, whenever you want to access some state
+
+353
+00:36:48,359 --> 00:36:50,379
+ in the tree, in the Markup Potential tree,
+
+354
+00:36:50,379 --> 00:36:52,539
+ you basically use the k-check hash function
+
+355
+00:36:52,539 --> 00:36:57,539
+ to calculate what is the tree key for that account, okay?
+
+356
+00:36:59,759 --> 00:37:01,799
+ For WorkPot trees, we don't use k-check,
+
+357
+00:37:01,799 --> 00:37:04,000
+ again it's not zero-knowledge friendly
+
+358
+00:37:04,000 --> 00:37:09,440
+ it's not really snark friendly let's say so we're going to really use ketchak what we use is
+
+359
+00:37:09,440 --> 00:37:15,360
+ something it's kind of a an elliptical based hashing function which is called person hashing
+
+360
+00:37:18,639 --> 00:37:24,960
+ and it's basically explained by this kind of definition i give here i use some colors to
+
+361
+00:37:24,960 --> 00:37:34,880
+ really help in understanding. So, the way this works is that we have a tree key function that
+
+362
+00:37:34,880 --> 00:37:43,360
+ receives the address of the account that you want to access some state. Some tree index value and
+
+363
+00:37:44,800 --> 00:37:50,000
+ some subindex value. Okay? These tree index and subindex are names that you probably
+
+364
+00:37:50,000 --> 00:37:59,039
+ it doesn't make any sense to you. But hold a second there. So, the way this 3K function works
+
+365
+00:37:59,039 --> 00:38:10,000
+ is it is basically doing a vector commitment of a vector of size five. So, we have the first
+
+366
+00:38:10,000 --> 00:38:15,760
+ element is this fixed number. That has a reason, but let's just take it as a fixed number.
+
+367
+00:38:15,760 --> 00:38:24,140
+ The next item is the most significant 16 bytes of the address.
+
+368
+00:38:24,140 --> 00:38:29,800
+ The next one is the 16 least significant bytes of the address.
+
+369
+00:38:29,800 --> 00:38:32,800
+ And we do the same with the tree index here.
+
+370
+00:38:32,800 --> 00:38:33,640
+ Okay?
+
+371
+00:38:33,640 --> 00:38:38,840
+ So this commitment give us a 32-byte value.
+
+372
+00:38:38,840 --> 00:38:42,280
+ and we basically take the first 31 bytes
+
+373
+00:38:42,280 --> 00:38:46,039
+ and we append the subindex, which is a single byte.
+
+374
+00:38:46,039 --> 00:38:49,740
+ So we have a 32 byte tree key, okay?
+
+375
+00:38:50,440 --> 00:38:52,680
+ So this is a very abstract function
+
+376
+00:38:52,680 --> 00:38:54,220
+ in which receive the address
+
+377
+00:38:54,220 --> 00:38:56,460
+ related to the state that you want to access
+
+378
+00:38:56,460 --> 00:38:59,260
+ and these two values, okay?
+
+379
+00:38:59,780 --> 00:39:01,640
+ And you kind of have the tree key.
+
+380
+00:39:03,900 --> 00:39:06,059
+ Okay, let's go, let's try to think about this
+
+381
+00:39:06,059 --> 00:39:07,019
+ in a concrete example.
+
+382
+00:39:07,019 --> 00:39:11,820
+ let's say that we want to know the tree key for the balance for an account.
+
+383
+00:39:13,019 --> 00:39:16,699
+ Okay, so what you have to do is you have to use this function that we explained before.
+
+384
+00:39:17,420 --> 00:39:21,980
+ You put here the address, responding to the address that you want to know the balance.
+
+385
+00:39:22,780 --> 00:39:26,940
+ You will use a tree index equal to zero, okay, this is by definition.
+
+386
+00:39:27,980 --> 00:39:36,860
+ And then you put here which state you want, in the case of the balance, you will have to put a one,
+
+387
+00:39:36,860 --> 00:39:46,220
+ here okay but each part uh if you see here it's kind of state of this account it's a different
+
+388
+00:39:46,220 --> 00:39:53,420
+ subindex where the subindex is basically which index in the vector you want to access so in the
+
+389
+00:39:53,420 --> 00:40:00,940
+ case of balance it's one uh in the case of nonce it's two and you can find this in the ip okay
+
+390
+00:40:01,660 --> 00:40:06,300
+ and you do this calculation and you have the tricky and you can access that in the tree and
+
+391
+00:40:06,300 --> 00:40:13,580
+ find what you want. If you remember, in the account header, we also store these special
+
+392
+00:40:14,140 --> 00:40:20,539
+ storage slots and these first cold chunks. So, if you want to access the first
+
+393
+00:40:21,260 --> 00:40:28,539
+ storage slot zero, you basically do the same as you do here, but you put the correct index
+
+394
+00:40:28,539 --> 00:40:31,840
+ and the same with this special cold chunks.
+
+395
+00:40:34,119 --> 00:40:37,840
+ For the rest of the storage slots that are in the first 64
+
+396
+00:40:37,840 --> 00:40:41,980
+ and for the rest of cold chunks that are in the first 128,
+
+397
+00:40:41,980 --> 00:40:44,239
+ you have to do some other calculation,
+
+398
+00:40:45,099 --> 00:40:46,920
+ which is also explained in the IP,
+
+399
+00:40:48,480 --> 00:40:52,000
+ which gives you the way to calculate the tree index
+
+400
+00:40:53,119 --> 00:40:57,139
+ and it's a Vindex for that storage slot.
+
+401
+00:40:57,139 --> 00:40:59,819
+ Okay, and the same with the cold chunks.
+
+402
+00:40:59,819 --> 00:41:01,659
+ Let's say that you want the cold chunk,
+
+403
+00:41:01,659 --> 00:41:04,619
+ I know, 1,000.
+
+404
+00:41:04,619 --> 00:41:06,519
+ So it basically put 1,000 here,
+
+405
+00:41:06,519 --> 00:41:08,900
+ you add which it's constant,
+
+406
+00:41:08,900 --> 00:41:10,379
+ you have this chunk ID.
+
+407
+00:41:11,519 --> 00:41:14,639
+ With that, you can calculate the tree index
+
+408
+00:41:14,639 --> 00:41:17,059
+ and the subindex,
+
+409
+00:41:17,059 --> 00:41:18,480
+ and you do the tree key function
+
+410
+00:41:18,480 --> 00:41:20,359
+ that we explained in the previous slide,
+
+411
+00:41:20,359 --> 00:41:23,139
+ and you get the tree key, okay?
+
+412
+00:41:23,139 --> 00:41:29,859
+ This is like maybe the part that is a bit more complex and it might take some minutes
+
+413
+00:41:29,859 --> 00:41:37,299
+ to digest it, digest this, so if it sounds confusing, don't be worried.
+
+414
+00:41:37,299 --> 00:41:42,639
+ Just try to come back to this slide later and hopefully it will make some sense.
+
+415
+00:41:42,639 --> 00:41:49,679
+ The main idea of adding this constants for storage slots and cold chunks is basically
+
+416
+00:41:49,679 --> 00:41:58,239
+ a way of partitioning the address space for this address so these both don't overlap,
+
+417
+00:41:58,239 --> 00:42:05,359
+ okay? Because this is really a big number that basically makes these three indexes
+
+418
+00:42:05,359 --> 00:42:08,639
+ not really overlap for storage slots and cold chunks.
+
+419
+00:42:11,679 --> 00:42:19,039
+ Okay, so now we will switch topics a bit and talk about gas accounting. I think that
+
+420
+00:42:19,039 --> 00:42:22,340
+ Guillaume is here, maybe he wants to continue.
+
+421
+00:42:22,340 --> 00:42:24,880
+ Yeah, I don't know if you guys can hear me.
+
+422
+00:42:24,880 --> 00:42:29,300
+ Yeah, we can hear you, but maybe before we switch topics here,
+
+423
+00:42:29,300 --> 00:42:34,300
+ a couple questions in the chat here that might be...
+
+424
+00:42:34,300 --> 00:42:36,199
+ Sorry, before we get to the questions,
+
+425
+00:42:36,199 --> 00:42:39,739
+ I just had one comment to give to the previous slide.
+
+426
+00:42:39,739 --> 00:42:41,440
+ Sure, great.
+
+427
+00:42:41,440 --> 00:42:43,000
+ Yeah, it's just that, yeah,
+
+428
+00:42:43,000 --> 00:42:44,599
+ domain storage offset is really big,
+
+429
+00:42:44,599 --> 00:42:47,880
+ but on top of that, the code size itself is limited.
+
+430
+00:42:47,880 --> 00:42:49,680
+ we want to increase the size of the code,
+
+431
+00:42:49,680 --> 00:42:53,660
+ but we will never increase it to the size of main storage
+
+432
+00:42:53,660 --> 00:42:55,160
+ offset.
+
+433
+00:42:55,160 --> 00:42:57,599
+ Well, there should never be a clash, basically.
+
+434
+00:43:00,260 --> 00:43:00,880
+ Got it.
+
+435
+00:43:00,880 --> 00:43:01,380
+ Thank you.
+
+436
+00:43:07,480 --> 00:43:11,160
+ Would you be willing to walk through quickly
+
+437
+00:43:11,160 --> 00:43:14,019
+ how retrieval changes with Merkle trees
+
+438
+00:43:14,019 --> 00:43:16,680
+ compared to Merkle trees?
+
+439
+00:43:16,679 --> 00:43:20,679
+ question is like what's the benefit of calculating the extra commitments
+
+440
+00:43:27,559 --> 00:43:33,239
+ uh you may like the performance overhead of burkle trees compared to markup potential trees
+
+441
+00:43:34,919 --> 00:43:41,960
+ i believe so when yeah when you're when you're retrieving data right so um burkle tree the kind
+
+442
+00:43:41,960 --> 00:43:49,240
+ of cryptography using Broker Tweez is much heavier than doing hashes. So, doing hashes
+
+443
+00:43:49,240 --> 00:43:57,159
+ in CPUs is really, really, really, really fast. Unfortunately, doing elliptical operations is much
+
+444
+00:43:57,159 --> 00:44:05,320
+ slower. This is basically a trade-off of trying to make the cryptography of Broker Tweez be really
+
+445
+00:44:05,320 --> 00:44:13,880
+ friendly for snarks. So it's basically a trade-off. We have done a lot of work to make all this
+
+446
+00:44:13,880 --> 00:44:20,600
+ cryptography implementation as fast as possible. But even if we do try to do the best thing
+
+447
+00:44:20,600 --> 00:44:27,559
+ possible it will never be as fast as the Merkle Patricia tree kind of cryptography.
+
+448
+00:44:27,559 --> 00:44:33,639
+ So it's basically a decided trade-off.
+
+449
+00:44:33,639 --> 00:44:38,900
+ We kind of gained some benefits, but we have to pay some costs.
+
+450
+00:44:38,900 --> 00:44:42,519
+ Cool, that makes sense.
+
+451
+00:44:42,519 --> 00:44:46,360
+ Mario, any other questions you want to surface now while we're here?
+
+452
+00:44:46,360 --> 00:44:53,400
+ There was a question whether the Verkult tree implementation will have a hiding property
+
+453
+00:44:53,400 --> 00:45:03,079
+ yes commitments uh hiding whether it applies here uh no it it's only having uh binding properties
+
+454
+00:45:03,079 --> 00:45:08,760
+ not really hiding uh because hiding doesn't make sense since all this the state is public anyway
+
+455
+00:45:09,480 --> 00:45:15,639
+ so the commitment doesn't really require to avoid leaking information or or similar um
+
+456
+00:45:15,639 --> 00:45:22,599
+ right it's a really good question yeah yeah it makes sense yeah thank you um yeah i think we can
+
+457
+00:45:22,599 --> 00:45:31,159
+ move on for now. Guillaume? Yeah, I don't know, can I share my screen? I don't know if it's gonna work.
+
+458
+00:45:31,159 --> 00:45:44,319
+ Yeah go ahead, you have the present button right here. Share screen, okay so I guess it's going to
+
+459
+00:45:44,320 --> 00:45:52,960
+ share my entire screen Wow you can also upload a presentation or I mean it's it's the same
+
+460
+00:45:52,960 --> 00:46:00,780
+ presentation it's just that my screen might be a bit too large for it for the entire okay let me
+
+461
+00:46:00,780 --> 00:46:16,300
+ try. You'll tell me if it works or not. Here we go. Oh, okay. Here we go. All right. Does that work?
+
+462
+00:46:18,780 --> 00:46:20,700
+ Yes. Yes. Perfect.
+
+463
+00:46:20,699 --> 00:46:31,980
+ it. So I'm going to talk about the gas changes, because we change, well, we make pretty heavy
+
+464
+00:46:31,980 --> 00:46:37,719
+ changes to the data model, it should be obvious. So the question is, how do we update the gas
+
+465
+00:46:37,719 --> 00:46:49,559
+ model to reflect this? And the first intuition to have is that we are no longer trying to
+
+466
+00:46:49,559 --> 00:46:57,480
+ reduce the amount of IO, right? We are no longer trying to reduce the growth of the state size,
+
+467
+00:46:57,539 --> 00:47:01,320
+ or at least more accurately, it's not that we're not trying to make this happen,
+
+468
+00:47:01,320 --> 00:47:12,039
+ to prevent this. It's not our primary focus. Our primary focus is to make the witness that
+
+469
+00:47:12,039 --> 00:47:17,519
+ Stakeless clients download and unpack and execute as small as possible.
+
+470
+00:47:18,360 --> 00:47:21,279
+ Then, of course, if on top of that, we can, you know,
+
+471
+00:47:21,599 --> 00:47:28,199
+ stamp the state growth and ensure speedy IO, that's better.
+
+472
+00:47:28,519 --> 00:47:30,639
+ But that's not the primary concern anymore.
+
+473
+00:47:32,739 --> 00:47:40,840
+ So, yeah, what we are looking at is making sure that
+
+474
+00:47:40,840 --> 00:47:46,120
+ we reduce, yeah, we look at all the actions
+
+475
+00:47:46,120 --> 00:47:48,600
+ that will increase the witness size,
+
+476
+00:47:48,600 --> 00:47:49,900
+ like reading the state.
+
+477
+00:47:50,019 --> 00:47:51,120
+ Every time you read the state,
+
+478
+00:47:51,200 --> 00:47:54,600
+ you need to prove that what you read was there
+
+479
+00:47:55,180 --> 00:47:59,180
+ and contained the value that you claim it contained.
+
+480
+00:48:00,000 --> 00:48:02,039
+ So you will need to add it to the witness,
+
+481
+00:48:02,240 --> 00:48:03,620
+ so you will need to add it to the block,
+
+482
+00:48:04,059 --> 00:48:05,900
+ so you need to prove it.
+
+483
+00:48:06,180 --> 00:48:10,620
+ So that's an action that will have a gas impact,
+
+484
+00:48:10,619 --> 00:48:11,779
+ that will have a gas cost.
+
+485
+00:48:12,079 --> 00:48:13,639
+ Same thing with writing to the state
+
+486
+00:48:13,639 --> 00:48:17,619
+ because you write to the state
+
+487
+00:48:17,619 --> 00:48:21,819
+ so that there's an update of the root commitments.
+
+488
+00:48:22,119 --> 00:48:24,119
+ So you need to somehow,
+
+489
+00:48:25,139 --> 00:48:27,900
+ well, first of all, you need to pay for this update
+
+490
+00:48:27,900 --> 00:48:33,199
+ so that you don't frivolously keep writing data
+
+491
+00:48:33,199 --> 00:48:38,980
+ that will increase the amount of calculation
+
+492
+00:48:38,980 --> 00:48:41,199
+ without paying for it.
+
+493
+00:48:42,280 --> 00:48:45,980
+ And one thing, I mean, Ignacio already mentioned,
+
+494
+00:48:46,260 --> 00:48:50,240
+ like now the code is very much part of the tree.
+
+495
+00:48:50,860 --> 00:48:53,639
+ And that's because when we execute code,
+
+496
+00:48:54,559 --> 00:48:58,619
+ we need to prove that the code we execute
+
+497
+00:48:58,619 --> 00:48:59,800
+ was also part of the state,
+
+498
+00:48:59,860 --> 00:49:01,800
+ that we don't execute some random code
+
+499
+00:49:01,800 --> 00:49:03,440
+ that comes from nowhere.
+
+500
+00:49:03,440 --> 00:49:13,780
+ So, we need to also change the guest model to account for what gets executed, because
+
+501
+00:49:13,780 --> 00:49:19,360
+ what gets executed is added to the witness, and will make the witness bigger, and therefore
+
+502
+00:49:19,360 --> 00:49:20,599
+ the block bigger.
+
+503
+00:49:20,599 --> 00:49:25,500
+ So, there are really five cost changes.
+
+504
+00:49:25,500 --> 00:49:31,740
+ One thing that I should say first is that making the distinction of what has already
+
+505
+00:49:31,739 --> 00:49:38,839
+ been accessed as opposed to what has not been accessed is something that already exists
+
+506
+00:49:38,839 --> 00:49:41,659
+ in the current state model with the access list.
+
+507
+00:49:41,819 --> 00:49:47,219
+ So we want to reuse this scheme of access list because once something has been added
+
+508
+00:49:47,219 --> 00:49:49,379
+ to the witness, the witness no longer grows.
+
+509
+00:49:49,619 --> 00:49:53,219
+ So it's only the first time that the hefty cost has to be paid.
+
+510
+00:49:53,500 --> 00:49:58,979
+ But once it has been added to the witness, it's just a matter of reading from memory
+
+511
+00:49:58,979 --> 00:49:59,359
+ cache.
+
+512
+00:49:59,360 --> 00:50:03,019
+ So we have a model that already exists in Ethereum right now.
+
+513
+00:50:03,180 --> 00:50:04,620
+ It's called the access list.
+
+514
+00:50:05,240 --> 00:50:08,820
+ And so we basically take the same model and we change the costs.
+
+515
+00:50:09,940 --> 00:50:16,680
+ Except that we take some of the model of the new tree, right?
+
+516
+00:50:16,860 --> 00:50:26,400
+ If you remember, we have this way of calculating where a value goes in the tree.
+
+517
+00:50:26,400 --> 00:50:30,440
+ and the idea is because the vertical node width is 256
+
+518
+00:50:30,440 --> 00:50:33,800
+ it's basically the last bytes
+
+519
+00:50:33,800 --> 00:50:37,940
+ all the values that are grouped in the same
+
+520
+00:50:37,940 --> 00:50:42,220
+ 256 chunk will be
+
+521
+00:50:42,220 --> 00:50:45,940
+ next to one another and so every time
+
+522
+00:50:45,940 --> 00:50:50,480
+ what we want to do is every time we access one of those groups
+
+523
+00:50:50,480 --> 00:50:54,099
+ we will pay a cost, like a hefty cost, but then every
+
+524
+00:50:54,099 --> 00:51:01,279
+ individual leaf in the group will be much cheaper to access for the first time and even cheaper to
+
+525
+00:51:01,279 --> 00:51:07,559
+ access for the second time. And another concern that I didn't talk about, by the way, until now,
+
+526
+00:51:08,380 --> 00:51:16,219
+ is that yes, we want to fit the guest model to the new storage model. But at the same time,
+
+527
+00:51:16,219 --> 00:51:22,259
+ we don't want to break every single application out there that might have tried to optimize for
+
+528
+00:51:22,260 --> 00:51:27,080
+ a given gas model. So everything, all those values, they might seem random, but they've
+
+529
+00:51:27,080 --> 00:51:33,000
+ actually been thought to more or less change nothing from the gas consumption perspective,
+
+530
+00:51:33,420 --> 00:51:37,460
+ from the EVM perspective. From the client perspective, it's completely different.
+
+531
+00:51:37,940 --> 00:51:44,740
+ But from the DAP perspective, it's fairly similar. It's not perfect, but it's pretty close.
+
+532
+00:51:46,080 --> 00:51:51,420
+ Yeah, so the idea is that we just get rid of all the old cold storage costs that we used to have
+
+533
+00:51:51,420 --> 00:51:56,420
+ with access list and we replace them with this model.
+
+534
+00:51:59,180 --> 00:52:02,760
+ So yeah, what are the events that trigger those costs?
+
+535
+00:52:06,000 --> 00:52:08,860
+ Well, there's every time you access the state itself,
+
+536
+00:52:08,860 --> 00:52:10,659
+ so if you store, if you load,
+
+537
+00:52:11,500 --> 00:52:13,720
+ but now if you check the balance,
+
+538
+00:52:13,720 --> 00:52:17,820
+ that also means that you have to go into the tree.
+
+539
+00:52:17,820 --> 00:52:20,139
+ I mean, okay, admittedly,
+
+540
+00:52:20,139 --> 00:52:23,719
+ That's what you already had to do, so it doesn't really change much in this respect.
+
+541
+00:52:24,900 --> 00:52:31,679
+ But yeah, so rephrasing what I should have said, every time you access the state,
+
+542
+00:52:32,799 --> 00:52:39,779
+ you, like with a balance, with a self-destruct, with a code copy, you will incur those costs.
+
+543
+00:52:39,780 --> 00:52:50,720
+ One thing that changes is that we do not charge the cost for withdrawals.
+
+544
+00:52:50,880 --> 00:52:52,420
+ Withdrawals need to be added.
+
+545
+00:52:52,540 --> 00:53:03,180
+ For example, I'm saying withdrawals, but also the Denkun beacon block root precompile.
+
+546
+00:53:04,220 --> 00:53:05,840
+ Actually, system contract, sorry.
+
+547
+00:53:05,840 --> 00:53:12,420
+ all those values are added to the witness but no one pays for it for them so those costs don't get
+
+548
+00:53:12,420 --> 00:53:18,780
+ charged um and it's the same thing because you pay an upfront cost of 21 000 gas to send a
+
+549
+00:53:18,780 --> 00:53:26,260
+ transaction we do not uh charge those costs for uh for sending and for the sender and the recipient
+
+550
+00:53:26,260 --> 00:53:32,920
+ of the transaction but everything else is um is charged including like we said contract code
+
+551
+00:53:32,920 --> 00:53:41,059
+ Um, we, yeah, like, like I said before, you only charge, uh, the first time, right?
+
+552
+00:53:41,099 --> 00:53:44,500
+ Because then, uh, the, the damage is done.
+
+553
+00:53:44,579 --> 00:53:48,260
+ You added data to the, to the, to the witness.
+
+554
+00:53:48,260 --> 00:53:53,760
+ So then it becomes, uh, the warm access costs, which is like the cost of reading from memory
+
+555
+00:53:53,760 --> 00:53:59,680
+ and not loading from disk or, uh, uh, or, uh, any other operations like this.
+
+556
+00:53:59,679 --> 00:54:11,019
+ So, right, so basically, I don't know if Inacio had in mind to take over here, but I can continue.
+
+557
+00:54:11,019 --> 00:54:13,579
+ I'll take it as yes.
+
+558
+00:54:13,579 --> 00:54:21,659
+ So yeah, you have this new gas accounting, you have all new crypto, all new tree formats,
+
+559
+00:54:21,659 --> 00:54:23,819
+ all new protocols.
+
+560
+00:54:23,819 --> 00:54:25,899
+ Is this the end of it?
+
+561
+00:54:25,899 --> 00:54:27,480
+ No.
+
+562
+00:54:27,480 --> 00:54:30,559
+ Because we need to convert the state.
+
+563
+00:54:30,559 --> 00:54:34,639
+ We have a state in an mpt format.
+
+564
+00:54:34,639 --> 00:54:37,139
+ There's like a billion leaves.
+
+565
+00:54:37,139 --> 00:54:42,900
+ So that's like 200, okay, more like 300 gigabytes by now.
+
+566
+00:54:42,900 --> 00:54:48,300
+ Or at least by the time we expect to have to start using vertical trees.
+
+567
+00:54:48,300 --> 00:54:51,619
+ So we have to somehow convert everything.
+
+568
+00:54:51,619 --> 00:54:59,500
+ it's not that easy because we have to, because we use a different hashing model to store
+
+569
+00:54:59,500 --> 00:55:07,359
+ data in the tree, we have to rehash everything. And we've been looking at several strategies,
+
+570
+00:55:07,359 --> 00:55:14,259
+ some of them were more centralized, others are really decentralized but pretty heavy
+
+571
+00:55:14,260 --> 00:55:24,840
+ on the computation. And we settled on the overlay tree, which is a method where you, yeah, so you
+
+572
+00:55:24,840 --> 00:55:33,060
+ start at block, just before the fork, you start with an mpt tree, right? And everything that is,
+
+573
+00:55:33,260 --> 00:55:40,340
+ I'm not sure how to call it, like green-blue are values that were written to the state before the
+
+574
+00:55:40,340 --> 00:55:47,059
+ fork and everything that is purple is our values that get written to the state after the fork so
+
+575
+00:55:47,059 --> 00:55:52,720
+ currently we are just before the fork so there are no purple values and we have this iterator
+
+576
+00:55:52,720 --> 00:55:59,579
+ that is going to sweep the state over time like it's going to the stride of the iterator is
+
+577
+00:55:59,579 --> 00:56:07,420
+ a given value that is chosen so that most of the nodes or at least your average node can follow
+
+578
+00:56:07,420 --> 00:56:17,099
+ can copy so many leaves per block without missing the slot, so being able to follow the network.
+
+579
+00:56:17,980 --> 00:56:23,099
+ And those weird red triangles represent, by the way, I forgot to mention that,
+
+580
+00:56:25,019 --> 00:56:30,300
+ the internal nodes of the MPD tree. So the red triangles are the internal nodes,
+
+581
+00:56:30,300 --> 00:56:36,320
+ and the blue-green squares are the leaves.
+
+582
+00:56:37,580 --> 00:56:39,060
+ So when the fork happens,
+
+583
+00:56:39,360 --> 00:56:42,220
+ we start with a fresh vertical route
+
+584
+00:56:42,220 --> 00:56:44,360
+ that is considered as,
+
+585
+00:56:45,260 --> 00:56:48,320
+ in an abstract way,
+
+586
+00:56:48,460 --> 00:56:50,760
+ it's laid over the mpg tree.
+
+587
+00:56:51,900 --> 00:56:54,039
+ And this new vertical route
+
+588
+00:56:54,039 --> 00:56:56,539
+ is where all the writes will end up.
+
+589
+00:56:56,620 --> 00:56:59,440
+ So if you write a new value to the tree,
+
+590
+00:56:59,440 --> 00:57:06,500
+ it's a purple value it will end up in the overlay vertical tree now what if you uh oh yeah and on
+
+591
+00:57:06,500 --> 00:57:15,340
+ top of that every block the the iterator moves by n value so here n equals two so yeah the green
+
+592
+00:57:15,340 --> 00:57:20,920
+ the green arrow represents the head of the iterator and it sweeped two leaves that got
+
+593
+00:57:20,920 --> 00:57:27,320
+ moved or more exactly copied into the vertical tree and now if i want to look for the
+
+594
+00:57:27,320 --> 00:57:32,320
+ to the pink square, which is currently in the Merkle tree,
+
+595
+00:57:33,740 --> 00:57:37,360
+ what we do is that we first try to read
+
+596
+00:57:37,360 --> 00:57:40,700
+ from the Virkle tree, we do not find it there.
+
+597
+00:57:40,700 --> 00:57:45,700
+ So we go to the Merkle tree, which is read only,
+
+598
+00:57:46,800 --> 00:57:48,300
+ and we find it there.
+
+599
+00:57:48,300 --> 00:57:52,700
+ And we continue this way, so the iterator at each block,
+
+600
+00:57:52,700 --> 00:57:55,680
+ the iterator continues copying values,
+
+601
+00:57:55,679 --> 00:57:57,579
+ and you can see that, for example,
+
+602
+00:57:57,579 --> 00:58:02,579
+ one value that used to be in the MPT has been clobbered,
+
+603
+00:58:03,799 --> 00:58:06,259
+ has been, sorry it hasn't been clobbered,
+
+604
+00:58:06,259 --> 00:58:08,739
+ it's a value that was copied for the MPT
+
+605
+00:58:08,739 --> 00:58:09,899
+ but it has been overwritten,
+
+606
+00:58:09,899 --> 00:58:13,179
+ so the MPT is frozen it doesn't change,
+
+607
+00:58:13,179 --> 00:58:16,699
+ but the values themselves keep getting copied
+
+608
+00:58:16,699 --> 00:58:20,500
+ unless of course they overwrite a new version of that value.
+
+609
+00:58:20,500 --> 00:58:34,000
+ And eventually, or at least when the fork block has been finalized, you can afford to delete all the mpt internal nodes.
+
+610
+00:58:34,119 --> 00:58:35,440
+ So you're freeing a lot of space.
+
+611
+00:58:37,360 --> 00:58:42,320
+ And I'm sorry, I don't know what happened with the slide, with the formatting here.
+
+612
+00:58:42,320 --> 00:58:58,940
+ But the idea is that when all the leaves, because the iterator keeps progressing, eventually, and because the iterator keeps progressing and the MPT itself is read-only, eventually, all the nodes will be, all the leaves will have been moved to the vertical tree.
+
+613
+00:58:59,340 --> 00:59:02,039
+ So you can afford to delete all the internal data.
+
+614
+00:59:03,620 --> 00:59:11,180
+ And one thing, like this model is a bit simplified, so I did not really represent that on those slides.
+
+615
+00:59:11,179 --> 00:59:21,759
+ But what you have to know is that currently I represent the leaves in the MPT and the
+
+616
+00:59:21,759 --> 00:59:24,299
+ vertical tree as being in the same order, but they're not.
+
+617
+00:59:24,379 --> 00:59:25,599
+ This is just a simplification.
+
+618
+00:59:28,059 --> 00:59:31,319
+ So yeah, this is the gist of the method.
+
+619
+00:59:32,039 --> 00:59:38,379
+ The question is, how do we set the stride of the iterator?
+
+620
+00:59:38,699 --> 00:59:40,679
+ And we have a bit of a model.
+
+621
+00:59:41,179 --> 00:59:46,079
+ And basically it looks like we can afford,
+
+622
+00:59:47,019 --> 00:59:48,460
+ what we want is to,
+
+623
+00:59:48,699 --> 00:59:52,179
+ it's a trade-off between how many leaves we copy per block
+
+624
+00:59:52,179 --> 00:59:54,119
+ and how many machines,
+
+625
+00:59:54,559 --> 00:59:58,079
+ what part of the network we are comfortable with losing
+
+626
+00:59:58,079 --> 01:00:01,440
+ during the transition.
+
+627
+01:00:01,440 --> 01:00:05,539
+ Of course, we cannot afford to lose more than one third
+
+628
+01:00:05,539 --> 01:00:06,159
+ of the network.
+
+629
+01:00:06,339 --> 01:00:07,219
+ That would be critical.
+
+630
+01:00:07,219 --> 01:00:16,279
+ But we can see that already with 5,000 leaves, we're definitely not losing too many.
+
+631
+01:00:16,459 --> 01:00:29,159
+ We can afford to lose more than 20% of the network and still complete the transition in two months.
+
+632
+01:00:29,159 --> 01:00:34,119
+ So I think by now, given the test we've done,
+
+633
+01:00:34,420 --> 01:00:40,500
+ we're pretty comfortable doing 10,000 leaves per block.
+
+634
+01:00:40,500 --> 01:00:45,460
+ So we would be able to proceed with the conversion within 15 days,
+
+635
+01:00:46,319 --> 01:00:47,339
+ which is not too bad.
+
+636
+01:00:48,920 --> 01:00:52,139
+ But yeah, ultimately, we need to do more testing.
+
+637
+01:00:52,699 --> 01:00:55,319
+ We might even discover that 20,000 leaves is okay
+
+638
+01:00:55,320 --> 01:00:59,200
+ because as we go more,
+
+639
+01:00:59,480 --> 01:01:01,039
+ the machines connected to the network
+
+640
+01:01:01,039 --> 01:01:02,160
+ are more and more powerful.
+
+641
+01:01:03,580 --> 01:01:05,400
+ But yeah, this is still,
+
+642
+01:01:05,580 --> 01:01:07,380
+ this is not exactly an open question,
+
+643
+01:01:07,600 --> 01:01:08,820
+ but it's still a parameter
+
+644
+01:01:08,820 --> 01:01:10,920
+ that can change before the fork.
+
+645
+01:01:13,920 --> 01:01:14,400
+ Right.
+
+646
+01:01:14,780 --> 01:01:16,380
+ So once again, Ignacio,
+
+647
+01:01:16,440 --> 01:01:18,260
+ I don't know if you plan to talk about this,
+
+648
+01:01:18,260 --> 01:01:19,100
+ but I can do it.
+
+649
+01:01:20,700 --> 01:01:21,220
+ Okay.
+
+650
+01:01:23,300 --> 01:01:24,740
+ So like I said,
+
+651
+01:01:25,320 --> 01:01:29,080
+ Sorry.
+
+652
+01:01:29,480 --> 01:01:29,620
+ Yep.
+
+653
+01:01:31,840 --> 01:01:32,440
+ Hello?
+
+654
+01:01:38,400 --> 01:01:39,700
+ Okay, I'll continue.
+
+655
+01:01:41,820 --> 01:01:45,340
+ So, like I said, we have to rehash everything.
+
+656
+01:01:46,620 --> 01:01:49,559
+ But the problem is that so far,
+
+657
+01:01:50,140 --> 01:01:52,559
+ not everybody has stored,
+
+658
+01:01:52,559 --> 01:02:00,039
+ In fact, a very, very small majority of people have stored pre-images of all the key hashes in their databases.
+
+659
+01:02:00,920 --> 01:02:03,360
+ It's like 70 gigabytes, more or less.
+
+660
+01:02:04,420 --> 01:02:08,360
+ So, yeah, why would you take up 70 gigabytes if you don't have to?
+
+661
+01:02:09,519 --> 01:02:12,639
+ The problem is that for the transition, you have to.
+
+662
+01:02:12,699 --> 01:02:13,539
+ You have to have them.
+
+663
+01:02:14,980 --> 01:02:22,380
+ So we don't really – we have to find a way to distribute those pre-images.
+
+664
+01:02:22,559 --> 01:02:35,440
+ And to do this, we have looked at several steps, several methods, but the fact is that
+
+665
+01:02:35,440 --> 01:02:47,239
+ Erdogan and Reff store their data by pre-images, so they have the ability to generate a file
+
+666
+01:02:47,239 --> 01:02:48,599
+ that it could then distribute.
+
+667
+01:02:48,599 --> 01:02:54,439
+ And it's not as bad as, for example, converting the entire database
+
+668
+01:02:54,439 --> 01:02:56,879
+ because the entire database is very large.
+
+669
+01:02:57,599 --> 01:03:00,039
+ The verification, if you are given the pre-images,
+
+670
+01:03:00,119 --> 01:03:03,739
+ you can go over your own database and verify that you've got all the pre-images.
+
+671
+01:03:04,500 --> 01:03:08,679
+ So it's much cheaper and much safer to distribute.
+
+672
+01:03:08,679 --> 01:03:18,559
+ But the consequence would be that you cannot exactly start the sweep right away.
+
+673
+01:03:18,839 --> 01:03:22,899
+ You need to have some time to get the pre-images generated,
+
+674
+01:03:24,379 --> 01:03:29,379
+ like the pre-images of the frozen Merkle tree, distributed.
+
+675
+01:03:29,379 --> 01:03:35,279
+ So we would give ourselves a month, sorry, not a month, a week,
+
+676
+01:03:35,280 --> 01:03:40,000
+ during which the vocal tree gets written to,
+
+677
+01:03:40,320 --> 01:03:41,580
+ but no conversion happens.
+
+678
+01:03:41,680 --> 01:03:43,060
+ So we still have the two trees.
+
+679
+01:03:44,340 --> 01:03:48,480
+ And when a client receives the pre-images,
+
+680
+01:03:48,480 --> 01:03:51,560
+ it can very easily verify
+
+681
+01:03:51,560 --> 01:03:53,420
+ that it's got all the pre-images it needs
+
+682
+01:03:53,420 --> 01:03:56,780
+ because it's only the pre-images of a frozen vocal tree.
+
+683
+01:03:57,700 --> 01:03:59,400
+ And then the sweeping star.
+
+684
+01:03:59,540 --> 01:04:01,180
+ And if we find, of course,
+
+685
+01:04:01,240 --> 01:04:04,880
+ that there's a problem in the pre-image distribution,
+
+686
+01:04:04,880 --> 01:04:08,320
+ We can always make an emergency release.
+
+687
+01:04:08,380 --> 01:04:10,900
+ It's not really great, but it's,
+
+688
+01:04:11,700 --> 01:04:15,380
+ at least we have a way to handle that.
+
+689
+01:04:16,920 --> 01:04:19,559
+ But yeah, it's still kind of an open problem,
+
+690
+01:04:20,860 --> 01:04:24,760
+ but it's not a, doesn't feel like a big one.
+
+691
+01:04:24,840 --> 01:04:27,800
+ So we're not losing sleep over this one.
+
+692
+01:04:29,079 --> 01:04:32,880
+ And then the last thing I plan to talk about
+
+693
+01:04:32,880 --> 01:04:35,640
+ was how we sync.
+
+694
+01:04:36,119 --> 01:04:39,380
+ So currently, there's only one client
+
+695
+01:04:39,380 --> 01:04:42,220
+ that has sync implemented,
+
+696
+01:04:42,599 --> 01:04:44,640
+ which is a Verkle version of SnapSync.
+
+697
+01:04:44,640 --> 01:04:47,240
+ But what I want to give you is an overview
+
+698
+01:04:47,240 --> 01:04:50,380
+ of what you could do with Verkle trees,
+
+699
+01:04:50,480 --> 01:04:52,360
+ how Verkle trees would simplify the sync.
+
+700
+01:04:53,300 --> 01:04:57,900
+ And the idea is that you already have parts of the tree
+
+701
+01:04:57,900 --> 01:04:59,820
+ packaged in every block.
+
+702
+01:04:59,820 --> 01:05:03,860
+ so the idea is to leverage this fact
+
+703
+01:05:03,860 --> 01:05:07,780
+ this feature to solve the sync
+
+704
+01:05:07,780 --> 01:05:09,580
+ and make sync much simpler
+
+705
+01:05:09,580 --> 01:05:11,580
+ so you would start at block end
+
+706
+01:05:11,580 --> 01:05:13,220
+ the block you join the network at
+
+707
+01:05:13,220 --> 01:05:14,900
+ and you execute statelessly
+
+708
+01:05:14,900 --> 01:05:19,080
+ but as you go you keep rebuilding trees
+
+709
+01:05:19,080 --> 01:05:22,900
+ so you can actually accumulate all the leaves
+
+710
+01:05:22,900 --> 01:05:26,580
+ and you know you have the latest version of a leaf
+
+711
+01:05:26,580 --> 01:05:28,000
+ which is always the biggest problem
+
+712
+01:05:28,000 --> 01:05:31,920
+ with the sync because, yeah,
+
+713
+01:05:32,000 --> 01:05:34,880
+ you are given the latest view of the tree.
+
+714
+01:05:34,980 --> 01:05:36,519
+ So if a leaf hasn't been touched,
+
+715
+01:05:37,559 --> 01:05:40,519
+ it means you have the latest version.
+
+716
+01:05:40,659 --> 01:05:45,219
+ Simply it's from a previous block.
+
+717
+01:05:46,519 --> 01:05:47,920
+ And then what you do in the background
+
+718
+01:05:47,920 --> 01:05:49,860
+ is you start downloading,
+
+719
+01:05:50,079 --> 01:05:51,480
+ you start asking nodes around you,
+
+720
+01:05:51,599 --> 01:05:55,579
+ full nodes around you for all the leaves
+
+721
+01:05:55,579 --> 01:06:00,420
+ that have not been seen in the stateless view so far.
+
+722
+01:06:01,119 --> 01:06:04,319
+ And you can verify them very, very easily
+
+723
+01:06:04,319 --> 01:06:05,539
+ because it's only,
+
+724
+01:06:06,000 --> 01:06:09,420
+ every time it's only gonna be a small subset of the tree.
+
+725
+01:06:09,519 --> 01:06:12,279
+ So you can recompute the root commitment very, very fast,
+
+726
+01:06:13,079 --> 01:06:14,420
+ at least comparatively fast
+
+727
+01:06:14,420 --> 01:06:19,119
+ and verify that what you've got is the current state,
+
+728
+01:06:19,500 --> 01:06:21,719
+ at least fits in your current view.
+
+729
+01:06:21,719 --> 01:06:24,659
+ and once again
+
+730
+01:06:24,659 --> 01:06:27,019
+ it doesn't even matter how long this process
+
+731
+01:06:27,019 --> 01:06:29,199
+ lasts because you can keep executing blocks
+
+732
+01:06:29,199 --> 01:06:30,939
+ statelessly
+
+733
+01:06:30,939 --> 01:06:32,359
+ until that point
+
+734
+01:06:32,359 --> 01:06:34,500
+ so yeah, that's
+
+735
+01:06:34,500 --> 01:06:36,559
+ pretty much the idea I think
+
+736
+01:06:36,559 --> 01:06:38,199
+ that was, yeah
+
+737
+01:06:38,199 --> 01:06:40,519
+ Ignacio, I'll let you conclude
+
+738
+01:06:40,519 --> 01:06:46,359
+ yes
+
+739
+01:06:46,359 --> 01:06:47,679
+ can you hear me?
+
+740
+01:06:48,619 --> 01:06:49,859
+ yep, okay
+
+741
+01:06:49,860 --> 01:06:51,980
+ because I had a problem with my mic.
+
+742
+01:06:53,160 --> 01:06:55,660
+ Yeah, this is kind of the end of the presentation.
+
+743
+01:06:56,620 --> 01:07:01,519
+ I left here an image on like why we use an elephant
+
+744
+01:07:01,519 --> 01:07:03,960
+ for Virgo trees, which might be surprising
+
+745
+01:07:03,960 --> 01:07:05,160
+ or not really obvious.
+
+746
+01:07:05,840 --> 01:07:09,620
+ So I learned from Guillaume that the elephants are known
+
+747
+01:07:09,620 --> 01:07:13,680
+ for destroying branches of tree or uprooting trees,
+
+748
+01:07:13,940 --> 01:07:18,980
+ which really is pretty related with what we are trying to do
+
+749
+01:07:18,980 --> 01:07:22,280
+ for the Ethereum protocol, of changing the MarkupObsidia
+
+750
+01:07:22,280 --> 01:07:23,539
+ tree with another tree.
+
+751
+01:07:23,539 --> 01:07:28,280
+ So I think this elephant kind of mascot
+
+752
+01:07:28,280 --> 01:07:31,740
+ was a really good idea from, I think,
+
+753
+01:07:31,740 --> 01:07:34,079
+ Guillaume and Pari from the DevOps team.
+
+754
+01:07:34,079 --> 01:07:36,139
+ So it was totally Pari.
+
+755
+01:07:36,139 --> 01:07:39,400
+ Well, yeah, great to him.
+
+756
+01:07:39,400 --> 01:07:46,619
+ And I think that maybe Sosh wants to say something else.
+
+757
+01:07:46,619 --> 01:07:48,480
+ Yeah, just really quick, thank you
+
+758
+01:07:48,480 --> 01:07:55,199
+ to uh ignacio guillaume everyone here uh ignacio and guillaume just wanted to emphasize that
+
+759
+01:07:55,199 --> 01:08:00,719
+ they've been doing a lot of heavy lifting on vertical for a long time so a lot of appreciation
+
+760
+01:08:00,719 --> 01:08:06,079
+ to their work and many others who are working on vertical i'm here happy just to play a small part
+
+761
+01:08:06,880 --> 01:08:14,079
+ and also for anyone interested uh we have bi-weekly vertical implementer calls anyone is
+
+762
+01:08:14,079 --> 01:08:19,760
+ welcome to listen in of course if you want to take a more active role um feel free to drop a message
+
+763
+01:08:19,760 --> 01:08:26,159
+ in the ethereum r d discord there should be a link handy um but yes bi-weekly calls where we
+
+764
+01:08:26,159 --> 01:08:39,039
+ continue these kinds of discussions awesome thank you so much guys um uh very well i think we can
+
+765
+01:08:39,039 --> 01:08:45,199
+ conclude the presentation let me see if there are any questions for you before we rip up um yeah
+
+766
+01:08:45,199 --> 01:08:50,800
+ thank you so much uh all three of you uh it was really great uh ignacio especially and with uh
+
+767
+01:08:51,359 --> 01:08:57,039
+ all the deep down photography and uh guillaume the glass pricing with uh the migration thanks
+
+768
+01:08:57,039 --> 01:09:03,760
+ so much it's uh it's a lot to digest but uh i believe it might be some questions um
+
+769
+01:09:03,760 --> 01:09:13,480
+ One thing which was asked before was about the post-quantum security, whether Verkl improves
+
+770
+01:09:13,480 --> 01:09:18,300
+ in the situation, whether it's makes it maybe easier in the future to swap for something
+
+771
+01:09:18,300 --> 01:09:21,159
+ quantum secure.
+
+772
+01:09:21,159 --> 01:09:29,520
+ Yeah, so the reality as we discussed there in the chat is all the elliptic core-based
+
+773
+01:09:29,520 --> 01:09:38,360
+ cryptography isn't really safe for like quantum computers. So actually we have yes, I mean
+
+774
+01:09:38,360 --> 01:09:44,540
+ vertical tree cryptography isn't safe for quantum, so that's period. But we also have
+
+775
+01:09:44,540 --> 01:09:49,080
+ to do all our kind of changes in the protocol, like the signatures that we use for transactions
+
+776
+01:09:49,080 --> 01:09:55,360
+ is elliptic curve based, so we will have to change the way that signatures work. KCG commitments
+
+777
+01:09:55,359 --> 01:10:00,699
+ you're seeing blobs or so you say it will be curve-based cryptography, so that will
+
+778
+01:10:00,699 --> 01:10:02,319
+ also break.
+
+779
+01:10:02,319 --> 01:10:11,039
+ So usually the plan that the way that we think about cryptography and this problem is every
+
+780
+01:10:11,039 --> 01:10:15,239
+ cryptography using the protocol should have a candidate that is quantum safe.
+
+781
+01:10:15,239 --> 01:10:22,699
+ And any new cryptography that we plan to use or introduce now should have an alternative
+
+782
+01:10:22,699 --> 01:10:26,699
+ that we can change in the future.
+
+783
+01:10:26,699 --> 01:10:35,519
+ The thing with this is that this quantum cryptography is usually pretty new, at least compared to
+
+784
+01:10:35,519 --> 01:10:43,559
+ the more solid cryptography that we use now, and also it's much slower and has other trade-offs
+
+785
+01:10:43,559 --> 01:10:47,899
+ like bigger signatures or things like that.
+
+786
+01:10:47,899 --> 01:10:54,259
+ So it's not really like a simple choice to say, hey, just simply use quantum-safe cryptography
+
+787
+01:10:54,259 --> 01:11:01,699
+ that has other trade-offs that will impact UX or have other, you know, effects that will
+
+788
+01:11:01,699 --> 01:11:03,539
+ be pretty bad.
+
+789
+01:11:03,539 --> 01:11:13,199
+ So whenever this risk becomes really closer to being practical, let's say, then we will
+
+790
+01:11:13,199 --> 01:11:18,639
+ should really start switching this kind of unsafe cryptography
+
+791
+01:11:18,639 --> 01:11:19,519
+ to other schemes.
+
+792
+01:11:21,760 --> 01:11:24,179
+ ALEXANDRE DROUINIAS- Right, but that's the point.
+
+793
+01:11:24,179 --> 01:11:28,420
+ The work we do now might have to be redone,
+
+794
+01:11:28,420 --> 01:11:30,599
+ but at least we'll have done it once,
+
+795
+01:11:30,599 --> 01:11:33,899
+ so we'll understand what's going on.
+
+796
+01:11:33,899 --> 01:11:38,619
+ And yeah, currently it makes complete sense
+
+797
+01:11:38,619 --> 01:11:42,760
+ to focus on elliptic curves, because, well, first of all,
+
+798
+01:11:42,760 --> 01:11:44,220
+ it still remains to be proven
+
+799
+01:11:44,220 --> 01:11:46,760
+ that quantum computing is really around the corner.
+
+800
+01:11:47,699 --> 01:11:50,619
+ And that's more importantly
+
+801
+01:11:50,619 --> 01:11:54,500
+ that they can break elliptic curve cryptography.
+
+802
+01:11:55,140 --> 01:11:57,260
+ But when this happens,
+
+803
+01:11:57,840 --> 01:11:59,460
+ we'll be ready to switch again.
+
+804
+01:12:03,460 --> 01:12:04,280
+ Yeah, awesome.
+
+805
+01:12:04,460 --> 01:12:05,119
+ Yeah, it makes sense.
+
+806
+01:12:05,320 --> 01:12:07,480
+ I think so much to both of you.
+
+807
+01:12:07,479 --> 01:12:17,879
+ The question on the computational overhead, it's two questions here, but maybe we can
+
+808
+01:12:17,879 --> 01:12:19,239
+ merge them.
+
+809
+01:12:19,239 --> 01:12:29,719
+ So, MPTs have a branching factor of 16, while welcome trees have 256 order-running benchmarks,
+
+810
+01:12:29,719 --> 01:12:36,339
+ links, or analysis on tradeoffs for bandwidth computation.
+
+811
+01:12:36,340 --> 01:12:43,380
+ And another question around the computation is on the transition, on the node transitioning
+
+812
+01:12:43,380 --> 01:12:50,560
+ to the Virchow tree, how much heavier machine is it for this?
+
+813
+01:12:50,560 --> 01:13:04,480
+ Yeah, so regarding the branching factor question, so the special, like where the magic happens
+
+814
+01:13:04,479 --> 01:13:09,279
+ for Broca trees is that the branching factor don't have a, doesn't have an impact on these
+
+815
+01:13:09,279 --> 01:13:17,679
+ openings that we have to do on each node or on each vector. There's still a trade-off there
+
+816
+01:13:17,679 --> 01:13:25,119
+ because the branching factor, so in any Broca arguments, the proof size and the verification
+
+817
+01:13:25,119 --> 01:13:31,039
+ time, the verification time is linear on the size of the vector. So we cannot really like simply
+
+818
+01:13:31,039 --> 01:13:38,880
+ select a branching factor of 1 million and store everything in a single vector.
+
+819
+01:13:38,880 --> 01:13:45,680
+ So there still has to be a balance between the branching factor and the cost of doing
+
+820
+01:13:45,680 --> 01:13:51,279
+ openings for verifying openings for verifiers.
+
+821
+01:13:51,279 --> 01:13:53,279
+ So yeah.
+
+822
+01:13:53,279 --> 01:13:57,420
+ And from another perspective, increasing the branching factor makes it more shadow-aware.
+
+823
+01:13:57,420 --> 01:14:02,000
+ So that requires less elements in the proof.
+
+824
+01:14:02,000 --> 01:14:12,380
+ So yeah, you have to do some kind of multi-factor analysis on verifying time for proofs and
+
+825
+01:14:12,380 --> 01:14:17,940
+ how much that helps the depth of the tree and things like that.
+
+826
+01:14:17,940 --> 01:14:18,940
+ So yeah.
+
+827
+01:14:18,940 --> 01:14:24,180
+ I don't know, maybe the other question regarding state conversion.
+
+828
+01:14:24,180 --> 01:14:31,520
+ So maybe Guillaume wants to complement this later, but we have done some benchmarks on
+
+829
+01:14:31,520 --> 01:14:38,400
+ usual desktop machines and also Rock 5B as a lower, lowest setup hardware.
+
+830
+01:14:38,400 --> 01:14:50,960
+ And I think that we feel comfortable around migrating probably 10K key values per block,
+
+831
+01:14:50,960 --> 01:14:59,199
+ in a Rock 5e, but the benchmark that we did at that point in time didn't include 4844
+
+832
+01:14:59,199 --> 01:15:02,640
+ load in mainnet because it didn't exist.
+
+833
+01:15:02,640 --> 01:15:11,939
+ So probably we'll have to do some new benchmarks to really understand how the current mainnet
+
+834
+01:15:11,939 --> 01:15:19,460
+ load um how much like performance performance or like resource like it it leaves to really
+
+835
+01:15:19,460 --> 01:15:26,099
+ add this extra work of doing the conversion per block uh or even decide if rock 5b or this really
+
+836
+01:15:26,099 --> 01:15:33,219
+ low setup machines are really uh are reasonable expectations for nose to be really brand this
+
+837
+01:15:33,219 --> 01:15:41,539
+ conversion i don't know if guilliams want to say something more uh no that was pretty much it
+
+838
+01:15:41,539 --> 01:15:44,439
+ I seem to have understood that it was a bandwidth question.
+
+839
+01:15:45,699 --> 01:15:49,960
+ So the point is that, yeah,
+
+840
+01:15:50,100 --> 01:15:54,899
+ it's the average size for the proof is 150 kilobytes.
+
+841
+01:15:55,300 --> 01:15:59,019
+ So we're doing way worse than that with blobs.
+
+842
+01:16:00,539 --> 01:16:02,859
+ So we don't really, I mean,
+
+843
+01:16:02,979 --> 01:16:06,359
+ we haven't really done any benchmarks to this,
+
+844
+01:16:06,579 --> 01:16:09,239
+ but that's because we don't expect it's nothing.
+
+845
+01:16:09,239 --> 01:16:14,779
+ so it's it's not really uh we don't expect any any issue with that
+
+846
+01:16:14,779 --> 01:16:21,420
+ uh that's interesting uh thank you so much i was i was wondering how it will look like
+
+847
+01:16:21,420 --> 01:16:24,920
+ in the setup of the stateless clients who announced whether there will be like
+
+848
+01:16:24,920 --> 01:16:34,399
+ a more overhead of the network so that's uh it's interesting to hear um awesome and um maybe uh
+
+849
+01:16:34,399 --> 01:16:43,000
+ So, the question about generally what are the current tasks, what are challenges right
+
+850
+01:16:43,000 --> 01:16:48,279
+ now, what is being solved, what is the roadmap, and maybe whether there are some parts that
+
+851
+01:16:48,279 --> 01:16:53,199
+ people could look into, start contributing to.
+
+852
+01:16:53,199 --> 01:17:00,359
+ I mean, the current roadmap is sync and conversion and pretty much distribution.
+
+853
+01:17:00,359 --> 01:17:06,920
+ uh contribution well uh there's several there are several areas the the one that uh would be
+
+854
+01:17:06,920 --> 01:17:13,559
+ my favorite and never gets attention is um is implementing vertical trees in uh in other clients
+
+855
+01:17:13,559 --> 01:17:23,079
+ so we have a pretty complete implementation in um in uh geth in uh in uh sorry nether mind and
+
+856
+01:17:23,079 --> 01:17:27,640
+ Ethereum.js, but there's no implementation to speak of in Rath.
+
+857
+01:17:28,519 --> 01:17:35,159
+ In Aragon, it's pretty nascent, so I'm sure they could appreciate some work.
+
+858
+01:17:36,439 --> 01:17:38,659
+ And for getting one, Besu.
+
+859
+01:17:38,720 --> 01:17:42,960
+ Besu is on the way, but I'm sure they would appreciate some help as well.
+
+860
+01:17:44,300 --> 01:17:48,399
+ Otherwise, what's an area to contribute to?
+
+861
+01:17:48,840 --> 01:17:50,699
+ Well, we want to build stateless clients,
+
+862
+01:17:50,699 --> 01:17:53,439
+ So stateless clients are an option.
+
+863
+01:17:55,500 --> 01:17:57,859
+ And otherwise something
+
+864
+01:17:57,859 --> 01:18:00,359
+ that is also not receiving a lot of attention,
+
+865
+01:18:00,359 --> 01:18:03,559
+ it's not directly core protocol related,
+
+866
+01:18:03,559 --> 01:18:08,559
+ but it's how L2s, DApps are going,
+
+867
+01:18:08,699 --> 01:18:11,399
+ like compilers are going to handle
+
+868
+01:18:11,399 --> 01:18:14,519
+ a vertical tree specificities, especially compilers.
+
+869
+01:18:14,519 --> 01:18:17,220
+ There's no work done on compilers at the moment.
+
+870
+01:18:17,220 --> 01:18:20,720
+ So that would be an extremely useful contribution.
+
+871
+01:18:21,659 --> 01:18:28,320
+ And then otherwise, I mean, there's plenty of tooling required.
+
+872
+01:18:28,560 --> 01:18:31,780
+ We don't really have a lot of support in Block Explorers.
+
+873
+01:18:34,619 --> 01:18:37,039
+ There's also some work that can be done,
+
+874
+01:18:37,140 --> 01:18:45,060
+ although that was already the topic of EPF efforts last year.
+
+875
+01:18:45,060 --> 01:18:47,520
+ but there's always the zk stuff.
+
+876
+01:18:48,360 --> 01:18:51,020
+ This one, I think, is a bit too early
+
+877
+01:18:51,020 --> 01:18:55,240
+ to be realistically helpful, but that's an option.
+
+878
+01:18:56,160 --> 01:18:57,440
+ There's state expiry,
+
+879
+01:18:57,660 --> 01:19:00,140
+ very good work done by Han last year.
+
+880
+01:19:02,460 --> 01:19:05,060
+ So yeah, maybe see how it interacts
+
+881
+01:19:05,060 --> 01:19:06,039
+ with account abstraction.
+
+882
+01:19:06,500 --> 01:19:07,940
+ If you can build relayers,
+
+883
+01:19:08,340 --> 01:19:10,120
+ there's a ton of things to do.
+
+884
+01:19:10,300 --> 01:19:13,460
+ Honestly, I wouldn't name one that's,
+
+885
+01:19:13,460 --> 01:19:17,619
+ you know, the most important, everything is important. Maybe Nessio has
+
+886
+01:19:17,619 --> 01:19:18,920
+ more ideas?
+
+887
+01:19:21,500 --> 01:19:25,420
+ No, I think I agree with all that list. I mean, we have other, like the previous
+
+888
+01:19:25,420 --> 01:19:29,659
+ distribution and all that. I think we have more like decisions
+
+889
+01:19:29,659 --> 01:19:33,640
+ to make than really executable tasks that we
+
+890
+01:19:33,640 --> 01:19:36,520
+ want to get more feedback from client teams and
+
+891
+01:19:36,520 --> 01:19:41,640
+ what kind of solutions might make them more comfortable. But I think it
+
+892
+01:19:41,640 --> 01:19:45,300
+ it was a really nice list of things that people can contribute.
+
+893
+01:19:45,300 --> 01:19:55,860
+ So yeah, thanks so much, guys. Um, we are, we are running through almost all the questions
+
+894
+01:19:55,860 --> 01:20:01,119
+ I believe. There's some being answered in the in the discord as well. Thank you so much
+
+895
+01:20:01,119 --> 01:20:08,600
+ for joining the discord, by the way, and answering their really appreciated it's a study group.
+
+896
+01:20:08,600 --> 01:20:21,200
+ You mentioned the state expiry, it's something I wanted to ask about, because it used to be a bigger thing, it's not mentioned much.
+
+897
+01:20:21,200 --> 01:20:36,600
+ Do you think that the vertical trees also opened the gates to the state expiry? Is it more feasible with the vertical trees? What is the benefit there?
+
+898
+01:20:36,600 --> 01:20:42,260
+ Yeah. So yes, it totally makes it feasible or at least more practical.
+
+899
+01:20:43,520 --> 01:20:44,920
+ It's, you know,
+
+900
+01:20:44,960 --> 01:20:48,360
+ the problem with vertical trees is that it's both a boon and a bane for,
+
+901
+01:20:48,360 --> 01:20:49,520
+ for a state expiry.
+
+902
+01:20:49,800 --> 01:20:51,700
+ It's a boon because the proof,
+
+903
+01:20:51,800 --> 01:20:54,000
+ the proving system makes it so much more practical,
+
+904
+01:20:54,000 --> 01:20:59,240
+ but it makes it less relevant at the same time because state growth becomes
+
+905
+01:20:59,240 --> 01:21:02,760
+ less of a problem. So if state growth becomes less of a problem,
+
+906
+01:21:03,039 --> 01:21:06,020
+ it's less of a, of a,
+
+907
+01:21:06,020 --> 01:21:09,220
+ requirement or at least an emergency.
+
+908
+01:21:10,340 --> 01:21:12,480
+ But there's been some very good work done by
+
+909
+01:21:12,480 --> 01:21:15,340
+ Han last year. And I think
+
+910
+01:21:15,340 --> 01:21:18,580
+ in fact, I need to get back to him about the topic.
+
+911
+01:21:19,840 --> 01:21:21,660
+ I think we have
+
+912
+01:21:21,660 --> 01:21:23,780
+ a good
+
+913
+01:21:23,780 --> 01:21:27,580
+ streamlined solution. So there's no
+
+914
+01:21:27,580 --> 01:21:30,460
+ implementation to speak of currently, but at least there's been
+
+915
+01:21:30,460 --> 01:21:33,680
+ good work done at the theoretical level such
+
+916
+01:21:33,680 --> 01:21:40,840
+ that I think it would be interesting to keep digging in this topic,
+
+917
+01:21:42,780 --> 01:21:46,280
+ knowing that, once again, unfortunately,
+
+918
+01:21:46,980 --> 01:21:51,180
+ vertical trees make it less likely that this will be adopted in the near future
+
+919
+01:21:51,180 --> 01:21:52,680
+ because it's not as urgent,
+
+920
+01:21:53,560 --> 01:21:56,800
+ but it's definitely a topic that we'll need to face sooner or later.
+
+921
+01:21:57,200 --> 01:22:01,740
+ So I don't think it spells the doom of state expiry.
+
+922
+01:22:01,739 --> 01:22:05,139
+ it's just that it's still
+
+923
+01:22:05,139 --> 01:22:08,319
+ no one really cares about it at the moment
+
+924
+01:22:08,319 --> 01:22:10,420
+ that would be it's biggest problem
+
+925
+01:22:10,420 --> 01:22:14,679
+ I care about it
+
+926
+01:22:14,679 --> 01:22:16,319
+ I asked you about it because
+
+927
+01:22:16,319 --> 01:22:18,119
+ I was excited
+
+928
+01:22:18,119 --> 01:22:21,619
+ I like the proposals when I first ran into it
+
+929
+01:22:21,619 --> 01:22:23,679
+ because there is just so much useless stuff
+
+930
+01:22:23,679 --> 01:22:25,880
+ in the state that my node needs to be running
+
+931
+01:22:25,880 --> 01:22:28,279
+ I have my precious little machine
+
+932
+01:22:28,279 --> 01:22:29,439
+ and I store so much
+
+933
+01:22:29,439 --> 01:22:30,739
+ unimportant things there
+
+934
+01:22:30,739 --> 01:22:33,719
+ which could expire, hopefully.
+
+935
+01:22:33,719 --> 01:22:35,300
+ And even in a stateless error, I'm
+
+936
+01:22:35,300 --> 01:22:37,719
+ going to run as full node as possible.
+
+937
+01:22:37,719 --> 01:22:42,079
+ So it would be nice to have more lead.
+
+938
+01:22:42,079 --> 01:22:44,659
+ Right, but between history expiry,
+
+939
+01:22:44,659 --> 01:22:48,300
+ because most of the stuff that is taking space on your disk
+
+940
+01:22:48,300 --> 01:22:50,539
+ is actually the blocks, the historical blocks,
+
+941
+01:22:50,539 --> 01:22:53,159
+ the receipts, all that stuff.
+
+942
+01:22:53,159 --> 01:22:55,699
+ So we have history expiry, which is another big topic.
+
+943
+01:22:55,699 --> 01:22:57,239
+ I'm not really helping my case here,
+
+944
+01:22:57,239 --> 01:22:59,619
+ but that's also a very important topic.
+
+945
+01:23:02,619 --> 01:23:06,279
+ And this one, you know, some of it we could even do now.
+
+946
+01:23:06,439 --> 01:23:08,199
+ Like, we store the receipts forever.
+
+947
+01:23:08,800 --> 01:23:09,579
+ Do we need to?
+
+948
+01:23:09,800 --> 01:23:10,219
+ Not really.
+
+949
+01:23:11,859 --> 01:23:14,139
+ We, you know, we could, I mean,
+
+950
+01:23:14,199 --> 01:23:18,079
+ guest has been working on getting rid of the historical blocks,
+
+951
+01:23:18,079 --> 01:23:21,719
+ but, you know, other clients might be interested
+
+952
+01:23:21,719 --> 01:23:23,579
+ in implementing a history expiry.
+
+953
+01:23:23,760 --> 01:23:25,659
+ And that's a very interesting topic, too,
+
+954
+01:23:25,659 --> 01:23:28,079
+ because you don't really need a hard fork for that.
+
+955
+01:23:28,199 --> 01:23:29,739
+ You just need to implement it.
+
+956
+01:23:29,899 --> 01:23:30,300
+ That's it.
+
+957
+01:23:32,300 --> 01:23:34,380
+ There's a few problems with it.
+
+958
+01:23:34,619 --> 01:23:36,880
+ And okay, I'm going to stop talking about history expiring,
+
+959
+01:23:37,539 --> 01:23:41,139
+ but that would have a major impact.
+
+960
+01:23:41,239 --> 01:23:42,180
+ And then on top of that,
+
+961
+01:23:42,239 --> 01:23:44,139
+ vertical trees would have another major impact
+
+962
+01:23:44,139 --> 01:23:45,340
+ because the tree,
+
+963
+01:23:45,899 --> 01:23:47,579
+ we found ways of storing the tree
+
+964
+01:23:47,579 --> 01:23:51,479
+ in such a way that it's also going to take less space,
+
+965
+01:23:52,359 --> 01:23:53,300
+ at least theoretically.
+
+966
+01:23:53,300 --> 01:24:01,300
+ So once you have those two things, history expiry becomes way less of a problem.
+
+967
+01:24:01,300 --> 01:24:06,300
+ It's still, you're right, there's a lot of stuff that is completely pointless.
+
+968
+01:24:06,300 --> 01:24:12,300
+ When, you know, in 50 years who's going to care about your CryptoKitties, right?
+
+969
+01:24:12,300 --> 01:24:16,300
+ Most of the people owning CryptoKitties, okay, maybe not in 50 years, but in 100 years,
+
+970
+01:24:16,300 --> 01:24:21,300
+ most likely everybody owning a CryptoKitty will be dead. Do we still need it? No.
+
+971
+01:24:21,300 --> 01:24:26,420
+ and more importantly, we'll be running out of people who care about cryptokines.
+
+972
+01:24:28,180 --> 01:24:37,360
+ So yes, it's quite important in the long run, but in practical terms, in the next 10 years,
+
+973
+01:24:37,360 --> 01:24:40,680
+ you will not need state expiry, basically.
+
+974
+01:24:43,199 --> 01:24:47,199
+ Right. Yeah, thanks so much for giving the intro into the history expiry as well,
+
+975
+01:24:47,199 --> 01:24:51,199
+ because it's kind of a teaser for a talk later in the study group.
+
+976
+01:24:51,199 --> 01:24:53,159
+ We will have Piper talking about history
+
+977
+01:24:53,159 --> 01:24:56,399
+ expiring in the full talk, so we will dive into that as well.
+
+978
+01:24:56,399 --> 01:24:57,699
+ Thank you so much, Guillaume.
+
+979
+01:24:57,699 --> 01:25:03,539
+ And yeah, folks, I think there are not many other questions
+
+980
+01:25:03,539 --> 01:25:07,079
+ that we can answer now.
+
+981
+01:25:07,079 --> 01:25:09,619
+ We have maybe a few more minutes to go.
+
+982
+01:25:09,619 --> 01:25:11,159
+ Josh, do you have anything?
+
+983
+01:25:11,159 --> 01:25:15,399
+ Um, I am.
+
+984
+01:25:15,720 --> 01:25:16,059
+ Yeah.
+
+985
+01:25:16,059 --> 01:25:23,199
+ So Virkle is sort of slated for the following hard fork after, um, after the
+
+986
+01:25:23,199 --> 01:25:28,019
+ next one, what was sort of like the timeframe you see for actually having
+
+987
+01:25:28,019 --> 01:25:32,800
+ all this stuff implemented in different clients and, and benchmarked and tested
+
+988
+01:25:32,800 --> 01:25:35,979
+ and all of the things ready for a hard work.
+
+989
+01:25:41,159 --> 01:25:47,119
+ I was hoping to give the floor to Josh.
+
+990
+01:25:47,119 --> 01:25:52,359
+ Okay, I'll just give a quick update.
+
+991
+01:25:52,359 --> 01:25:54,479
+ So I'm extremely optimistic, right?
+
+992
+01:25:54,479 --> 01:25:56,539
+ I still believe we can front-run Denkun.
+
+993
+01:25:56,539 --> 01:26:00,880
+ So this is to tell you how optimistic I am.
+
+994
+01:26:00,880 --> 01:26:05,800
+ But no, from what I see, most of the problems have been solved.
+
+995
+01:26:05,800 --> 01:26:09,360
+ yes, there's still a few open problems like sync,
+
+996
+01:26:11,579 --> 01:26:15,140
+ like pre-image distribution,
+
+997
+01:26:15,520 --> 01:26:17,220
+ but this is really a problem
+
+998
+01:26:17,220 --> 01:26:22,820
+ because a lot of clients have looked at other things
+
+999
+01:26:22,820 --> 01:26:24,739
+ instead of looking at vertical trees,
+
+1000
+01:26:25,340 --> 01:26:29,520
+ but there's been a lot of progress with clients.
+
+1001
+01:26:29,840 --> 01:26:31,840
+ We have a good support in NetherMind.
+
+1002
+01:26:31,940 --> 01:26:35,079
+ We have a pretty good support in Ethereum.js.
+
+1003
+01:26:35,079 --> 01:26:39,239
+ yes, BESU is underway, they're making progress as well.
+
+1004
+01:26:39,239 --> 01:26:43,640
+ I think next year, a year is realistic.
+
+1005
+01:26:43,640 --> 01:26:49,619
+ Maybe someone more pessimistic would say a year and a half, two years,
+
+1006
+01:26:49,619 --> 01:26:55,220
+ but it's definitely ready for its prime, at least.
+
+1007
+01:26:58,619 --> 01:27:04,019
+ Awesome. Well, congratulations on that, and good luck front-running Dan Kuhn.
+
+1008
+01:27:05,079 --> 01:27:06,760
+ Thank you.
+
+1009
+01:27:08,739 --> 01:27:09,800
+ Yeah, amazing.
+
+1010
+01:27:09,979 --> 01:27:10,859
+ Thank you so much, guys.
+
+1011
+01:27:11,399 --> 01:27:12,880
+ Thank you so much for the presentation,
+
+1012
+01:27:13,019 --> 01:27:15,359
+ but especially all the great work you've done
+
+1013
+01:27:15,359 --> 01:27:17,920
+ on the record tree migration
+
+1014
+01:27:17,920 --> 01:27:19,559
+ or the whole concept.
+
+1015
+01:27:20,220 --> 01:27:21,779
+ It's great to learn from you.
+
+1016
+01:27:22,699 --> 01:27:25,920
+ Yeah, we are almost at 90 minutes.
+
+1017
+01:27:26,059 --> 01:27:27,619
+ I think we can wrap up here.
+
+1018
+01:27:28,260 --> 01:27:30,380
+ But again, we really appreciate having you here.
+
+1019
+01:27:30,479 --> 01:27:32,180
+ We appreciate having you in the Discord
+
+1020
+01:27:32,180 --> 01:27:33,180
+ answering questions.
+
+1021
+01:27:33,359 --> 01:27:34,899
+ Maybe if there are some more questions
+
+1022
+01:27:34,899 --> 01:27:42,179
+ coming, keep an eye on it. People might ping you with something. I hope you folks listening to this
+
+1023
+01:27:42,179 --> 01:27:48,579
+ will learn a lot, and we'll have some more documentation on the wiki for vertical trees
+
+1024
+01:27:49,139 --> 01:27:59,859
+ later on. Yeah, awesome. Great. Thank you, everybody. We will see you all next Monday
+
+1025
+01:27:59,859 --> 01:28:06,579
+ for a dive into consensus layer architect client architecture with paul from teku
+
+1026
+01:28:08,259 --> 01:28:24,500
+ and thanks again gil ignacio josh for your time today thanks appreciate it see you guys bye-bye
+
+1027
+01:28:29,859 --> 01:28:39,859
+ ¶¶
+
+1028
+01:28:39,859 --> 01:28:49,859
+ ¶¶
+
+1029
+01:28:49,859 --> 01:29:19,839
+ Thank you.
+
+1030
+01:29:19,859 --> 01:29:20,339
+ Thank you.
+

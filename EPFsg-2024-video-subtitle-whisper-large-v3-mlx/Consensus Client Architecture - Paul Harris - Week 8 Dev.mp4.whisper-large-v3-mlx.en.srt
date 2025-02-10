@@ -1,0 +1,4352 @@
+1
+00:00:30,000 --> 00:00:54,260
+ Thank you.
+
+2
+00:01:00,000 --> 00:01:29,980
+ Thank you.
+
+3
+00:01:30,000 --> 00:01:40,000
+ ¶¶
+
+4
+00:01:40,000 --> 00:01:50,000
+ ¶¶
+
+5
+00:01:50,000 --> 00:02:00,000
+ ¶¶
+
+6
+00:02:00,000 --> 00:02:10,000
+ ¶¶
+
+7
+00:02:10,000 --> 00:02:20,000
+ ¶¶
+
+8
+00:02:20,000 --> 00:02:30,000
+ ¶¶
+
+9
+00:02:30,000 --> 00:02:59,979
+ I love you.
+
+10
+00:03:00,000 --> 00:03:29,979
+ Thank you.
+
+11
+00:03:30,000 --> 00:03:59,979
+ Thank you.
+
+12
+00:04:00,000 --> 00:04:07,840
+ All right, welcome back to the Ethereum Protocol Fellowship Study Group.
+
+13
+00:04:08,479 --> 00:04:15,979
+ We are on week eight now, and this is the development track session for week eight.
+
+14
+00:04:15,979 --> 00:04:27,379
+ We are here talking with Paul Harris from Tecku, who will give us a deep dive into the Ethereum consensus client architecture.
+
+15
+00:04:27,379 --> 00:04:36,339
+ So yeah, I'll pass it off to Mario, maybe give us a little bit more in-depth intro for Paul here, and then we'll kick it off.
+
+16
+00:04:37,959 --> 00:04:38,719
+ Hey, everyone.
+
+17
+00:04:38,939 --> 00:04:41,800
+ First of all, Paul, thank you so much for joining us today.
+
+18
+00:04:42,219 --> 00:04:45,120
+ One thing you should know about Paul is that he's in Australia.
+
+19
+00:04:45,560 --> 00:04:50,659
+ It's very early for him today, so really thank you so much for making it and joining us today here.
+
+20
+00:04:50,920 --> 00:04:55,659
+ Because we're very eager to learn about the consensus layer and about the actual client architectures.
+
+21
+00:04:55,660 --> 00:05:03,120
+ In previous weeks, we had an insight into the consensus layer, more abstract, from Alex Stokes.
+
+22
+00:05:04,020 --> 00:05:11,780
+ We saw the execution layer client, and today we'll finally also dive into the real code base of consensus client.
+
+23
+00:05:12,680 --> 00:05:23,220
+ And specifically, Paul prepared for us a little presentation about how the EIP or an idea becomes a specification
+
+24
+00:05:23,220 --> 00:05:27,380
+ and then it gets implemented through this process that we've been discussing through the study group before.
+
+25
+00:05:27,380 --> 00:05:31,140
+ So yeah, we are really excited to learn about that.
+
+26
+00:05:31,140 --> 00:05:40,620
+ Paul is working on the Consensus Client TeKu as part of Consensus campaign.
+
+27
+00:05:40,620 --> 00:05:47,140
+ And it's been a while, I believe Paul has been around Ethereum for a few years already.
+
+28
+00:05:47,139 --> 00:05:57,539
+ He's been also doing AMA for the protocol fellowship last year, a year ago, but it was
+
+29
+00:05:57,539 --> 00:05:58,539
+ non-technical.
+
+30
+00:05:58,539 --> 00:06:02,439
+ We had a really nice chat there, but it wasn't really the deep dive, so yeah, excited to
+
+31
+00:06:02,439 --> 00:06:04,539
+ have that with you.
+
+32
+00:06:04,539 --> 00:06:05,939
+ Yeah, the stage is yours.
+
+33
+00:06:05,939 --> 00:06:09,560
+ Feel free to share your screen and get us through it.
+
+34
+00:06:09,560 --> 00:06:11,959
+ Thank you so much again for being here.
+
+35
+00:06:11,959 --> 00:06:12,959
+ Awesome.
+
+36
+00:06:12,959 --> 00:06:15,620
+ Thanks very much for inviting me.
+
+37
+00:06:15,620 --> 00:06:17,079
+ That sounds okay, I assume.
+
+38
+00:06:19,340 --> 00:06:21,540
+ I'm just using headphones and I do tend to
+
+39
+00:06:22,720 --> 00:06:24,319
+ be interesting sometimes on Zoom,
+
+40
+00:06:24,319 --> 00:06:26,019
+ so I thought I'd check it.
+
+41
+00:06:26,019 --> 00:06:27,240
+ Um, sounds great.
+
+42
+00:06:28,360 --> 00:06:29,920
+ Awesome.
+
+43
+00:06:29,920 --> 00:06:32,519
+ So, I'll share a screen.
+
+44
+00:06:32,519 --> 00:06:33,639
+ Sorry about the background.
+
+45
+00:06:33,639 --> 00:06:34,620
+ Usually I have a,
+
+46
+00:06:35,879 --> 00:06:38,040
+ usually I hide the cupboard and everything.
+
+47
+00:06:41,000 --> 00:06:42,220
+ Is that my screen?
+
+48
+00:06:43,800 --> 00:06:45,500
+ I've prepared a bit of a slide deck.
+
+49
+00:06:45,620 --> 00:06:55,620
+ it's a bit more like not just me talking. As it's already been said, I work for, on
+
+50
+00:06:55,620 --> 00:07:01,740
+ the consensus layer on a client called Tecku, and I do have to say that the views expressed
+
+51
+00:07:01,740 --> 00:07:08,980
+ are mine, and they do not necessarily reflect the views of ConsenSys.
+
+52
+00:07:08,980 --> 00:07:17,780
+ Just a quick little bit about me, I'm a blockchain protocol engineer with ConsenSys, the company
+
+53
+00:07:17,780 --> 00:07:22,120
+ ConsenSys, and I work on ConsenSys Layer Client, TeKu.
+
+54
+00:07:22,120 --> 00:07:28,860
+ I'm also a maintainer on a couple of REST APIs, which is the beacon API and key manager
+
+55
+00:07:28,860 --> 00:07:37,259
+ API, and they're the main APIs that the ConsenSys Layer uses to do different things.
+
+56
+00:07:37,259 --> 00:07:46,279
+ My team's got seven software engineers in it, and four are in techie, and sorry, four
+
+57
+00:07:46,279 --> 00:07:56,300
+ are in Europe, and three are in the APAC region, but we operate as one team.
+
+58
+00:07:56,300 --> 00:08:02,079
+ I figured I'd start off with going through at a high level about the consensus layer.
+
+59
+00:08:02,079 --> 00:08:07,539
+ Obviously, we've got a number of things that drive what we do on a day-to-day basis.
+
+60
+00:08:08,839 --> 00:08:18,539
+ There's the consensus spec, which is basically the complete executable specification for the consensus layer.
+
+61
+00:08:19,439 --> 00:08:26,120
+ There's an execution API, which is our interface to the execution layer client.
+
+62
+00:08:26,339 --> 00:08:27,839
+ So that's really important as well.
+
+63
+00:08:27,839 --> 00:08:39,179
+ In terms of APIs internally, we've got the beacon API, which allows us to do things like produce blocks and submit blocks.
+
+64
+00:08:39,179 --> 00:08:46,839
+ Then there's the key manager API, which is also important, but it's more around validated key management.
+
+65
+00:08:46,839 --> 00:08:53,339
+ So being able to accept a new key, being able to remove a key that we're running.
+
+66
+00:08:53,340 --> 00:09:00,740
+ And then there's the builder API, which is around building the execution layer section
+
+67
+00:09:00,740 --> 00:09:10,960
+ of the block that's in preference to using the execution layer for some people.
+
+68
+00:09:10,960 --> 00:09:16,879
+ Some people fall back to their local execution layer as a default, but some people use the
+
+69
+00:09:16,879 --> 00:09:21,720
+ builder API to do MEV.
+
+70
+00:09:21,720 --> 00:09:29,000
+ The other thing that does drive teams is obviously their actual team direction.
+
+71
+00:09:29,000 --> 00:09:35,120
+ For Teco as an example, we don't currently implement the light client, so there are sections
+
+72
+00:09:35,120 --> 00:09:47,860
+ of the consensus spec that we understand, but we don't necessarily implement.
+
+73
+00:09:47,860 --> 00:09:55,139
+ look at everything, basically consensus layer and execution layer, both to find open specifications.
+
+74
+00:09:55,940 --> 00:10:02,659
+ Prefus Dake itself is basically like a really large, complicated, distributed game.
+
+75
+00:10:04,100 --> 00:10:09,940
+ Like any games, there's interactions that are pretty well defined, and there's a set of rules.
+
+76
+00:10:09,940 --> 00:10:18,740
+ And like any complicated game, there's definitely gray areas where as much as we think that
+
+77
+00:10:18,740 --> 00:10:25,240
+ rules are going to be well defined, they're not actually perfectly defined.
+
+78
+00:10:25,240 --> 00:10:29,960
+ Because the consensus layer uses executable specs it means that we can write tests on
+
+79
+00:10:29,960 --> 00:10:34,760
+ those specs and then we can share those tests with all the implementations.
+
+80
+00:10:34,759 --> 00:10:41,919
+ So Tecce, for example, can download all of those tests and run them and just exclude
+
+81
+00:10:41,919 --> 00:10:55,360
+ the ones that we don't want to cover like the light client.
+
+82
+00:10:55,360 --> 00:11:01,580
+ Looking at Tecce, so our mission statement, if you like, is that we want to be the client
+
+83
+00:11:01,580 --> 00:11:03,860
+ of choice for institutional stakers.
+
+84
+00:11:06,820 --> 00:11:08,259
+ We are written in Java,
+
+85
+00:11:09,560 --> 00:11:13,200
+ so hopefully people can read a little bit of Java,
+
+86
+00:11:13,200 --> 00:11:16,259
+ but it's not going to be super super code heavy today,
+
+87
+00:11:16,259 --> 00:11:17,360
+ so it should be good.
+
+88
+00:11:18,740 --> 00:11:20,960
+ We've got a lot of extensive metrics
+
+89
+00:11:22,440 --> 00:11:24,000
+ that's exposed through Prometheus,
+
+90
+00:11:24,000 --> 00:11:27,720
+ so got a really good dashboard,
+
+91
+00:11:27,720 --> 00:11:29,259
+ which I probably won't show today,
+
+92
+00:11:29,259 --> 00:11:32,419
+ But we do have it, and it's openly available to everyone
+
+93
+00:11:32,419 --> 00:11:34,840
+ to use.
+
+94
+00:11:34,840 --> 00:11:37,819
+ And we've got a big focus on testing.
+
+95
+00:11:37,819 --> 00:11:40,819
+ If anyone's seen the testing triangle before,
+
+96
+00:11:40,819 --> 00:11:46,059
+ so you'll have a large number of tests at the unit test level.
+
+97
+00:11:46,059 --> 00:11:48,059
+ And then as you go up the triangle,
+
+98
+00:11:48,059 --> 00:11:49,659
+ there's less at the integration level,
+
+99
+00:11:49,659 --> 00:11:51,600
+ and there's less at the system level.
+
+100
+00:11:51,600 --> 00:11:54,600
+ But covering all levels is generally a good idea
+
+101
+00:11:54,600 --> 00:11:57,439
+ so that you get the coverage that you need.
+
+102
+00:11:59,259 --> 00:12:02,500
+ We're pretty focused on logging.
+
+103
+00:12:02,500 --> 00:12:06,539
+ So we use a basic user Log4j.
+
+104
+00:12:06,539 --> 00:12:12,759
+ We were impacted by the Log4j thing a couple of years ago, if anyone knows about that.
+
+105
+00:12:12,759 --> 00:12:16,720
+ I think most client teams were.
+
+106
+00:12:16,720 --> 00:12:18,819
+ And we run one code stream.
+
+107
+00:12:18,819 --> 00:12:26,179
+ So some client teams will use branch development where they do features in different branches
+
+108
+00:12:26,179 --> 00:12:29,739
+ and then bring them in towards the end.
+
+109
+00:12:29,739 --> 00:12:30,739
+ We don't do that.
+
+110
+00:12:30,739 --> 00:12:34,639
+ We use development or master development.
+
+111
+00:12:34,639 --> 00:12:36,539
+ And we release all of our code frequently.
+
+112
+00:12:36,539 --> 00:12:43,979
+ So anything that we do needs to be either active or behind a feature flag.
+
+113
+00:12:43,979 --> 00:12:51,000
+ If we don't want code to be in the release, we need to make sure that we're disabling
+
+114
+00:12:51,000 --> 00:12:52,000
+ it.
+
+115
+00:12:52,000 --> 00:12:55,960
+ got a ton of documentation.
+
+116
+00:12:55,960 --> 00:13:00,779
+ The product is open source, and we do support on Discord
+
+117
+00:13:00,779 --> 00:13:04,379
+ through the consensus Discord, as well as
+
+118
+00:13:04,379 --> 00:13:07,679
+ we do have a presence in the each state Discord,
+
+119
+00:13:07,679 --> 00:13:09,399
+ and there's a techu support channel there.
+
+120
+00:13:12,019 --> 00:13:14,419
+ And lastly, we are node operators.
+
+121
+00:13:14,419 --> 00:13:17,840
+ So we run techu on mainnet, and we run techu, obviously,
+
+122
+00:13:17,840 --> 00:13:20,480
+ on testnets as well.
+
+123
+00:13:22,000 --> 00:13:24,279
+ Some people call that eating your own dog food,
+
+124
+00:13:24,279 --> 00:13:27,879
+ if there's anyone that's heard that before.
+
+125
+00:13:31,059 --> 00:13:33,259
+ That was an overview of kind of consensus layer,
+
+126
+00:13:33,259 --> 00:13:38,259
+ and Tecku, are there any questions so far?
+
+127
+00:13:43,820 --> 00:13:46,259
+ There is only one question,
+
+128
+00:13:46,259 --> 00:13:51,259
+ whether Tecku uses Gradle, which I believe it does.
+
+129
+00:13:51,259 --> 00:13:58,419
+ We do use Gradle, yes. Gradle is our build system, and we currently release to Artifactory.
+
+130
+00:13:58,419 --> 00:14:08,419
+ And one more now, what is the reason that Teco doesn't implement the Liteclient API?
+
+131
+00:14:08,419 --> 00:14:14,419
+ Good question. Yeah, for sure.
+
+132
+00:14:14,419 --> 00:14:21,399
+ Basically it's a historical artifact of not having many resources.
+
+133
+00:14:21,399 --> 00:14:29,379
+ When we started TeKu going towards Phase Zero release, we were down to two developers for
+
+134
+00:14:29,379 --> 00:14:32,839
+ a while, so it was just no capacity.
+
+135
+00:14:32,839 --> 00:14:38,339
+ Now that we have seven, we have enough to keep up, but we probably need at least one
+
+136
+00:14:38,340 --> 00:14:42,860
+ more resource to be looking at doing a whole new code stream.
+
+137
+00:14:43,780 --> 00:14:51,399
+ And we did get some protocol fellowship person
+
+138
+00:14:51,399 --> 00:14:52,440
+ to start doing it.
+
+139
+00:14:52,560 --> 00:14:54,580
+ So there is a start on it,
+
+140
+00:14:54,759 --> 00:14:56,580
+ but we just don't have the resources, basically.
+
+141
+00:14:58,320 --> 00:15:01,340
+ It's not really a focus of the people
+
+142
+00:15:01,340 --> 00:15:05,019
+ that our business statement are aiming for,
+
+143
+00:15:05,120 --> 00:15:07,800
+ so we haven't found it to be a huge issue.
+
+144
+00:15:07,799 --> 00:15:10,319
+ but it would be nice to be spec complete as well.
+
+145
+00:15:11,959 --> 00:15:13,639
+ So just competing drivers.
+
+146
+00:15:14,620 --> 00:15:15,139
+ Yeah, get it.
+
+147
+00:15:15,299 --> 00:15:15,740
+ Thank you, Paul.
+
+148
+00:15:16,159 --> 00:15:17,240
+ Yeah, I think you can go ahead.
+
+149
+00:15:18,379 --> 00:15:18,799
+ Cool.
+
+150
+00:15:20,419 --> 00:15:22,599
+ I had a brief look over the material
+
+151
+00:15:22,599 --> 00:15:25,479
+ that was in the week eight stuff
+
+152
+00:15:25,479 --> 00:15:31,519
+ and Adrian's talk about all of the modules
+
+153
+00:15:31,519 --> 00:15:33,500
+ that were already in techie
+
+154
+00:15:33,500 --> 00:15:35,039
+ was actually a lot more complete
+
+155
+00:15:35,039 --> 00:15:37,719
+ than what I realized.
+
+156
+00:15:37,879 --> 00:15:39,939
+ So I haven't gone into the details
+
+157
+00:15:39,939 --> 00:15:41,360
+ of how tech is laid out.
+
+158
+00:15:41,360 --> 00:15:44,360
+ So hopefully people have had a look at that talk,
+
+159
+00:15:45,039 --> 00:15:47,379
+ but if they haven't, it's not a huge issue.
+
+160
+00:15:48,939 --> 00:15:51,379
+ We just won't be covering exactly that today
+
+161
+00:15:51,379 --> 00:15:54,120
+ because there's no point going over the same stuff.
+
+162
+00:15:55,120 --> 00:15:56,740
+ At a very high level,
+
+163
+00:15:58,579 --> 00:16:02,819
+ we've laid out our modules in a way
+
+164
+00:16:02,820 --> 00:16:07,640
+ where it's kind of like a hierarchy.
+
+165
+00:16:08,100 --> 00:16:10,600
+ So we've got infrastructure at the bottom level.
+
+166
+00:16:11,379 --> 00:16:13,460
+ We've got Ethereum that sits above that.
+
+167
+00:16:13,460 --> 00:16:19,700
+ And basically infrastructure can't pull in anything from Ethereum.
+
+168
+00:16:21,280 --> 00:16:25,060
+ It can pull in at the same level, but it can't pull in after stack.
+
+169
+00:16:25,300 --> 00:16:29,260
+ And that goes the same for the beacon and validator modules,
+
+170
+00:16:29,780 --> 00:16:31,060
+ and it goes the same for techie.
+
+171
+00:16:31,059 --> 00:16:35,819
+ So it can consume all the way down the stack,
+
+172
+00:16:36,039 --> 00:16:38,679
+ but infrastructure can't consume anywhere up the stack,
+
+173
+00:16:38,779 --> 00:16:41,199
+ and B can't consume up the stack.
+
+174
+00:16:42,619 --> 00:16:45,679
+ There are some tools that sit to the side,
+
+175
+00:16:45,899 --> 00:16:47,739
+ and we do have reference tests.
+
+176
+00:16:49,019 --> 00:16:53,079
+ But this is kind of our guidance for developers to say,
+
+177
+00:16:53,479 --> 00:16:58,379
+ make sure that we're not causing cyclic dependencies.
+
+178
+00:16:58,379 --> 00:17:08,579
+ One of the things that can happen, because IntelliJ is fairly tolerant, we can introduce
+
+179
+00:17:08,579 --> 00:17:13,500
+ a cyclic dependency and not really know, so there are build checks to make sure that we're
+
+180
+00:17:13,500 --> 00:17:18,259
+ consuming things in a nice order and not causing other people problems.
+
+181
+00:17:18,259 --> 00:17:25,660
+ Because sometimes when people import the project into Eclipse especially it has caused problems
+
+182
+00:17:25,660 --> 00:17:34,220
+ in the past. Most of the developers use IntelliJ and it doesn't matter a lot, but Eclipse is very
+
+183
+00:17:34,220 --> 00:17:43,259
+ opinionated. I'm going to dive first into APIs a little bit, because that's one thing that has
+
+184
+00:17:43,259 --> 00:17:50,480
+ changed since Adrian gave his talks. They were fairly light on the APIs anyway, but we used to
+
+185
+00:17:50,480 --> 00:17:54,259
+ use an annotated set of objects to do our APIs,
+
+186
+00:17:54,259 --> 00:17:59,360
+ and now we've changed to a more declarative style.
+
+187
+00:17:59,360 --> 00:18:08,360
+ If we have a look at where APIs are and what they're used for,
+
+188
+00:18:08,360 --> 00:18:11,240
+ in terms of the operator, they may
+
+189
+00:18:11,240 --> 00:18:13,599
+ need to interact with the beacon node,
+
+190
+00:18:13,599 --> 00:18:16,440
+ and they may need to interact with Validator Client
+
+191
+00:18:16,440 --> 00:18:19,480
+ for a couple of different reasons.
+
+192
+00:18:19,480 --> 00:18:24,920
+ got the beacon API which allows accessing actual data from the beacon
+
+193
+00:18:24,920 --> 00:18:31,599
+ node. You can get state data, you can get block data, you can
+
+194
+00:18:31,599 --> 00:18:41,440
+ produce and submit attestations and all of that sort of thing and that will
+
+195
+00:18:41,440 --> 00:18:47,680
+ go straight on to, like the beacon node will submit it to the network. The
+
+196
+00:18:47,680 --> 00:18:51,720
+ Validator client itself is a small client
+
+197
+00:18:51,720 --> 00:18:54,560
+ that is just managing keys and making
+
+198
+00:18:54,560 --> 00:18:56,840
+ sure that duties are done.
+
+199
+00:18:56,840 --> 00:19:00,279
+ And it can use the beacon API to do that.
+
+200
+00:19:00,279 --> 00:19:03,060
+ But from an operator perspective,
+
+201
+00:19:03,060 --> 00:19:07,140
+ the key manager API allows an operator
+
+202
+00:19:07,140 --> 00:19:13,400
+ to add or remove a Validator key at runtime.
+
+203
+00:19:13,400 --> 00:19:17,920
+ So that's kind of a nifty API.
+
+204
+00:19:17,920 --> 00:19:20,220
+ It does require a lot more security.
+
+205
+00:19:20,220 --> 00:19:27,200
+ I think in the Key Manager API, we recommend only using SSL.
+
+206
+00:19:27,200 --> 00:19:29,680
+ And we also recommend it being password protected,
+
+207
+00:19:29,680 --> 00:19:34,920
+ because these sorts of things are dealing with private keys,
+
+208
+00:19:34,920 --> 00:19:38,700
+ and it's super, super sensitive.
+
+209
+00:19:38,700 --> 00:19:41,840
+ So it would be bad if you lost your private keys.
+
+210
+00:19:41,839 --> 00:19:43,299
+ Hopefully, we all understand that.
+
+211
+00:19:43,299 --> 00:19:47,899
+ I'm happy to go into it, but that's what the KeyManager API
+
+212
+00:19:47,899 --> 00:19:50,399
+ is around.
+
+213
+00:19:50,399 --> 00:19:52,240
+ From the Beacon node perspective,
+
+214
+00:19:52,240 --> 00:19:55,879
+ the APIs it mainly consumes are the Engine API
+
+215
+00:19:55,879 --> 00:19:59,759
+ to talk to the execution layer, and the Builder API,
+
+216
+00:19:59,759 --> 00:20:03,279
+ I believe it's called, to interact with builders
+
+217
+00:20:03,279 --> 00:20:08,099
+ and relays to interact with MEV.
+
+218
+00:20:08,099 --> 00:20:12,719
+ it's not required to be using the builder API.
+
+219
+00:20:12,719 --> 00:20:16,539
+ You can simply have a beacon node connected
+
+220
+00:20:16,539 --> 00:20:20,199
+ to an execution layer, which is what I have at home.
+
+221
+00:20:20,199 --> 00:20:24,719
+ It does simplify the setup, and there are situations
+
+222
+00:20:24,719 --> 00:20:28,799
+ where the beacon node might need to turn the builder API off
+
+223
+00:20:28,799 --> 00:20:31,719
+ so that we can produce blocks, because our number one
+
+224
+00:20:31,719 --> 00:20:36,579
+ important thing is liveliness of the network.
+
+225
+00:20:36,579 --> 00:20:40,519
+ The other API which I won't get into it all today,
+
+226
+00:20:40,519 --> 00:20:45,679
+ I won't really touch on anything except the beacon API.
+
+227
+00:20:45,679 --> 00:20:50,259
+ There's a signer API that allows external signers.
+
+228
+00:20:50,259 --> 00:20:56,679
+ So if you are using Dirk or Web3 signer,
+
+229
+00:20:56,679 --> 00:20:58,899
+ they'll implement the signer API,
+
+230
+00:20:58,899 --> 00:21:01,220
+ and the Validator client will go via them
+
+231
+00:21:01,220 --> 00:21:05,059
+ to sign rather than signing themselves.
+
+232
+00:21:06,579 --> 00:21:15,059
+ it allows things like sharing a signer and making sure that everything's centrally controlled,
+
+233
+00:21:15,059 --> 00:21:21,059
+ which is a better high-valuability solution than just having a local signer
+
+234
+00:21:21,740 --> 00:21:24,500
+ and having to do flashing protection by yourself.
+
+235
+00:21:31,399 --> 00:21:34,139
+ So this is probably obvious, but just to state it,
+
+236
+00:21:34,140 --> 00:21:43,860
+ API is the interface to the world, and for the world to access the beacon API.
+
+237
+00:21:43,860 --> 00:21:51,840
+ It's secure by default, so for us that means we have an access list, and it's only accessible
+
+238
+00:21:51,840 --> 00:22:02,000
+ by localhost, and it's accessible only on 127.0.0.1.
+
+239
+00:22:02,000 --> 00:22:06,440
+ We use a declarative interface, which is the interesting bit.
+
+240
+00:22:06,440 --> 00:22:11,279
+ We ended up having to write our own, which is never my first choice, but in this case
+
+241
+00:22:11,279 --> 00:22:15,119
+ it made a lot of sense.
+
+242
+00:22:15,119 --> 00:22:20,099
+ It's called type definitions, and we'll have a look at some examples in a minute.
+
+243
+00:22:20,099 --> 00:22:27,539
+ And the type definitions allow us to define parts of the object to expose, and parts to
+
+244
+00:22:27,539 --> 00:22:30,339
+ are not explicitly parts to not exposed,
+
+245
+00:22:30,339 --> 00:22:33,079
+ but basically we can say,
+
+246
+00:22:33,079 --> 00:22:35,519
+ access these attributes of an object,
+
+247
+00:22:35,519 --> 00:22:38,659
+ which is quite useful if we've got an object
+
+248
+00:22:38,659 --> 00:22:40,319
+ that is slightly different
+
+249
+00:22:40,319 --> 00:22:42,319
+ to what we need to share on the network.
+
+250
+00:22:44,700 --> 00:22:46,460
+ And they're all based on SSZ.
+
+251
+00:22:46,460 --> 00:22:48,299
+ So SSZ is strongly typed
+
+252
+00:22:48,299 --> 00:22:50,460
+ and it has all of the information
+
+253
+00:22:50,460 --> 00:22:52,099
+ about what we want to share.
+
+254
+00:22:52,099 --> 00:22:54,399
+ And we want it to be able to leverage
+
+255
+00:22:54,399 --> 00:22:55,700
+ the data that's already there
+
+256
+00:22:55,700 --> 00:22:59,360
+ so that we don't have to redefine it all on our API layer,
+
+257
+00:22:59,360 --> 00:23:01,240
+ which is what we were doing
+
+258
+00:23:01,240 --> 00:23:05,200
+ when we were creating the old objects,
+
+259
+00:23:05,200 --> 00:23:07,200
+ which we'll also run through in a minute.
+
+260
+00:23:13,940 --> 00:23:15,940
+ A very simple type def example,
+
+261
+00:23:16,900 --> 00:23:20,860
+ we've got a class called post attestation.
+
+262
+00:23:20,860 --> 00:23:23,860
+ That's when the beacon node
+
+263
+00:23:23,859 --> 00:23:28,659
+ is actually trying to submit a signed attestation to the beacon node.
+
+264
+00:23:28,659 --> 00:23:31,139
+ Sorry, when the Validator client is trying
+
+265
+00:23:31,139 --> 00:23:33,299
+ to submit a signed attestation.
+
+266
+00:23:37,099 --> 00:23:43,740
+ This is kind of the structure within the body of the object itself.
+
+267
+00:23:43,740 --> 00:23:47,079
+ But this is where we're declaring what we want to use.
+
+268
+00:23:47,079 --> 00:23:52,899
+ So we're saying that in a request body, we have a, I'll stop clicking,
+
+269
+00:23:52,900 --> 00:23:56,060
+ We have a deserializable type definition.
+
+270
+00:23:56,060 --> 00:24:01,860
+ So it's going to be coming in across the wire as JSON.
+
+271
+00:24:01,860 --> 00:24:03,660
+ And we're going to consume that JSON
+
+272
+00:24:03,660 --> 00:24:06,100
+ and turn it into a real object.
+
+273
+00:24:06,100 --> 00:24:09,060
+ And we're going to be using the attestation schema.
+
+274
+00:24:09,060 --> 00:24:16,200
+ So each SSZ object defines its schema,
+
+275
+00:24:16,200 --> 00:24:20,780
+ and we're going to be leveraging off the attestation schema.
+
+276
+00:24:20,779 --> 00:24:24,559
+ And we're going to be expecting it as JSON.
+
+277
+00:24:24,559 --> 00:24:31,099
+ In terms of responses, OK is a good response.
+
+278
+00:24:31,099 --> 00:24:37,359
+ That's 200 for anyone that loves HTTP codes.
+
+279
+00:24:37,359 --> 00:24:40,660
+ The other code that's likely is a bad request code, which is
+
+280
+00:24:40,660 --> 00:24:42,839
+ 400.
+
+281
+00:24:42,839 --> 00:24:47,099
+ And a bad request code has to be defined as a JSON type as well.
+
+282
+00:24:47,099 --> 00:24:51,939
+ So we tell it, we give it the type of,
+
+283
+00:24:51,939 --> 00:24:55,439
+ we give it a declaration of what it's going to look like
+
+284
+00:24:55,439 --> 00:24:56,759
+ as a valid object.
+
+285
+00:24:57,919 --> 00:24:59,480
+ If we have a look at,
+
+286
+00:25:02,399 --> 00:25:05,139
+ hopefully that changes, no.
+
+287
+00:25:07,279 --> 00:25:08,980
+ Hasn't changed the view anywhere.
+
+288
+00:25:14,519 --> 00:25:16,519
+ I was hoping it would stay on the view.
+
+289
+00:25:17,099 --> 00:25:18,099
+ Excellent.
+
+290
+00:25:18,099 --> 00:25:34,379
+ So, ooh, I'm running out of room.
+
+291
+00:25:34,379 --> 00:25:38,980
+ That's defined in the constructor.
+
+292
+00:25:38,980 --> 00:25:45,899
+ And then in the handle request, which is the predefined interface that's there, we basically
+
+293
+00:25:45,900 --> 00:25:57,320
+ get the request body. And when we call submitAtStations internally, we get a future. So it's an asynchronous
+
+294
+00:25:57,320 --> 00:26:07,800
+ request and we may get a list of data errors. And then basically we respond asynchronously.
+
+295
+00:26:07,800 --> 00:26:14,380
+ We need to queue up a response to say, once this future resolves, then we're going to
+
+296
+00:26:14,380 --> 00:26:21,260
+ go through and render any errors and decide on the error response if there's an actual
+
+297
+00:26:21,260 --> 00:26:28,420
+ error.
+
+298
+00:26:28,420 --> 00:26:29,420
+ We have unit tests.
+
+299
+00:26:29,420 --> 00:26:34,260
+ Ooh, I'm going to have to stop and start it a lot.
+
+300
+00:26:34,260 --> 00:26:37,920
+ Sorry about that.
+
+301
+00:26:37,920 --> 00:26:43,380
+ I should've just clicked on the other link.
+
+302
+00:26:44,380 --> 00:27:03,180
+ Sorry, I didn't realize it's gonna have to stop and start.
+
+303
+00:27:03,180 --> 00:27:18,140
+ All right, a unit test in JUnit, which is a pretty common framework.
+
+304
+00:27:18,140 --> 00:27:23,880
+ In the unit test, we're not using mock server or anything complicated.
+
+305
+00:27:23,880 --> 00:27:31,620
+ Basically, obviously, we want to make sure that we're able to submit that type of object.
+
+306
+00:27:31,619 --> 00:27:38,899
+ So we would submit an attestation type and we would expect it to get back okay, and the
+
+307
+00:27:38,899 --> 00:27:43,959
+ response body should be null.
+
+308
+00:27:43,959 --> 00:27:50,699
+ In terms of when there's invalid attestations, we would expect to be able to get errors back
+
+309
+00:27:50,699 --> 00:27:58,039
+ and get it and get a bad request response.
+
+310
+00:27:58,039 --> 00:28:01,279
+ And then we go into some other tests around the body.
+
+311
+00:28:01,279 --> 00:28:09,379
+ I'll have a look at your comment, Josh, in just one second.
+
+312
+00:28:09,379 --> 00:28:12,259
+ That'll be easier.
+
+313
+00:28:12,259 --> 00:28:17,920
+ Let's try that now.
+
+314
+00:28:17,920 --> 00:28:21,579
+ Share screen.
+
+315
+00:28:21,579 --> 00:28:30,139
+ Oh, until our screen.
+
+316
+00:28:30,139 --> 00:28:31,139
+ Nice.
+
+317
+00:28:31,139 --> 00:28:32,139
+ You see it now?
+
+318
+00:28:32,139 --> 00:28:33,139
+ Cool.
+
+319
+00:28:33,139 --> 00:28:34,139
+ Yeah.
+
+320
+00:28:34,139 --> 00:28:35,139
+ Okay.
+
+321
+00:28:35,139 --> 00:28:36,139
+ That's much better.
+
+322
+00:28:36,139 --> 00:28:41,460
+ Did I not click share until our screen?
+
+323
+00:28:41,460 --> 00:28:50,019
+ Apparently I don't have permissions to share an entire screen.
+
+324
+00:28:50,019 --> 00:28:51,860
+ Sorry guys.
+
+325
+00:28:51,860 --> 00:28:55,680
+ Are there any questions while I fix this permissions issue?
+
+326
+00:28:55,680 --> 00:29:06,279
+ Yes, there is a one big question about whether you share any libraries with Basu,
+
+327
+00:29:06,279 --> 00:29:09,440
+ it will be some collaborative work there.
+
+328
+00:29:12,119 --> 00:29:13,960
+ That's a good question, actually.
+
+329
+00:29:13,960 --> 00:29:22,920
+ We do share a couple of libraries.
+
+330
+00:29:22,920 --> 00:29:27,559
+ The main one is actually around Prometheus.
+
+331
+00:29:27,559 --> 00:29:31,180
+ So all of our metrics go through a basic library, which
+
+332
+00:29:31,180 --> 00:29:36,279
+ is safe just having to implement any of the metrics
+
+333
+00:29:36,279 --> 00:29:37,639
+ themselves.
+
+334
+00:29:37,639 --> 00:29:41,559
+ We do have rapid classes that allow us to do our own thing.
+
+335
+00:29:41,559 --> 00:29:47,619
+ I'm just going to have to pretty much re-
+
+336
+00:29:47,619 --> 00:29:50,500
+ Okay, and we will be back very soon.
+
+337
+00:29:50,500 --> 00:29:56,519
+ Yeah, Paul is making it so he can share his entire screen.
+
+338
+00:29:56,519 --> 00:30:01,399
+ I think he didn't realize his browser was running this session.
+
+339
+00:30:01,399 --> 00:30:04,759
+ So we'll be back right in a moment here.
+
+340
+00:30:04,759 --> 00:30:08,000
+ Meanwhile, feel free to ask any questions.
+
+341
+00:30:08,000 --> 00:30:16,099
+ Also, if you have any questions unanswered from previous consensus-related talks, feel
+
+342
+00:30:16,099 --> 00:30:18,980
+ free to post them.
+
+343
+00:30:18,980 --> 00:30:19,980
+ Hey.
+
+344
+00:30:19,980 --> 00:30:20,980
+ Hi, Brian.
+
+345
+00:30:20,980 --> 00:30:23,559
+ Can you put me back?
+
+346
+00:30:23,559 --> 00:30:29,579
+ Apparently, it couldn't reopen Prime, it means it couldn't reopen this.
+
+347
+00:30:29,579 --> 00:30:33,740
+ Now she'll be able to share the entire screen.
+
+348
+00:30:33,740 --> 00:30:48,039
+ I was just saying, we do share base libraries, which is mainly around the metrics.
+
+349
+00:30:48,039 --> 00:30:54,399
+ So other than that, I don't think so.
+
+350
+00:30:54,400 --> 00:31:01,960
+ I know Web3 signup pulls in a lot of our REST API stuff.
+
+351
+00:31:01,960 --> 00:31:06,800
+ I don't think they, hopefully they don't anymore because we're getting rid of most of what
+
+352
+00:31:06,800 --> 00:31:07,360
+ they use.
+
+353
+00:31:08,080 --> 00:31:11,380
+ That is something that I have to chase up on sometime very soon.
+
+354
+00:31:13,140 --> 00:31:15,380
+ Now I get the fun of logging into everything.
+
+355
+00:31:15,380 --> 00:31:32,780
+ Yeah it makes sense, metrics can be basically the same thing but the other parts are very
+
+356
+00:31:32,780 --> 00:31:35,260
+ different between EL and CL.
+
+357
+00:31:35,260 --> 00:31:38,920
+ And yeah, we'll let you know when there are more questions coming.
+
+358
+00:31:38,920 --> 00:31:46,440
+ Yep, I'm just logging into, we have a lot of authentication requirements now, so closing
+
+359
+00:31:46,440 --> 00:31:50,259
+ the browser was actually really bad, but I'm getting it.
+
+360
+00:31:50,259 --> 00:31:53,140
+ It's always the way.
+
+361
+00:31:53,140 --> 00:31:56,320
+ Let's try again.
+
+362
+00:31:56,320 --> 00:31:59,620
+ No, not slides.
+
+363
+00:32:29,619 --> 00:32:34,899
+ That's better.
+
+364
+00:32:34,899 --> 00:32:38,500
+ Now it's actually changing for you.
+
+365
+00:32:38,500 --> 00:32:48,659
+ One of the things that we noticed was a gap when we were developing APIs actually in the
+
+366
+00:32:48,659 --> 00:32:52,839
+ when we were using annotations is that we could very easily change the definition of
+
+367
+00:32:52,839 --> 00:32:57,500
+ an API and not see that the definition had changed.
+
+368
+00:32:57,500 --> 00:33:00,059
+ it's actually really bad, especially on this API,
+
+369
+00:33:00,059 --> 00:33:03,200
+ because the definition is really, really important
+
+370
+00:33:03,200 --> 00:33:05,259
+ to get right.
+
+371
+00:33:05,259 --> 00:33:11,579
+ So we ended up basically dumping the JSON schema
+
+372
+00:33:11,579 --> 00:33:14,660
+ so that tests can reference that JSON schema
+
+373
+00:33:14,660 --> 00:33:20,059
+ to be able to validate that we haven't changed things,
+
+374
+00:33:20,059 --> 00:33:23,759
+ or at least show us when we have changed things.
+
+375
+00:33:23,759 --> 00:33:28,079
+ it's a pretty low tech solution but it's very effective
+
+376
+00:33:28,079 --> 00:33:34,240
+ we end up getting these files where um in this case we're looking at the
+
+377
+00:33:34,240 --> 00:33:39,359
+ post data stations uh we're looking at the the route eth v1
+
+378
+00:33:39,359 --> 00:33:42,879
+ beacon pool attestations there's two routes on that
+
+379
+00:33:42,879 --> 00:33:47,759
+ there's a get datagram and there's a post datagram
+
+380
+00:33:47,759 --> 00:33:52,000
+ the get's defined here we'll scroll down because we were looking at the post
+
+381
+00:33:52,000 --> 00:34:01,839
+ implementation so in terms of the post it has a couple of tags it's it's part of the
+
+382
+00:34:01,839 --> 00:34:07,599
+ validator required api which is actually really important to know any validator
+
+383
+00:34:09,039 --> 00:34:12,960
+ that's implementing the rest api has to implement this post function
+
+384
+00:34:15,840 --> 00:34:20,000
+ it's a tag it's a low-tech solution to say you need to implement this but it's
+
+385
+00:34:20,000 --> 00:34:25,280
+ it turned out to be quite effective and then basically we're expecting a rest
+
+386
+00:34:25,280 --> 00:34:30,000
+ body that has to have the type at a station
+
+387
+00:34:30,880 --> 00:34:39,039
+ and the valid responses that we get are 200 400 and 500. 500 got magically added
+
+388
+00:34:39,039 --> 00:34:44,719
+ we didn't really want to have to hack in 500 every single interface
+
+389
+00:34:44,719 --> 00:34:48,960
+ so we made it part of the default set but we would just already always add
+
+390
+00:34:48,960 --> 00:34:57,039
+ that um in our declarations this interface was really handy to have when we're switching over
+
+391
+00:34:57,039 --> 00:35:02,320
+ to type definitions because we were able to then see what we were missing when we were
+
+392
+00:35:02,320 --> 00:35:07,519
+ changing the interface rewriting a whole library is a big undertaking and if you don't have
+
+393
+00:35:08,720 --> 00:35:12,159
+ adequate testing beforehand you're really not going to have very much fun
+
+394
+00:35:15,280 --> 00:35:15,599
+ um
+
+395
+00:35:15,599 --> 00:35:23,279
+ Oh man, it's ugly.
+
+396
+00:35:23,279 --> 00:35:24,900
+ That's most of this example.
+
+397
+00:35:24,900 --> 00:35:29,819
+ Did anyone have any questions on that?
+
+398
+00:35:29,819 --> 00:35:41,559
+ The reason that I thought that this might be interesting is because this is our own
+
+399
+00:35:41,559 --> 00:35:53,559
+ So it's not something that you can find online to find references of it's something that you really need to either follow examples or ask one of the techie devs.
+
+400
+00:35:54,559 --> 00:35:59,559
+ It's interesting. We don't have a question specifically about this example.
+
+401
+00:36:00,559 --> 00:36:06,559
+ But there was another question. Do you use any dependency injection framework?
+
+402
+00:36:06,559 --> 00:36:15,400
+ Penance injection framework.
+
+403
+00:36:15,400 --> 00:36:18,599
+ None comes to mind.
+
+404
+00:36:18,599 --> 00:36:25,179
+ We do, no, none comes to mind.
+
+405
+00:36:25,179 --> 00:36:26,179
+ We might.
+
+406
+00:36:26,179 --> 00:36:29,119
+ I don't think so.
+
+407
+00:36:29,119 --> 00:36:35,559
+ We do have libraries that people use to fuzz and stuff, but that's not really what the
+
+408
+00:36:35,559 --> 00:36:41,719
+ question is. I guess that's injecting fuzzed data, but yeah.
+
+409
+00:36:45,380 --> 00:36:47,320
+ Yeah, I say no, but I could be wrong.
+
+410
+00:36:49,360 --> 00:36:52,579
+ Okay, for now. Yeah, thank you, Paul. I think we can we can
+
+411
+00:36:52,719 --> 00:36:53,259
+ move along.
+
+412
+00:36:59,480 --> 00:37:05,480
+ The next example is also I love my mouse wheel. Sorry. The next
+
+413
+00:37:05,480 --> 00:37:14,679
+ The other example I'm going to go into is also around using the type definitions.
+
+414
+00:37:14,679 --> 00:37:22,159
+ This one's slightly different because what we end up doing is we bring in an object which
+
+415
+00:37:22,159 --> 00:37:28,159
+ isn't our own wrapper object called objectInMetadata.
+
+416
+00:37:28,159 --> 00:37:34,000
+ We were finding that often we need to return some sort of generic object.
+
+417
+00:37:34,639 --> 00:37:36,500
+ And in this case, it's a bytes 32.
+
+418
+00:37:36,500 --> 00:37:38,739
+ In some cases, it's an entire block.
+
+419
+00:37:40,539 --> 00:37:51,379
+ But with that data, we also need whether it's finalized and whether it's in post merge world,
+
+420
+00:37:51,519 --> 00:37:53,440
+ there's a mode called execution optimistic.
+
+421
+00:37:54,119 --> 00:37:56,799
+ So we don't really have all of the data.
+
+422
+00:37:56,800 --> 00:37:59,920
+ we think that it's valid but we don't really have the data from the EL.
+
+423
+00:38:02,880 --> 00:38:08,880
+ So we found that we needed that type of definition a lot and we created this container for it.
+
+424
+00:38:10,560 --> 00:38:14,480
+ So we can pass it in an object and metadata that contains bytes 32.
+
+425
+00:38:16,320 --> 00:38:21,200
+ And in this case, although we have that structure, we need a different structure
+
+426
+00:38:21,200 --> 00:38:25,200
+ to output and that's why this is more interesting in a way than the last one.
+
+427
+00:38:25,199 --> 00:38:35,319
+ We've got, we're defining a field that is data and to get that data field it's actually
+
+428
+00:38:35,319 --> 00:38:42,699
+ of root type so it's actually recursing into this definition which has a field which is
+
+429
+00:38:42,699 --> 00:38:46,619
+ root and it's bytes 32.
+
+430
+00:38:46,619 --> 00:38:54,779
+ So that's the actual data payload of this get block root function.
+
+431
+00:38:54,780 --> 00:38:57,160
+ It's also got the execution optimistic flag, which
+
+432
+00:38:57,160 --> 00:38:59,260
+ just comes straight off the object,
+
+433
+00:38:59,260 --> 00:39:00,660
+ and the finalized flag, which just
+
+434
+00:39:00,660 --> 00:39:01,880
+ comes straight off the object.
+
+435
+00:39:05,360 --> 00:39:15,140
+ This one, the testing is actually very similar.
+
+436
+00:39:15,140 --> 00:39:17,700
+ So it should return header block information.
+
+437
+00:39:17,700 --> 00:39:21,740
+ We try and use mostly meaningful test names.
+
+438
+00:39:21,739 --> 00:39:25,779
+ Sometimes they get exceedingly long,
+
+439
+00:39:25,779 --> 00:39:28,979
+ but we do try and make them fairly descriptive.
+
+440
+00:39:28,979 --> 00:39:31,119
+ And it's a source of code-reviewed comments
+
+441
+00:39:31,119 --> 00:39:31,739
+ all the time.
+
+442
+00:39:34,219 --> 00:39:39,099
+ The metadata ones, again, are very similar to the other test.
+
+443
+00:39:39,099 --> 00:39:40,819
+ What we're doing here is validating
+
+444
+00:39:40,819 --> 00:39:46,699
+ that that type definition has everything that we need.
+
+445
+00:39:46,699 --> 00:39:51,039
+ So we know that we need to be able to return a 200 response,
+
+446
+00:39:51,039 --> 00:39:54,340
+ and we know that we need to be able to turn it 400 response.
+
+447
+00:39:54,340 --> 00:39:58,699
+ If the object definition doesn't contain those,
+
+448
+00:39:58,699 --> 00:40:04,360
+ then we're in trouble, because it'll turn a 400 response
+
+449
+00:40:04,360 --> 00:40:07,699
+ into a 500 response, and a 500 is an internal error, which
+
+450
+00:40:07,699 --> 00:40:14,579
+ is still an error, but it's not a great response from a REST
+
+451
+00:40:14,579 --> 00:40:15,079
+ API.
+
+452
+00:40:15,079 --> 00:40:24,279
+ But basically the unit tests are more interested in that metadata definition
+
+453
+00:40:24,279 --> 00:40:31,460
+ And the integration tests are more interested in actually what happens when you get
+
+454
+00:40:31,460 --> 00:40:35,199
+ In this case, the object definition itself, I guess
+
+455
+00:40:35,199 --> 00:40:40,639
+ This one's fairly easy because it's mostly a block root
+
+456
+00:40:40,639 --> 00:40:45,639
+ So it's throwing out to another object, which we won't look at.
+
+457
+00:40:48,400 --> 00:40:50,500
+ Get block root isn't heavily used.
+
+458
+00:40:52,400 --> 00:40:56,400
+ The other one, the post attestation, is heavily used.
+
+459
+00:40:57,059 --> 00:41:00,739
+ So the other one gets tested every time we run up a validator
+
+460
+00:41:00,739 --> 00:41:01,879
+ that's in remote mode.
+
+461
+00:41:02,539 --> 00:41:05,900
+ It'll be using that interface, and we'll know very quickly if it breaks.
+
+462
+00:41:10,639 --> 00:41:17,799
+ The other thing we do have when we're looking at APIs is this is our own version of the documentation,
+
+463
+00:41:17,799 --> 00:41:20,719
+ but this is also on the Deacon APIs repository.
+
+464
+00:41:21,039 --> 00:41:24,179
+ There's a way to look at the object definitions.
+
+465
+00:41:25,599 --> 00:41:30,359
+ So this is the interface that we were looking at just then.
+
+466
+00:41:33,579 --> 00:41:36,179
+ It has a path parameter, which is the block ID.
+
+467
+00:41:36,179 --> 00:41:56,099
+ The funny thing, I think, with this one is that you can pass things like head, or you can pass the block root, which I think that's just because block ID is a standard definition, but it seems a little bit weird to be able to pass the block root and then get the block root back.
+
+468
+00:41:57,480 --> 00:42:02,259
+ But that's just one of those weird design outcomes that can happen sometimes.
+
+469
+00:42:02,260 --> 00:42:10,580
+ So that is a relatively simple example, a couple of examples on type definitions.
+
+470
+00:42:15,860 --> 00:42:23,060
+ I'm going to move on from APIs in a second. Is there any other questions on APIs before we
+
+471
+00:42:23,059 --> 00:42:34,400
+ I don't see anything specific about APIs at the moment.
+
+472
+00:42:34,400 --> 00:42:35,400
+ Yeah.
+
+473
+00:42:35,400 --> 00:42:36,400
+ Cool.
+
+474
+00:42:36,400 --> 00:42:42,659
+ We'll get cracking into the next section.
+
+475
+00:42:42,659 --> 00:42:48,219
+ I gather you've looked a bit at ERPs and the EIP process.
+
+476
+00:42:48,219 --> 00:42:53,500
+ I'm not across the entire process, so this is all from the perspective of a developer
+
+477
+00:42:53,500 --> 00:42:58,799
+ who's starting on the prototyping section.
+
+478
+00:42:58,799 --> 00:43:06,339
+ So I may be misrepresenting things, but here's kind of my take on it.
+
+479
+00:43:06,339 --> 00:43:14,399
+ So we get to a point in time in the EIP process where we're not just a research project anymore,
+
+480
+00:43:14,400 --> 00:43:19,680
+ and we want to start looking at how we're going to implement something.
+
+481
+00:43:19,680 --> 00:43:23,680
+ So we start in this round of kind of prototyping,
+
+482
+00:43:23,680 --> 00:43:29,599
+ and it's no longer research. We often discuss these things on Discord,
+
+483
+00:43:29,599 --> 00:43:34,960
+ so ETH, R&D, Discord. For some things that are larger
+
+484
+00:43:34,960 --> 00:43:40,400
+ there's dedicated channels, sometimes they are on Telegram, it
+
+485
+00:43:40,400 --> 00:43:44,220
+ it just depends where the conversation starts.
+
+486
+00:43:44,220 --> 00:43:48,420
+ And often it ends up being a bridge between the two.
+
+487
+00:43:48,420 --> 00:43:51,960
+ It's a fairly organic and muddy process.
+
+488
+00:43:51,960 --> 00:43:55,960
+ So it is hard to understand what happens
+
+489
+00:43:55,960 --> 00:43:59,139
+ because it's not always the same.
+
+490
+00:43:59,139 --> 00:44:01,559
+ When we're doing this, we're looking at things from more
+
+491
+00:44:01,559 --> 00:44:04,480
+ of an engineering mindset.
+
+492
+00:44:04,480 --> 00:44:06,940
+ So we're looking at more holistically
+
+493
+00:44:06,940 --> 00:44:13,360
+ the system that's there now and trying to fit something into that system with knowledge
+
+494
+00:44:13,360 --> 00:44:18,700
+ of the rest of it.
+
+495
+00:44:18,700 --> 00:44:25,780
+ So it's kind of this case of we're trying to make the EIP actually fit into an executable
+
+496
+00:44:25,780 --> 00:44:33,539
+ spec and make sure that we understand how the EL and CL are going to interact.
+
+497
+00:44:33,539 --> 00:44:36,699
+ And sometimes there's definitely missed bits.
+
+498
+00:44:36,699 --> 00:44:40,940
+ After an ERP's been mostly accepted and working out
+
+499
+00:44:40,940 --> 00:44:45,619
+ the details is a big part of how things go.
+
+500
+00:44:45,619 --> 00:44:48,019
+ This is all very vague and hand-wavy,
+
+501
+00:44:48,019 --> 00:44:50,820
+ and we'll move into a concrete example where I can explain
+
+502
+00:44:50,820 --> 00:44:52,039
+ more what I'm talking about.
+
+503
+00:44:55,360 --> 00:45:00,639
+ ERP 7251 is around maximum effective balance
+
+504
+00:45:00,639 --> 00:45:02,480
+ being increased.
+
+505
+00:45:02,480 --> 00:45:06,960
+ and it is true that i'm looking at this because i'm currently implementing it
+
+506
+00:45:07,599 --> 00:45:14,400
+ and i feel like i have a reasonable understanding so basically as part of
+
+507
+00:45:15,599 --> 00:45:20,960
+ this we're looking at the initial penalty when a slashing event occurs
+
+508
+00:45:22,480 --> 00:45:30,000
+ um the slashing event uh gets expensive even for a single validator we're looking at
+
+509
+00:45:30,000 --> 00:45:37,920
+ it, 1E, being the initial penalty that one of the current validators would incur if they
+
+510
+00:45:37,920 --> 00:45:38,639
+ were to be slashed.
+
+511
+00:45:39,900 --> 00:45:48,539
+ And just to be clear, because slashing is used a lot in a lot of different ways, anytime
+
+512
+00:45:48,539 --> 00:45:52,820
+ someone incurs a penalty on the network, we just call that a penalty.
+
+513
+00:45:52,820 --> 00:45:57,539
+ if someone has done something intentionally bad
+
+514
+00:45:57,539 --> 00:45:59,340
+ and we deem it bad enough
+
+515
+00:45:59,340 --> 00:46:02,240
+ that they should stop participating on the network,
+
+516
+00:46:02,400 --> 00:46:05,100
+ we call that a slashing and only that a slashing.
+
+517
+00:46:07,780 --> 00:46:11,400
+ So the result of what I'm calling being slashed
+
+518
+00:46:11,400 --> 00:46:13,980
+ is literally being kicked off the network.
+
+519
+00:46:16,100 --> 00:46:19,260
+ The initial penalty for a small validator isn't too bad,
+
+520
+00:46:19,320 --> 00:46:21,680
+ but once we scale it up to max EB,
+
+521
+00:46:21,679 --> 00:46:27,139
+ the initial penalty with the rest of the rule set today would look like 64 ETH.
+
+522
+00:46:29,079 --> 00:46:33,440
+ It's linear scaling so in some worlds you could argue that that's fair
+
+523
+00:46:33,440 --> 00:46:40,579
+ but the reality is if I was to have 64 validators on a box
+
+524
+00:46:40,579 --> 00:46:43,659
+ and one of them gets an attestation slashing
+
+525
+00:46:43,659 --> 00:46:47,000
+ the rest could be perfectly fine for a period of time
+
+526
+00:46:47,000 --> 00:46:49,239
+ depending on which slot they're attesting to.
+
+527
+00:46:49,239 --> 00:46:56,839
+ So I could turn that node off and I would have only been slashed for one validator or a small number of validators.
+
+528
+00:46:57,419 --> 00:47:07,719
+ In the case of consolidating all of that into a single validator, I would have incurred 100% of the penalty when previously I would have only incurred a small percentage.
+
+529
+00:47:08,859 --> 00:47:12,199
+ So from that perspective, it's not super fair.
+
+530
+00:47:12,199 --> 00:47:25,319
+ So what they're looking to do is for the initial penalty, make sure that that initial penalty approaches nothing, which works for everyone.
+
+531
+00:47:25,559 --> 00:47:28,399
+ It's not penalizing institutionals.
+
+532
+00:47:28,399 --> 00:47:30,019
+ It's not penalizing solo stakers.
+
+533
+00:47:30,019 --> 00:47:32,400
+ is.
+
+534
+00:47:32,400 --> 00:47:38,280
+ When we had a look at this to put into the spec,
+
+535
+00:47:38,280 --> 00:47:43,000
+ the thought came to mind around whistleblower rewards.
+
+536
+00:47:43,000 --> 00:47:44,639
+ What happens when you get slashed
+
+537
+00:47:44,639 --> 00:47:47,780
+ is that someone gets a reward for reporting it.
+
+538
+00:47:47,780 --> 00:47:50,900
+ In reality, it's the block proposer.
+
+539
+00:47:50,900 --> 00:47:55,400
+ In theory, it could have been a third party that produces,
+
+540
+00:47:55,400 --> 00:47:57,139
+ that's going over all of the data
+
+541
+00:47:57,139 --> 00:48:02,319
+ and trying to report on who's been banned.
+
+542
+00:48:02,319 --> 00:48:07,900
+ In this case, our 2048 ETH Validator, which is the max,
+
+543
+00:48:07,900 --> 00:48:12,259
+ would have created a 4 ETH whistleblower award, which
+
+544
+00:48:12,259 --> 00:48:15,819
+ is awesome, and a lot of people would be really happy.
+
+545
+00:48:15,819 --> 00:48:21,059
+ But the problem with that is we're actually minting ETH.
+
+546
+00:48:21,059 --> 00:48:26,920
+ The penalty no longer pays for that whistleblower award, which
+
+547
+00:48:27,139 --> 00:48:32,679
+ If we go back to game theory it's infinite resource generation and it's something to be avoided.
+
+548
+00:48:33,460 --> 00:48:36,099
+ So ultimately, we don't want to mint ETH.
+
+549
+00:48:38,699 --> 00:48:45,319
+ The solution for this is the whistleblower reward needs to at least be covered by the initial penalty.
+
+550
+00:48:50,000 --> 00:48:56,239
+ That's an interesting case of when an EIP gets to the real world.
+
+551
+00:48:57,139 --> 00:49:01,659
+ I'm just going to read a question.
+
+552
+00:49:05,500 --> 00:49:10,839
+ We have one question here regarding the changes here.
+
+553
+00:49:12,099 --> 00:49:14,400
+ Is it looking at Phase 0 spec?
+
+554
+00:49:14,759 --> 00:49:16,759
+ That sounds like about Phase 0 spec.
+
+555
+00:49:21,259 --> 00:49:23,099
+ I'll have to get back to you on that one,
+
+556
+00:49:23,099 --> 00:49:24,739
+ but I'm fairly sure.
+
+557
+00:49:27,139 --> 00:49:32,139
+ it changed in Bellatrix to be 1e, I'm fairly sure.
+
+558
+00:49:36,299 --> 00:49:38,319
+ If anyone's been looking at the consensus spec,
+
+559
+00:49:38,319 --> 00:49:43,319
+ the other thing we do is we create basically a difference
+
+560
+00:49:45,139 --> 00:49:49,559
+ between the previous version and the next version
+
+561
+00:49:49,559 --> 00:49:51,420
+ as a definition of the next version.
+
+562
+00:49:51,420 --> 00:49:54,460
+ So it can be confusing to follow,
+
+563
+00:49:54,460 --> 00:49:58,019
+ But I can chase up that question, Marius.
+
+564
+00:49:58,019 --> 00:50:00,740
+ I can't answer it right now.
+
+565
+00:50:00,740 --> 00:50:05,039
+ But I'm fairly sure in Bellatrix it changed to be 1E.
+
+566
+00:50:07,960 --> 00:50:11,240
+ Basically, the reward question changed.
+
+567
+00:50:11,240 --> 00:50:14,599
+ Yeah, I copied the question for Paul, so it's a bit long.
+
+568
+00:50:14,599 --> 00:50:17,720
+ But we have this discussion in Discord,
+
+569
+00:50:17,720 --> 00:50:20,420
+ so maybe if you will join our Discord
+
+570
+00:50:20,420 --> 00:50:27,700
+ Yeah, okay. Do you want to just shoot me a DM link for that?
+
+571
+00:50:27,700 --> 00:50:32,820
+ Yeah, I will. Awesome. Otherwise I'll forget for sure.
+
+572
+00:50:35,860 --> 00:50:41,059
+ Anyway, when we pointed out that the initial penalty would go to 64, no one else in that
+
+573
+00:50:41,059 --> 00:50:45,380
+ in that group argued, so it's probably that I was right, but I can confirm that.
+
+574
+00:50:47,539 --> 00:50:48,659
+ Um,
+
+575
+00:50:50,420 --> 00:51:00,280
+ So basically all of the features, all of the ERP's when they go into the consensus spec
+
+576
+00:51:00,280 --> 00:51:08,320
+ go into this underscore features folder.
+
+577
+00:51:08,320 --> 00:51:12,300
+ And in this case, we've changed Validere now as well.
+
+578
+00:51:12,300 --> 00:51:16,960
+ We had only changed beacon chain and fork, but it looks like we've now changed another
+
+579
+00:51:16,960 --> 00:51:19,980
+ file.
+
+580
+00:51:19,980 --> 00:51:28,099
+ These are a difference on the specification, so when they say, we're going to be jumping
+
+581
+00:51:28,099 --> 00:51:34,199
+ into one specifically, I think, we're going to be going to the beacon state.
+
+582
+00:51:34,199 --> 00:51:41,740
+ All right, it's not so with the beacon state.
+
+583
+00:51:41,740 --> 00:51:49,900
+ So these redefine the object, and then at a point we start getting new in, say, we know
+
+584
+00:51:49,900 --> 00:51:53,559
+ 7, 2, 5, 1 is what we're looking at.
+
+585
+00:51:53,559 --> 00:51:56,400
+ We've actually added a whole ton of new fields
+
+586
+00:51:56,400 --> 00:52:00,519
+ into the Bitcoin state for 7, 2, 5, 1.
+
+587
+00:52:00,519 --> 00:52:03,579
+ So that's all of these.
+
+588
+00:52:03,579 --> 00:52:05,720
+ Some of them are lists, which are
+
+589
+00:52:05,720 --> 00:52:06,880
+ going to prove interesting.
+
+590
+00:52:06,880 --> 00:52:10,380
+ Someone the other day noticed that this
+
+591
+00:52:10,380 --> 00:52:11,920
+ is kind of the first time that we're
+
+592
+00:52:11,920 --> 00:52:13,440
+ going to be having the splice lists.
+
+593
+00:52:16,820 --> 00:52:18,680
+ That's going to be a pain point that we
+
+594
+00:52:18,680 --> 00:52:19,840
+ haven't worked through yet.
+
+595
+00:52:19,840 --> 00:52:24,640
+ But in real terms, generally, when we're adding things to the state,
+
+596
+00:52:24,780 --> 00:52:27,240
+ we're adding one or two fields, not eight.
+
+597
+00:52:28,180 --> 00:52:31,600
+ So, yeah, it's going to get interesting.
+
+598
+00:52:32,900 --> 00:52:34,600
+ What I was going to show is...
+
+599
+00:52:36,720 --> 00:52:38,579
+ I might actually jump over to my idea.
+
+600
+00:52:38,579 --> 00:52:49,559
+ it becomes a bit interesting when we add things to our
+
+601
+00:52:49,559 --> 00:52:58,119
+ uh our code base because of the history of how things have kind of evolved so
+
+602
+00:52:58,119 --> 00:53:05,960
+ we do have changes in our in our um in our actual versioned area
+
+603
+00:53:05,960 --> 00:53:13,119
+ but we have this whole set of changes in our API area, API schema.
+
+604
+00:53:15,260 --> 00:53:18,059
+ These are the old annotated objects that we used to use.
+
+605
+00:53:18,340 --> 00:53:21,800
+ No, that's not what I clicked on.
+
+606
+00:53:23,780 --> 00:53:24,260
+ This is?
+
+607
+00:53:26,099 --> 00:53:27,460
+ No, that's JSON.
+
+608
+00:53:29,900 --> 00:53:31,340
+ And balance deposit.
+
+609
+00:53:31,519 --> 00:53:32,360
+ Okay, that looks better.
+
+610
+00:53:32,360 --> 00:53:42,940
+ So with our annotated objects, we have to, they're called POJOs, the plain old Java objects,
+
+611
+00:53:42,940 --> 00:53:47,920
+ but basically we have to put annotations on every field that we add, and we have to put
+
+612
+00:53:47,920 --> 00:53:52,620
+ annotations into the constructor.
+
+613
+00:53:52,620 --> 00:53:59,140
+ We also need to create a constructor that allows us to take the real object, the versioned
+
+614
+00:53:59,139 --> 00:54:09,219
+ object and produce this object so that we can convert both ways so we need to be able to go
+
+615
+00:54:09,219 --> 00:54:17,139
+ to the schema objects and from the schema objects depending on on the scenario this is basically
+
+616
+00:54:17,139 --> 00:54:22,900
+ this whole folder basically is tech debt because we don't use it anymore except for in some specific
+
+617
+00:54:22,900 --> 00:54:29,780
+ scenarios but it still needs to be defined because it's changing the state and the old
+
+618
+00:54:29,780 --> 00:54:39,300
+ API still references this. We use these for some of the Validator API, sorry for some of the
+
+619
+00:54:39,860 --> 00:54:48,420
+ Validator clients interactions with the beacon node but it doesn't it doesn't require state but
+
+620
+00:54:48,420 --> 00:54:52,280
+ but we haven't removed that code path completely,
+
+621
+00:54:52,460 --> 00:54:54,599
+ so we still are maintaining those objects,
+
+622
+00:54:54,740 --> 00:54:55,700
+ which is a bit unfortunate.
+
+623
+00:54:59,000 --> 00:55:01,720
+ Having said that, it's a small change
+
+624
+00:55:01,720 --> 00:55:04,320
+ compared to the rest of the stuff,
+
+625
+00:55:04,380 --> 00:55:05,880
+ which all has to exist anyway.
+
+626
+00:55:08,300 --> 00:55:10,740
+ If we have a look just at the JSON object,
+
+627
+00:55:12,680 --> 00:55:15,200
+ all a few new fields will be in there.
+
+628
+00:55:15,199 --> 00:55:24,699
+ they're also defined down through here so that's kind of what it looks like in JSON land and that's
+
+629
+00:55:24,699 --> 00:55:32,839
+ where these tests are fairly handy is because changing the object has then changed the type
+
+630
+00:55:32,839 --> 00:55:40,019
+ definition that the object uses and that flows through the object at the all of the
+
+631
+00:55:40,019 --> 00:55:45,280
+ integration testing so we can see exactly what's changed without looking at the code
+
+632
+00:55:45,280 --> 00:55:52,139
+ and same thing if one of these had changed from in un64 to something else
+
+633
+00:55:52,139 --> 00:55:55,599
+ that would also be reflected here and we'd be able to see that very easily
+
+634
+00:55:55,599 --> 00:56:05,320
+ it's a whole bit of a we have builders and at the moment this is only on my own branch so I've kind
+
+635
+00:56:05,320 --> 00:56:10,200
+ hacked in some constants which I won't be doing by the time it reaches real code
+
+636
+00:56:11,480 --> 00:56:14,200
+ but it was an easy way to get this off the ground.
+
+637
+00:56:17,240 --> 00:56:22,120
+ I'm assuming everyone's seen the builder pattern before so I won't jump much into the builder
+
+638
+00:56:22,120 --> 00:56:29,960
+ pattern. The main thing I was going to say is there's a whole lot of stuff that changes just
+
+639
+00:56:29,960 --> 00:56:36,840
+ for those eight fields so it ends up in a big overhead for the team to wear
+
+640
+00:56:41,320 --> 00:56:45,880
+ and that integration test was the annoying test that shows what we've missed basically
+
+641
+00:56:50,519 --> 00:56:53,159
+ this is one of the few times that we've used branch development
+
+642
+00:56:53,159 --> 00:56:58,139
+ normally what we'll do is we'll just put things behind feature toggles
+
+643
+00:56:58,139 --> 00:57:05,619
+ uh at the moment we've got a case where we've got some some features have been accepted into
+
+644
+00:57:05,619 --> 00:57:13,399
+ Electra and some are still being worked out and and 7251 is one of those has been worked out so
+
+645
+00:57:13,399 --> 00:57:22,379
+ it's been it hasn't been fully accepted and it hasn't been changed to yes it's definitely in
+
+646
+00:57:22,380 --> 00:57:29,059
+ Electra. So I'm keeping it on a branch so that I don't infect the other things, because once I add
+
+647
+00:57:29,059 --> 00:57:38,320
+ those objects into the state, then any other client that we talk to would need to be also
+
+648
+00:57:38,320 --> 00:57:41,380
+ dealing with the same state, otherwise it's going to get a different route,
+
+649
+00:57:42,000 --> 00:57:43,320
+ and we won't be able to talk to each other.
+
+650
+00:57:43,320 --> 00:57:58,400
+ um another example from 7251 a really seemingly simple one is um is eligible for activation queue
+
+651
+00:57:58,400 --> 00:58:06,860
+ so this is a function that is that is having a look at a validator object and determining
+
+652
+00:58:06,860 --> 00:58:12,559
+ whether it needs is is able to go into the activation queue to be to become an active
+
+653
+00:58:12,559 --> 00:58:14,579
+ file editor.
+
+654
+00:58:14,579 --> 00:58:19,320
+ In Python, everything is snake case.
+
+655
+00:58:19,320 --> 00:58:22,880
+ In Java, it's really confusing to have
+
+656
+00:58:22,880 --> 00:58:25,699
+ mixed case where some things are snake case
+
+657
+00:58:25,699 --> 00:58:28,059
+ and some things are camel case.
+
+658
+00:58:28,059 --> 00:58:32,759
+ And all the main Java coding standards are camel case.
+
+659
+00:58:32,759 --> 00:58:34,179
+ So we've gone with camel case.
+
+660
+00:58:34,179 --> 00:58:40,159
+ And if we translate that, we get is eligible for activation queue
+
+661
+00:58:40,159 --> 00:58:43,599
+ much more like that.
+
+662
+00:58:43,599 --> 00:58:45,379
+ One of these should be found when we do
+
+663
+00:58:45,379 --> 00:58:48,139
+ a search through the code.
+
+664
+00:58:48,139 --> 00:58:52,379
+ So we'll have a look at the code in a second.
+
+665
+00:58:52,379 --> 00:58:57,559
+ It was in abstract epoch processor, which is good.
+
+666
+00:58:57,559 --> 00:59:03,279
+ And then we can have a look at how we're going to define
+
+667
+00:59:03,279 --> 00:59:09,579
+ is it eligible for activation queue for Electra,
+
+668
+00:59:09,579 --> 00:59:12,019
+ which has to change that function.
+
+669
+00:59:12,019 --> 00:59:17,259
+ So if I jump back into it's a lot smaller change.
+
+670
+00:59:22,579 --> 00:59:27,880
+ The abstract, you put processR.
+
+671
+00:59:34,400 --> 00:59:37,719
+ The interesting thing is that it was inline, which is OK.
+
+672
+00:59:39,579 --> 00:59:43,699
+ And we had a comment which was mentioning it is eligible for activation queue.
+
+673
+00:59:45,079 --> 00:59:48,799
+ If we have a look back at the spec, it's basically doing the same thing.
+
+674
+00:59:48,880 --> 00:59:50,079
+ It's just a little bit different.
+
+675
+00:59:52,759 --> 00:59:59,579
+ But it sounds like we're just trying to make sure that we don't have to read the whole validator object so that we can make this determination.
+
+676
+01:00:02,139 --> 01:00:06,119
+ So without changing that logic, I've just split it out into a function.
+
+677
+01:00:06,119 --> 01:00:14,759
+ and basically then I just can override that function when we're looking in.
+
+678
+01:00:16,119 --> 01:00:17,460
+ I've gone to the wrong file.
+
+679
+01:00:17,460 --> 01:00:22,460
+ So abstractEqualProcessor.
+
+680
+01:00:25,119 --> 01:00:31,019
+ And so is eligible for activation queue is now dependent on min activation balance,
+
+681
+01:00:31,099 --> 01:00:35,699
+ which is a new field that's coming into play in 7.2.5.1.
+
+682
+01:00:36,119 --> 01:00:44,380
+ Along with that, there was a bunch of other functions that needed to be defined.
+
+683
+01:00:45,679 --> 01:00:50,019
+ As compounding withdrawal credential is compounding withdrawal credential.
+
+684
+01:00:50,659 --> 01:00:56,960
+ I don't know that it makes it that much easier to pass through just the withdrawal credentials.
+
+685
+01:00:57,099 --> 01:00:58,699
+ I'm assuming that was done for tests.
+
+686
+01:00:58,699 --> 01:01:07,419
+ it's an overhead that I don't care greatly for but it's not either like a big problem so I've
+
+687
+01:01:07,419 --> 01:01:14,379
+ just done it the way the spec does it initially and then there's a get max effect validate a max
+
+688
+01:01:14,379 --> 01:01:21,119
+ effective balance which does make sense because we have to check the withdrawal credential prefix
+
+689
+01:01:21,119 --> 01:01:24,119
+ if anyone's had a look at
+
+690
+01:01:24,119 --> 01:01:28,719
+ the dirty details of
+
+691
+01:01:28,719 --> 01:01:30,079
+ the validator.
+
+692
+01:01:31,400 --> 01:01:34,259
+ We've got a prefix which is 0x00.
+
+693
+01:01:35,679 --> 01:01:37,980
+ When withdrawals were active in Capella,
+
+694
+01:01:38,339 --> 01:01:40,639
+ actually well before that,
+
+695
+01:01:41,279 --> 01:01:42,719
+ there became this eth1 withdrawal
+
+696
+01:01:42,719 --> 01:01:46,619
+ which is basically 0x01
+
+697
+01:01:46,619 --> 01:01:48,679
+ and then a whole bunch of zeros
+
+698
+01:01:48,679 --> 01:01:50,559
+ and then an eth address.
+
+699
+01:01:50,559 --> 01:01:57,059
+ we're going to be leveraging on that and making it 0x02 for compounding.
+
+700
+01:01:58,460 --> 01:02:04,320
+ I wouldn't suggest anyone watching this changes their users 0x02 at the moment.
+
+701
+01:02:04,440 --> 01:02:08,380
+ There's nothing stopping you, but it's probably not good
+
+702
+01:02:08,380 --> 01:02:11,119
+ until we determine all the details to change to.
+
+703
+01:02:13,679 --> 01:02:18,139
+ Anyway, the 0x01 is the most common that you'll see on the mainnet now,
+
+704
+01:02:18,139 --> 01:02:25,239
+ which means that withdrawals are basically worked through in a loop
+
+705
+01:02:25,239 --> 01:02:28,699
+ and over a period of a few days,
+
+706
+01:02:29,159 --> 01:02:31,199
+ everyone gets their partial withdrawals processed.
+
+707
+01:02:32,980 --> 01:02:35,420
+ The new compounding one will change that a little bit
+
+708
+01:02:35,420 --> 01:02:38,500
+ and the details aren't finalized yet
+
+709
+01:02:38,500 --> 01:02:41,139
+ as to exactly what that's going to look like.
+
+710
+01:02:41,139 --> 01:02:53,460
+ We have a bunch of presets that get changed to add some new fields.
+
+711
+01:02:53,460 --> 01:02:55,359
+ And we have different network configs.
+
+712
+01:02:55,359 --> 01:03:00,619
+ So mainnet, obviously, is the one that most people are aware of.
+
+713
+01:03:00,619 --> 01:03:07,359
+ Minimal is a handy network config for running during development, because it doesn't need
+
+714
+01:03:07,359 --> 01:03:10,559
+ quite so many things, but it does start from phase zero.
+
+715
+01:03:11,139 --> 01:03:13,940
+ And Swift is one that we really only use for testing.
+
+716
+01:03:14,879 --> 01:03:18,059
+ It's very, very short epoch time,
+
+717
+01:03:18,239 --> 01:03:21,440
+ so it allows us to do things like run acceptance tests
+
+718
+01:03:21,440 --> 01:03:26,400
+ in a very fast way where we get to finalization
+
+719
+01:03:26,400 --> 01:03:29,299
+ without having to wait for several minutes.
+
+720
+01:03:30,259 --> 01:03:32,579
+ But they all need to be updated for Electra.
+
+721
+01:03:33,859 --> 01:03:35,199
+ So that's just going through that.
+
+722
+01:03:35,199 --> 01:03:45,960
+ and then we have these objects in testing that basically just define some defaults
+
+723
+01:03:45,960 --> 01:03:53,500
+ they're fairly arbitrary so I haven't defined perfectly each value but they give us a
+
+724
+01:03:53,500 --> 01:03:56,960
+ representative for writing test seconds
+
+725
+01:03:56,960 --> 01:04:08,960
+ So that change is a lot smaller, but it is also only targeting one function, and we've
+
+726
+01:04:08,960 --> 01:04:16,840
+ ended up implementing three or four, because we're looking at that min activation balance.
+
+727
+01:04:16,840 --> 01:04:24,480
+ So that's kind of what you go through when you're prototyping out the functions.
+
+728
+01:04:24,480 --> 01:04:31,360
+ Obviously, there's tests involved, and there's a framework that we will have to add to.
+
+729
+01:04:31,360 --> 01:04:39,619
+ So when reference tests are added to the spec, we'll be able to then call some of these individual
+
+730
+01:04:39,619 --> 01:04:44,079
+ functions to validate that they're doing what we think they're doing.
+
+731
+01:04:44,079 --> 01:04:53,860
+ But for now, we don't have those, so we're just implementing the code itself.
+
+732
+01:04:53,860 --> 01:04:55,099
+ That was a little bit random.
+
+733
+01:04:55,099 --> 01:04:56,700
+ Is there any questions on that?
+
+734
+01:05:04,059 --> 01:05:05,820
+ Not questions on this part,
+
+735
+01:05:08,079 --> 01:05:09,320
+ maybe something for later,
+
+736
+01:05:09,320 --> 01:05:12,780
+ but some un-dragged question.
+
+737
+01:05:12,780 --> 01:05:15,420
+ What is the database that,
+
+738
+01:05:15,420 --> 01:05:17,579
+ what is the database engine that Teco uses?
+
+739
+01:05:19,160 --> 01:05:20,680
+ Apparently we got two.
+
+740
+01:05:20,679 --> 01:05:25,779
+ When we started at Genesis, we were using RocksDB only.
+
+741
+01:05:27,000 --> 01:05:32,019
+ We had problems with being able to upgrade RocksDB sometimes,
+
+742
+01:05:32,019 --> 01:05:36,480
+ and they do have a lot of kind of false starts
+
+743
+01:05:36,480 --> 01:05:39,279
+ with some of their releases where all of a sudden things regress.
+
+744
+01:05:40,219 --> 01:05:41,799
+ So we did switch to LevelDB.
+
+745
+01:05:43,099 --> 01:05:48,659
+ We have found that LevelDB is not really very actively maintained now.
+
+746
+01:05:48,659 --> 01:05:52,139
+ So we are considering switching back to RocksDB.
+
+747
+01:05:53,940 --> 01:05:55,699
+ Basu obviously uses RocksDB,
+
+748
+01:05:55,879 --> 01:05:59,799
+ and there's a lot of expertise in that area in the greater team.
+
+749
+01:06:01,659 --> 01:06:04,839
+ And for anyone that is curious,
+
+750
+01:06:05,199 --> 01:06:08,639
+ ConsenSys does run a large team of people
+
+751
+01:06:08,639 --> 01:06:10,819
+ maintaining Hyperledger Basu as well.
+
+752
+01:06:11,519 --> 01:06:16,039
+ So that's why Basu is sometimes a consideration for Tecku
+
+753
+01:06:16,039 --> 01:06:19,480
+ in how we're doing our development
+
+754
+01:06:19,480 --> 01:06:21,340
+ because we do have a lot of expertise
+
+755
+01:06:21,340 --> 01:06:24,440
+ inside our own group
+
+756
+01:06:24,440 --> 01:06:27,380
+ for a lot of basic stuff as well.
+
+757
+01:06:29,719 --> 01:06:30,739
+ All right, thank you.
+
+758
+01:06:31,000 --> 01:06:32,199
+ That's interesting, yeah,
+
+759
+01:06:32,279 --> 01:06:35,079
+ because it was a get moved from level DB to pedal
+
+760
+01:06:35,079 --> 01:06:39,960
+ and it's interesting to hear that you go back to level DB.
+
+761
+01:06:40,679 --> 01:06:41,880
+ Thank you.
+
+762
+01:06:42,579 --> 01:06:45,039
+ And another question,
+
+763
+01:06:45,039 --> 01:06:49,199
+ What do you find most challenging in the tech development,
+
+764
+01:06:49,199 --> 01:06:52,380
+ which part of the code base are the hardest to maintain
+
+765
+01:06:52,380 --> 01:06:54,940
+ to work on the quality features?
+
+766
+01:06:55,940 --> 01:06:57,920
+ Storage is the hardest for sure.
+
+767
+01:07:02,199 --> 01:07:05,380
+ The database storage doesn't change very often.
+
+768
+01:07:05,380 --> 01:07:09,579
+ So what you get with that is basically the tests
+
+769
+01:07:09,579 --> 01:07:13,440
+ aren't heavily understood sometimes,
+
+770
+01:07:13,440 --> 01:07:16,940
+ They're written by usually people that have left the team
+
+771
+01:07:16,940 --> 01:07:21,519
+ because it's not super common that we need to change them.
+
+772
+01:07:21,920 --> 01:07:26,039
+ So once we do eventually dive into changing anything
+
+773
+01:07:26,039 --> 01:07:29,559
+ in the storage layer, it tends to be a little bit of an overhead.
+
+774
+01:07:32,360 --> 01:07:36,139
+ There's a gentleman in Europe that's been here
+
+775
+01:07:36,139 --> 01:07:38,820
+ a little bit less than me, but for a fair while.
+
+776
+01:07:39,400 --> 01:07:42,960
+ So usually it falls back to one of us
+
+777
+01:07:42,960 --> 01:07:44,980
+ to be having an eye over any storage change.
+
+778
+01:07:48,500 --> 01:07:50,300
+ And there are sections of the code.
+
+779
+01:07:51,519 --> 01:07:54,920
+ So when we look at the two ways we can run,
+
+780
+01:07:55,240 --> 01:07:57,500
+ we can run as a beacon node that's combined
+
+781
+01:07:57,500 --> 01:08:04,039
+ to be able to run Val editor keys in the same process.
+
+782
+01:08:04,860 --> 01:08:08,019
+ Or we can run with a split out Val editor client.
+
+783
+01:08:08,019 --> 01:08:13,559
+ So those, in those two modes, there's a parent class for each one.
+
+784
+01:08:13,559 --> 01:08:19,359
+ There's a beacon chain controller, and there's a validated client service, I believe it is
+
+785
+01:08:19,359 --> 01:08:21,500
+ off the top of my head.
+
+786
+01:08:21,500 --> 01:08:26,819
+ Those two are like the parent classes where everything is built from.
+
+787
+01:08:26,819 --> 01:08:32,140
+ But if you need to add something like the key manager API, which could be run in that
+
+788
+01:08:32,140 --> 01:08:36,699
+ combined process, or it could be run in the validated client service, you really need
+
+789
+01:08:36,699 --> 01:08:42,239
+ to be understanding where your flag's going to become active.
+
+790
+01:08:42,239 --> 01:08:45,760
+ We use pico-cli for our command-like flag argument
+
+791
+01:08:45,760 --> 01:08:46,599
+ processing stuff.
+
+792
+01:08:49,300 --> 01:08:49,960
+ Right.
+
+793
+01:08:49,960 --> 01:08:50,460
+ Interesting.
+
+794
+01:08:50,460 --> 01:08:53,859
+ And so you have two distinct classes for the beacon node
+
+795
+01:08:53,859 --> 01:08:55,979
+ and the validator.
+
+796
+01:08:55,979 --> 01:08:58,840
+ We had a question about the validator code,
+
+797
+01:08:58,840 --> 01:09:00,699
+ but I think we can get into that later,
+
+798
+01:09:00,699 --> 01:09:04,880
+ and you can just keep going and finish the presentation
+
+799
+01:09:04,880 --> 01:09:10,800
+ this we have yeah over an hour now so uh yeah for sure we'll just keep it going
+
+800
+01:09:12,480 --> 01:09:14,880
+ i have i have a couple of other slides but um
+
+801
+01:09:15,680 --> 01:09:22,400
+ they were really in case i ran out of time but this is this kind of wraps up the uh the eip
+
+802
+01:09:22,400 --> 01:09:26,880
+ kind of thing that we're looking at so in terms of
+
+803
+01:09:26,880 --> 01:09:34,079
+ of how our team is operating, we'll allocate an owner
+
+804
+01:09:34,079 --> 01:09:36,260
+ to an individual EIP.
+
+805
+01:09:36,260 --> 01:09:40,619
+ So some people, for example, would have got EIP7002,
+
+806
+01:09:40,619 --> 01:09:45,420
+ which is an Electra-confirmed EIP, and it's quite small.
+
+807
+01:09:45,420 --> 01:09:48,900
+ And some people, like me, got the Maxi-B EIP,
+
+808
+01:09:48,900 --> 01:09:50,420
+ which is quite a lot larger.
+
+809
+01:09:52,880 --> 01:09:55,060
+ The person who owns it is going to obviously
+
+810
+01:09:55,060 --> 01:09:59,680
+ break that project down into tickets or, I've said chunks
+
+811
+01:09:59,680 --> 01:10:04,060
+ here, but basically issues on GitHub.
+
+812
+01:10:04,060 --> 01:10:06,400
+ Ideally, we're going to present an overview to the team
+
+813
+01:10:06,400 --> 01:10:11,880
+ so that people understand what's involved in the changes
+
+814
+01:10:11,880 --> 01:10:14,940
+ and have a bit of an overview of everything.
+
+815
+01:10:14,940 --> 01:10:19,340
+ And then that person's going to be
+
+816
+01:10:19,340 --> 01:10:21,840
+ kind of on the hook for making sure
+
+817
+01:10:21,840 --> 01:10:23,300
+ that things are delivered.
+
+818
+01:10:23,300 --> 01:10:28,300
+ So just making sure that test nets are all,
+
+819
+01:10:29,060 --> 01:10:33,699
+ we're joining them, we're not having any issues on them,
+
+820
+01:10:33,699 --> 01:10:36,980
+ if the spec changes, keeping up with those developments.
+
+821
+01:10:38,440 --> 01:10:41,980
+ And depending on the feature itself,
+
+822
+01:10:41,980 --> 01:10:44,960
+ 7.0.0.2 was quite small
+
+823
+01:10:44,960 --> 01:10:47,260
+ and it was easily implemented by one person,
+
+824
+01:10:47,260 --> 01:10:50,300
+ but Max-EB is looking like
+
+825
+01:10:50,300 --> 01:10:52,239
+ it's going to be quite a large feature.
+
+826
+01:10:53,300 --> 01:10:55,800
+ Blobs, for example, was a very large feature,
+
+827
+01:10:55,800 --> 01:10:58,760
+ and we had half of our team on Blobs.
+
+828
+01:10:58,760 --> 01:11:01,159
+ So you might not be implementing the entire feature
+
+829
+01:11:01,159 --> 01:11:02,060
+ depending on that size.
+
+830
+01:11:04,760 --> 01:11:09,779
+ Withdrawals is another good example, which was in Capella.
+
+831
+01:11:09,779 --> 01:11:14,539
+ I owned that feature, and I was responsible for making sure
+
+832
+01:11:14,539 --> 01:11:16,360
+ that everything was running OK.
+
+833
+01:11:16,360 --> 01:11:18,119
+ But there was another person on the team
+
+834
+01:11:18,119 --> 01:11:21,480
+ that helped me through some things,
+
+835
+01:11:21,479 --> 01:11:24,919
+ just so that we could deliver and be on time for the test net.
+
+836
+01:11:30,599 --> 01:11:32,599
+ That's about it from team side of it.
+
+837
+01:11:32,599 --> 01:11:35,000
+ We don't have a product owner at the moment per se.
+
+838
+01:11:35,519 --> 01:11:38,239
+ We're mostly just managing it within the development team.
+
+839
+01:11:41,599 --> 01:11:44,159
+ And we do have, because we have a Europe presence,
+
+840
+01:11:44,719 --> 01:11:47,319
+ they tend to go to the all core dev schools
+
+841
+01:11:47,319 --> 01:11:51,340
+ and I tend to be asleep in my bed at that time
+
+842
+01:11:51,340 --> 01:11:52,719
+ because it's 2 a.m. our time.
+
+843
+01:11:57,719 --> 01:11:59,539
+ That's about all I was going to look at
+
+844
+01:11:59,539 --> 01:12:04,880
+ from the EIP kind of perspective,
+
+845
+01:12:05,500 --> 01:12:08,519
+ and I'm hoping people find that useful.
+
+846
+01:12:09,979 --> 01:12:11,179
+ If there's no further questions,
+
+847
+01:12:11,259 --> 01:12:14,599
+ I do have a quick performance thing that we could run through
+
+848
+01:12:14,599 --> 01:12:15,799
+ or we could wrap it up there.
+
+849
+01:12:15,920 --> 01:12:16,920
+ I'm easy either way.
+
+850
+01:12:17,319 --> 01:12:24,079
+ Thank you so much, Paul.
+
+851
+01:12:24,079 --> 01:12:27,319
+ It's also very interesting to see how it works within the team.
+
+852
+01:12:27,319 --> 01:12:28,659
+ It's an interesting insight.
+
+853
+01:12:28,659 --> 01:12:36,119
+ Let's see if there are any questions about the AAP process.
+
+854
+01:12:36,119 --> 01:12:42,139
+ So far, we don't have any.
+
+855
+01:12:42,139 --> 01:12:43,139
+ But it's very interesting.
+
+856
+01:12:43,140 --> 01:12:49,539
+ so much because we've been using it as an example of how the changes implementation
+
+857
+01:12:49,539 --> 01:12:54,020
+ things is done in the Ethereum that there is some EIP idea which goes through some
+
+858
+01:12:54,020 --> 01:12:58,820
+ research process then it's implemented and it's great to dive into that to
+
+859
+01:12:59,700 --> 01:13:07,780
+ zoom in on how it's actually happening so it's really helpful yeah and let's see if
+
+860
+01:13:07,779 --> 01:13:13,779
+ um we have we have any related questions otherwise i'm very glad to have to continue to give you more
+
+861
+01:13:13,779 --> 01:13:20,420
+ space and we have like maybe 20 minutes left it's okay with you at first um so we can we can use
+
+862
+01:13:20,420 --> 01:13:27,219
+ that time um somebody's typing so i just want to see if there's a relevant question and yeah no
+
+863
+01:13:27,220 --> 01:13:40,900
+ problem okay uh unrelated question but still uh whether um you are working on
+
+864
+01:13:40,900 --> 01:13:47,780
+ implementation or any research related to epbs technically maybe similar to epbs not currently
+
+865
+01:13:49,300 --> 01:13:56,100
+ um i'm trying to follow the conversation on epbs it's very long um yeah and if anyone is interested
+
+866
+01:13:56,100 --> 01:13:59,120
+ There's an ETH R&D channel for EPBS.
+
+867
+01:14:03,700 --> 01:14:06,880
+ It'll be interesting to see how it pans out at the moment.
+
+868
+01:14:06,980 --> 01:14:09,200
+ I don't think it's looking like it's going to be in Electra.
+
+869
+01:14:11,060 --> 01:14:14,160
+ But there's a lot of considerations to be had.
+
+870
+01:14:17,160 --> 01:14:19,280
+ Yeah, interesting. Thank you.
+
+871
+01:14:19,280 --> 01:14:23,140
+ Any more questions?
+
+872
+01:14:26,100 --> 01:14:37,440
+ Okay, I think we can go on.
+
+873
+01:14:37,440 --> 01:14:52,060
+ If you have more content, just feel free to continue.
+
+874
+01:14:52,060 --> 01:14:52,680
+ Okay.
+
+875
+01:14:54,900 --> 01:14:58,039
+ I was going to mention just a quick performance example.
+
+876
+01:14:58,039 --> 01:15:01,900
+ I'm sure this is potentially language specific,
+
+877
+01:15:02,420 --> 01:15:05,120
+ so sorry for anyone that doesn't look at Java,
+
+878
+01:15:05,320 --> 01:15:10,020
+ but Java has synchronized functions,
+
+879
+01:15:10,800 --> 01:15:17,960
+ and synchronized functions basically run as a single process,
+
+880
+01:15:18,280 --> 01:15:20,200
+ so only one can run all the time.
+
+881
+01:15:22,060 --> 01:15:29,660
+ When I was looking at performance on Holsky, one of the things that I did was I tried to scale up
+
+882
+01:15:32,460 --> 01:15:36,300
+ what the machine was doing on Holsky until a point where it started breaking.
+
+883
+01:15:37,260 --> 01:15:44,780
+ It can be a useful indicator of performance when things are starting to go negative. So I
+
+884
+01:15:44,779 --> 01:15:48,279
+ I started with 10,000 keys and that ran fine.
+
+885
+01:15:49,019 --> 01:15:52,179
+ I upped it to 15,000 to 20,000.
+
+886
+01:15:52,699 --> 01:15:55,519
+ 20,000 things started going a little bit south,
+
+887
+01:15:56,119 --> 01:15:57,859
+ but I wasn't happy with that.
+
+888
+01:15:57,979 --> 01:16:01,719
+ And I upped it to a single node to be running 30,000 keys,
+
+889
+01:16:02,599 --> 01:16:05,439
+ which is very not ideal,
+
+890
+01:16:06,079 --> 01:16:09,059
+ but it did show an interesting pattern
+
+891
+01:16:09,060 --> 01:16:15,020
+ where when we're doing our local slashing protection,
+
+892
+01:16:15,500 --> 01:16:18,000
+ we need to run these functions
+
+893
+01:16:18,000 --> 01:16:22,160
+ that maintain the slashing protection data
+
+894
+01:16:22,160 --> 01:16:23,680
+ to ensure that we can't be slashed.
+
+895
+01:16:24,700 --> 01:16:26,580
+ Those functions are actually synchronized.
+
+896
+01:16:27,020 --> 01:16:30,000
+ So we started hitting a bottleneck,
+
+897
+01:16:30,240 --> 01:16:32,980
+ not as much on Mason block,
+
+898
+01:16:33,320 --> 01:16:36,440
+ more so on the attestations
+
+899
+01:16:36,439 --> 01:16:40,659
+ because your validators on average,
+
+900
+01:16:41,719 --> 01:16:45,679
+ you can look at one 32nd of your validators
+
+901
+01:16:45,679 --> 01:16:49,779
+ that you're running are testing in every slot.
+
+902
+01:16:50,659 --> 01:16:52,819
+ So if I'm running 30,000 validators,
+
+903
+01:16:52,899 --> 01:16:54,699
+ that's quite a lot of validators
+
+904
+01:16:54,699 --> 01:16:56,159
+ that end up testing each slot.
+
+905
+01:16:56,359 --> 01:17:00,879
+ And each one of them have to write an update to a file,
+
+906
+01:17:01,259 --> 01:17:02,679
+ which is fine.
+
+907
+01:17:02,759 --> 01:17:04,139
+ It's a very small amount of data.
+
+908
+01:17:04,860 --> 01:17:12,700
+ but if it's a if it's a function where it's basically locked that across those
+
+909
+01:17:12,700 --> 01:17:20,539
+ 30 000 validators i can only check one elevator at a time it becomes quite a resource constraint
+
+910
+01:17:22,220 --> 01:17:26,140
+ so there was a little tiny feature that was a little bit scary to do
+
+911
+01:17:26,140 --> 01:17:29,440
+ to basically remove that synchronized.
+
+912
+01:17:32,460 --> 01:17:37,640
+ If you look at it in, it's not a new solution, basically.
+
+913
+01:17:37,900 --> 01:17:41,060
+ If you look at databases, relational databases,
+
+914
+01:17:41,400 --> 01:17:44,760
+ they initially started with a table-level locking scheme
+
+915
+01:17:44,760 --> 01:17:47,740
+ and they eventually determined
+
+916
+01:17:47,740 --> 01:17:49,420
+ that row-level locking was a lot smarter.
+
+917
+01:17:50,579 --> 01:17:52,640
+ Basically, this is similar to that
+
+918
+01:17:52,640 --> 01:17:56,280
+ in that I'm locking one validator.
+
+919
+01:17:57,160 --> 01:17:59,700
+ So multiple validators can be accessed at once
+
+920
+01:17:59,700 --> 01:18:00,780
+ for their slashing protection,
+
+921
+01:18:01,800 --> 01:18:04,980
+ but one validator can only be updated
+
+922
+01:18:04,980 --> 01:18:08,380
+ like in a single sequence.
+
+923
+01:18:09,460 --> 01:18:11,380
+ So you end up needing a bunch of locking data
+
+924
+01:18:11,380 --> 01:18:16,920
+ around that power data.
+
+925
+01:18:17,460 --> 01:18:22,240
+ So I actually have a bunch of records
+
+926
+01:18:22,239 --> 01:18:25,179
+ and the local splashing protection record
+
+927
+01:18:25,179 --> 01:18:28,639
+ ends up having its own lock.
+
+928
+01:18:30,800 --> 01:18:32,639
+ But the net result of that
+
+929
+01:18:32,639 --> 01:18:36,979
+ was about a 15% increase
+
+930
+01:18:36,979 --> 01:18:39,800
+ in our effectiveness on other stations.
+
+931
+01:18:40,699 --> 01:18:43,179
+ So it's funny how
+
+932
+01:18:43,179 --> 01:18:46,880
+ sometimes one little design decision,
+
+933
+01:18:46,880 --> 01:18:49,939
+ which is okay at low levels,
+
+934
+01:18:49,939 --> 01:18:52,739
+ it's not okay when things scale up.
+
+935
+01:18:53,599 --> 01:19:00,679
+ So I thought that was just maybe a fairly simple performance-related one
+
+936
+01:19:00,679 --> 01:19:03,479
+ that we look at sometimes.
+
+937
+01:19:03,619 --> 01:19:06,960
+ Another example that I don't have on the slide is
+
+938
+01:19:06,960 --> 01:19:11,960
+ UN64s are a full-blown object in Tecu.
+
+939
+01:19:12,500 --> 01:19:15,179
+ So when I was looking at reducing memory size,
+
+940
+01:19:15,899 --> 01:19:17,919
+ I was trying things for weeks and weeks,
+
+941
+01:19:17,920 --> 01:19:27,079
+ And then I had a look in our memory analyzer,
+
+942
+01:19:27,340 --> 01:19:30,340
+ and it turned out that we had millions and millions of objects
+
+943
+01:19:30,340 --> 01:19:35,840
+ that all said 32E, which was this Uint64.
+
+944
+01:19:36,220 --> 01:19:39,000
+ So I could save several hundred meg
+
+945
+01:19:39,000 --> 01:19:43,739
+ just by making a single static variable to have 32E value in,
+
+946
+01:19:45,000 --> 01:19:47,739
+ which still blows my mind when I think about it today.
+
+947
+01:19:47,920 --> 01:19:55,020
+ So there's some interesting performance stuff that happens in the background when you're
+
+948
+01:19:55,020 --> 01:19:56,020
+ doing development.
+
+949
+01:19:56,020 --> 01:20:11,140
+ The only other slide I had, probably a timely question, how do I become a cordev?
+
+950
+01:20:11,140 --> 01:20:17,039
+ The number one thing that always answers this question for me is get involved.
+
+951
+01:20:17,039 --> 01:20:22,880
+ assume that you're not in a place where you're able to help out because a lot of people can
+
+952
+01:20:22,880 --> 01:20:32,159
+ help out more than they realize um so my advice would be to pick a project a good example person
+
+953
+01:20:32,159 --> 01:20:40,479
+ is potus who basically got into prison because he was implementing a feature that he wanted that no
+
+954
+01:20:40,479 --> 01:20:48,319
+ else wanted to implement it so he taught himself how to do it and is now on a cordial team um
+
+955
+01:20:49,919 --> 01:20:57,839
+ but pick a project try to use it and familiar familiarize yourself with it uh if you did pick
+
+956
+01:20:57,839 --> 01:21:04,879
+ techie obviously we've got the consensus discord in that there's two channels we've even created a
+
+957
+01:21:04,880 --> 01:21:07,900
+ a techie contributors channel.
+
+958
+01:21:07,900 --> 01:21:12,000
+ So shameless plug from our side, if you
+
+959
+01:21:12,000 --> 01:21:14,119
+ do want to get involved, that's a channel
+
+960
+01:21:14,119 --> 01:21:17,760
+ that you could be talking on if you need help finding things
+
+961
+01:21:17,760 --> 01:21:20,920
+ or if you need help understanding the code.
+
+962
+01:21:20,920 --> 01:21:25,460
+ We do have developers looking in there.
+
+963
+01:21:25,460 --> 01:21:28,920
+ Even Eth R&D is a really good place.
+
+964
+01:21:28,920 --> 01:21:30,840
+ EPBS was mentioned before, and there
+
+965
+01:21:30,840 --> 01:21:33,440
+ is a channel dedicated to EPBS.
+
+966
+01:21:33,439 --> 01:21:40,719
+ So if you are interested in that, I would be joining that channel and trying to get your head around how things work.
+
+967
+01:21:43,699 --> 01:21:47,179
+ And also, a lot of teams have hiring pages.
+
+968
+01:21:47,859 --> 01:21:51,379
+ Consensus hiring pages always there.
+
+969
+01:21:52,039 --> 01:21:56,000
+ And I think we are hiring for cordevs at the moment.
+
+970
+01:21:56,000 --> 01:22:03,399
+ and this is just from me because sometimes I'm my worst enemy
+
+971
+01:22:03,399 --> 01:22:06,979
+ don't let yourself doubt anything that holds you back
+
+972
+01:22:06,979 --> 01:22:11,000
+ that is everything I had
+
+973
+01:22:11,000 --> 01:22:15,100
+ awesome thanks so much Paul
+
+974
+01:22:15,100 --> 01:22:19,020
+ yeah also for those of you still listening
+
+975
+01:22:19,020 --> 01:22:21,960
+ yeah joining programs like this study group
+
+976
+01:22:21,960 --> 01:22:25,000
+ as well as the protocol fellowship are great ways to
+
+977
+01:22:25,000 --> 01:22:31,439
+ get a little bit more structure and guidance through your journey into core development,
+
+978
+01:22:31,579 --> 01:22:37,960
+ if that's a path that you'd like to take. That's a good point. Protocol Fellowship is
+
+979
+01:22:37,960 --> 01:22:44,640
+ really, really good. We have had a lot of good experiences with people from there as well. So
+
+980
+01:22:44,640 --> 01:22:50,899
+ it's definitely worth mentioning for sure. Yeah, actually, I wanted to ask about that.
+
+981
+01:22:50,899 --> 01:22:55,059
+ Maybe if you can give people some tips on their first-time contributions.
+
+982
+01:22:55,420 --> 01:23:00,319
+ You had a good experience with a fellow from the EPF before,
+
+983
+01:23:00,319 --> 01:23:04,420
+ so maybe some things that you liked about their interactions
+
+984
+01:23:04,420 --> 01:23:07,379
+ or how it works for people.
+
+985
+01:23:08,920 --> 01:23:13,719
+ I think I didn't actually have to do very much to specify the project
+
+986
+01:23:13,719 --> 01:23:19,719
+ that was worked on previously from that, because it was already predefined,
+
+987
+01:23:19,720 --> 01:23:22,880
+ I think, by the gentleman that did the change, but
+
+988
+01:23:24,760 --> 01:23:27,720
+ they were very interested in
+
+989
+01:23:27,720 --> 01:23:31,260
+ LiteClient basically and wanted to implement LiteClient for TeKu.
+
+990
+01:23:32,920 --> 01:23:36,480
+ I suggested that doing it properly rather than doing
+
+991
+01:23:36,480 --> 01:23:40,960
+ the whole thing as it as a shallow dive would be a better option.
+
+992
+01:23:41,560 --> 01:23:44,680
+ So we ended up developing
+
+993
+01:23:45,680 --> 01:23:49,020
+ actually, he's probably one of the recent people to go into the storage layer
+
+994
+01:23:49,020 --> 01:23:50,700
+ because he had to change that a fair bit
+
+995
+01:23:50,700 --> 01:23:54,860
+ and was able to produce some of the endpoints for client.
+
+996
+01:23:55,340 --> 01:23:58,740
+ But because we were doing it fully tested and product ready,
+
+997
+01:23:59,420 --> 01:24:00,960
+ we didn't get all the way across it.
+
+998
+01:24:01,180 --> 01:24:02,640
+ So one day we will revisit it,
+
+999
+01:24:03,240 --> 01:24:06,620
+ but it was a good outcome for everyone, I think.
+
+1000
+01:24:09,160 --> 01:24:11,160
+ And I think he got a lot out of it.
+
+1001
+01:24:12,560 --> 01:24:13,540
+ Yeah, awesome.
+
+1002
+01:24:14,400 --> 01:24:18,140
+ And maybe you mentioned good first issues.
+
+1003
+01:24:18,140 --> 01:24:23,880
+ maybe some other things where people can contribute to or any like active
+
+1004
+01:24:23,880 --> 01:24:33,100
+ research development areas where you know, Tecubesu or other ports might need help?
+
+1005
+01:24:33,100 --> 01:24:43,640
+ In terms of ERP's, they're obviously documented as they go through and it
+
+1006
+01:24:43,640 --> 01:24:45,920
+ These things are free for anyone to join.
+
+1007
+01:24:45,920 --> 01:24:49,520
+ So if people believe that they can contribute to an ERP,
+
+1008
+01:24:49,700 --> 01:24:50,880
+ they should definitely get involved,
+
+1009
+01:24:51,400 --> 01:24:54,760
+ reach out to the people that are championing it
+
+1010
+01:24:54,760 --> 01:24:57,220
+ and try to become part of the process.
+
+1011
+01:25:00,460 --> 01:25:04,740
+ A lot of information is flowing all of the time,
+
+1012
+01:25:04,820 --> 01:25:09,860
+ so the biggest challenge is finding where the information that you need lives.
+
+1013
+01:25:10,720 --> 01:25:12,900
+ And ETH R&D is an excellent resource for that.
+
+1014
+01:25:13,640 --> 01:25:19,660
+ There's a consensus dev channel, and there's an all core devs channel.
+
+1015
+01:25:21,160 --> 01:25:25,260
+ Fairly accepting of questions that are considered.
+
+1016
+01:25:25,460 --> 01:25:32,900
+ I wouldn't go spamming them, but I definitely wouldn't feel afraid to ask a question.
+
+1017
+01:25:36,860 --> 01:25:38,800
+ They're a fairly open bunch overall.
+
+1018
+01:25:38,800 --> 01:25:48,020
+ uh this the erp channels obviously keeping up with awkward abs is
+
+1019
+01:25:48,020 --> 01:25:56,060
+ uh like the calls you can watch them back on youtube uh one some people's contribution is
+
+1020
+01:25:56,060 --> 01:26:02,980
+ largely summarizing those calls so i know um ben edgington for a while was joining them
+
+1021
+01:26:02,979 --> 01:26:08,500
+ and producing just like a bullet point summary of those calls,
+
+1022
+01:26:08,559 --> 01:26:11,839
+ which I used to really appreciate because I could read that
+
+1023
+01:26:11,839 --> 01:26:14,799
+ rather than watch the hour and a half back because I never see it.
+
+1024
+01:26:16,719 --> 01:26:18,719
+ So people contribute in different ways.
+
+1025
+01:26:19,839 --> 01:26:23,339
+ Obviously, there's the other side of it where people's contributions
+
+1026
+01:26:23,339 --> 01:26:29,199
+ are more about airdrop farming, which isn't great, but yeah.
+
+1027
+01:26:29,899 --> 01:26:30,979
+ Yeah, it is interesting.
+
+1028
+01:26:30,979 --> 01:26:38,259
+ world okay did you get a little spam uh prs or stuff like that for one up from one of
+
+1029
+01:26:38,259 --> 01:26:44,099
+ it beacon apis is the weird one the beacon apis channel seems to get a lot more spam than i would
+
+1030
+01:26:44,099 --> 01:26:54,819
+ expect and um i'm one of the main admins on that so i see it probably see it more than sometimes
+
+1031
+01:26:54,819 --> 01:26:59,699
+ but like things like people commenting or close prs and stuff i don't know what that gets you
+
+1032
+01:27:00,979 --> 01:27:05,779
+ it must get you something because people do it a lot yeah right and it's time consuming for
+
+1033
+01:27:05,779 --> 01:27:12,739
+ the dev teams who already have very little time so i wouldn't suggest doing it great yeah uh yeah
+
+1034
+01:27:12,739 --> 01:27:19,299
+ i noticed it in some some what you said like old prs issues and just random comments and then like
+
+1035
+01:27:19,299 --> 01:27:24,339
+ it's also kind of annoying on github to block them because you need to file a whole report and
+
+1036
+01:27:24,339 --> 01:27:29,539
+ it's it's just too long process yeah um yeah yeah yeah thank you paul um
+
+1037
+01:27:30,979 --> 01:27:38,139
+ We had a bit more difficult question, and I'm not that familiar with Java, but I think
+
+1038
+01:27:38,139 --> 01:27:44,239
+ this is like a new feature in Java 21 using virtual threads, maybe whether who uses them
+
+1039
+01:27:44,239 --> 01:27:47,399
+ or whether you leverage the latest features.
+
+1040
+01:27:47,399 --> 01:27:55,799
+ At the moment, we're on to Java 17, so we're not using any of the new features in Java
+
+1041
+01:27:55,799 --> 01:27:56,799
+ 21.
+
+1042
+01:27:56,800 --> 01:28:04,079
+ I actually really wanted to use records, which I believe is Java 17, but the problem is the
+
+1043
+01:28:04,079 --> 01:28:13,220
+ reality of how we do things versus how records want them done wasn't very intrusive to using
+
+1044
+01:28:13,220 --> 01:28:14,220
+ them either.
+
+1045
+01:28:14,220 --> 01:28:23,420
+ So sometimes we do use new features, but it just depends on the way we're using things.
+
+1046
+01:28:23,420 --> 01:28:29,119
+ Like the new switch syntax in Java 17, we have started using it a fair bit, but other
+
+1047
+01:28:29,119 --> 01:28:31,980
+ features like records, we haven't really touched.
+
+1048
+01:28:31,980 --> 01:28:41,079
+ Hopefully soon we'll start moving to Java 21, but we need to also be realistic about
+
+1049
+01:28:41,079 --> 01:28:43,300
+ making people move just for moving sake.
+
+1050
+01:28:43,300 --> 01:28:49,380
+ So add Docker image changes first usually, because that's easy lift.
+
+1051
+01:28:49,380 --> 01:28:56,659
+ Right, it can break the environment for many people, it's a big step.
+
+1052
+01:28:56,659 --> 01:29:00,720
+ Yeah it gets listed as breaking change.
+
+1053
+01:29:00,720 --> 01:29:10,500
+ Right, folks any other questions feel free to ask, we have maybe a few more, one
+
+1054
+01:29:10,500 --> 01:29:11,500
+ last question or so.
+
+1055
+01:29:11,500 --> 01:29:15,659
+ I'm not sure, Josh, do you have anything here?
+
+1056
+01:29:15,659 --> 01:29:20,060
+ I think we are out of the question pool already.
+
+1057
+01:29:20,060 --> 01:29:23,000
+ Yeah, I don't think so.
+
+1058
+01:29:23,000 --> 01:29:29,000
+ Just a big thanks to you, Paul, for taking us through TeKu and giving us a good overview
+
+1059
+01:29:29,000 --> 01:29:33,739
+ of that code base and how it works.
+
+1060
+01:29:33,739 --> 01:29:35,039
+ You're very welcome.
+
+1061
+01:29:35,039 --> 01:29:37,460
+ Yeah, thank you very much.
+
+1062
+01:29:37,460 --> 01:29:39,020
+ Yeah, I appreciate it.
+
+1063
+01:29:39,020 --> 01:29:40,520
+ it was really great to see
+
+1064
+01:29:40,520 --> 01:29:42,680
+ especially such a
+
+1065
+01:29:42,680 --> 01:29:44,680
+ I would say kind of hot and interesting
+
+1066
+01:29:44,680 --> 01:29:46,120
+ EIP as MaxEB
+
+1067
+01:29:46,120 --> 01:29:48,780
+ it's very heavily discussed
+
+1068
+01:29:48,780 --> 01:29:50,360
+ people have opinions
+
+1069
+01:29:50,360 --> 01:29:52,580
+ want to include it so it was really great to
+
+1070
+01:29:52,580 --> 01:29:53,560
+ actually see it in action
+
+1071
+01:29:53,560 --> 01:29:56,420
+ yeah thank you so much Paul and again
+
+1072
+01:29:56,420 --> 01:29:57,480
+ huge thanks for
+
+1073
+01:29:57,480 --> 01:30:00,740
+ picking up for us
+
+1074
+01:30:00,740 --> 01:30:01,000
+ and
+
+1075
+01:30:01,000 --> 01:30:03,960
+ hope you all had some rest today
+
+1076
+01:30:03,960 --> 01:30:04,740
+ have a good day
+
+1077
+01:30:04,740 --> 01:30:08,280
+ no worries thank you very much for your time
+
+1078
+01:30:08,279 --> 01:30:13,559
+ So yeah, thanks a lot Paul, and we'll see you around.
+
+1079
+01:30:13,559 --> 01:30:15,559
+ Paul Krugman, All right, thanks Paul.
+
+1080
+01:30:15,559 --> 01:30:16,559
+ Paul Krugman, All right, have a good day everyone.
+
+1081
+01:30:16,559 --> 01:30:22,099
+ Paul Krugman, And to the rest of the study group, we will see you all in a couple
+
+1082
+01:30:22,099 --> 01:30:30,039
+ of days on Wednesday for a chat with Barnum, Bay, and Manon on MEB and censorship.
+
+1083
+01:30:30,039 --> 01:30:31,819
+ Paul Krugman, Awesome.
+
+1084
+01:30:31,819 --> 01:30:34,239
+ Paul Krugman, All right, thanks.
+
+1085
+01:30:34,239 --> 01:30:36,759
+ Paul Krugman, Thank you so much for following everyone.
+
+1086
+01:30:36,760 --> 01:30:37,820
+ Thanks, Paul. Bye-bye.
+
+1087
+01:31:06,760 --> 01:31:36,739
+ Thank you.
+
+1088
+01:31:36,760 --> 01:31:41,760
+ .
+

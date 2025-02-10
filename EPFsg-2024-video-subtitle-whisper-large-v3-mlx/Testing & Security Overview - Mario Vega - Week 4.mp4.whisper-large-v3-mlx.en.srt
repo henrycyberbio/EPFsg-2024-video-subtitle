@@ -1,0 +1,6636 @@
+1
+00:00:30,000 --> 00:00:59,980
+ Thank you.
+
+2
+00:01:30,000 --> 00:01:40,000
+ ¶¶
+
+3
+00:01:40,000 --> 00:01:50,000
+ ¶¶
+
+4
+00:01:50,000 --> 00:02:00,000
+ ¶¶
+
+5
+00:02:00,000 --> 00:02:10,000
+ ¶¶
+
+6
+00:02:10,000 --> 00:02:20,000
+ ¶¶
+
+7
+00:02:20,000 --> 00:02:49,979
+ I don't know.
+
+8
+00:02:50,000 --> 00:03:19,979
+ Thank you.
+
+9
+00:04:20,000 --> 00:04:49,980
+ Thank you.
+
+10
+00:04:50,000 --> 00:05:19,980
+ Thank you.
+
+11
+00:05:20,000 --> 00:05:39,160
+ Hello everyone, hope you can hear me well.
+
+12
+00:05:39,160 --> 00:05:44,819
+ I'm without a camera today, so let me know if it's still good.
+
+13
+00:05:44,819 --> 00:05:45,819
+ Yeah, thank you.
+
+14
+00:05:45,819 --> 00:05:56,219
+ welcome to our fourth week of the epf study group and uh after uh covering the intro the execution
+
+15
+00:05:56,219 --> 00:06:03,339
+ the consensus layer um now we will dive into how all of this that we discussed actually gets tested
+
+16
+00:06:03,339 --> 00:06:10,779
+ and secure um this is very important uh for many people the testing sounds uh like something
+
+17
+00:06:10,779 --> 00:06:15,019
+ strange like why why should we care about it it's just like part of the development but it's
+
+18
+00:06:15,019 --> 00:06:17,519
+ it's actually one of the most important parts of the whole Ethereum,
+
+19
+00:06:17,959 --> 00:06:20,680
+ I would say as important as the topics as we discussed before,
+
+20
+00:06:20,799 --> 00:06:25,899
+ because, well, this is what prevents the whole network from going belly up, as we say.
+
+21
+00:06:26,439 --> 00:06:33,159
+ And for this week's talks, we got the best possible person to discuss this topic,
+
+22
+00:06:33,319 --> 00:06:38,240
+ and it's Mario Vega, our colleague from EF testing and security team,
+
+23
+00:06:38,240 --> 00:06:45,400
+ who have been working on the testing since like autumn 2021, I believe,
+
+24
+00:06:46,000 --> 00:06:47,780
+ a year before the merge.
+
+25
+00:06:47,780 --> 00:06:52,860
+ And during this first year, he, well, he overhauled a lot of the testing infrastructure,
+
+26
+00:06:53,199 --> 00:06:56,500
+ which helped for the merge to actually happen.
+
+27
+00:06:57,040 --> 00:07:02,160
+ And until today, he is one of the major forces behind all of the testing
+
+28
+00:07:02,160 --> 00:07:04,259
+ of the upgrades and hard works and so on.
+
+29
+00:07:04,259 --> 00:07:08,659
+ So, yeah, I'm very, very happy to have Mario here today.
+
+30
+00:07:08,980 --> 00:07:10,579
+ Can you hear me?
+
+31
+00:07:14,680 --> 00:07:15,939
+ Can you guys hear me?
+
+32
+00:07:16,639 --> 00:07:17,779
+ Yeah, all good.
+
+33
+00:07:18,300 --> 00:07:19,839
+ Yeah, thank you so much for joining.
+
+34
+00:07:20,079 --> 00:07:23,180
+ You can share your slides here in the Harrison button.
+
+35
+00:07:24,399 --> 00:07:25,839
+ Give me just one second.
+
+36
+00:07:28,399 --> 00:07:31,120
+ And yeah, for everybody listening, joining in now,
+
+37
+00:07:31,120 --> 00:07:36,120
+ please use the week four in the study group Discord.
+
+38
+00:07:37,800 --> 00:07:42,540
+ We just opened a thread for this week's presentation,
+
+39
+00:07:42,540 --> 00:07:44,600
+ so you can ask questions there.
+
+40
+00:07:44,600 --> 00:07:46,759
+ Feel free to ask anything during the talk,
+
+41
+00:07:46,759 --> 00:07:50,120
+ and we will try to get it answered
+
+42
+00:07:50,120 --> 00:07:52,259
+ either within the thread,
+
+43
+00:07:52,259 --> 00:07:55,720
+ or we will ask Mario directly.
+
+44
+00:07:56,980 --> 00:07:57,899
+ So, yeah.
+
+45
+00:08:01,120 --> 00:08:05,280
+ Yeah, and we got the slides. Awesome.
+
+46
+00:08:05,280 --> 00:08:08,280
+ Does that work? Does it look okay?
+
+47
+00:08:08,280 --> 00:08:09,280
+ Yeah, yeah.
+
+48
+00:08:09,280 --> 00:08:10,280
+ Okay, let me...
+
+49
+00:08:10,280 --> 00:08:12,459
+ Yeah, of course.
+
+50
+00:08:12,459 --> 00:08:16,340
+ You just click on the slideshow if you're looking for that on the right.
+
+51
+00:08:16,340 --> 00:08:17,340
+ Yeah.
+
+52
+00:08:17,340 --> 00:08:18,340
+ The big button.
+
+53
+00:08:18,340 --> 00:08:19,340
+ Right, there you go.
+
+54
+00:08:19,340 --> 00:08:20,340
+ Yeah, that one. There you go.
+
+55
+00:08:20,340 --> 00:08:21,340
+ Awesome. Thank you so much.
+
+56
+00:08:21,340 --> 00:08:23,340
+ The stage is yours. Go ahead.
+
+57
+00:08:23,340 --> 00:08:29,360
+ Perfect. So yeah, thanks for the presentation. My name is Mario, Mario Vega. I'm from the
+
+58
+00:08:29,360 --> 00:08:39,360
+ EF. I work in the EF testing team. I focus mainly on developing the tests and the functional,
+
+59
+00:08:39,360 --> 00:08:45,440
+ mainly the functional testing part of the entire testing setup that Ethereum uses to actually work
+
+60
+00:08:45,440 --> 00:08:54,159
+ properly. So I'm gonna dig in a little bit on what I do and a little bit of what some of our peers
+
+61
+00:08:54,159 --> 00:09:01,600
+ in the EF do, mainly testing security also, and also DevOps, a little bit of that.
+
+62
+00:09:03,360 --> 00:09:05,079
+ So yeah, let's get started.
+
+63
+00:09:05,299 --> 00:09:11,399
+ So today's topics I'm going to be covering, how is the execution layer testing done?
+
+64
+00:09:12,039 --> 00:09:18,539
+ Mainly the EBM testing, which is a very important part of the consensus of the chain.
+
+65
+00:09:18,539 --> 00:09:21,219
+ We have two main repositories for this.
+
+66
+00:09:21,219 --> 00:09:24,500
+ One is the Ethereum test, and the other one is,
+
+67
+00:09:24,500 --> 00:09:27,839
+ and the other one we just started working on
+
+68
+00:09:27,839 --> 00:09:30,299
+ it's called the Ethereum Execution Spec Tests.
+
+69
+00:09:30,299 --> 00:09:33,159
+ And we're gonna go a little bit of that.
+
+70
+00:09:33,159 --> 00:09:36,039
+ And I'm also gonna do a little bit of a demo
+
+71
+00:09:36,039 --> 00:09:39,179
+ on how to run these tests, how they work
+
+72
+00:09:39,179 --> 00:09:44,179
+ and their inner workings is gonna be really, really good.
+
+73
+00:09:44,500 --> 00:09:47,099
+ The, I'm gonna cover it out just a little bit
+
+74
+00:09:47,100 --> 00:09:52,940
+ consensus layer testing, mainly the theorem consensus specs, which is the repo that
+
+75
+00:09:52,940 --> 00:10:00,300
+ basically does everything. It's one solution for the specification and the testing it's all covered
+
+76
+00:10:00,300 --> 00:10:07,019
+ inside of this repo. I'm gonna just go over it a little bit, not in the greatest detail, because
+
+77
+00:10:08,460 --> 00:10:15,019
+ this is not the main area that we work currently, I mean the EF team, the testing team.
+
+78
+00:10:15,019 --> 00:10:26,360
+ I'm going to be going over a little bit of a cross-layer interrupt testing, which is a very important part now that we have two layers, the execution layer and the consensus layer part.
+
+79
+00:10:26,360 --> 00:10:38,960
+ The team, the testing team, works mainly on Hive, but we also have the devnets, childworks, and testnet, which are the work of the DevOps team.
+
+80
+00:10:38,960 --> 00:10:41,980
+ I'm gonna cover a little bit of that,
+
+81
+00:10:41,980 --> 00:10:45,040
+ but we're going to go a little bit deeper on Hive,
+
+82
+00:10:45,040 --> 00:10:50,040
+ which is the one that I work with the most.
+
+83
+00:10:50,240 --> 00:10:53,639
+ And we are gonna do a little bit of a demo in that too,
+
+84
+00:10:53,639 --> 00:10:55,879
+ how to run tests, how they work,
+
+85
+00:10:55,879 --> 00:10:57,879
+ the inner workings and all that stuff.
+
+86
+00:10:57,879 --> 00:11:00,500
+ And finally, a little bit of the security,
+
+87
+00:11:01,580 --> 00:11:03,600
+ what the potential issues are,
+
+88
+00:11:03,600 --> 00:11:10,480
+ What are the rewards if you guys are into finding security issues?
+
+89
+00:11:10,759 --> 00:11:19,680
+ What can you earn if you disclose properly and you find any security-related issues?
+
+90
+00:11:20,060 --> 00:11:22,759
+ That's going to be what we cover today.
+
+91
+00:11:23,480 --> 00:11:31,420
+ And also how to publicly disclose your deaths after any security incident has been addressed.
+
+92
+00:11:33,600 --> 00:11:42,759
+ So, yeah, we're going to start with the EVM testing, which is, I wouldn't say the simplest.
+
+93
+00:11:42,899 --> 00:11:48,279
+ It's very complex, but the setup is the most straightforward.
+
+94
+00:11:49,580 --> 00:11:59,920
+ EVM testing, the main purpose is basically just to try to verify that every single Ethereum execution client adheres to this specification.
+
+95
+00:11:59,919 --> 00:12:14,659
+ This is extremely important because not adhering to the specification means a positive potential fork in the chain if there are no consensus on what was executed through all the transactions.
+
+96
+00:12:14,659 --> 00:12:24,439
+ it's the setup is super simple for for even testing basically you have the same input for
+
+97
+00:12:24,439 --> 00:12:31,179
+ every client and you must register that every single client gets the same exact output given
+
+98
+00:12:31,179 --> 00:12:37,339
+ the same environment pre-state and hard work activation rules which will be going over in a
+
+99
+00:12:37,340 --> 00:12:47,420
+ little bit. So yeah, I wanted to cover just this important characteristics of a
+
+100
+00:12:47,420 --> 00:12:53,759
+ test because these are like the most, the things that we focus on the most when
+
+101
+00:12:53,759 --> 00:13:02,500
+ writing our tests for the ABM. And the first one is the pre-state. And I'll go
+
+102
+00:13:02,500 --> 00:13:08,259
+ back a little bit so just just explain a little bit uh of how it's discomposed so the blockchain
+
+103
+00:13:08,980 --> 00:13:16,019
+ uh the ethereum blockchain contains uh the state um in general this is where everything lives
+
+104
+00:13:16,019 --> 00:13:20,899
+ everything that that comprises the ethereum blockchain it's it lives on the state this
+
+105
+00:13:20,899 --> 00:13:27,460
+ contains the smart contracts the balances the nonce uh the code of the smart contracts
+
+106
+00:13:27,460 --> 00:13:33,300
+ the and also most importantly the storage of the smart contract so every single smart contract
+
+107
+00:13:34,180 --> 00:13:39,860
+ contains at least code and storage this is very important part because when you're writing your
+
+108
+00:13:39,860 --> 00:13:47,460
+ smart contract um you normally want to save some information uh that will uh be preserved
+
+109
+00:13:48,500 --> 00:13:52,740
+ even after so even after the first transaction where you launch your smart contract
+
+110
+00:13:52,740 --> 00:13:57,539
+ on the next transactions you will want to access information from the previous ones.
+
+111
+00:13:57,539 --> 00:14:01,299
+ So this is the storage, it's a very important part of the blockchain.
+
+112
+00:14:01,299 --> 00:14:11,539
+ And when we set up the EVM testing, this is the most pivotal part of the test,
+
+113
+00:14:11,539 --> 00:14:17,379
+ because we don't test the entire mainnet, for example, because it's huge.
+
+114
+00:14:17,379 --> 00:14:21,220
+ What you have right now in mainnet, you have contracts that have
+
+115
+00:14:21,220 --> 00:14:27,720
+ an insane amount of storage, an insane amount of key values that they will use.
+
+116
+00:14:27,860 --> 00:14:35,440
+ For example, Uniswap, they use a lot of storage to store every single user's,
+
+117
+00:14:35,440 --> 00:14:39,360
+ for example, balances in each token, and so on and so forth.
+
+118
+00:14:39,899 --> 00:14:46,019
+ But for the simplest testing, so normally when we write an EDM test,
+
+119
+00:14:46,019 --> 00:14:52,860
+ We normally just want to focus on a small slice of what the EVM executes.
+
+120
+00:14:53,299 --> 00:14:55,399
+ So for that, we generate the pre-state.
+
+121
+00:14:55,740 --> 00:15:01,659
+ The pre-state is something that we know for sure is going to be before we execute any of the transactions.
+
+122
+00:15:03,120 --> 00:15:04,399
+ And this is very important.
+
+123
+00:15:04,620 --> 00:15:08,879
+ I will explain a little bit further in the following slides.
+
+124
+00:15:10,460 --> 00:15:11,319
+ But that's it.
+
+125
+00:15:11,320 --> 00:15:20,580
+ yes and yeah the another important part of of this is the environment so when you are running
+
+126
+00:15:20,580 --> 00:15:26,900
+ your transactions your transactions are in the blockchain are surrounded by first of all more
+
+127
+00:15:26,900 --> 00:15:34,000
+ transactions but also an an environment which is the block the block contains a lot of information
+
+128
+00:15:34,000 --> 00:15:37,580
+ that can affect the outcome of your transaction.
+
+129
+00:15:38,299 --> 00:15:42,419
+ For example, you can read the timestamp of the block
+
+130
+00:15:42,419 --> 00:15:44,000
+ that you're currently executing on,
+
+131
+00:15:44,399 --> 00:15:46,700
+ or the preferendow, which is something that comes
+
+132
+00:15:46,700 --> 00:15:53,259
+ from the consensus layer and gives you some pseudo-randomness
+
+133
+00:15:53,259 --> 00:15:55,200
+ as input to your contract.
+
+134
+00:15:55,759 --> 00:15:58,340
+ Also, the block number, for example, that's very important.
+
+135
+00:15:59,340 --> 00:16:00,860
+ You can also get previous block caches,
+
+136
+00:16:00,860 --> 00:16:05,100
+ as well as, for example, a total gas limit.
+
+137
+00:16:05,340 --> 00:16:07,980
+ If you want to limit how much your test executes,
+
+138
+00:16:08,360 --> 00:16:11,659
+ you're going to set up a smaller or bigger gas limit.
+
+139
+00:16:11,759 --> 00:16:14,720
+ We have some tests where we bump up this gas
+
+140
+00:16:14,720 --> 00:16:16,899
+ to a very large number
+
+141
+00:16:16,899 --> 00:16:19,120
+ just because we want to check
+
+142
+00:16:19,120 --> 00:16:23,680
+ if any contract takes too long to execute, for example.
+
+143
+00:16:24,639 --> 00:16:25,680
+ And also the base fee,
+
+144
+00:16:25,840 --> 00:16:28,019
+ because the base fee is very important
+
+145
+00:16:28,019 --> 00:16:37,340
+ because even if you are not executing something that requires a big transaction fee,
+
+146
+00:16:37,559 --> 00:16:42,919
+ you still want to make sure that every single client takes the base fee
+
+147
+00:16:42,919 --> 00:16:47,799
+ and calculates the correct fee for every transaction that you are testing for.
+
+148
+00:16:48,699 --> 00:16:51,000
+ Also, the hard fork activation times is very important also
+
+149
+00:16:51,000 --> 00:16:55,939
+ because when we are testing for a new fork,
+
+150
+00:16:55,940 --> 00:17:07,180
+ The most common setup scenario is that we set up an environment where the fork is going to be activated at some end blocks in the future.
+
+151
+00:17:09,680 --> 00:17:12,100
+ I'm going to give a very specific example.
+
+152
+00:17:12,220 --> 00:17:20,920
+ In the case of the blocks, for example, you are not supposed to be able to run block transactions before the Cancun fork is activated.
+
+153
+00:17:20,920 --> 00:17:28,200
+ it. So in the environment for this specific test, we set up a fork activation time in the future,
+
+154
+00:17:28,200 --> 00:17:32,600
+ and then we send the transaction, for example, and then we verify that the block containing
+
+155
+00:17:32,600 --> 00:17:40,440
+ this transaction is correctly rejected by the execution clients. This is just a small example,
+
+156
+00:17:40,539 --> 00:17:47,519
+ but there are a ton of ways where you can test a lot of interesting combinations and activation
+
+157
+00:17:47,519 --> 00:17:52,740
+ scenarios with this, with these variables. And that's, that's why the environment is very,
+
+158
+00:17:52,859 --> 00:18:00,339
+ very important for the, for the, for the preparation of the test. And the third one,
+
+159
+00:18:00,400 --> 00:18:04,019
+ this is transactions, right? Is that this is basically the most, most important one.
+
+160
+00:18:05,019 --> 00:18:08,639
+ If you don't have a transaction that you're testing with, basically you're not going to
+
+161
+00:18:08,639 --> 00:18:14,759
+ execute anything. Every single execution of an EMASmart contract starts with a transaction.
+
+162
+00:18:14,759 --> 00:18:20,039
+ So this is a very important part of the test that we write.
+
+163
+00:18:20,960 --> 00:18:31,839
+ Most likely, when you're writing a test, you are sending your transaction to a smart contract that you know it's going to execute some important piece of code.
+
+164
+00:18:32,519 --> 00:18:39,579
+ You're never going to send just like a transaction just to send Ether from one account to other because there's nothing interesting going on.
+
+165
+00:18:39,579 --> 00:18:45,119
+ But yeah, you're going to set up, with the help of the pre-state and the environment,
+
+166
+00:18:45,119 --> 00:18:51,139
+ you're going to set up an interesting transaction where your execution of this transaction is
+
+167
+00:18:51,139 --> 00:18:53,619
+ going to cause something interesting in the blockchain.
+
+168
+00:18:53,619 --> 00:18:57,259
+ And that's how your test will work.
+
+169
+00:18:57,259 --> 00:19:01,819
+ I say transaction and transactions because we have different kinds of tests.
+
+170
+00:19:01,819 --> 00:19:08,339
+ I'm going to go into a little bit more detail, but basically we can have tests where just
+
+171
+00:19:08,339 --> 00:19:16,019
+ transaction is interesting for us, and this is to test very specific EVM executions in the chain.
+
+172
+00:19:16,659 --> 00:19:23,299
+ And we also have a test with multiple transactions which is equal to a block filled with many
+
+173
+00:19:23,299 --> 00:19:27,859
+ transactions. This is when we are going to test the full blockchain functionality.
+
+174
+00:19:29,619 --> 00:19:37,459
+ And lastly, but not less important, is the post state. When we are designing a test it's very
+
+175
+00:19:37,460 --> 00:19:43,200
+ it's very important that after you set up the pre-stated environment transactions,
+
+176
+00:19:43,420 --> 00:19:46,019
+ you also want to know exactly what you are expecting
+
+177
+00:19:46,019 --> 00:19:50,220
+ to happen in the accounts of the blockchain.
+
+178
+00:19:50,940 --> 00:19:52,759
+ So for example, if you set up a smart contract
+
+179
+00:19:52,759 --> 00:19:55,660
+ and the smart contract is supposed to write something
+
+180
+00:19:55,660 --> 00:19:57,600
+ into the storage of the smart contract,
+
+181
+00:19:57,600 --> 00:20:00,420
+ you expect a zero to go from zero to one,
+
+182
+00:20:01,000 --> 00:20:03,860
+ then this is the place where you're going to put that in the post-it.
+
+183
+00:20:03,859 --> 00:20:09,819
+ The post it contains all the list of the interesting accounts that you're calling with your transactions
+
+184
+00:20:09,819 --> 00:20:17,219
+ and also all the interesting storage values that you want to check after your transaction has executed.
+
+185
+00:20:18,819 --> 00:20:19,759
+ Very important.
+
+186
+00:20:20,119 --> 00:20:22,939
+ And it's also very important to know exactly what to look for.
+
+187
+00:20:23,459 --> 00:20:29,819
+ When you're writing a test, you are not writing a good test unless you really know what the outcome should be.
+
+188
+00:20:29,819 --> 00:20:38,379
+ This is part of the setup and the verification, basically, at the end of the execution of
+
+189
+00:20:38,379 --> 00:20:40,220
+ the test.
+
+190
+00:20:40,220 --> 00:20:47,179
+ I will go into a little bit more detail on how we use all these inputs to generate a
+
+191
+00:20:47,179 --> 00:20:53,039
+ test and how we verify it against the clients in a little bit.
+
+192
+00:20:53,039 --> 00:20:56,859
+ I don't know, Mario, if you have any questions so far.
+
+193
+00:20:56,859 --> 00:21:00,019
+ If not, I can just go continue.
+
+194
+00:21:04,019 --> 00:21:14,539
+ Yeah. Okay. So all of these inputs that we have into the EVM tests, they are meaningless unless
+
+195
+00:21:14,539 --> 00:21:20,619
+ we have something to execute them with. So this is a process that is called test filling. So once
+
+196
+00:21:20,619 --> 00:21:22,719
+ We have written all of our inputs.
+
+197
+00:21:23,000 --> 00:21:25,959
+ We have the state that we want to execute.
+
+198
+00:21:26,579 --> 00:21:31,339
+ We have the smart contracts that have the correct code and everything that we want to execute.
+
+199
+00:21:31,459 --> 00:21:40,979
+ We still have to somehow apply the state transition, which is the moment where you convert the pre-state and the transaction into a post-it.
+
+200
+00:21:41,919 --> 00:21:46,239
+ And this is a process that is done in many different ways.
+
+201
+00:21:46,240 --> 00:21:49,480
+ but it is important because
+
+202
+00:21:49,480 --> 00:21:53,640
+ when we have a test
+
+203
+00:21:53,640 --> 00:21:55,079
+ we have test source code
+
+204
+00:21:55,079 --> 00:21:58,000
+ which is written in JSON or Python
+
+205
+00:21:58,000 --> 00:22:00,759
+ depending on the repository that you're using
+
+206
+00:22:00,759 --> 00:22:05,240
+ but the output is always going to be
+
+207
+00:22:05,240 --> 00:22:06,420
+ a JSON output
+
+208
+00:22:06,420 --> 00:22:07,799
+ that's what we use
+
+209
+00:22:07,799 --> 00:22:11,779
+ and it's going to be consumable by every single client
+
+210
+00:22:11,779 --> 00:22:15,620
+ and this is a process called test filling
+
+211
+00:22:15,619 --> 00:22:24,899
+ This process of converting the test design definition into something that is actually consumable and verifiable in each of the clients.
+
+212
+00:22:26,019 --> 00:22:27,379
+ Very important process.
+
+213
+00:22:27,839 --> 00:22:34,219
+ I'm going to explain a little bit in the following slides how it is specifically done, how we do it.
+
+214
+00:22:34,220 --> 00:22:45,900
+ and yeah um yeah also more important um this process of filling is is very different from
+
+215
+00:22:45,900 --> 00:22:52,940
+ the unit testing that is performed um by all the clients every every every piece of code um can do
+
+216
+00:22:52,940 --> 00:22:59,339
+ their own unit testing and this is a very common practice when you're developing software and
+
+217
+00:22:59,339 --> 00:23:06,859
+ The Ethereum clients do use unit testing to test their execution clients and the consensus clients,
+
+218
+00:23:06,859 --> 00:23:15,179
+ but the important quality of a test fixture that we have filled is that this can be consumed
+
+219
+00:23:15,179 --> 00:23:21,099
+ by any client. So we generate a test once, and then we can execute it across all of the clients
+
+220
+00:23:21,099 --> 00:23:26,699
+ and verify that none of them have any discrepancies between them. This is very
+
+221
+00:23:26,700 --> 00:23:33,420
+ important to keep the consensus running. If we relied on writing unit tests for every single
+
+222
+00:23:33,420 --> 00:23:38,940
+ of the clients, the unit test would definitely be different. So, when we are filling a test and
+
+223
+00:23:38,940 --> 00:23:45,740
+ we create the fixtures it means also that we are sure that the execution client is consuming
+
+224
+00:23:45,740 --> 00:23:51,019
+ exactly the same test. This is very important for consensus.
+
+225
+00:23:53,259 --> 00:24:03,019
+ Okay, so yeah let me see. Yeah, okay so
+
+226
+00:24:03,019 --> 00:24:09,420
+ this is a small diagram which shows just the
+
+227
+00:24:09,420 --> 00:24:15,500
+ gist of how we do a single state test.
+
+228
+00:24:15,740 --> 00:24:22,460
+ in the in the in the for the evm testing and we start with what what i already described is the
+
+229
+00:24:22,460 --> 00:24:28,059
+ pre-state you have all the smart contracts all the balances and the code and the storage that you need
+
+230
+00:24:29,099 --> 00:24:34,779
+ for for for your for your test you combine that with a single transaction which has
+
+231
+00:24:35,339 --> 00:24:43,579
+ a in account source an account destination some value which could be either zero or something
+
+232
+00:24:43,579 --> 00:24:45,679
+ some gas and some data.
+
+233
+00:24:46,740 --> 00:24:50,439
+ And when you combine that, you will get the post-date,
+
+234
+00:24:50,740 --> 00:24:54,259
+ which is possibly creation of new smart contracts,
+
+235
+00:24:54,919 --> 00:24:57,619
+ some modified balances, some new or modified,
+
+236
+00:24:58,000 --> 00:25:01,259
+ well, not modified code, new code or modified,
+
+237
+00:25:02,039 --> 00:25:04,099
+ yeah, this is incorrect.
+
+238
+00:25:04,460 --> 00:25:05,859
+ Not modified code, it's impossible.
+
+239
+00:25:06,399 --> 00:25:09,119
+ New code or modified storage, yeah, that's it.
+
+240
+00:25:09,119 --> 00:25:14,279
+ and sell the strokes and all that stuff,
+
+241
+00:25:14,659 --> 00:25:16,519
+ you can have everything of that.
+
+242
+00:25:16,639 --> 00:25:19,479
+ The important part is that on the pre-state,
+
+243
+00:25:20,459 --> 00:25:24,279
+ you have to set up a smart contract
+
+244
+00:25:24,279 --> 00:25:27,319
+ that performs some interesting things.
+
+245
+00:25:28,879 --> 00:25:31,859
+ And that's going to be the destination of your transaction.
+
+246
+00:25:32,019 --> 00:25:33,879
+ Otherwise, it's not going to execute anything meaningful
+
+247
+00:25:33,879 --> 00:25:35,379
+ and you're not really testing anything.
+
+248
+00:25:36,500 --> 00:25:38,199
+ Also, the transaction, for example,
+
+249
+00:25:38,200 --> 00:25:43,860
+ if it's possible that the destination of the transaction
+
+250
+00:25:43,860 --> 00:25:46,000
+ is not a smart contract,
+
+251
+00:25:46,180 --> 00:25:47,660
+ but the creation of a smart contract,
+
+252
+00:25:47,740 --> 00:25:48,600
+ that's also possible.
+
+253
+00:25:48,880 --> 00:25:52,420
+ And then the data that you put in this transaction
+
+254
+00:25:52,420 --> 00:25:55,700
+ executes in the way of init code.
+
+255
+00:25:55,700 --> 00:25:56,940
+ So that's also interesting.
+
+256
+00:25:57,200 --> 00:26:02,019
+ So if you can put some interesting init code,
+
+257
+00:26:02,559 --> 00:26:04,720
+ it's another way of testing
+
+258
+00:26:04,720 --> 00:26:07,460
+ that your smart contract was created in the correct way.
+
+259
+00:26:07,460 --> 00:26:10,440
+ and also the modified balances,
+
+260
+00:26:10,660 --> 00:26:13,000
+ the new created code is very important here also
+
+261
+00:26:13,000 --> 00:26:14,779
+ and the modified storage if necessary.
+
+262
+00:26:15,940 --> 00:26:20,039
+ Most importantly, we use what's called the stage root
+
+263
+00:26:20,039 --> 00:26:21,019
+ to make this verification.
+
+264
+00:26:22,259 --> 00:26:25,840
+ And the stage root is, as we explained earlier,
+
+265
+00:26:25,980 --> 00:26:28,700
+ the state is what contains the smart contracts, everything,
+
+266
+00:26:29,299 --> 00:26:32,700
+ but the root is like this cryptographic computation
+
+267
+00:26:32,700 --> 00:26:36,720
+ that commits and securely commits all the contents of the state
+
+268
+00:26:36,720 --> 00:26:43,299
+ into a single number it's a very big number basically 32 bytes of information that is very
+
+269
+00:26:43,299 --> 00:26:50,220
+ difficult to have two different states that commit into the same uh into the same number this is what
+
+270
+00:26:50,220 --> 00:26:59,720
+ makes uh the blockchain secure and so given that um that precondition we can assume that if two
+
+271
+00:26:59,720 --> 00:27:06,279
+ execution clients we you give them this the same pre-state the same transaction you also can know
+
+272
+00:27:06,279 --> 00:27:11,279
+ that you expect the same state root difference at the end.
+
+273
+00:27:11,720 --> 00:27:13,440
+ If you compare two execution clients
+
+274
+00:27:13,440 --> 00:27:14,839
+ and they give you two different state root,
+
+275
+00:27:14,839 --> 00:27:19,379
+ that means one of them, or maybe a test also it's incorrect.
+
+276
+00:27:20,680 --> 00:27:21,779
+ And this is the way that,
+
+277
+00:27:21,779 --> 00:27:24,379
+ this is the simplest way of testing devian.
+
+278
+00:27:29,019 --> 00:27:34,019
+ We also have fuzzy differential state testing, very similar.
+
+279
+00:27:34,019 --> 00:27:42,799
+ similar. The main difference is that we have a tool which is called FuzzyEVM, which is
+
+280
+00:27:42,799 --> 00:27:49,319
+ written by one of the developers of the GoEthereum client. And the way that this works is that
+
+281
+00:27:49,319 --> 00:28:00,460
+ instead of having an unknown smart contract that we designed to hit some specific code
+
+282
+00:28:00,460 --> 00:28:07,740
+ path in the execution clients. In this case, the fussiness comes in the way of what the code
+
+283
+00:28:08,299 --> 00:28:18,539
+ contains. So you let the code being fussed into the lock, into the pre-set of the chain,
+
+284
+00:28:18,539 --> 00:28:23,259
+ and then you create a transaction that specifically the destination is that code,
+
+285
+00:28:23,259 --> 00:28:27,779
+ it's that FOSS smart contract.
+
+286
+00:28:27,779 --> 00:28:30,900
+ Then since we don't know exactly
+
+287
+00:28:32,319 --> 00:28:34,680
+ what the outcome of that contract will be
+
+288
+00:28:34,680 --> 00:28:39,180
+ because it's FOSS it's gonna have very stochastic
+
+289
+00:28:39,180 --> 00:28:41,079
+ or random behavior.
+
+290
+00:28:41,079 --> 00:28:42,740
+ You're gonna maybe set storage
+
+291
+00:28:42,740 --> 00:28:44,599
+ that you don't expect it to set.
+
+292
+00:28:44,599 --> 00:28:46,379
+ The way that we verify this kind of test
+
+293
+00:28:46,379 --> 00:28:50,259
+ is that we pass the stage route to different
+
+294
+00:28:50,259 --> 00:28:52,859
+ and we compare that between different clients.
+
+295
+00:28:53,259 --> 00:28:56,559
+ So if we have the same first smart contract,
+
+296
+00:28:56,559 --> 00:28:59,279
+ the same transaction, the same pre-state,
+
+297
+00:28:59,279 --> 00:29:01,740
+ and we get a different state route
+
+298
+00:29:01,740 --> 00:29:04,940
+ on two different EVM clients,
+
+299
+00:29:04,940 --> 00:29:07,940
+ that means there's a mistake, there's something wrong.
+
+300
+00:29:07,940 --> 00:29:10,339
+ And then you can verify it and see exactly
+
+301
+00:29:11,720 --> 00:29:15,160
+ by examining the trace of the execution
+
+302
+00:29:15,160 --> 00:29:17,140
+ to know exactly what happened,
+
+303
+00:29:17,140 --> 00:29:20,460
+ and then you can find bugs this way.
+
+304
+00:29:23,259 --> 00:29:34,259
+ um yeah and we also have uh blockchain blockchain testing so the previous ones were based on we have
+
+305
+00:29:34,259 --> 00:29:39,759
+ like a pre-state we have a single transaction and we have a very specific execution that's going to
+
+306
+00:29:39,759 --> 00:29:47,500
+ happen and we but we also can have a full block testing which means that you also have like the
+
+307
+00:29:47,500 --> 00:29:52,879
+ pre-state which is the smart contracts balances code and search and whatever and you put them in
+
+308
+00:29:52,880 --> 00:29:59,920
+ the genesis that you are going to instantiate your blockchain with. Then you start feeding blocks,
+
+309
+00:30:00,220 --> 00:30:06,460
+ each one with transactions and also header values and also more information that comprises the block.
+
+310
+00:30:06,840 --> 00:30:12,980
+ And then you start feeding the entire block into the execution client. And then you expect that
+
+311
+00:30:12,980 --> 00:30:21,540
+ after one or two or many blocks, you expect that the client, if your outcome of the validation
+
+312
+00:30:21,539 --> 00:30:25,859
+ is that every single block that you feed into your test,
+
+313
+00:30:26,019 --> 00:30:28,799
+ that you designed in your test is supposed to be correct,
+
+314
+00:30:29,059 --> 00:30:32,180
+ then the expectation is that the execution client
+
+315
+00:30:32,180 --> 00:30:34,599
+ consumes all of these blocks
+
+316
+00:30:34,599 --> 00:30:40,420
+ and you check the chain head of the execution client,
+
+317
+00:30:40,759 --> 00:30:44,339
+ you must find here the block that you expected it to be.
+
+318
+00:30:45,079 --> 00:30:48,920
+ If for some reason, let's say in this diagram,
+
+319
+00:30:48,920 --> 00:30:52,480
+ block number two was deemed invalid
+
+320
+00:30:52,480 --> 00:30:54,539
+ by one of the execution clients
+
+321
+00:30:54,539 --> 00:30:57,080
+ because they have a faulty check somewhere.
+
+322
+00:30:57,720 --> 00:30:59,519
+ That means that the chain head
+
+323
+00:30:59,519 --> 00:31:01,140
+ is not going to correspond to block number two
+
+324
+00:31:01,140 --> 00:31:02,840
+ and then you get an error.
+
+325
+00:31:04,980 --> 00:31:05,960
+ This is very important
+
+326
+00:31:05,960 --> 00:31:10,000
+ because not everything that we check
+
+327
+00:31:10,000 --> 00:31:12,700
+ on the execution clients is part of the EVM execution.
+
+328
+00:31:12,700 --> 00:31:14,720
+ We also check other values
+
+329
+00:31:14,720 --> 00:31:18,880
+ that are resulting of the execution of previous blocks.
+
+330
+00:31:18,880 --> 00:31:22,880
+ For example, 1559, which is the base fee,
+
+331
+00:31:23,400 --> 00:31:25,860
+ you have the base fee of the block,
+
+332
+00:31:26,279 --> 00:31:29,900
+ and this is calculated based on previous transactions
+
+333
+00:31:29,900 --> 00:31:31,079
+ of the previous block.
+
+334
+00:31:31,740 --> 00:31:34,259
+ So if there was some client
+
+335
+00:31:34,259 --> 00:31:38,120
+ that had a faulty calculation of 5059, the base fee,
+
+336
+00:31:38,920 --> 00:31:43,480
+ then you will get a rejection somewhere in here, for example.
+
+337
+00:31:43,480 --> 00:31:46,460
+ and then your chain head will not match
+
+338
+00:31:46,460 --> 00:31:49,000
+ to the last block of your test,
+
+339
+00:31:49,400 --> 00:31:52,640
+ then you will have found a bug.
+
+340
+00:31:53,740 --> 00:31:55,920
+ Then you also check the post date,
+
+341
+00:31:56,200 --> 00:31:57,900
+ the new smart contracts, the modified balances,
+
+342
+00:31:58,019 --> 00:31:59,920
+ the new code, the modified storage, everything.
+
+343
+00:32:00,299 --> 00:32:01,720
+ You check that everything is in place
+
+344
+00:32:01,720 --> 00:32:06,660
+ because even after correctly consuming all of the blocks
+
+345
+00:32:06,660 --> 00:32:09,120
+ up to the end block,
+
+346
+00:32:09,740 --> 00:32:11,579
+ you could still have some bugs somewhere
+
+347
+00:32:11,579 --> 00:32:14,819
+ where the storage for some reason
+
+348
+00:32:14,819 --> 00:32:19,099
+ does not respond correctly from the execution line.
+
+349
+00:32:19,339 --> 00:32:24,599
+ That's very, very, it's not very common
+
+350
+00:32:24,599 --> 00:32:26,779
+ because normally when you check the chain head,
+
+351
+00:32:27,019 --> 00:32:28,879
+ you also checked the state root,
+
+352
+00:32:29,199 --> 00:32:31,939
+ which means that the descriptographic commitment
+
+353
+00:32:31,939 --> 00:32:33,139
+ that we talked about previously.
+
+354
+00:32:33,919 --> 00:32:36,279
+ And that means that you have your storage correctly.
+
+355
+00:32:36,460 --> 00:32:39,579
+ So these kinds of checks are just sanity checks,
+
+356
+00:32:39,579 --> 00:32:40,199
+ extra checks.
+
+357
+00:32:40,200 --> 00:32:42,340
+ but yeah, the basic gist is that
+
+358
+00:32:42,340 --> 00:32:44,400
+ all the blocks were consumed
+
+359
+00:32:44,400 --> 00:32:45,640
+ because the client is correct
+
+360
+00:32:45,640 --> 00:32:59,640
+ and we also have the other way of checking
+
+361
+00:32:59,640 --> 00:33:02,680
+ which is that you design your test
+
+362
+00:33:02,680 --> 00:33:06,120
+ with one invalid block at some point
+
+363
+00:33:06,120 --> 00:33:09,580
+ for example, let's take the example
+
+364
+00:33:09,579 --> 00:33:11,439
+ of the 1559 again,
+
+365
+00:33:11,799 --> 00:33:13,740
+ which is, let's say that you
+
+366
+00:33:13,740 --> 00:33:17,899
+ deliberately put an invalid value
+
+367
+00:33:17,899 --> 00:33:20,559
+ into the base fee of a block
+
+368
+00:33:20,559 --> 00:33:22,639
+ and then you feed that block
+
+369
+00:33:22,639 --> 00:33:24,199
+ to the client,
+
+370
+00:33:24,539 --> 00:33:27,439
+ then you expect the client
+
+371
+00:33:27,439 --> 00:33:28,659
+ to reject this block.
+
+372
+00:33:29,460 --> 00:33:30,599
+ So what will happen is that
+
+373
+00:33:30,599 --> 00:33:32,539
+ the block gets rejected.
+
+374
+00:33:32,799 --> 00:33:33,480
+ That's one check.
+
+375
+00:33:34,000 --> 00:33:36,279
+ Then you go back into the client
+
+376
+00:33:36,279 --> 00:33:37,039
+ and you say, okay,
+
+377
+00:33:37,039 --> 00:33:40,680
+ what was the last block that I gave you?
+
+378
+00:33:41,480 --> 00:33:42,559
+ That was correct.
+
+379
+00:33:42,920 --> 00:33:44,319
+ Then you check that again
+
+380
+00:33:44,319 --> 00:33:45,799
+ because in this case it's block number two.
+
+381
+00:33:46,000 --> 00:33:46,899
+ That was the last block.
+
+382
+00:33:47,460 --> 00:33:49,700
+ Then you check the post-it and everything.
+
+383
+00:33:51,259 --> 00:33:53,519
+ And here the post-it becomes important
+
+384
+00:33:53,519 --> 00:33:57,680
+ because if you feed an invalid block,
+
+385
+00:33:57,779 --> 00:34:01,399
+ you expect that the post-it
+
+386
+00:34:01,399 --> 00:34:04,039
+ or the contracts living in the client
+
+387
+00:34:04,039 --> 00:34:06,379
+ are not belonging to the invalid block.
+
+388
+00:34:06,380 --> 00:34:09,760
+ So in this case, this check is actually more important.
+
+389
+00:34:11,280 --> 00:34:17,140
+ It's also very important to know exactly how the client failed.
+
+390
+00:34:18,320 --> 00:34:31,440
+ It's very important when you are designing one of these negative tests that you are completely sure that there's no other way that the client could fail.
+
+391
+00:34:31,440 --> 00:34:40,320
+ for example if okay again if you are designing a test for 1559 and you want to put an invalid
+
+392
+00:34:40,320 --> 00:34:47,780
+ um value in in the base fee but you forget to update the block hatch with this modified value
+
+393
+00:34:47,780 --> 00:34:53,619
+ with this modified value it would mean that um that the client is still going to correctly
+
+394
+00:34:53,619 --> 00:35:00,639
+ correctly reject your block but not because of the base fee value that you modified but
+
+395
+00:35:00,639 --> 00:35:02,299
+ instead because of the block hash.
+
+396
+00:35:02,659 --> 00:35:04,359
+ So that's an invalid test
+
+397
+00:35:04,359 --> 00:35:07,519
+ because you didn't make sure that every other field,
+
+398
+00:35:07,920 --> 00:35:10,539
+ what you were testing was correct.
+
+399
+00:35:11,279 --> 00:35:11,879
+ So if you have,
+
+400
+00:35:13,019 --> 00:35:15,279
+ so this is very important when saying a test
+
+401
+00:35:15,279 --> 00:35:17,460
+ and you have to always make sure.
+
+402
+00:35:17,460 --> 00:35:22,460
+ This is something that it's very easy to slip in here
+
+403
+00:35:22,460 --> 00:35:24,599
+ to write a test
+
+404
+00:35:24,599 --> 00:35:27,699
+ and then you think you correctly wrote your test
+
+405
+00:35:27,699 --> 00:35:29,699
+ and then realizing later then,
+
+406
+00:35:29,699 --> 00:35:34,339
+ okay, I didn't change this, and the client was passing the test,
+
+407
+00:35:34,599 --> 00:35:38,619
+ but there was a fault somewhere that I didn't detect
+
+408
+00:35:38,619 --> 00:35:41,179
+ because the client still rejected the block
+
+409
+00:35:41,179 --> 00:35:44,239
+ because my block was not correctly designed.
+
+410
+00:35:44,539 --> 00:35:45,980
+ My test was not correctly designed.
+
+411
+00:35:49,059 --> 00:35:49,619
+ Yeah.
+
+412
+00:35:52,259 --> 00:35:55,019
+ Any questions so far?
+
+413
+00:35:55,019 --> 00:36:00,719
+ There is a discussion going on.
+
+414
+00:36:00,719 --> 00:36:05,099
+ Maybe, guys, I will give you a second if you want to ask a question.
+
+415
+00:36:05,099 --> 00:36:06,780
+ But otherwise it's pretty clear.
+
+416
+00:36:06,780 --> 00:36:07,780
+ Thank you so much, Mario.
+
+417
+00:36:07,780 --> 00:36:08,780
+ It's great.
+
+418
+00:36:08,780 --> 00:36:14,900
+ People were discussing, like, just some stuff I was able to answer.
+
+419
+00:36:14,900 --> 00:36:15,900
+ Yeah.
+
+420
+00:36:15,900 --> 00:36:19,840
+ I think we'll get to questions later.
+
+421
+00:36:19,840 --> 00:36:21,840
+ All right.
+
+422
+00:36:21,840 --> 00:36:23,500
+ All right.
+
+423
+00:36:23,500 --> 00:36:24,500
+ Cool.
+
+424
+00:36:24,500 --> 00:36:33,880
+ Okay, so now to the actual test filling part of the test.
+
+425
+00:36:33,880 --> 00:36:39,360
+ We're going to start with the first repository that we have.
+
+426
+00:36:39,360 --> 00:36:46,320
+ This is the Ethereum test repo which has existed since the inception of Ethereum, almost nine
+
+427
+00:36:46,320 --> 00:36:47,880
+ years ago.
+
+428
+00:36:47,880 --> 00:36:57,500
+ And this is the first test-filling framework that was produced by the Ethereum community.
+
+429
+00:36:57,500 --> 00:37:06,619
+ It's basically the source files of the tests are simple JSON files or YAML, which is the
+
+430
+00:37:06,619 --> 00:37:08,220
+ source code.
+
+431
+00:37:08,220 --> 00:37:16,360
+ This is the part where you design your pre-states, your storage, your code, your smart contracts,
+
+432
+00:37:16,360 --> 00:37:17,700
+ everything you put it in there.
+
+433
+00:37:17,699 --> 00:37:22,899
+ This all goes into a JSON file or a YAML file.
+
+434
+00:37:23,899 --> 00:37:26,439
+ It provides very simple parameterization
+
+435
+00:37:26,439 --> 00:37:30,619
+ in the sense that you can set up multiple transactions
+
+436
+00:37:30,619 --> 00:37:33,199
+ to operate on top of the same pre-state,
+
+437
+00:37:33,679 --> 00:37:36,500
+ and then you expect a different outcome
+
+438
+00:37:36,500 --> 00:37:37,480
+ depending on the transaction.
+
+439
+00:37:38,399 --> 00:37:40,119
+ And then you can also check all that
+
+440
+00:37:40,119 --> 00:37:44,339
+ in a compact JSON format.
+
+441
+00:37:44,340 --> 00:37:49,240
+ and these tests are written in C++.
+
+442
+00:37:50,300 --> 00:37:53,640
+ I'm sorry, the test filler is called retest it.
+
+443
+00:37:55,680 --> 00:37:57,220
+ It's written in C++.
+
+444
+00:37:59,600 --> 00:38:04,000
+ What retest it is basically you have your JSON input,
+
+445
+00:38:04,920 --> 00:38:08,039
+ you have retest it, and then you call retest it,
+
+446
+00:38:08,460 --> 00:38:10,059
+ and then it consumes the JSON.
+
+447
+00:38:10,059 --> 00:38:16,599
+ it calls go it through actually to fill it this and then at the end you have a
+
+448
+00:38:16,599 --> 00:38:21,159
+ fixture that every single client can consume then you can check for
+
+449
+00:38:21,159 --> 00:38:27,019
+ invalidity in any of the any of the clients
+
+450
+00:38:28,860 --> 00:38:36,599
+ and we have the newer execution specters this was just developed over the over
+
+451
+00:38:36,599 --> 00:38:40,279
+ the course of last year and the previous year also.
+
+452
+00:38:41,119 --> 00:38:44,199
+ The main difference is that we have Python source code.
+
+453
+00:38:44,779 --> 00:38:49,900
+ So the source of the tests, this is where you define your pre-state and everything.
+
+454
+00:38:50,360 --> 00:38:51,279
+ This is all in Python.
+
+455
+00:38:51,799 --> 00:38:57,759
+ And it provides simple to complex parameterization because it's powered by PyTest.
+
+456
+00:38:58,360 --> 00:39:03,980
+ So we have all of the PyTest tools are at disposal to make different parameterization
+
+457
+00:39:03,980 --> 00:39:04,820
+ of different tests.
+
+458
+00:39:05,800 --> 00:39:08,340
+ And this allows a lot of flexibility
+
+459
+00:39:08,340 --> 00:39:11,320
+ and it's very efficient
+
+460
+00:39:11,320 --> 00:39:14,619
+ on just writing a single input
+
+461
+00:39:14,619 --> 00:39:16,260
+ and then you just pass
+
+462
+00:39:16,260 --> 00:39:17,300
+ a lot of parameters,
+
+463
+00:39:17,940 --> 00:39:19,240
+ a lot of values
+
+464
+00:39:19,240 --> 00:39:20,240
+ for the parameterization.
+
+465
+00:39:20,400 --> 00:39:21,780
+ It will generate a ton of tests for you.
+
+466
+00:39:22,159 --> 00:39:23,820
+ It's really, really convenient.
+
+467
+00:39:25,820 --> 00:39:27,599
+ It can get really complex.
+
+468
+00:39:28,199 --> 00:39:30,079
+ So we're still defining,
+
+469
+00:39:30,420 --> 00:39:31,539
+ we're still at that point
+
+470
+00:39:31,539 --> 00:39:32,300
+ where we're defining
+
+471
+00:39:32,300 --> 00:39:36,100
+ how much complexity do we want the tests to be.
+
+472
+00:39:37,840 --> 00:39:43,120
+ So it's a really nice framework overall.
+
+473
+00:39:44,260 --> 00:39:47,600
+ The downside is that, as retested also,
+
+474
+00:39:47,780 --> 00:39:52,140
+ this still also requires an actual client implementation
+
+475
+00:39:52,140 --> 00:39:55,720
+ to be able to fill the tests
+
+476
+00:39:55,720 --> 00:39:57,120
+ because of the transition function.
+
+477
+00:39:58,519 --> 00:40:00,580
+ This is only because we don't have
+
+478
+00:40:00,579 --> 00:40:03,880
+ the transition function implemented in Python so far,
+
+479
+00:40:03,880 --> 00:40:06,819
+ but there's a work in progress to have
+
+480
+00:40:06,819 --> 00:40:12,139
+ the entire Python specification
+
+481
+00:40:12,139 --> 00:40:16,199
+ written in a script that is called yields,
+
+482
+00:40:16,360 --> 00:40:20,139
+ which is the Ethereum execution layer spec.
+
+483
+00:40:21,279 --> 00:40:23,059
+ And this will, in the future,
+
+484
+00:40:23,199 --> 00:40:26,900
+ will be used to serve as the actual client representation,
+
+485
+00:40:27,900 --> 00:40:28,920
+ but not today.
+
+486
+00:40:30,579 --> 00:40:33,880
+ Okay.
+
+487
+00:40:33,880 --> 00:40:39,139
+ This is the, this are the inner workings of how the execution spec test.
+
+488
+00:40:39,139 --> 00:40:44,579
+ This is very similar, both in retest it and execution spec test.
+
+489
+00:40:44,579 --> 00:40:50,460
+ So I'm going to go over this point on how it works internally.
+
+490
+00:40:50,460 --> 00:40:52,019
+ It's very simple, actually.
+
+491
+00:40:52,019 --> 00:40:59,119
+ it's the framework, as I said earlier, it starts with some Python tests.
+
+492
+00:40:59,119 --> 00:41:09,179
+ This test you can create one for every single EIP or several for several EIPs or you can
+
+493
+00:41:09,179 --> 00:41:12,820
+ write many for many forks, for example.
+
+494
+00:41:12,820 --> 00:41:17,719
+ The way that we are working right now is that we have different folders where our Python
+
+495
+00:41:17,719 --> 00:41:20,579
+ tests live, one for every fork.
+
+496
+00:41:20,579 --> 00:41:26,900
+ fork so for example we started from frontier and we go all the way up to cancun and cancun
+
+497
+00:41:26,900 --> 00:41:34,099
+ at the moment contains all of the 48404 tests all of the beacon root contract tests and everything
+
+498
+00:41:34,099 --> 00:41:39,059
+ all all of that it's uh very well organized uh this is something i really like from different
+
+499
+00:41:39,059 --> 00:41:45,219
+ in your repository and you start from that you have a you you start with your python test where
+
+500
+00:41:45,219 --> 00:41:54,639
+ you write all your pre-states, your transactions, you actually have written the parameterization
+
+501
+00:41:54,639 --> 00:41:55,639
+ or everything.
+
+502
+00:41:55,639 --> 00:42:01,919
+ And then, when you execute this, to execute this, what it uses is the fill command that
+
+503
+00:42:01,919 --> 00:42:05,379
+ we have in this repository.
+
+504
+00:42:05,379 --> 00:42:09,959
+ You specify the fill command to what test you want to execute it at the moment, and
+
+505
+00:42:09,959 --> 00:42:13,659
+ then it will go in, execute the Python code.
+
+506
+00:42:13,659 --> 00:42:17,099
+ The important part is that it has two dependencies, well, three.
+
+507
+00:42:17,519 --> 00:42:19,500
+ The bottom one is a little bit less important,
+
+508
+00:42:19,619 --> 00:42:21,219
+ but the two ones on the top are,
+
+509
+00:42:21,920 --> 00:42:23,699
+ and especially the top one is very important.
+
+510
+00:42:24,339 --> 00:42:25,420
+ So when you're filling tests
+
+511
+00:42:25,420 --> 00:42:30,279
+ and you get to the point where you want to execute a transaction,
+
+512
+00:42:30,819 --> 00:42:33,159
+ but you don't know how to do this because you're running Python,
+
+513
+00:42:33,259 --> 00:42:37,079
+ you don't have the actual logic of the execution client,
+
+514
+00:42:37,199 --> 00:42:42,079
+ what you do is you spawn up this go Ethereum subcommand,
+
+515
+00:42:42,079 --> 00:42:44,679
+ sub-command, which is called EVM.
+
+516
+00:42:44,679 --> 00:42:49,239
+ And then EVM transition is actually EVM TA10.
+
+517
+00:42:49,239 --> 00:42:52,759
+ What you give to this command is just all the pre-state
+
+518
+00:42:53,739 --> 00:42:56,039
+ and the transactions and the environment,
+
+519
+00:42:56,039 --> 00:43:00,239
+ and then it will spit out what the result
+
+520
+00:43:00,239 --> 00:43:01,739
+ of the execution is,
+
+521
+00:43:01,739 --> 00:43:03,840
+ including the execution of every single transaction
+
+522
+00:43:03,840 --> 00:43:05,059
+ that you gave it.
+
+523
+00:43:06,900 --> 00:43:10,360
+ This is important because it's a very back and forth
+
+524
+00:43:10,360 --> 00:43:14,099
+ process, feeding tests, if you have one single test that
+
+525
+00:43:14,099 --> 00:43:18,380
+ executes 10 blocks, you will be calling this EVM
+
+526
+00:43:18,380 --> 00:43:20,420
+ transition tool 10 times.
+
+527
+00:43:23,740 --> 00:43:24,900
+ It's very efficient.
+
+528
+00:43:24,900 --> 00:43:28,280
+ It's not...
+
+529
+00:43:28,280 --> 00:43:32,940
+ But we have more solutions in the way to make it
+
+530
+00:43:32,940 --> 00:43:36,380
+ even more efficient, because we basically call
+
+531
+00:43:36,380 --> 00:43:38,660
+ once, two, or three times
+
+532
+00:43:38,660 --> 00:43:39,619
+ every single test.
+
+533
+00:43:39,619 --> 00:43:41,840
+ So it gets quite consuming,
+
+534
+00:43:42,079 --> 00:43:43,079
+ quite CPU consuming.
+
+535
+00:43:44,940 --> 00:43:47,340
+ The second dependency that we have
+
+536
+00:43:47,340 --> 00:43:48,820
+ is Solidity.
+
+537
+00:43:50,599 --> 00:43:52,500
+ And this is less so
+
+538
+00:43:52,500 --> 00:43:54,059
+ because most of our tests
+
+539
+00:43:54,059 --> 00:43:55,840
+ inside of our framework,
+
+540
+00:43:56,099 --> 00:43:58,480
+ we have every single opcode
+
+541
+00:43:58,480 --> 00:43:59,780
+ that the EVM has.
+
+542
+00:44:01,019 --> 00:44:03,500
+ And so you don't really need
+
+543
+00:44:03,500 --> 00:44:04,140
+ to write Solidity.
+
+544
+00:44:04,139 --> 00:44:09,299
+ And Solidity is an excellent language to write smart contracts.
+
+545
+00:44:09,480 --> 00:44:13,440
+ But the problem with us is that we normally have to focus
+
+546
+00:44:13,440 --> 00:44:16,099
+ on single opcodes that we are testing.
+
+547
+00:44:16,900 --> 00:44:22,019
+ So in the case that Solidity makes some optimization
+
+548
+00:44:22,019 --> 00:44:25,139
+ to what we are expecting to see in the bytecode
+
+549
+00:44:25,659 --> 00:44:27,859
+ that goes into a smart contract, that is not good.
+
+550
+00:44:27,860 --> 00:44:34,099
+ because if it optimizes out some very important opcode
+
+551
+00:44:34,099 --> 00:44:35,260
+ that we are actually testing,
+
+552
+00:44:35,840 --> 00:44:36,820
+ when we are filling that test,
+
+553
+00:44:36,920 --> 00:44:39,519
+ it's going to make the test unreliable.
+
+554
+00:44:39,740 --> 00:44:40,680
+ It's simply not going to work
+
+555
+00:44:40,680 --> 00:44:43,480
+ because the opcode that you're testing is not there.
+
+556
+00:44:43,840 --> 00:44:44,480
+ It's not executed.
+
+557
+00:44:44,820 --> 00:44:45,559
+ It doesn't matter.
+
+558
+00:44:46,780 --> 00:44:51,700
+ So we only use Solidity when we have very complex code
+
+559
+00:44:51,700 --> 00:44:55,120
+ that we cannot do with bytecode writing.
+
+560
+00:44:55,780 --> 00:44:57,280
+ And it's not actually bytecode writing.
+
+561
+00:44:57,280 --> 00:45:01,140
+ is I will show an example in the source code in a bit,
+
+562
+00:45:01,440 --> 00:45:05,100
+ just for you guys to see how we write this.
+
+563
+00:45:05,840 --> 00:45:08,620
+ But yes, it's less and less used by us.
+
+564
+00:45:09,660 --> 00:45:13,420
+ We also have the other input is the EIPs,
+
+565
+00:45:14,160 --> 00:45:15,580
+ the repository actually.
+
+566
+00:45:17,740 --> 00:45:21,060
+ This is the primary source of the specification
+
+567
+00:45:21,060 --> 00:45:22,720
+ that we use to write the test.
+
+568
+00:45:23,360 --> 00:45:25,660
+ So whenever we are writing a test,
+
+569
+00:45:25,659 --> 00:45:28,679
+ we don't go to the goetherium's code,
+
+570
+00:45:28,779 --> 00:45:29,899
+ we go to the specification.
+
+571
+00:45:30,699 --> 00:45:33,359
+ And from that, we pull out the test cases.
+
+572
+00:45:33,839 --> 00:45:36,279
+ We actually write them from the specification.
+
+573
+00:45:36,460 --> 00:45:42,859
+ So it's very important to preserve the ideas of the EIPs
+
+574
+00:45:42,859 --> 00:45:47,359
+ in the source code of the tests.
+
+575
+00:45:48,319 --> 00:45:52,019
+ And the way that we do this here is that we also,
+
+576
+00:45:52,480 --> 00:45:54,399
+ well, one is the tester, the test writer.
+
+577
+00:45:54,400 --> 00:46:02,220
+ they are going into the EIP and they are copying or bringing or whatever the formulas,
+
+578
+00:46:02,380 --> 00:46:08,619
+ whatever that is describing there, but also they bring the checksum and the version of the EIP.
+
+579
+00:46:09,700 --> 00:46:14,920
+ And this is important because during the development process of any fork,
+
+580
+00:46:15,200 --> 00:46:19,300
+ it's really common that the EIPs change from time to time.
+
+581
+00:46:19,300 --> 00:46:29,300
+ So this is like a safe measure that we use to make sure that, okay, we pulled this logic or information from the EIP or this idea from the EIP.
+
+582
+00:46:29,880 --> 00:46:33,580
+ Are we sure that we are working on this new expression?
+
+583
+00:46:33,980 --> 00:46:42,080
+ Because then the EIP changes and then the execution client goes and implements a new version and our tests start failing.
+
+584
+00:46:42,519 --> 00:46:45,440
+ And they come to us and say, what did you write?
+
+585
+00:46:45,440 --> 00:46:49,780
+ then we have a proof that we wrote for the EAP,
+
+586
+00:46:50,559 --> 00:46:51,639
+ but at a previous version.
+
+587
+00:46:52,159 --> 00:46:54,780
+ So then the processes are just to go update
+
+588
+00:46:54,780 --> 00:46:55,820
+ to the newest version,
+
+589
+00:46:55,920 --> 00:46:57,300
+ but then we have failsafe here
+
+590
+00:46:57,300 --> 00:46:59,880
+ just to make sure that we are writing
+
+591
+00:46:59,880 --> 00:47:01,659
+ for some version of the EAP.
+
+592
+00:47:03,920 --> 00:47:07,300
+ Yeah, after the fill command is executed,
+
+593
+00:47:08,000 --> 00:47:08,860
+ we get the output.
+
+594
+00:47:09,280 --> 00:47:10,900
+ And this is the important part.
+
+595
+00:47:11,800 --> 00:47:12,860
+ These are the fixtures.
+
+596
+00:47:12,860 --> 00:47:14,960
+ This is very simple.
+
+597
+00:47:14,960 --> 00:47:18,119
+ it's not very simple JSON file, but it's very readable.
+
+598
+00:47:20,500 --> 00:47:22,360
+ There's nothing complex in the JSON files.
+
+599
+00:47:22,519 --> 00:47:24,679
+ It's basically just the output of the test.
+
+600
+00:47:25,460 --> 00:47:26,720
+ And there are two flavors.
+
+601
+00:47:27,159 --> 00:47:29,659
+ It's the, well, three flavors is the state test,
+
+602
+00:47:29,920 --> 00:47:34,000
+ which is the first one that I described over here.
+
+603
+00:47:34,840 --> 00:47:37,780
+ The state test, we have a format specific for this,
+
+604
+00:47:38,500 --> 00:47:41,280
+ and we have another format specific for this.
+
+605
+00:47:41,280 --> 00:47:47,420
+ and the third format is which is this same format the blockchain format but we that we use to consume
+
+606
+00:47:47,420 --> 00:47:54,500
+ in hive which is a tool that i will explain a little bit further in the presentation and yeah
+
+607
+00:47:54,500 --> 00:47:59,280
+ the important part here is that this is the actual input to the clients and this is how we test
+
+608
+00:47:59,280 --> 00:48:07,400
+ clients because the client goes and consumes this json and if it finds some something that it's that
+
+609
+00:48:07,400 --> 00:48:13,280
+ it could not consume or when it consumed it it found a different result that means there's a
+
+610
+00:48:13,280 --> 00:48:17,300
+ difference there's a there's a there's an error somewhere and this is how we find the bugs
+
+611
+00:48:17,300 --> 00:48:24,599
+ in declines at least for the evm part of the testing um i will explain a little bit further
+
+612
+00:48:24,599 --> 00:48:32,119
+ uh the in in the in the presentation about hive and but the the gist on why we need it is because
+
+613
+00:48:32,119 --> 00:48:36,239
+ there are always two methods of consumption of the blocks
+
+614
+00:48:36,239 --> 00:48:38,819
+ in every single execution client.
+
+615
+00:48:38,940 --> 00:48:41,839
+ So one is the raw format.
+
+616
+00:48:41,839 --> 00:48:44,139
+ You have the block, the actual block,
+
+617
+00:48:44,239 --> 00:48:48,460
+ which is formed into RLP, which is an encoding method.
+
+618
+00:48:49,019 --> 00:48:52,380
+ And this gets broadcasted through the peer-to-peer network.
+
+619
+00:48:52,519 --> 00:48:54,279
+ So when you're syncing, this is what you're getting.
+
+620
+00:48:55,179 --> 00:48:58,339
+ But in the other case, when we use Hive,
+
+621
+00:48:58,340 --> 00:49:03,420
+ we feed the execution client via the engine API,
+
+622
+00:49:03,620 --> 00:49:08,760
+ which is the engine API is basically just a method of communication
+
+623
+00:49:08,760 --> 00:49:11,820
+ between the execution client and the consensus layer.
+
+624
+00:49:12,880 --> 00:49:17,220
+ So when the actual Ethereum blockchain is running,
+
+625
+00:49:17,700 --> 00:49:19,840
+ we have the consensus client running,
+
+626
+00:49:20,100 --> 00:49:23,420
+ and it's giving instructions back to the execution client.
+
+627
+00:49:23,420 --> 00:49:28,539
+ so those instructions are in the form of the engine API directives
+
+628
+00:49:28,539 --> 00:49:30,460
+ and this is what we test here
+
+629
+00:49:30,460 --> 00:49:32,380
+ so when we are filling the tests
+
+630
+00:49:32,380 --> 00:49:37,019
+ the high format contains the actual engine API directives
+
+631
+00:49:37,019 --> 00:49:39,579
+ that are going to come from the consensus client
+
+632
+00:49:39,579 --> 00:49:46,320
+ so we can be sure that this specific test scenario
+
+633
+00:49:46,320 --> 00:49:51,700
+ is going to be tested as if it was running on the real blockchain
+
+634
+00:49:51,699 --> 00:50:00,579
+ Taking into account the difference that comes from the fact that mainnet is very, very large
+
+635
+00:50:00,579 --> 00:50:06,119
+ in state terms, and all of the tests that we filled, they are very, very small state
+
+636
+00:50:06,119 --> 00:50:14,119
+ because otherwise it wouldn't be manageable, but it's more or less the same thing.
+
+637
+00:50:14,119 --> 00:50:25,460
+ Okay. So, yeah. I wanted to give a little demo on how we actually fill the tests. Let
+
+638
+00:50:25,460 --> 00:50:32,920
+ me go to the actual repository. By the way, can you still see my screen?
+
+639
+00:50:32,920 --> 00:50:36,359
+ Yes, all good.
+
+640
+00:50:36,360 --> 00:50:45,559
+ All right, perfect. This is the execution spectas repository, and it's very nicely documented. We
+
+641
+00:50:45,559 --> 00:50:54,920
+ have this documentation page here that you guys can come and see. The first, we need three things
+
+642
+00:50:56,120 --> 00:51:02,440
+ to run this. Well, and the Paroxy that you need Python installed. You need Python 3.10,
+
+643
+00:51:02,440 --> 00:51:13,179
+ I think yes 3.10 and we also need to have compiled EVM and Solidity so I'm not
+
+644
+00:51:13,179 --> 00:51:19,320
+ I'm not gonna go over how to compile go go Ethereum and or Solidity you can
+
+645
+00:51:19,320 --> 00:51:23,139
+ assume that it's very it you go to the README and go to go Ethereum's repository
+
+646
+00:51:23,139 --> 00:51:28,200
+ and you can you can compile it but yeah the first approach is that you come to
+
+647
+00:51:28,199 --> 00:51:33,839
+ this repository and then you can clone the entire repository and just git clone
+
+648
+00:51:33,839 --> 00:51:42,059
+ this and you can get a copy of this in your in your PC and let me just show you
+
+649
+00:51:42,059 --> 00:51:51,419
+ what the repository looks like yeah this is this is this comprises the
+
+650
+00:51:51,420 --> 00:51:53,340
+ The repository is comprised by two.
+
+651
+00:51:53,700 --> 00:51:56,139
+ Let me just, there you go.
+
+652
+00:51:57,659 --> 00:52:00,180
+ The repository, let me delete this.
+
+653
+00:52:01,420 --> 00:52:04,980
+ And we have two sections of the repository.
+
+654
+00:52:05,320 --> 00:52:09,099
+ The first one is the source code of the framework.
+
+655
+00:52:10,220 --> 00:52:13,019
+ So everything that you find inside of source,
+
+656
+00:52:13,019 --> 00:52:18,579
+ it belongs to the code that we use to fill the tests.
+
+657
+00:52:18,579 --> 00:52:21,699
+ There are no tests here for the Ethereum blockchain.
+
+658
+00:52:22,739 --> 00:52:25,079
+ And then the second part is the tests,
+
+659
+00:52:25,679 --> 00:52:26,699
+ also in the root directory.
+
+660
+00:52:27,219 --> 00:52:28,500
+ You can start seeing here
+
+661
+00:52:28,500 --> 00:52:31,179
+ that you actually start to see some hard forks.
+
+662
+00:52:31,880 --> 00:52:33,799
+ So we have every single hard fork
+
+663
+00:52:33,799 --> 00:52:35,360
+ until Cancun is over here.
+
+664
+00:52:35,980 --> 00:52:37,460
+ And we start from Frontier.
+
+665
+00:52:38,340 --> 00:52:41,000
+ And then Homestead, Byzantium, Istanbul,
+
+666
+00:52:42,519 --> 00:52:44,779
+ Parish, the Marish or Paris,
+
+667
+00:52:44,780 --> 00:52:51,760
+ and Shanghai and I skipped London and Berlin, but yeah, you get the idea.
+
+668
+00:52:52,180 --> 00:52:58,740
+ So if you go into any of these folders, you can see every single test that we have implemented.
+
+669
+00:52:59,320 --> 00:53:07,900
+ Just take into account that this repository started being active since Shanghai.
+
+670
+00:53:08,120 --> 00:53:10,500
+ So for Shanghai, yeah, you will see every single AIP.
+
+671
+00:53:10,500 --> 00:53:17,559
+ But for example, for Berlin, you will not see that many because it was not active when Berlin came to be.
+
+672
+00:53:18,059 --> 00:53:20,860
+ So you will not see all of the full set of tests.
+
+673
+00:53:21,260 --> 00:53:24,059
+ Those will, you can find them in the Ethereum test repository.
+
+674
+00:53:25,179 --> 00:53:29,840
+ So yeah, let's take a look at just the simplest test that I can think of.
+
+675
+00:53:30,739 --> 00:53:33,500
+ Let's go to one of these tests.
+
+676
+00:53:35,320 --> 00:53:39,780
+ And yeah, let's start from the top.
+
+677
+00:53:40,500 --> 00:53:43,800
+ Every single test that we write here uses PyTest.
+
+678
+00:53:43,800 --> 00:53:48,019
+ It's a framework that we use to fill our tests.
+
+679
+00:53:48,019 --> 00:53:52,539
+ We use a lot of the functionality that PyTest provides for us.
+
+680
+00:53:52,539 --> 00:53:56,000
+ Then you can see that we need to write
+
+681
+00:53:56,000 --> 00:53:59,300
+ functions for each of the tests that we want to provide.
+
+682
+00:53:59,300 --> 00:54:03,860
+ In this case, we have this very simple test that is called TestDup.
+
+683
+00:54:03,860 --> 00:54:07,720
+ Its purpose is to, as it is stated here,
+
+684
+00:54:07,840 --> 00:54:10,340
+ it's to test the DUP upcodes,
+
+685
+00:54:10,840 --> 00:54:15,059
+ which are one of the most simple upcodes that exists in DBM.
+
+686
+00:54:15,960 --> 00:54:18,120
+ It tests DUP 1 through 16.
+
+687
+00:54:18,820 --> 00:54:23,120
+ So it will generate one test for every single DUP upcode.
+
+688
+00:54:23,740 --> 00:54:26,280
+ Yeah, you can see here really nicely how you can,
+
+689
+00:54:26,840 --> 00:54:32,539
+ you have the, you can see that the actual meaning
+
+690
+00:54:32,539 --> 00:54:35,940
+ of each of the upcodes.
+
+691
+00:54:36,779 --> 00:54:39,000
+ But yeah, this test function,
+
+692
+00:54:39,099 --> 00:54:40,719
+ it generates one status,
+
+693
+00:54:41,099 --> 00:54:42,940
+ the one that we talked about earlier,
+
+694
+00:54:43,159 --> 00:54:43,880
+ the first one.
+
+695
+00:54:44,360 --> 00:54:46,820
+ And the reason being is that
+
+696
+00:54:46,820 --> 00:54:48,759
+ this is purely an EVM test.
+
+697
+00:54:48,960 --> 00:54:51,420
+ So you can abstract everything away
+
+698
+00:54:51,420 --> 00:54:52,699
+ that is on the block
+
+699
+00:54:52,699 --> 00:54:56,739
+ and you can stay only with the upcodes
+
+700
+00:54:56,739 --> 00:54:57,619
+ and the EVM execution
+
+701
+00:54:57,619 --> 00:54:58,699
+ and then you get this test
+
+702
+00:54:58,699 --> 00:54:59,619
+ because it's the simplest.
+
+703
+00:54:59,619 --> 00:55:02,320
+ You don't require anything from outside.
+
+704
+00:55:02,539 --> 00:55:09,900
+ to test the dub command um that's that's the main thing uh to keep in mind when you're deciding which
+
+705
+00:55:10,699 --> 00:55:16,779
+ which format you're going to test with um yeah you you get an environment um and you get the
+
+706
+00:55:16,779 --> 00:55:21,340
+ pre this is the breed that we have been talking about so the first thing that you have to do is
+
+707
+00:55:21,340 --> 00:55:26,619
+ yeah you have to uh you have a common test address which is the source of all of our transactions that
+
+708
+00:55:26,619 --> 00:55:27,440
+ that we write.
+
+709
+00:55:28,239 --> 00:55:31,699
+ And this pre, it will contain all of the code also,
+
+710
+00:55:31,799 --> 00:55:32,639
+ but it's not filled here.
+
+711
+00:55:33,039 --> 00:55:36,699
+ So at this point, we only set up a test address,
+
+712
+00:55:36,859 --> 00:55:37,920
+ which is the source of the transaction,
+
+713
+00:55:38,119 --> 00:55:40,799
+ and we will have an unlimited amount of balance
+
+714
+00:55:40,799 --> 00:55:42,900
+ because this will be the source
+
+715
+00:55:42,900 --> 00:55:44,199
+ of all the transactions that we send.
+
+716
+00:55:44,679 --> 00:55:46,739
+ So it has to have something, right?
+
+717
+00:55:48,219 --> 00:55:50,559
+ Then we define the account,
+
+718
+00:55:50,559 --> 00:55:59,860
+ the account where we are going to put the code that we are going to work with. This is the main
+
+719
+00:55:59,860 --> 00:56:07,420
+ account where the transaction is going to be sent to, and then it will, we are going to start
+
+720
+00:56:07,420 --> 00:56:13,820
+ creating the code on top of it, which is this. Let me see if there's anything else. Okay, yeah.
+
+721
+00:56:14,400 --> 00:56:19,099
+ So yeah, and as you can see, it's, there are three parts to generating this code.
+
+722
+00:56:19,099 --> 00:56:21,199
+ So the first part is that
+
+723
+00:56:21,199 --> 00:56:23,259
+ We're going to create
+
+724
+00:56:23,259 --> 00:56:25,699
+ 11
+
+725
+00:56:25,699 --> 00:56:27,400
+ 10, so from 0 to
+
+726
+00:56:27,400 --> 00:56:29,500
+ 10, no
+
+727
+00:56:29,500 --> 00:56:31,559
+ 0x10, which is 16
+
+728
+00:56:31,559 --> 00:56:33,179
+ Push commands
+
+729
+00:56:33,179 --> 00:56:35,380
+ So this is very easy, it's just
+
+730
+00:56:35,380 --> 00:56:36,360
+ The push command is
+
+731
+00:56:36,360 --> 00:56:39,699
+ Basically just push something
+
+732
+00:56:39,699 --> 00:56:41,460
+ Into the EVMS stack
+
+733
+00:56:41,460 --> 00:56:43,880
+ So yeah, the EVMS stack computer
+
+734
+00:56:43,880 --> 00:56:45,839
+ And then you use
+
+735
+00:56:45,839 --> 00:56:47,059
+ The stack for a lot of things
+
+736
+00:56:47,059 --> 00:56:48,400
+ So the main
+
+737
+00:56:49,099 --> 00:56:54,500
+ EVM opcode that you're going to use ever writing a test is at least some of the push commands.
+
+738
+00:56:55,059 --> 00:56:56,199
+ So in this case, we're using them.
+
+739
+00:56:56,860 --> 00:57:03,319
+ We are using the simplest one, which is just push one byte into the stack.
+
+740
+00:57:04,659 --> 00:57:09,679
+ The stack is comprised of 32-byte elements.
+
+741
+00:57:09,679 --> 00:57:11,759
+ But in this case, we're just pushing one byte.
+
+742
+00:57:11,760 --> 00:57:19,640
+ So it's going to be 31 zeros, 31 zero bytes, and then one byte, which is defined by this.
+
+743
+00:57:20,320 --> 00:57:25,260
+ And if you know Python, you know now that we are going to collect all of this.
+
+744
+00:57:26,220 --> 00:57:32,740
+ We're going to collect this array or list into a byte code that is going to go here.
+
+745
+00:57:33,520 --> 00:57:39,900
+ After that, we're going to put or up code that is under testing,
+
+746
+00:57:39,900 --> 00:57:43,400
+ which is defined this variable.
+
+747
+00:57:43,559 --> 00:57:44,619
+ And this variable is special
+
+748
+00:57:44,619 --> 00:57:48,240
+ because we define it as the parameters to our test,
+
+749
+00:57:48,460 --> 00:57:49,200
+ as you can see here.
+
+750
+00:57:49,340 --> 00:57:50,700
+ And also it's important
+
+751
+00:57:50,700 --> 00:57:54,000
+ because this is what is being parametrized.
+
+752
+00:57:54,440 --> 00:57:57,260
+ This is one of the most important decorators
+
+753
+00:57:57,260 --> 00:57:59,500
+ that we use from ByteDest.
+
+754
+00:58:00,880 --> 00:58:04,400
+ Basically just take this parameter
+
+755
+00:58:04,400 --> 00:58:06,220
+ that is going to be used down here
+
+756
+00:58:06,219 --> 00:58:10,419
+ and then run this function each time for each one of this.
+
+757
+00:58:11,119 --> 00:58:14,659
+ So the value of this variable is going to change
+
+758
+00:58:14,659 --> 00:58:18,199
+ in each iteration that this function is executed.
+
+759
+00:58:19,279 --> 00:58:23,879
+ So the first iteration is going to use the dub1,
+
+760
+00:58:24,099 --> 00:58:26,099
+ and the second, dub2, and so on and so forth.
+
+761
+00:58:26,739 --> 00:58:32,779
+ And that is going to change which value of the bytecode is executed.
+
+762
+00:58:33,459 --> 00:58:36,000
+ And therefore it's going to change the outcome.
+
+763
+00:58:36,219 --> 00:58:38,819
+ of the test.
+
+764
+00:58:40,139 --> 00:58:44,139
+ Lastly, we're gonna use another
+
+765
+00:58:44,139 --> 00:58:47,779
+ of the most important opcodes that we use,
+
+766
+00:58:48,619 --> 00:58:50,719
+ which is the SsStore.
+
+767
+00:58:50,719 --> 00:58:55,659
+ And the SsStore is basically the most used opcode for us
+
+768
+00:58:55,659 --> 00:58:59,199
+ because this is the way that we save the stuff
+
+769
+00:58:59,199 --> 00:59:01,859
+ into the storage of the contract that we are executing it.
+
+770
+00:59:01,860 --> 00:59:05,820
+ if we don't use this opcode anywhere in our tests,
+
+771
+00:59:06,380 --> 00:59:10,099
+ it means either that we are testing something else,
+
+772
+00:59:10,200 --> 00:59:11,019
+ like an error or something,
+
+773
+00:59:11,300 --> 00:59:15,500
+ or we have written an invalid test, basically.
+
+774
+00:59:16,480 --> 00:59:19,059
+ And in this case, what we are doing is, like,
+
+775
+00:59:19,059 --> 00:59:22,160
+ we already have all of these things in the stack,
+
+776
+00:59:22,280 --> 00:59:24,680
+ in the stack over EVM execution.
+
+777
+00:59:25,400 --> 00:59:28,000
+ Then the last step is just to save them.
+
+778
+00:59:28,460 --> 00:59:29,440
+ So that's what we're doing here.
+
+779
+00:59:29,440 --> 00:59:34,240
+ we're pushing just one more byte into the stack,
+
+780
+00:59:34,480 --> 00:59:37,700
+ which is where we're going to save this value here
+
+781
+00:59:37,700 --> 00:59:40,320
+ that we pushed previously.
+
+782
+00:59:41,200 --> 00:59:42,900
+ And then store it, obviously.
+
+783
+00:59:43,659 --> 00:59:45,940
+ And we're going to do that for every single stack item
+
+784
+00:59:45,940 --> 00:59:48,099
+ that we have, which is one more.
+
+785
+00:59:48,240 --> 00:59:49,480
+ No, it's the same.
+
+786
+00:59:49,960 --> 00:59:53,000
+ Yeah, and that's going to be stored
+
+787
+00:59:53,000 --> 00:59:54,079
+ when we execute our code.
+
+788
+00:59:55,760 --> 00:59:58,700
+ Lastly, we have our account set up,
+
+789
+00:59:58,699 --> 01:00:01,460
+ which has its code, its address and everything.
+
+790
+01:00:02,000 --> 01:00:03,919
+ So we are ready to just put it into the pre-state,
+
+791
+01:00:04,279 --> 01:00:08,000
+ which means that when we execute this test
+
+792
+01:00:08,000 --> 01:00:10,599
+ and the client consumes this test,
+
+793
+01:00:11,079 --> 01:00:13,619
+ it's going to find a pre-state that contains the account.
+
+794
+01:00:14,199 --> 01:00:14,960
+ So that's very important
+
+795
+01:00:14,960 --> 01:00:17,980
+ because it's how the transaction is going to be executed
+
+796
+01:00:17,980 --> 01:00:19,980
+ and it's the destination of the transaction,
+
+797
+01:00:20,139 --> 01:00:21,219
+ as you can see here.
+
+798
+01:00:21,439 --> 01:00:21,960
+ Yes, exactly.
+
+799
+01:00:22,539 --> 01:00:25,599
+ So the transaction that we produce in this test
+
+800
+01:00:25,599 --> 01:00:26,399
+ is a single transaction.
+
+801
+01:00:26,400 --> 01:00:29,639
+ and the only thing that it matters here
+
+802
+01:00:29,639 --> 01:00:32,680
+ is that we are sending it to the account
+
+803
+01:00:32,680 --> 01:00:35,240
+ where we put the code that we were writing.
+
+804
+01:00:38,780 --> 01:00:40,900
+ Plus all the information, but this is not relevant.
+
+805
+01:00:42,220 --> 01:00:44,700
+ Yeah, basically, and also, lastly,
+
+806
+01:00:45,240 --> 01:00:47,260
+ the last thing that we're going to set
+
+807
+01:00:47,260 --> 01:00:50,380
+ is the post date,
+
+808
+01:00:50,840 --> 01:00:52,639
+ which is what we're going to check
+
+809
+01:00:52,639 --> 01:00:59,500
+ that happened after the execution of the transaction.
+
+810
+01:01:01,000 --> 01:01:04,859
+ Basically, it just expects that the stack items
+
+811
+01:01:04,859 --> 01:01:07,599
+ are in the correct position that we stated here.
+
+812
+01:01:08,199 --> 01:01:10,559
+ If you read the description, you will find out how it works.
+
+813
+01:01:11,440 --> 01:01:14,400
+ But yeah, this is basically the last step.
+
+814
+01:01:14,400 --> 01:01:16,179
+ The next step is just filling test.
+
+815
+01:01:17,199 --> 01:01:21,259
+ What will happen here is that we're going to fill the status
+
+816
+01:01:21,260 --> 01:01:24,680
+ with all of the ingredients that we set up before.
+
+817
+01:01:25,200 --> 01:01:27,220
+ And it's going to give us a fixture.
+
+818
+01:01:27,980 --> 01:01:30,500
+ So the easiest way just to do that
+
+819
+01:01:30,500 --> 01:01:34,000
+ is going to be that we run the fill command.
+
+820
+01:01:35,000 --> 01:01:36,800
+ And so where are we is important.
+
+821
+01:01:37,080 --> 01:01:40,220
+ So test frontier upcodes test underscore dub.py.
+
+822
+01:01:40,420 --> 01:01:41,260
+ Let's do that.
+
+823
+01:01:41,840 --> 01:01:45,720
+ Fill fork Cancun, let's say.
+
+824
+01:01:45,719 --> 01:01:47,539
+ and tests
+
+825
+01:01:47,539 --> 01:01:49,799
+ frontier
+
+826
+01:01:49,799 --> 01:01:51,679
+ what is
+
+827
+01:01:51,679 --> 01:01:53,739
+ upcodes and test
+
+828
+01:01:53,739 --> 01:01:54,759
+ underscore dub
+
+829
+01:01:54,759 --> 01:01:58,480
+ there you go
+
+830
+01:01:58,480 --> 01:02:01,019
+ there you go
+
+831
+01:02:01,019 --> 01:02:02,699
+ so as you can see
+
+832
+01:02:02,699 --> 01:02:05,019
+ we generated a ton of tests
+
+833
+01:02:05,019 --> 01:02:07,239
+ 48 which is
+
+834
+01:02:07,239 --> 01:02:09,079
+ I'll explain that in a bit
+
+835
+01:02:09,079 --> 01:02:11,559
+ so this means
+
+836
+01:02:11,559 --> 01:02:13,519
+ that every single test that we run here
+
+837
+01:02:13,519 --> 01:02:14,919
+ the
+
+838
+01:02:14,920 --> 01:02:18,159
+ the execution client in this case,
+
+839
+01:02:18,159 --> 01:02:20,500
+ because we are filling with this transition tool from geth,
+
+840
+01:02:20,880 --> 01:02:23,260
+ we are not testing any other client here.
+
+841
+01:02:23,360 --> 01:02:27,039
+ We are just using geth to tell us what the outcome should be.
+
+842
+01:02:27,519 --> 01:02:29,119
+ But we have a safe measure here.
+
+843
+01:02:29,220 --> 01:02:30,900
+ So if we design or test properly,
+
+844
+01:02:31,139 --> 01:02:34,579
+ it means that what we put here, it makes sense.
+
+845
+01:02:35,619 --> 01:02:39,139
+ So if we modify this, let's say,
+
+846
+01:02:40,159 --> 01:02:44,440
+ let us save this to something else, like 20 or something.
+
+847
+01:02:44,920 --> 01:02:48,079
+ and let's just run it again to see what happens.
+
+848
+01:02:49,440 --> 01:02:50,260
+ There you go.
+
+849
+01:02:50,760 --> 01:02:53,079
+ So yeah, it's not...
+
+850
+01:02:54,119 --> 01:02:56,019
+ Yeah, I put this very, very big.
+
+851
+01:02:56,420 --> 01:02:58,159
+ So the thing is here that
+
+852
+01:02:58,159 --> 01:03:00,559
+ everything that we put here in the post
+
+853
+01:03:00,559 --> 01:03:02,599
+ is really important for us to make sure
+
+854
+01:03:02,599 --> 01:03:06,159
+ that the execution client that we are filling the test with
+
+855
+01:03:06,159 --> 01:03:07,460
+ is actually sane.
+
+856
+01:03:07,920 --> 01:03:10,619
+ Otherwise, it would go on and generate tests
+
+857
+01:03:10,619 --> 01:03:13,280
+ that will be consumed by our clients,
+
+858
+01:03:13,280 --> 01:03:18,380
+ but it will it will they will fail because the execution client that we used to fill the tests
+
+859
+01:03:18,380 --> 01:03:24,640
+ is faulty so let's go back to the original just to make sure that we fill the test again
+
+860
+01:03:24,640 --> 01:03:33,700
+ and there you go okay and um what's the outcome of this so we now have a new um a new folder let's
+
+861
+01:03:33,700 --> 01:03:41,220
+ see yeah there you go so we have this folder which is called this is the output this is the
+
+862
+01:03:41,219 --> 01:03:49,339
+ fixtures output. And you can see that these are the three formats that we expect here.
+
+863
+01:03:49,779 --> 01:03:53,579
+ So the first one is the blockchain test, is the one that we consume by the clients,
+
+864
+01:03:54,279 --> 01:03:59,099
+ the high format and status formats. Let's just open one of them just to see how they look like.
+
+865
+01:03:59,099 --> 01:04:08,599
+ There you go.
+
+866
+01:04:09,099 --> 01:04:10,579
+ So, yeah, everything is here.
+
+867
+01:04:10,860 --> 01:04:12,400
+ This is the JSON output.
+
+868
+01:04:13,139 --> 01:04:17,699
+ And really nicely here, we have the name of the test, exactly what we executed.
+
+869
+01:04:18,599 --> 01:04:19,739
+ And this is state test.
+
+870
+01:04:19,739 --> 01:04:22,539
+ It means that we only have one transaction in this test.
+
+871
+01:04:23,019 --> 01:04:24,739
+ And you can see it down here.
+
+872
+01:04:25,400 --> 01:04:26,380
+ We have the transaction here.
+
+873
+01:04:26,500 --> 01:04:28,099
+ You have all the properties of the transaction.
+
+874
+01:04:28,099 --> 01:04:30,819
+ you also have the pre-state and the environment.
+
+875
+01:04:31,119 --> 01:04:33,139
+ So in this case, you can see that environment contains
+
+876
+01:04:33,139 --> 01:04:35,759
+ simple information that comprises the block,
+
+877
+01:04:36,079 --> 01:04:39,699
+ what the environment will be, namely the block.
+
+878
+01:04:41,079 --> 01:04:43,739
+ And you can see the number, time step, and all that stuff,
+
+879
+01:04:43,799 --> 01:04:44,360
+ and the base fee.
+
+880
+01:04:44,799 --> 01:04:46,480
+ And you can also see, more importantly,
+
+881
+01:04:47,380 --> 01:04:53,079
+ do you guys remember the address where we save our code to?
+
+882
+01:04:53,199 --> 01:04:53,960
+ This is right here.
+
+883
+01:04:54,360 --> 01:04:56,299
+ So we have address number 100.
+
+884
+01:04:56,300 --> 01:05:03,260
+ it. And we have the code here, which is what we generated using this fancy code over here.
+
+885
+01:05:05,260 --> 01:05:11,180
+ And this is what gets executed because the two destinations, all the transactions,
+
+886
+01:05:11,180 --> 01:05:17,980
+ is this exact same address. Then the transaction goes to here, executes all this, and then we
+
+887
+01:05:17,980 --> 01:05:23,340
+ verify the post, which is also in this file. And you can see, one important thing is that
+
+888
+01:05:23,340 --> 01:05:30,059
+ in the state test format, we don't verify exactly, specifically every single key of the storage,
+
+889
+01:05:30,059 --> 01:05:38,460
+ but we verify the hash, the state root. This is what gives us the pass or fail of a transaction
+
+890
+01:05:38,460 --> 01:05:48,460
+ test, or the state test, sorry, when it's consumed by the execution client. And this is just for one
+
+891
+01:05:48,460 --> 01:05:52,980
+ test but you can see that we have many tests here in this same file which is
+
+892
+01:05:52,980 --> 01:05:59,800
+ dub1, dub2, dub3 and so on so forth so on total should be like 16 tests I
+
+893
+01:05:59,800 --> 01:06:06,920
+ think yeah there you go so yeah that's basically the gist of how this
+
+894
+01:06:06,920 --> 01:06:12,400
+ framework works I encourage everyone to just go and take a look and it's really
+
+895
+01:06:12,400 --> 01:06:16,960
+ fun to write this test it's it's in Python if you know Python before you can
+
+896
+01:06:16,960 --> 01:06:25,760
+ use this it's very straightforward and yeah let me go back to the presentation
+
+897
+01:06:28,480 --> 01:06:37,599
+ yeah all right so we have um two other tools very important tools this is the fussy uh evm um
+
+898
+01:06:37,599 --> 01:06:42,000
+ currently on the execution specters we don't generate first a test this is done by distal
+
+899
+01:06:42,000 --> 01:06:44,559
+ which is written by Marius from the Go team.
+
+900
+01:06:45,159 --> 01:06:46,000
+ He wrote this tool.
+
+901
+01:06:46,440 --> 01:06:48,519
+ It's a companionship to this other tool,
+
+902
+01:06:48,639 --> 01:06:51,300
+ which generates FOSS code.
+
+903
+01:06:51,719 --> 01:06:53,539
+ Then you use Go EVM Lab,
+
+904
+01:06:53,599 --> 01:06:56,860
+ which is a tool that you use to one input,
+
+905
+01:06:57,079 --> 01:07:00,539
+ and then you run this input
+
+906
+01:07:00,539 --> 01:07:01,880
+ with many of the different clients.
+
+907
+01:07:02,480 --> 01:07:03,739
+ Then you check for differences.
+
+908
+01:07:06,460 --> 01:07:07,820
+ It's spawned a lot of bugs,
+
+909
+01:07:08,099 --> 01:07:08,980
+ and it's really useful
+
+910
+01:07:08,980 --> 01:07:11,920
+ because when you're writing functional testing,
+
+911
+01:07:12,000 --> 01:07:16,159
+ it's really hard to really come up with every single edge case that you can think of.
+
+912
+01:07:16,159 --> 01:07:21,619
+ So this tool is a very good companionship to what we write using the execution spec tests.
+
+913
+01:07:24,219 --> 01:07:28,639
+ And also another important part is the execution AP testing.
+
+914
+01:07:29,199 --> 01:07:32,139
+ This is done inside of this repository.
+
+915
+01:07:34,340 --> 01:07:35,960
+ Let me just show you quickly.
+
+916
+01:07:35,960 --> 01:07:43,519
+ Basically, all the execution APIs that you use to query the execution client,
+
+917
+01:07:43,599 --> 01:07:45,920
+ for example, get a block, get a transaction, send a transaction,
+
+918
+01:07:46,360 --> 01:07:49,539
+ all that stuff, it's listed in this repository.
+
+919
+01:07:50,179 --> 01:07:52,820
+ Let me show you real quick how does that look.
+
+920
+01:07:53,240 --> 01:07:55,679
+ So we have this repository, and then you have tests.
+
+921
+01:07:56,240 --> 01:08:03,960
+ And then you can see that you have one or two tests per each RPC directive.
+
+922
+01:08:03,960 --> 01:08:07,619
+ directive so for example it underscore call then you can go and see here and
+
+923
+01:08:07,619 --> 01:08:11,639
+ every single one of this it's like an input and then expected up it's very
+
+924
+01:08:11,639 --> 01:08:17,079
+ simple all of them have like this prerequisite which is this the chain
+
+925
+01:08:17,079 --> 01:08:23,340
+ because you have to have a chain a preset chain if you are expecting a fixed
+
+926
+01:08:23,340 --> 01:08:30,319
+ outcome you have to have a Genesis chain and all that and so forth
+
+927
+01:08:30,319 --> 01:08:33,619
+ There you go.
+
+928
+01:08:33,619 --> 01:08:36,279
+ Consensus layer testing.
+
+929
+01:08:36,279 --> 01:08:43,500
+ This is all done in the consensus spec repository.
+
+930
+01:08:43,500 --> 01:08:51,000
+ And it's for testing specifically it's a very similar idea to what execution spec test does,
+
+931
+01:08:51,000 --> 01:08:59,000
+ which is that you have the output it's a fixture which the clients can consume.
+
+932
+01:08:59,000 --> 01:09:05,119
+ One of the main differences is that since you have the actual specification contained
+
+933
+01:09:05,119 --> 01:09:09,000
+ in the same repository, you don't have any dependencies.
+
+934
+01:09:09,000 --> 01:09:12,739
+ You don't depend on any consensus layer client.
+
+935
+01:09:12,739 --> 01:09:17,600
+ So this is very helpful because you have the test, you have the specification, you have
+
+936
+01:09:17,600 --> 01:09:20,159
+ everything in the same repository.
+
+937
+01:09:20,159 --> 01:09:21,420
+ It's very, very fancy.
+
+938
+01:09:21,420 --> 01:09:26,260
+ Let me show you just this part.
+
+939
+01:09:32,760 --> 01:09:33,420
+ So, yeah.
+
+940
+01:09:34,300 --> 01:09:37,319
+ And if you go into the consensus specs, you go into the tests,
+
+941
+01:09:37,600 --> 01:09:43,659
+ you can go in here and see all the formats that can be output
+
+942
+01:09:43,659 --> 01:09:44,560
+ from this repository.
+
+943
+01:09:44,960 --> 01:09:48,000
+ These are very many different formats that test different things
+
+944
+01:09:48,000 --> 01:09:49,600
+ of the consensus layer.
+
+945
+01:09:49,600 --> 01:09:56,460
+ it's a great deal more than we generate for the execution specs we only generate blockchain test
+
+946
+01:09:56,460 --> 01:10:01,660
+ format and status which is expected to change we are going to introduce more more formats as
+
+947
+01:10:01,660 --> 01:10:06,840
+ necessary but yeah you can see the great deal of formats that you can generate using this test is
+
+948
+01:10:06,840 --> 01:10:13,320
+ very useful because you can very granularly test every single every single small layer it's
+
+949
+01:10:13,320 --> 01:10:18,440
+ basically like unit testing every single aspect of the of the consensus layer and it's very efficient
+
+950
+01:10:18,439 --> 01:10:27,619
+ also. I recommend coming into here, into this repository, and giving this
+
+951
+01:10:27,619 --> 01:10:32,659
+ read, because it's it's not as straightforward maybe, but it's very
+
+952
+01:10:32,659 --> 01:10:38,099
+ rewarding to understand how this test are filled.
+
+953
+01:10:38,199 --> 01:10:48,019
+ So, going into the last part of the later part of the
+
+954
+01:10:48,020 --> 01:10:57,120
+ presentation um we do testing of the execution layer and consensus layers separately but we also
+
+955
+01:10:57,120 --> 01:11:03,460
+ do some testing that is cross cross layer testing which is very important to know that everything
+
+956
+01:11:03,460 --> 01:11:10,340
+ fits together it's called end-to-end testing it's basically just building chains from from genesis
+
+957
+01:11:10,340 --> 01:11:16,400
+ to some point and then verifying that everything all the interactions happened correctly between
+
+958
+01:11:16,399 --> 01:11:21,439
+ the execution and consensus clients. We have different test for this, test tweets for this.
+
+959
+01:11:21,439 --> 01:11:26,239
+ I'm gonna just mention just a few of them, because otherwise it will be a very, very long
+
+960
+01:11:26,239 --> 01:11:31,599
+ presentation. So we have Hive, which is the main tool that I personally focus on and the
+
+961
+01:11:31,599 --> 01:11:36,719
+ room testing team focuses on, but we also have more tools that were developed by the
+
+962
+01:11:36,719 --> 01:11:43,839
+ DevOps team and also in conjunction with other companies. So we have the Assertor,
+
+963
+01:11:43,840 --> 01:11:53,119
+ which is basically just a tool that we can use to give it an input and then expect some expected
+
+964
+01:11:53,119 --> 01:12:01,360
+ output and assert that the output was correct in any of the chains. Have it being Hive chain,
+
+965
+01:12:01,360 --> 01:12:06,400
+ a DevNet, a TestNet, or even MainNet. It's relevant, you can do it all with the
+
+966
+01:12:06,399 --> 01:12:08,819
+ The assertor is very nice tool.
+
+967
+01:12:09,239 --> 01:12:11,679
+ We also have the Kurtosis package,
+
+968
+01:12:12,099 --> 01:12:13,679
+ which was developed by the Kurtosis team.
+
+969
+01:12:14,259 --> 01:12:15,939
+ It's a very, very nice tool,
+
+970
+01:12:15,939 --> 01:12:19,519
+ which allows to do simple stuff
+
+971
+01:12:19,519 --> 01:12:23,960
+ from just spawning your own local Ethereum chain,
+
+972
+01:12:24,099 --> 01:12:26,000
+ which is comprised by the execution client
+
+973
+01:12:26,000 --> 01:12:27,279
+ and the consensus client,
+
+974
+01:12:27,460 --> 01:12:30,939
+ or go all the way up to even launching ShadowForks,
+
+975
+01:12:31,779 --> 01:12:33,879
+ which is something I will explain in a little bit.
+
+976
+01:12:33,920 --> 01:12:35,259
+ It's a very, very nice package.
+
+977
+01:12:35,260 --> 01:12:41,420
+ and it's um i recommend it if you want to run something quick this is this is one of the tools
+
+978
+01:12:41,420 --> 01:12:50,480
+ to go to um yeah i'm gonna go a little bit more into hive because this is uh one of also tools
+
+979
+01:12:50,480 --> 01:13:00,180
+ that i work with so um yeah basically hive is a framework that gives you gives you the tester
+
+980
+01:13:00,180 --> 01:13:03,260
+ a way of spawning tests
+
+981
+01:13:03,260 --> 01:13:05,400
+ and spawning clients inside of tests,
+
+982
+01:13:06,320 --> 01:13:09,140
+ namely execution clients and consensus clients.
+
+983
+01:13:09,640 --> 01:13:13,159
+ So you can create tests that you start your tests
+
+984
+01:13:13,159 --> 01:13:15,680
+ and you have something very specific in mind.
+
+985
+01:13:15,740 --> 01:13:19,400
+ For example, you want to test the deposits
+
+986
+01:13:19,400 --> 01:13:21,119
+ in the consensus data chain.
+
+987
+01:13:21,579 --> 01:13:22,960
+ So then you start your test
+
+988
+01:13:22,960 --> 01:13:26,079
+ and then you start a execution client.
+
+989
+01:13:26,240 --> 01:13:29,500
+ I'm sorry, you start first the consensus client,
+
+990
+01:13:29,500 --> 01:13:31,720
+ then you start the execution client
+
+991
+01:13:31,720 --> 01:13:33,060
+ you put them together
+
+992
+01:13:33,060 --> 01:13:35,119
+ you launch some deposits
+
+993
+01:13:35,119 --> 01:13:36,539
+ into the consensus client
+
+994
+01:13:36,539 --> 01:13:38,060
+ and then you expect something
+
+995
+01:13:38,060 --> 01:13:39,579
+ and at the end of the test
+
+996
+01:13:39,579 --> 01:13:40,920
+ if everything went correctly
+
+997
+01:13:40,920 --> 01:13:43,960
+ you instruct that test is correctly finished
+
+998
+01:13:43,960 --> 01:13:45,020
+ and passed
+
+999
+01:13:45,020 --> 01:13:46,520
+ and then you wrap up
+
+1000
+01:13:46,520 --> 01:13:49,039
+ it's a very nice framework
+
+1001
+01:13:49,039 --> 01:13:51,920
+ for doing very
+
+1002
+01:13:51,920 --> 01:13:54,979
+ very functional and specific testing
+
+1003
+01:13:54,979 --> 01:13:57,180
+ you have to have in mind
+
+1004
+01:13:57,180 --> 01:13:58,460
+ exactly what you want to test
+
+1005
+01:13:58,460 --> 01:14:00,899
+ when you roll and write simulators.
+
+1006
+01:14:01,579 --> 01:14:02,779
+ The way it works is that,
+
+1007
+01:14:02,899 --> 01:14:04,199
+ let me see if I have a slide, yes.
+
+1008
+01:14:04,380 --> 01:14:07,659
+ The way it works is we have the Hive server,
+
+1009
+01:14:07,920 --> 01:14:09,819
+ which is the main orchestrator
+
+1010
+01:14:09,819 --> 01:14:11,779
+ of everything that we run in this,
+
+1011
+01:14:12,420 --> 01:14:13,800
+ but you also have simulators.
+
+1012
+01:14:14,420 --> 01:14:17,300
+ The simulator's job is to know what to do
+
+1013
+01:14:17,300 --> 01:14:20,779
+ in terms of when to start a test,
+
+1014
+01:14:21,020 --> 01:14:22,739
+ when to end it, when to start a client,
+
+1015
+01:14:22,739 --> 01:14:25,380
+ when to end the client, and so on and so forth.
+
+1016
+01:14:25,380 --> 01:14:28,500
+ So the first step is that you build the Hive server,
+
+1017
+01:14:29,039 --> 01:14:31,020
+ and I'll show it in a little bit.
+
+1018
+01:14:31,079 --> 01:14:31,779
+ I have a demo for this.
+
+1019
+01:14:32,100 --> 01:14:33,319
+ It's really, really quick.
+
+1020
+01:14:34,060 --> 01:14:36,260
+ And you start your Hive server,
+
+1021
+01:14:36,720 --> 01:14:41,039
+ and you tell your Hive server to start a given simulator,
+
+1022
+01:14:41,500 --> 01:14:45,140
+ and it will go on and start a Docker container
+
+1023
+01:14:45,140 --> 01:14:45,960
+ with the simulator.
+
+1024
+01:14:46,600 --> 01:14:48,600
+ And basically, the simulator is just another program
+
+1025
+01:14:48,600 --> 01:14:50,039
+ that contains all the instructions
+
+1026
+01:14:50,039 --> 01:14:51,420
+ on how to run this test.
+
+1027
+01:14:51,819 --> 01:14:53,380
+ So the simulator starts,
+
+1028
+01:14:53,380 --> 01:14:59,659
+ the simulator knows that it's being run by Hive, then it goes on and does its thing,
+
+1029
+01:15:00,180 --> 01:15:05,440
+ it starts a test, it starts a client, and then performs some calculations and things,
+
+1030
+01:15:05,800 --> 01:15:11,060
+ and then it ends the client, or ends the test, or aborts the test, or fails, or passes the test,
+
+1031
+01:15:11,619 --> 01:15:17,520
+ and then that's basically it. A single simulator can start many tests at once,
+
+1032
+01:15:17,520 --> 01:15:21,580
+ in parallel, it can start many clients in parallel also,
+
+1033
+01:15:21,680 --> 01:15:25,420
+ and it can orchestrate many different scenarios
+
+1034
+01:15:25,420 --> 01:15:30,020
+ for the execution and consensus clients to execute.
+
+1035
+01:15:31,740 --> 01:15:34,780
+ The nice thing is that you don't have to worry
+
+1036
+01:15:34,780 --> 01:15:38,680
+ in your simulator on how you start up.
+
+1037
+01:15:39,040 --> 01:15:40,560
+ For example, let's say, okay,
+
+1038
+01:15:40,600 --> 01:15:42,160
+ I want to start a execution client,
+
+1039
+01:15:42,680 --> 01:15:43,680
+ but I don't know how to start it
+
+1040
+01:15:43,680 --> 01:15:45,660
+ because Go Ethereum and Nethermine
+
+1041
+01:15:45,660 --> 01:15:47,100
+ are started in different ways.
+
+1042
+01:15:47,520 --> 01:15:52,140
+ for example, we have Docker images for each,
+
+1043
+01:15:52,140 --> 01:15:55,780
+ but even so you have like parameters,
+
+1044
+01:15:55,780 --> 01:15:58,340
+ for example, go theorem has a different parameter
+
+1045
+01:15:58,340 --> 01:16:02,280
+ for how to specify the Genesis file or whatever,
+
+1046
+01:16:02,280 --> 01:16:04,220
+ as compared to Nethermine.
+
+1047
+01:16:04,220 --> 01:16:06,860
+ So one of the goals of the Hive server
+
+1048
+01:16:06,860 --> 01:16:08,380
+ is to abstract all this.
+
+1049
+01:16:08,380 --> 01:16:12,480
+ So you start your simulator, Hive tells you,
+
+1050
+01:16:12,480 --> 01:16:14,680
+ okay, you have go theorem, Nethermine,
+
+1051
+01:16:14,680 --> 01:16:17,300
+ PZU and whatever, and the simulator
+
+1052
+01:16:17,520 --> 01:16:21,100
+ goes into and says, okay, let's start the go with it.
+
+1053
+01:16:21,100 --> 01:16:22,480
+ And then it starts go with theorem
+
+1054
+01:16:22,480 --> 01:16:25,340
+ with all the parameters already set for you.
+
+1055
+01:16:25,340 --> 01:16:28,340
+ And then you can just focus on testing
+
+1056
+01:16:28,340 --> 01:16:32,460
+ for that specific execution client.
+
+1057
+01:16:32,460 --> 01:16:35,460
+ And the Hive server will start the execution
+
+1058
+01:16:35,460 --> 01:16:37,020
+ or consensus clients for you.
+
+1059
+01:16:37,020 --> 01:16:39,240
+ But the nice thing is that from the simulation,
+
+1060
+01:16:39,240 --> 01:16:41,740
+ you can communicate to both the Hive server
+
+1061
+01:16:41,740 --> 01:16:42,900
+ to start more clients,
+
+1062
+01:16:42,900 --> 01:16:46,020
+ or you can communicate to the execution client
+
+1063
+01:16:46,020 --> 01:16:47,380
+ or the consensus client directly.
+
+1064
+01:16:48,080 --> 01:16:49,460
+ So it's a very nice way
+
+1065
+01:16:49,460 --> 01:16:50,880
+ of just abstracting
+
+1066
+01:16:50,880 --> 01:16:52,220
+ a lot of stuff away from you.
+
+1067
+01:16:53,000 --> 01:16:53,720
+ The test writer
+
+1068
+01:16:53,720 --> 01:16:55,400
+ to only focus on
+
+1069
+01:16:55,400 --> 01:16:57,540
+ testing actual things
+
+1070
+01:16:57,540 --> 01:16:59,760
+ in the image of the clients.
+
+1071
+01:17:02,440 --> 01:17:03,840
+ We have many simulators
+
+1072
+01:17:03,840 --> 01:17:07,000
+ for Hive.
+
+1073
+01:17:07,520 --> 01:17:09,820
+ They are all in Golang
+
+1074
+01:17:09,820 --> 01:17:11,180
+ and they are all contained
+
+1075
+01:17:11,180 --> 01:17:13,180
+ in the Hive repository,
+
+1076
+01:17:13,340 --> 01:17:14,100
+ but it's possible
+
+1077
+01:17:14,100 --> 01:17:20,340
+ to write any simulator in any language that you need.
+
+1078
+01:17:21,380 --> 01:17:25,800
+ This is for, we have also a library for Python,
+
+1079
+01:17:25,920 --> 01:17:29,060
+ which is not out yet,
+
+1080
+01:17:30,060 --> 01:17:31,440
+ and still has some work to do,
+
+1081
+01:17:32,020 --> 01:17:33,340
+ some work left to do on it.
+
+1082
+01:17:33,980 --> 01:17:36,980
+ But yeah, for the time being, it's only on Golang.
+
+1083
+01:17:37,320 --> 01:17:39,440
+ And as you can see, here are all the simulators
+
+1084
+01:17:39,440 --> 01:17:42,579
+ that at least on master high branch
+
+1085
+01:17:42,579 --> 01:17:44,239
+ that are contained into Hive.
+
+1086
+01:17:45,079 --> 01:17:46,260
+ And we have different things.
+
+1087
+01:17:46,380 --> 01:17:48,000
+ Like, for example, we have the peer-to-peer,
+
+1088
+01:17:48,220 --> 01:17:51,619
+ which is like the way of communicating execution clients in between them.
+
+1089
+01:17:51,619 --> 01:17:57,100
+ So this simulator pertains to testing this part of the communication.
+
+1090
+01:17:57,779 --> 01:18:00,619
+ Just start clients, communicate them with each other,
+
+1091
+01:18:00,680 --> 01:18:02,720
+ and verify that this communication took place
+
+1092
+01:18:02,720 --> 01:18:04,119
+ and it was correct and successful.
+
+1093
+01:18:05,000 --> 01:18:07,079
+ And we also have the Ethereum normal,
+
+1094
+01:18:07,340 --> 01:18:10,380
+ which contains many different things,
+
+1095
+01:18:10,380 --> 01:18:12,659
+ namely the RPC
+
+1096
+01:18:12,659 --> 01:18:14,619
+ the RPC compact is
+
+1097
+01:18:14,619 --> 01:18:16,739
+ if you guys remember
+
+1098
+01:18:16,739 --> 01:18:18,659
+ this other page
+
+1099
+01:18:18,659 --> 01:18:20,480
+ that we saw which is the execution
+
+1100
+01:18:20,480 --> 01:18:22,560
+ app is, this thing here
+
+1101
+01:18:22,560 --> 01:18:24,500
+ it goes into that repository
+
+1102
+01:18:24,500 --> 01:18:26,600
+ and collects every single one of
+
+1103
+01:18:26,600 --> 01:18:27,980
+ these files
+
+1104
+01:18:27,980 --> 01:18:30,680
+ and then executes them over RPC
+
+1105
+01:18:30,680 --> 01:18:31,880
+ on the running clients
+
+1106
+01:18:31,880 --> 01:18:34,260
+ using the method that we just
+
+1107
+01:18:34,260 --> 01:18:36,819
+ saw, so it's really important
+
+1108
+01:18:36,819 --> 01:18:38,819
+ for the consumption
+
+1109
+01:18:38,819 --> 01:18:39,500
+ of this
+
+1110
+01:18:39,500 --> 01:18:44,500
+ of these tests to use Hive only for the RPC combat.
+
+1111
+01:18:45,600 --> 01:18:47,399
+ But we also have more things.
+
+1112
+01:18:47,399 --> 01:18:50,180
+ For example, we have the consensus.
+
+1113
+01:18:50,180 --> 01:18:53,600
+ This loads test for Ethereum tests
+
+1114
+01:18:53,600 --> 01:18:56,899
+ and just passes them into the client, verifies them.
+
+1115
+01:18:56,899 --> 01:18:58,340
+ We also have the Engine API.
+
+1116
+01:18:58,340 --> 01:19:00,199
+ This is very important because it tests
+
+1117
+01:19:00,199 --> 01:19:03,340
+ the communication from the consensus client
+
+1118
+01:19:03,340 --> 01:19:06,899
+ into the execution client via the Engine API,
+
+1119
+01:19:06,899 --> 01:19:10,059
+ which is defined over here in the execution APIs.
+
+1120
+01:19:10,059 --> 01:19:12,339
+ The important part of this simulator
+
+1121
+01:19:12,339 --> 01:19:15,599
+ is that it does not use a consensus client.
+
+1122
+01:19:15,599 --> 01:19:18,139
+ And the reason is that it wants to test
+
+1123
+01:19:18,139 --> 01:19:21,319
+ some very specific sequence of engine API commands
+
+1124
+01:19:22,339 --> 01:19:26,399
+ and some very specific Genesis properties.
+
+1125
+01:19:26,399 --> 01:19:30,079
+ So the way that we do that
+
+1126
+01:19:31,219 --> 01:19:34,059
+ and without the interruption of the consensus client,
+
+1127
+01:19:34,060 --> 01:19:39,060
+ it's by generating a mock consensus client,
+
+1128
+01:19:39,180 --> 01:19:42,440
+ which is basically just does the engine API calls
+
+1129
+01:19:42,440 --> 01:19:43,940
+ that we exactly require.
+
+1130
+01:19:44,800 --> 01:19:47,960
+ We also have the GraphQL, which is test the GraphQL.
+
+1131
+01:19:47,960 --> 01:19:50,880
+ The PySpec is the basically execution specters.
+
+1132
+01:19:50,880 --> 01:19:53,740
+ They are all consumed over here and some sync test also.
+
+1133
+01:19:55,340 --> 01:19:58,880
+ And, but also very important is the f2.
+
+1134
+01:19:58,880 --> 01:20:02,160
+ This is a legacy name, don't mind it.
+
+1135
+01:20:02,159 --> 01:20:12,739
+ This contains all the interrupt testing between the consensus layer and the execution layer.
+
+1136
+01:20:12,739 --> 01:20:21,619
+ So this actually, this one, this simulators over here, do actually spawn a consensus client and an execution client at the same time.
+
+1137
+01:20:21,619 --> 01:20:26,979
+ And it's purpose is just to test some specific scenarios that are happening, for example, in the goon,
+
+1138
+01:20:26,979 --> 01:20:29,459
+ you have blobs, blobs sending blobs,
+
+1139
+01:20:29,719 --> 01:20:31,019
+ and doing the blob stuff,
+
+1140
+01:20:31,500 --> 01:20:33,899
+ and verifying that the consensus client
+
+1141
+01:20:33,899 --> 01:20:36,199
+ and the execution client behave the way expected
+
+1142
+01:20:36,199 --> 01:20:39,199
+ when these blobs are fed into them.
+
+1143
+01:20:39,859 --> 01:20:42,819
+ And it's very nice because it orchestrates both things,
+
+1144
+01:20:43,019 --> 01:20:45,119
+ both the execution client and the consensus client
+
+1145
+01:20:45,119 --> 01:20:46,019
+ at the same time.
+
+1146
+01:20:46,599 --> 01:20:48,839
+ And it's really nice to see how it works.
+
+1147
+01:20:50,199 --> 01:20:51,500
+ Let me see.
+
+1148
+01:20:52,139 --> 01:20:52,439
+ What else?
+
+1149
+01:20:52,939 --> 01:20:53,939
+ A small component portal,
+
+1150
+01:20:54,379 --> 01:20:56,259
+ more simulators, different implementations.
+
+1151
+01:20:56,260 --> 01:21:01,800
+ This is a different implementation it uses different ethereum clients, but it's the same idea
+
+1152
+01:21:02,920 --> 01:21:04,920
+ Yeah
+
+1153
+01:21:06,400 --> 01:21:13,300
+ Yeah, okay, so let me just quickly just I just want to show a little bit of how it runs it's really
+
+1154
+01:21:13,880 --> 01:21:15,880
+ Really simple
+
+1155
+01:21:16,600 --> 01:21:21,360
+ One of the important parts is that you first have to clone the repository as always
+
+1156
+01:21:22,480 --> 01:21:25,060
+ Just go over here into hive it in hive
+
+1157
+01:21:25,060 --> 01:21:36,400
+ git clone, you clone it into your local host, and then assuming that you have golan installed,
+
+1158
+01:21:36,400 --> 01:21:42,460
+ you can just go build it, and you will be building hive, which is this executable right here.
+
+1159
+01:21:42,460 --> 01:21:52,680
+ That right there. So this executable pertains to this server over here, the server that orchestrates
+
+1160
+01:21:52,680 --> 01:21:58,860
+ everything it's basically a very fancy docker container instantiator and
+
+1161
+01:21:58,860 --> 01:22:05,500
+ orchestrator that's it's role and so let's let's run a simple test I think I
+
+1162
+01:22:05,500 --> 01:22:12,380
+ have something in the area yeah okay let's let's run a simple test that is
+
+1163
+01:22:12,380 --> 01:22:22,039
+ just the testnet test for an execution client and a consensus client let me just
+
+1164
+01:22:22,039 --> 01:22:31,420
+ I hope it's not that bad okay so we're gonna use the hive command yes
+
+1165
+01:22:31,420 --> 01:22:36,640
+ we're gonna use the hive command and we're gonna instruct it to use three
+
+1166
+01:22:36,640 --> 01:22:41,020
+ different clients so the first client is the Netdermind client which is the
+
+1167
+01:22:41,020 --> 01:22:43,380
+ execution client that we want to use.
+
+1168
+01:22:43,380 --> 01:22:47,920
+ And the second, third clients are both part
+
+1169
+01:22:47,920 --> 01:22:49,480
+ of the consensus layer,
+
+1170
+01:22:49,480 --> 01:22:54,480
+ but they have two different responsibilities.
+
+1171
+01:22:55,980 --> 01:22:59,700
+ Hive requires a beacon node and a validator client
+
+1172
+01:22:59,700 --> 01:23:01,960
+ to be run for the consensus layer part.
+
+1173
+01:23:01,960 --> 01:23:03,780
+ So that's where we are specifying here,
+
+1174
+01:23:03,780 --> 01:23:05,440
+ it's Prism in this case,
+
+1175
+01:23:05,440 --> 01:23:07,520
+ and we're using beacon node,
+
+1176
+01:23:07,520 --> 01:23:09,660
+ just the beacon node part of Prism,
+
+1177
+01:23:09,659 --> 01:23:11,380
+ and then validator client,
+
+1178
+01:23:11,380 --> 01:23:14,439
+ the validator client part of Prism.
+
+1179
+01:23:14,439 --> 01:23:16,779
+ Then we're going to specify a simulator,
+
+1180
+01:23:16,779 --> 01:23:18,279
+ which is this flag over here.
+
+1181
+01:23:19,359 --> 01:23:21,979
+ And then we are going to use it to Tenkun,
+
+1182
+01:23:21,979 --> 01:23:25,059
+ which is the latest simulator that we have.
+
+1183
+01:23:25,059 --> 01:23:28,819
+ And we're going to limit this to just a single,
+
+1184
+01:23:28,819 --> 01:23:33,439
+ let me see, test, no, me.
+
+1185
+01:23:33,439 --> 01:23:38,439
+ Okay, if you want to know the names of the actual tests
+
+1186
+01:23:38,439 --> 01:23:43,559
+ tests that we're running, you can go into the simulator and just get, for example, let's go to
+
+1187
+01:23:43,559 --> 01:23:51,559
+ add2 and let's go to dencun and let's look up the suites. You can actually look it here it's the it
+
+1188
+01:23:51,559 --> 01:23:56,279
+ will list all of the all of the all of the tests that are currently running on this on this
+
+1189
+01:23:56,279 --> 01:24:03,399
+ simulator and let's go to the easiest one which is the dencun testnet.
+
+1190
+01:24:03,399 --> 01:24:09,639
+ it. And you can see that every single test case in here will have a specific common line that you
+
+1191
+01:24:09,639 --> 01:24:16,699
+ can just copy paste. And let me just do that. This dash is not important. This can be removed.
+
+1192
+01:24:17,359 --> 01:24:23,659
+ And let's just copy paste it here. And let's just hit enter to see what happens. The first thing
+
+1193
+01:24:23,659 --> 01:24:29,159
+ that happens is that, okay, a hive starts and it builds something that is called high proxy.
+
+1194
+01:24:29,159 --> 01:24:37,159
+ This is not important it's basically just like an intermediary between the execution clients and the consensus clients and the hive server.
+
+1195
+01:24:37,159 --> 01:24:45,159
+ The second thing that it's building over here, it's, I cannot pause it, well, the second thing it's building is the execution client.
+
+1196
+01:24:45,159 --> 01:24:48,159
+ You can see that Nethermind is being built here and it built correctly.
+
+1197
+01:24:48,159 --> 01:24:53,019
+ and it's important to build clients
+
+1198
+01:24:53,019 --> 01:24:55,139
+ because you can know that building
+
+1199
+01:24:55,139 --> 01:24:57,220
+ will give you the latest version
+
+1200
+01:24:57,220 --> 01:24:59,059
+ that we are trying to test.
+
+1201
+01:24:59,260 --> 01:25:00,159
+ So in this case,
+
+1202
+01:25:00,199 --> 01:25:02,380
+ we are pulling, nevermind the latest master.
+
+1203
+01:25:02,779 --> 01:25:04,439
+ So also it might contain bugs
+
+1204
+01:25:04,439 --> 01:25:06,119
+ because this is not a release,
+
+1205
+01:25:06,220 --> 01:25:06,760
+ this is master.
+
+1206
+01:25:07,159 --> 01:25:08,380
+ So there are things,
+
+1207
+01:25:08,579 --> 01:25:11,079
+ obviously in the master branch of each client
+
+1208
+01:25:11,079 --> 01:25:13,420
+ that can contain bugs,
+
+1209
+01:25:13,659 --> 01:25:15,199
+ but this is the purpose of Hive
+
+1210
+01:25:15,199 --> 01:25:17,159
+ to catch those errors.
+
+1211
+01:25:17,159 --> 01:25:21,319
+ So the important thing here is use the latest master.
+
+1212
+01:25:21,319 --> 01:25:25,059
+ The next things that are building is the same thing
+
+1213
+01:25:25,059 --> 01:25:27,899
+ for the consensus client, consensus layer, sorry.
+
+1214
+01:25:27,899 --> 01:25:30,039
+ We are using Prism, the Bitcoin node,
+
+1215
+01:25:30,039 --> 01:25:33,059
+ the Prism, the belated claim, same thing.
+
+1216
+01:25:33,059 --> 01:25:35,220
+ We're using the latest master, which is not a release,
+
+1217
+01:25:35,220 --> 01:25:39,519
+ it's something newer, it's basically just a beta version.
+
+1218
+01:25:39,519 --> 01:25:42,920
+ So there could be bugs in this.
+
+1219
+01:25:42,920 --> 01:25:46,079
+ And lastly, we're gonna build the simulator.
+
+1220
+01:25:46,079 --> 01:25:49,399
+ So the simulator in here is the one that we specified,
+
+1221
+01:25:49,399 --> 01:25:53,439
+ but this flag here that we use, which is the limit,
+
+1222
+01:25:53,439 --> 01:25:57,180
+ it's a flag that is going into the simulator.
+
+1223
+01:25:57,180 --> 01:26:00,359
+ So we're passing the flag into simulator to tell it to,
+
+1224
+01:26:00,359 --> 01:26:04,500
+ please do not run anything else but this specific test.
+
+1225
+01:26:04,500 --> 01:26:06,600
+ So it's not gonna run the entire simulator
+
+1226
+01:26:06,600 --> 01:26:10,619
+ and the direct capability of testing of that simulator
+
+1227
+01:26:10,619 --> 01:26:13,279
+ it's just gonna run this one single test.
+
+1228
+01:26:13,279 --> 01:26:14,420
+ And now it's running,
+
+1229
+01:26:14,420 --> 01:26:17,939
+ and you can see that it started several things
+
+1230
+01:26:17,939 --> 01:26:20,439
+ and it's currently running
+
+1231
+01:26:20,439 --> 01:26:22,519
+ because it's doing it's thing in the background.
+
+1232
+01:26:22,519 --> 01:26:26,039
+ But what we can see it right now it's very silly
+
+1233
+01:26:26,039 --> 01:26:29,619
+ is that we have all of these things running in Docker.
+
+1234
+01:26:29,619 --> 01:26:32,259
+ So you can see that we have spawned
+
+1235
+01:26:32,259 --> 01:26:34,300
+ two different execution clients
+
+1236
+01:26:34,300 --> 01:26:38,479
+ and two different Validator and Baconaut clients
+
+1237
+01:26:38,479 --> 01:26:39,719
+ for the Conscious Layer.
+
+1238
+01:26:39,719 --> 01:26:42,899
+ This, the reason is that since this is a full test net
+
+1239
+01:26:42,899 --> 01:26:44,139
+ that we are using,
+
+1240
+01:26:44,139 --> 01:26:46,379
+ and normally the consensus clients require
+
+1241
+01:26:46,379 --> 01:26:51,039
+ at least one peer to know that everything is same, right?
+
+1242
+01:26:51,039 --> 01:26:52,000
+ Because otherwise,
+
+1243
+01:26:53,799 --> 01:26:56,199
+ if you don't have any single peer to connect to,
+
+1244
+01:26:56,199 --> 01:26:59,719
+ that means something wrong is happening.
+
+1245
+01:26:59,719 --> 01:27:03,639
+ So in this case, we instantiate two pairs of everything
+
+1246
+01:27:03,639 --> 01:27:06,839
+ and let the simulator do it's thing.
+
+1247
+01:27:06,839 --> 01:27:10,219
+ And then we can actually go into the file.
+
+1248
+01:27:10,220 --> 01:27:14,320
+ There's a simulator log file that we can use just to see.
+
+1249
+01:27:14,320 --> 01:27:18,560
+ The main output of this is the locks
+
+1250
+01:27:20,500 --> 01:27:21,340
+ in the workspace.
+
+1251
+01:27:21,340 --> 01:27:25,900
+ So in your local host, in the High folder that you have,
+
+1252
+01:27:25,900 --> 01:27:28,039
+ when you run your workspace,
+
+1253
+01:27:28,039 --> 01:27:30,159
+ you will see this locks directory.
+
+1254
+01:27:30,159 --> 01:27:32,039
+ And if you go in here,
+
+1255
+01:27:32,039 --> 01:27:35,039
+ you will see the output of the actual simulator.
+
+1256
+01:27:35,039 --> 01:27:37,140
+ So you will see everything that is happening
+
+1257
+01:27:37,140 --> 01:27:40,300
+ in the simulator, what it's running, what it's doing,
+
+1258
+01:27:40,300 --> 01:27:43,500
+ what it's requesting, everything you will see it here.
+
+1259
+01:27:43,500 --> 01:27:44,820
+ This is just a Genesis file,
+
+1260
+01:27:44,820 --> 01:27:48,200
+ but then you can see here that the chain is progressing.
+
+1261
+01:27:48,200 --> 01:27:50,800
+ So you can see that the simulator,
+
+1262
+01:27:50,800 --> 01:27:55,680
+ one of the jobs that it does is just to keep track
+
+1263
+01:27:55,680 --> 01:27:56,820
+ of everything that is happening.
+
+1264
+01:27:56,820 --> 01:27:58,079
+ So the first thing that it keeps track
+
+1265
+01:27:58,079 --> 01:28:00,380
+ is that the chain is actually progressing.
+
+1266
+01:28:00,380 --> 01:28:02,619
+ So you can see that we are jumping
+
+1267
+01:28:02,619 --> 01:28:04,420
+ from one slot to the next one.
+
+1268
+01:28:04,420 --> 01:28:07,000
+ So four, five, the chain is changing,
+
+1269
+01:28:07,000 --> 01:28:08,640
+ The head chain is changing.
+
+1270
+01:28:08,640 --> 01:28:11,239
+ It means that blocks are being produced.
+
+1271
+01:28:11,239 --> 01:28:12,479
+ And in the meantime,
+
+1272
+01:28:12,479 --> 01:28:14,779
+ also there's a lot of testing in the background,
+
+1273
+01:28:14,779 --> 01:28:17,079
+ which is sending block transactions,
+
+1274
+01:28:17,079 --> 01:28:19,640
+ verifying those block transactions that go inside
+
+1275
+01:28:19,640 --> 01:28:21,180
+ and everything's fine.
+
+1276
+01:28:22,579 --> 01:28:24,119
+ This is, I think it's a lengthy task
+
+1277
+01:28:24,119 --> 01:28:26,359
+ because it's to wait for finalization.
+
+1278
+01:28:26,359 --> 01:28:29,640
+ So we're gonna wrap it there for the demo.
+
+1279
+01:28:29,640 --> 01:28:31,340
+ Otherwise it's gonna take too long.
+
+1280
+01:28:32,859 --> 01:28:36,199
+ But yeah, that's basically it just for,
+
+1281
+01:28:36,199 --> 01:28:37,659
+ Let me just cancel this.
+
+1282
+01:28:40,059 --> 01:28:42,159
+ And I think there's only five minutes left.
+
+1283
+01:28:44,359 --> 01:28:47,800
+ And so are there any questions yet
+
+1284
+01:28:47,800 --> 01:28:50,479
+ or should I just keep going?
+
+1285
+01:28:50,479 --> 01:28:53,519
+ Yeah, let's take a second for questions, I guess,
+
+1286
+01:28:53,519 --> 01:28:55,300
+ because it's been a lot, Mario.
+
+1287
+01:28:55,300 --> 01:28:57,960
+ Thank you so much, by the way, it's amazing.
+
+1288
+01:28:57,960 --> 01:29:01,760
+ I love the live session and everything, really great.
+
+1289
+01:29:01,760 --> 01:29:03,239
+ Yeah, back to that, actually,
+
+1290
+01:29:03,239 --> 01:29:05,840
+ there was one interesting question I wanted to ask
+
+1291
+01:29:05,840 --> 01:29:10,360
+ because the execution spec tests have it as dependency,
+
+1292
+01:29:10,360 --> 01:29:13,239
+ the get execution environment.
+
+1293
+01:29:13,239 --> 01:29:14,840
+ So the question is like,
+
+1294
+01:29:14,840 --> 01:29:16,940
+ and you touched on it a little bit,
+
+1295
+01:29:16,940 --> 01:29:18,520
+ but maybe if you can elaborate,
+
+1296
+01:29:18,520 --> 01:29:21,279
+ so like how, like we,
+
+1297
+01:29:21,279 --> 01:29:23,659
+ I guess we don't assume that there is no bug in get,
+
+1298
+01:29:23,659 --> 01:29:24,840
+ so like how do you identify
+
+1299
+01:29:24,840 --> 01:29:27,420
+ if there is actually bug in the dependency
+
+1300
+01:29:27,420 --> 01:29:29,720
+ and yeah, how do we work with that?
+
+1301
+01:29:29,720 --> 01:29:32,720
+ So yeah, ideally, the ideal situation
+
+1302
+01:29:32,720 --> 01:29:35,779
+ is that we don't depend on get, that's the truth.
+
+1303
+01:29:35,840 --> 01:29:48,840
+ So for as a workaround with that, we are working for to have a another execution client, which is just specs oriented, which is called ELSE it's execution specs repo.
+
+1304
+01:29:48,840 --> 01:30:04,840
+ Ideally, we should not use get, but now as of now, we do depend on get and that the reason and the reason why it's not it's not it's it's not a big deal is because we generally we also verify the results of the post date.
+
+1305
+01:30:04,840 --> 01:30:09,880
+ it so we have to be very careful when we write a test that we actually verify everything that
+
+1306
+01:30:09,880 --> 01:30:14,440
+ we expect the only thing that we don't go into detail is the gas consumption because it's really
+
+1307
+01:30:14,440 --> 01:30:21,319
+ tricky to get it right in testing and it can get um to false positives and it can get a lot of noise
+
+1308
+01:30:21,319 --> 01:30:26,520
+ but other things which is the keys of the storage the values all of that we actually
+
+1309
+01:30:27,159 --> 01:30:34,039
+ verify them when we get the response from geth so there's no much leeway for for box
+
+1310
+01:30:34,039 --> 01:30:36,359
+ affecting us in get.
+
+1311
+01:30:36,880 --> 01:30:40,119
+ From time to time, we do find bugs in get
+
+1312
+01:30:40,119 --> 01:30:42,140
+ when we are filling tests, and then we go report it.
+
+1313
+01:30:42,260 --> 01:30:44,939
+ We have to wait until the get theme fixes those
+
+1314
+01:30:44,939 --> 01:30:48,460
+ for us to be able to generate the tests.
+
+1315
+01:30:49,239 --> 01:30:50,979
+ And in some other rare occasions,
+
+1316
+01:30:50,979 --> 01:30:55,399
+ we have generated the full test.
+
+1317
+01:30:55,819 --> 01:30:56,960
+ We have the fixture,
+
+1318
+01:30:57,260 --> 01:30:59,739
+ and then we go and run it on other clients,
+
+1319
+01:31:00,000 --> 01:31:01,199
+ and then we get an error.
+
+1320
+01:31:01,199 --> 01:31:07,380
+ and then sometimes it's most of the times it's an error with the other client but sometimes
+
+1321
+01:31:07,380 --> 01:31:14,019
+ it has happened in the past that we found a bug in geth that the other client found so it's yeah
+
+1322
+01:31:14,019 --> 01:31:19,659
+ it's it's it's a stepped process as as of now it will get better in the future but as of now
+
+1323
+01:31:19,659 --> 01:31:24,859
+ there are some places that it's it's we have to be very careful where where we where what we what
+
+1324
+01:31:24,859 --> 01:31:32,219
+ verify what we let pass. For example, the gas limits is very tricky, as I said,
+
+1325
+01:31:32,219 --> 01:31:36,380
+ that's something that we let the other clients verify for us. But yeah.
+
+1326
+01:31:38,939 --> 01:31:47,659
+ Awesome, thanks for explaining that. Another question is more advice for an EIP author,
+
+1327
+01:31:47,659 --> 01:31:52,779
+ for example, who implements some change to RPC method, which doesn't need to change the state
+
+1328
+01:31:52,779 --> 01:31:57,579
+ transition or anything, just for example add some extra data in RPC response,
+
+1329
+01:31:57,579 --> 01:32:02,219
+ what would be a way to test this, to compare the outputs of different implementations,
+
+1330
+01:32:02,219 --> 01:32:07,420
+ for example, what is something that it doesn't have much overhead?
+
+1331
+01:32:08,859 --> 01:32:11,099
+ So if I understood correctly,
+
+1332
+01:32:15,179 --> 01:32:20,779
+ so the RPC is something that you can test without going into writing the test that
+
+1333
+01:32:20,779 --> 01:32:21,559
+ that we just described.
+
+1334
+01:32:21,960 --> 01:32:23,579
+ So for that scenario,
+
+1335
+01:32:24,019 --> 01:32:25,899
+ you will go into the execution APIs repository,
+
+1336
+01:32:26,619 --> 01:32:31,359
+ which is the part that I just glanced upon a little bit,
+
+1337
+01:32:31,359 --> 01:32:36,099
+ which is where the RPC tests live.
+
+1338
+01:32:36,759 --> 01:32:39,079
+ Those RPC tests,
+
+1339
+01:32:39,519 --> 01:32:41,340
+ they are very, very self-contained,
+
+1340
+01:32:41,460 --> 01:32:43,179
+ very small and easy to write.
+
+1341
+01:32:44,319 --> 01:32:46,479
+ For those specific kind of VAPs,
+
+1342
+01:32:46,559 --> 01:32:50,380
+ I would suggest going onto the execution APIs repository
+
+1343
+01:32:50,380 --> 01:32:54,400
+ just giving it a look, giving it a look at the tests, what we test here.
+
+1344
+01:32:54,779 --> 01:32:58,180
+ So if you have something to introduce to the RPC of the Ethereum clients,
+
+1345
+01:32:58,739 --> 01:33:02,260
+ this is the place to start, I think, the execution APIs repository.
+
+1346
+01:33:03,260 --> 01:33:04,800
+ Okay, awesome. Thank you so much.
+
+1347
+01:33:06,279 --> 01:33:11,400
+ Yeah, one question, going back to your example there, the demo that you did,
+
+1348
+01:33:11,880 --> 01:33:17,840
+ it was the tests for the opcodes, which was 48 test cases,
+
+1349
+01:33:17,840 --> 01:33:19,619
+ which is like three per opcode.
+
+1350
+01:33:19,619 --> 01:33:24,480
+ So what were the cases where we had 48 test cases there?
+
+1351
+01:33:24,800 --> 01:33:25,180
+ Definitely.
+
+1352
+01:33:25,340 --> 01:33:28,340
+ So we had 16 opcodes,
+
+1353
+01:33:28,520 --> 01:33:29,659
+ but for each one of those,
+
+1354
+01:33:29,840 --> 01:33:31,880
+ we generated the three test formats.
+
+1355
+01:33:32,380 --> 01:33:33,340
+ So the state test format,
+
+1356
+01:33:33,699 --> 01:33:34,720
+ the blockchain test format,
+
+1357
+01:33:34,920 --> 01:33:37,560
+ and the blockchain test hive format.
+
+1358
+01:33:38,140 --> 01:33:41,020
+ So every single one of the formats has its own purpose.
+
+1359
+01:33:41,300 --> 01:33:42,520
+ State test is very self-contained,
+
+1360
+01:33:42,800 --> 01:33:46,739
+ just one transaction in the pre-state,
+
+1361
+01:33:46,739 --> 01:33:48,939
+ out the state root, check, that's it.
+
+1362
+01:33:49,420 --> 01:33:50,719
+ The blockchain test, which is
+
+1363
+01:33:50,719 --> 01:33:53,079
+ what the clients consume, they can consume it,
+
+1364
+01:33:53,179 --> 01:33:54,880
+ just check the block header, everything
+
+1365
+01:33:54,880 --> 01:33:56,599
+ passes. And lastly, the hype test,
+
+1366
+01:33:56,880 --> 01:33:58,939
+ which contains everything, like everything
+
+1367
+01:33:58,939 --> 01:34:01,019
+ that comes as if it was coming
+
+1368
+01:34:01,019 --> 01:34:03,019
+ from the consensus layer. So that's
+
+1369
+01:34:03,019 --> 01:34:04,619
+ why we have three different test formats
+
+1370
+01:34:04,619 --> 01:34:06,880
+ to consume and to generate.
+
+1371
+01:34:07,819 --> 01:34:08,300
+ I get it.
+
+1372
+01:34:09,300 --> 01:34:11,340
+ All the formats are pretty cool.
+
+1373
+01:34:11,559 --> 01:34:11,699
+ Awesome.
+
+1374
+01:34:13,659 --> 01:34:13,920
+ Yeah.
+
+1375
+01:34:13,920 --> 01:34:18,359
+ Yeah, one more question, maybe we can combine these.
+
+1376
+01:34:19,300 --> 01:34:24,119
+ What do you find the most complex to test in EL or CL?
+
+1377
+01:34:24,239 --> 01:34:25,060
+ What is the most heavy?
+
+1378
+01:34:25,480 --> 01:34:28,659
+ And how much time it actually takes to run all these tests,
+
+1379
+01:34:28,760 --> 01:34:30,940
+ like, for example, to test the counter work?
+
+1380
+01:34:33,039 --> 01:34:35,859
+ I would say it really depends.
+
+1381
+01:34:36,480 --> 01:34:38,739
+ So for the first question, what's the most complex?
+
+1382
+01:34:38,739 --> 01:34:43,739
+ I think the interoperability is something that is not pretty much solved yet.
+
+1383
+01:34:43,920 --> 01:34:51,840
+ it. And this is the most complex part, in my opinion. The, the EVM part is also complex,
+
+1384
+01:34:51,840 --> 01:34:56,300
+ but it in its own way, there are a lot of nuances that you have to be aware, when you're
+
+1385
+01:34:56,300 --> 01:35:01,539
+ writing an EVM test, it always happens that, oh, I forgot about this thing of the idea
+
+1386
+01:35:01,539 --> 01:35:07,460
+ that this side effect in devian somewhere else, and it affected my test. So it's you
+
+1387
+01:35:07,460 --> 01:35:12,859
+ really have to, well, you kind of know everything of the EM, but it's like a back and forth
+
+1388
+01:35:12,859 --> 01:35:14,979
+ and go and check and specifications,
+
+1389
+01:35:14,979 --> 01:35:16,420
+ the yellow paper and everything.
+
+1390
+01:35:16,420 --> 01:35:18,559
+ So it's a very, very long process.
+
+1391
+01:35:18,559 --> 01:35:21,380
+ It's like it's it's it's really nice because it's rewarding.
+
+1392
+01:35:21,380 --> 01:35:23,880
+ Once you have your EVM test completed and finalized
+
+1393
+01:35:23,880 --> 01:35:25,939
+ and it works it's really nice because you know
+
+1394
+01:35:25,939 --> 01:35:28,979
+ that everything is correct, but it's complex indeed.
+
+1395
+01:35:28,979 --> 01:35:30,719
+ It's it's it's time consuming.
+
+1396
+01:35:32,119 --> 01:35:35,079
+ And the other part, how much does it take?
+
+1397
+01:35:35,079 --> 01:35:35,939
+ It takes a lot.
+
+1398
+01:35:35,939 --> 01:35:38,739
+ So depending on the software,
+
+1399
+01:35:38,739 --> 01:35:41,139
+ the hardware that we are running on,
+
+1400
+01:35:41,140 --> 01:35:43,900
+ The problem with the consensus test, the EVM test,
+
+1401
+01:35:43,980 --> 01:35:47,060
+ is that every single test instantiates a full client,
+
+1402
+01:35:47,380 --> 01:35:50,460
+ and then you give it the input, and then you spec the output.
+
+1403
+01:35:50,680 --> 01:35:51,760
+ So it's very time-consuming.
+
+1404
+01:35:52,240 --> 01:35:55,420
+ So I think there are up to 10,000 or something tests
+
+1405
+01:35:55,420 --> 01:35:56,600
+ in the Ethereum test repository.
+
+1406
+01:35:57,200 --> 01:35:59,880
+ In the new execution specs, there are only 5,000.
+
+1407
+01:36:00,900 --> 01:36:03,700
+ So it takes a lot less, and we can parallelize those.
+
+1408
+01:36:04,360 --> 01:36:07,720
+ So I don't have the number, but last time I tested it,
+
+1409
+01:36:07,720 --> 01:36:11,000
+ it wasn't so long, maybe five minutes to 10 minutes,
+
+1410
+01:36:11,000 --> 01:36:13,220
+ or something for the execution specters in Parallelize
+
+1411
+01:36:13,220 --> 01:36:14,979
+ if you have a beefy hardware.
+
+1412
+01:36:15,359 --> 01:36:16,619
+ Otherwise, it's going to take a long time.
+
+1413
+01:36:17,420 --> 01:36:17,600
+ But yeah.
+
+1414
+01:36:19,960 --> 01:36:20,779
+ Okay, thanks so much.
+
+1415
+01:36:21,000 --> 01:36:21,760
+ That's very interesting.
+
+1416
+01:36:22,760 --> 01:36:24,859
+ Yeah, the next questions are about
+
+1417
+01:36:24,859 --> 01:36:28,399
+ how do you communicate bugs to client teams?
+
+1418
+01:36:28,920 --> 01:36:30,600
+ I guess it's different from your perspective
+
+1419
+01:36:30,600 --> 01:36:32,140
+ as a testing team,
+
+1420
+01:36:32,239 --> 01:36:34,880
+ but also you mentioned that we will get
+
+1421
+01:36:34,880 --> 01:36:36,300
+ to the bug bounties part,
+
+1422
+01:36:36,460 --> 01:36:38,699
+ so maybe I'll let you segue into that.
+
+1423
+01:36:39,479 --> 01:36:40,720
+ This is very important.
+
+1424
+01:36:41,000 --> 01:36:47,880
+ it depends it really depends on the severity of the of the bug if we found found something that
+
+1425
+01:36:47,880 --> 01:36:52,760
+ affects any live network it's going to be something that is very we have to be very cautious
+
+1426
+01:36:53,399 --> 01:36:58,920
+ uh normally when when we are developing a new fork for example we were started we were at the
+
+1427
+01:36:58,920 --> 01:37:04,359
+ start of cancun um it's it's really easy it's just like submit an issue and something because
+
+1428
+01:37:05,000 --> 01:37:10,920
+ there's no live network with cancun at that point so it doesn't really matter but the the the closer
+
+1429
+01:37:10,920 --> 01:37:15,819
+ that we get to Cancun being released in any live network,
+
+1430
+01:37:15,819 --> 01:37:18,020
+ the more cautious that we have to be
+
+1431
+01:37:18,020 --> 01:37:19,980
+ when we submit issues.
+
+1432
+01:37:20,579 --> 01:37:22,680
+ It gets to the point where we only communicate this
+
+1433
+01:37:22,680 --> 01:37:23,840
+ to the specific developers
+
+1434
+01:37:23,840 --> 01:37:27,140
+ and we get to specific communication
+
+1435
+01:37:27,140 --> 01:37:29,859
+ and there's special handling
+
+1436
+01:37:29,859 --> 01:37:31,500
+ that you have to take care of
+
+1437
+01:37:31,500 --> 01:37:33,119
+ when we're submitting something
+
+1438
+01:37:33,119 --> 01:37:35,659
+ that is potentially harmful for a live network.
+
+1439
+01:37:37,140 --> 01:37:37,180
+ Yeah.
+
+1440
+01:37:40,920 --> 01:37:44,079
+ Cool, cool, cool.
+
+1441
+01:37:44,079 --> 01:37:45,079
+ Awesome.
+
+1442
+01:37:45,079 --> 01:37:46,079
+ Thank you so much.
+
+1443
+01:37:46,079 --> 01:37:48,079
+ I think we are out of the questions.
+
+1444
+01:37:48,079 --> 01:37:52,480
+ If there are none, feel free to ask.
+
+1445
+01:37:52,480 --> 01:37:53,800
+ We are over time.
+
+1446
+01:37:53,800 --> 01:37:55,140
+ We should wrap it up.
+
+1447
+01:37:55,140 --> 01:37:58,159
+ I actually have a couple more slides.
+
+1448
+01:37:58,159 --> 01:38:00,800
+ I can just fly through them.
+
+1449
+01:38:00,800 --> 01:38:02,420
+ Feel free.
+
+1450
+01:38:02,420 --> 01:38:05,460
+ We are all very happy following.
+
+1451
+01:38:05,460 --> 01:38:06,460
+ Everybody's excited.
+
+1452
+01:38:06,460 --> 01:38:08,119
+ So feel free to use our time.
+
+1453
+01:38:08,119 --> 01:38:09,480
+ Just mind your own time.
+
+1454
+01:38:09,479 --> 01:38:12,500
+ So how much, however, I'm sure you can take it.
+
+1455
+01:38:12,500 --> 01:38:13,219
+ No problem.
+
+1456
+01:38:13,219 --> 01:38:15,019
+ No, let's carry on.
+
+1457
+01:38:15,439 --> 01:38:17,659
+ I will just fly over the slides.
+
+1458
+01:38:19,879 --> 01:38:23,939
+ So yeah, after everything else that I explained before,
+
+1459
+01:38:24,159 --> 01:38:29,199
+ we still have another test methodology to use,
+
+1460
+01:38:29,399 --> 01:38:31,859
+ which is the live testnets.
+
+1461
+01:38:32,139 --> 01:38:34,599
+ We have the devnets, the ShadowRub forks,
+
+1462
+01:38:34,639 --> 01:38:37,139
+ and the public devnets, which all happened
+
+1463
+01:38:37,140 --> 01:38:40,579
+ before the mainnet release.
+
+1464
+01:38:41,660 --> 01:38:44,400
+ So for Cancun, mainnet is coming up in three days.
+
+1465
+01:38:44,480 --> 01:38:45,940
+ So all of this has already passed.
+
+1466
+01:38:46,420 --> 01:38:50,520
+ And we have many iterations of all of these different testnets.
+
+1467
+01:38:51,039 --> 01:38:52,200
+ The first one is a devnet.
+
+1468
+01:38:52,579 --> 01:38:56,860
+ It's something that is like, we run a small chain
+
+1469
+01:38:56,860 --> 01:38:59,480
+ with all the combinations of the clients,
+
+1470
+01:39:00,020 --> 01:39:03,800
+ but it's a very, very limited size of clients.
+
+1471
+01:39:03,800 --> 01:39:06,920
+ So we have very few nodes per each chain.
+
+1472
+01:39:07,140 --> 01:39:16,060
+ And the purpose of this is to test a new proof of concept fork.
+
+1473
+01:39:16,800 --> 01:39:19,240
+ For example, at the very start of the blobs,
+
+1474
+01:39:19,360 --> 01:39:21,360
+ which it was almost two years ago, I think,
+
+1475
+01:39:22,200 --> 01:39:23,860
+ devnets is the first way to go.
+
+1476
+01:39:24,160 --> 01:39:27,060
+ You implement the bare minimum,
+
+1477
+01:39:27,700 --> 01:39:30,180
+ the function in the proof of concept for each of the clients,
+
+1478
+01:39:30,280 --> 01:39:32,400
+ and then you launch a devnet with this.
+
+1479
+01:39:32,980 --> 01:39:35,880
+ And then you send things into the chain
+
+1480
+01:39:35,880 --> 01:39:38,840
+ and see how it behaves and you verify their behavior.
+
+1481
+01:39:39,539 --> 01:39:42,119
+ And obviously this is where,
+
+1482
+01:39:42,260 --> 01:39:45,119
+ when the software is not ready for production.
+
+1483
+01:39:45,440 --> 01:39:47,319
+ So these are very short-lived
+
+1484
+01:39:47,319 --> 01:39:51,619
+ and normally they go down and they go out of sync
+
+1485
+01:39:51,619 --> 01:39:53,180
+ and a lot of bad things happen,
+
+1486
+01:39:53,380 --> 01:39:55,119
+ but that's what they are for.
+
+1487
+01:39:56,020 --> 01:39:58,199
+ And another thing that we use is the ShadowForks.
+
+1488
+01:39:58,199 --> 01:39:59,840
+ This is a very clever implementation
+
+1489
+01:39:59,840 --> 01:40:02,020
+ that the DevOps team has come up with.
+
+1490
+01:40:02,020 --> 01:40:06,320
+ it's basically you have a clone of Mainnet,
+
+1491
+01:40:06,820 --> 01:40:09,300
+ but on a limited set of nodes,
+
+1492
+01:40:09,480 --> 01:40:13,080
+ you configure them to activate the upcoming fork early.
+
+1493
+01:40:13,680 --> 01:40:14,900
+ So for example, in the case of Cancun,
+
+1494
+01:40:15,240 --> 01:40:17,040
+ we sync everything,
+
+1495
+01:40:17,760 --> 01:40:21,120
+ but this ShadowForks began happening
+
+1496
+01:40:21,120 --> 01:40:24,700
+ early last year from June, I think.
+
+1497
+01:40:24,840 --> 01:40:27,120
+ So the clients that we were running
+
+1498
+01:40:27,120 --> 01:40:31,020
+ were configured, for example, June 20th of 2023.
+
+1499
+01:40:31,020 --> 01:40:33,340
+ go on with Cancun.
+
+1500
+01:40:33,640 --> 01:40:35,260
+ And then you sync
+
+1501
+01:40:35,260 --> 01:40:36,640
+ and you wait for the fork to happen.
+
+1502
+01:40:37,080 --> 01:40:37,880
+ You verify things.
+
+1503
+01:40:38,300 --> 01:40:40,300
+ And the nice thing about this
+
+1504
+01:40:40,300 --> 01:40:43,180
+ is that you can still communicate
+
+1505
+01:40:43,180 --> 01:40:45,300
+ to the existing nodes.
+
+1506
+01:40:45,300 --> 01:40:46,660
+ So you can get transactions
+
+1507
+01:40:46,660 --> 01:40:47,740
+ from the live network.
+
+1508
+01:40:47,900 --> 01:40:49,500
+ So while you are testing
+
+1509
+01:40:49,500 --> 01:40:50,400
+ your new functionality,
+
+1510
+01:40:50,680 --> 01:40:52,720
+ you are still getting some information,
+
+1511
+01:40:52,880 --> 01:40:53,440
+ some transactions
+
+1512
+01:40:53,440 --> 01:40:55,660
+ from actual activity
+
+1513
+01:40:55,660 --> 01:40:56,400
+ in the mainnet.
+
+1514
+01:40:57,940 --> 01:40:59,200
+ So a very nice way to test
+
+1515
+01:40:59,200 --> 01:41:00,400
+ mainly with blobs.
+
+1516
+01:41:00,399 --> 01:41:01,699
+ This was used a lot.
+
+1517
+01:41:02,619 --> 01:41:04,259
+ And lastly, the public testnets,
+
+1518
+01:41:04,559 --> 01:41:08,479
+ which have been GURLY, which is now deprecated.
+
+1519
+01:41:09,199 --> 01:41:11,219
+ We have Sipolia and Holesky.
+
+1520
+01:41:11,599 --> 01:41:16,079
+ They both serve different purposes.
+
+1521
+01:41:17,279 --> 01:41:21,699
+ And yeah, mostly this is for applications to be,
+
+1522
+01:41:21,859 --> 01:41:24,899
+ for them to be able to test their implementations
+
+1523
+01:41:24,899 --> 01:41:29,819
+ on the new functionality of the fork.
+
+1524
+01:41:30,399 --> 01:41:35,839
+ Yeah, I'm just going to go very quickly through Ethereum security.
+
+1525
+01:41:37,039 --> 01:41:42,960
+ There's an Ethereum security group in the Ethereum Foundation.
+
+1526
+01:41:43,139 --> 01:41:46,099
+ They are very dedicated to all of these specific issues.
+
+1527
+01:41:47,500 --> 01:41:48,439
+ Mainly, they test.
+
+1528
+01:41:48,859 --> 01:41:52,639
+ They also perform tests, which go into, for example,
+
+1529
+01:41:52,960 --> 01:41:55,099
+ the analysis of these attacks and all that stuff,
+
+1530
+01:41:55,319 --> 01:41:58,079
+ that complex stuff that becomes a security issue.
+
+1531
+01:41:58,079 --> 01:42:03,079
+ They are the people that are best suited to respond
+
+1532
+01:42:03,359 --> 01:42:05,979
+ most of the questions that you could have about security.
+
+1533
+01:42:05,979 --> 01:42:08,340
+ But I'm gonna go over it a little bit.
+
+1534
+01:42:10,579 --> 01:42:13,640
+ The main things that can go wrong
+
+1535
+01:42:13,640 --> 01:42:15,260
+ in the inclusion layer side, for example,
+
+1536
+01:42:15,260 --> 01:42:20,260
+ is that when a client does, like, invalidates a block
+
+1537
+01:42:22,220 --> 01:42:26,439
+ that fully complies with the Ethereum specification,
+
+1538
+01:42:26,439 --> 01:42:29,079
+ This means that I have block that is correct,
+
+1539
+01:42:29,319 --> 01:42:30,879
+ and then my client, for some reason,
+
+1540
+01:42:31,059 --> 01:42:32,399
+ decided that it was not correct,
+
+1541
+01:42:32,579 --> 01:42:33,799
+ and then it just rejects it.
+
+1542
+01:42:34,199 --> 01:42:37,079
+ That means that all of the people running that client,
+
+1543
+01:42:37,199 --> 01:42:37,719
+ that specific client,
+
+1544
+01:42:37,779 --> 01:42:39,819
+ are going to go out of sync with the network
+
+1545
+01:42:39,819 --> 01:42:41,239
+ and are going into a fork.
+
+1546
+01:42:42,899 --> 01:42:44,059
+ There are a lot of variables,
+
+1547
+01:42:44,539 --> 01:42:45,979
+ and many things will happen
+
+1548
+01:42:45,979 --> 01:42:49,899
+ depending on the weight of the distribution
+
+1549
+01:42:49,899 --> 01:42:53,319
+ of how many people are running that actual client.
+
+1550
+01:42:54,319 --> 01:42:55,819
+ I'm not going to go into detail,
+
+1551
+01:42:55,819 --> 01:42:58,719
+ but this is one of the possible things.
+
+1552
+01:43:00,059 --> 01:43:01,799
+ Also, the other thing that happens,
+
+1553
+01:43:02,019 --> 01:43:03,799
+ so you have a valid,
+
+1554
+01:43:04,139 --> 01:43:05,840
+ this is a little bit worse, to be honest.
+
+1555
+01:43:06,460 --> 01:43:09,139
+ This is when your client receives a backlog
+
+1556
+01:43:09,139 --> 01:43:10,099
+ that is invalid,
+
+1557
+01:43:10,659 --> 01:43:12,639
+ and you pass it as valid.
+
+1558
+01:43:12,779 --> 01:43:16,039
+ This is worse because you are validating something
+
+1559
+01:43:16,039 --> 01:43:17,380
+ that is out of specification,
+
+1560
+01:43:17,539 --> 01:43:18,340
+ that is very risky.
+
+1561
+01:43:19,359 --> 01:43:22,519
+ This is something that we take special care on
+
+1562
+01:43:22,519 --> 01:43:24,179
+ when we are designing a test
+
+1563
+01:43:24,180 --> 01:43:26,460
+ inside of the test repository.
+
+1564
+01:43:27,420 --> 01:43:30,020
+ Also, another example is the denial service
+
+1565
+01:43:30,020 --> 01:43:31,520
+ during block execution.
+
+1566
+01:43:32,200 --> 01:43:34,400
+ If a client just takes a transaction or a block
+
+1567
+01:43:34,400 --> 01:43:36,860
+ and it just takes so much time to execute,
+
+1568
+01:43:37,240 --> 01:43:39,579
+ that could be also deemed like a denial service.
+
+1569
+01:43:40,600 --> 01:43:43,600
+ It's another possible security concern that we can have.
+
+1570
+01:43:44,740 --> 01:43:46,079
+ On the consensus layer side,
+
+1571
+01:43:46,600 --> 01:43:51,880
+ something different is that depending on the faulty nodes
+
+1572
+01:43:51,880 --> 01:43:53,820
+ that you have, for example,
+
+1573
+01:43:53,819 --> 01:43:58,659
+ you have less than 32% of the clients that are misbehaving
+
+1574
+01:43:58,659 --> 01:44:00,579
+ and then they are not following
+
+1575
+01:44:00,579 --> 01:44:03,539
+ the theorem consensus specification for any reason.
+
+1576
+01:44:05,639 --> 01:44:10,739
+ Less than 32% is the least concerning scenario.
+
+1577
+01:44:11,179 --> 01:44:12,739
+ So you can miss slots
+
+1578
+01:44:12,739 --> 01:44:16,299
+ and your chain will miss some at stations.
+
+1579
+01:44:16,699 --> 01:44:20,219
+ You will see some hiccups, but nothing will happen.
+
+1580
+01:44:20,599 --> 01:44:21,859
+ The chain will still finalize.
+
+1581
+01:44:21,859 --> 01:44:24,139
+ So everything carries on as if nothing happened.
+
+1582
+01:44:25,019 --> 01:44:28,439
+ If you have 33 or more percent of the majority,
+
+1583
+01:44:29,199 --> 01:44:31,439
+ you can cause, if the client fails,
+
+1584
+01:44:31,679 --> 01:44:33,059
+ you can cause a delay finality.
+
+1585
+01:44:33,279 --> 01:44:35,039
+ So what happens is that the chain,
+
+1586
+01:44:35,039 --> 01:44:38,960
+ if there's a split and 33% of the clients
+
+1587
+01:44:38,960 --> 01:44:39,880
+ go through this route,
+
+1588
+01:44:40,399 --> 01:44:43,460
+ it means that the main chain will not finalize.
+
+1589
+01:44:44,420 --> 01:44:47,759
+ So that's bad, but it's very recoverable.
+
+1590
+01:44:48,079 --> 01:44:50,539
+ It's not as bad as other.
+
+1591
+01:44:50,539 --> 01:44:53,560
+ 50% or more you can disrupt the fork choice
+
+1592
+01:44:53,560 --> 01:44:56,720
+ it means that you have 50% of the nodes
+
+1593
+01:44:56,720 --> 01:45:01,100
+ then you will disrupt how the clients behave
+
+1594
+01:45:01,100 --> 01:45:03,840
+ and how the clients choose what chain to follow
+
+1595
+01:45:03,840 --> 01:45:07,699
+ depending on what the majority of clients is
+
+1596
+01:45:07,699 --> 01:45:10,600
+ and you have the last and the most concerning one
+
+1597
+01:45:10,600 --> 01:45:14,600
+ is the 66% or more percent of the fault clients
+
+1598
+01:45:14,600 --> 01:45:18,180
+ this means that you have a superior majority of clients
+
+1599
+01:45:18,180 --> 01:45:19,699
+ failing because of the same thing
+
+1600
+01:45:19,699 --> 01:45:21,920
+ which means that they can finalize the chain.
+
+1601
+01:45:21,920 --> 01:45:24,739
+ This is the most risky behavior that we can find
+
+1602
+01:45:24,739 --> 01:45:26,679
+ in security-related concerns.
+
+1603
+01:45:28,079 --> 01:45:29,099
+ It's very bad.
+
+1604
+01:45:30,099 --> 01:45:34,319
+ It probably will require intervention of some sort.
+
+1605
+01:45:35,179 --> 01:45:38,559
+ At the moment, I don't think I am capable of explaining
+
+1606
+01:45:38,559 --> 01:45:40,920
+ what will happen in that scenario,
+
+1607
+01:45:41,059 --> 01:45:44,380
+ but it's one of the things that we'll always have to consider.
+
+1608
+01:45:45,319 --> 01:45:49,559
+ That's why we do so much testing before any,
+
+1609
+01:45:49,560 --> 01:45:56,039
+ even considering launching domain it and we have the back bounty if you guys like
+
+1610
+01:45:56,039 --> 01:46:04,920
+ this you like you you guys like security you have an eye for to finding security
+
+1611
+01:46:04,920 --> 01:46:09,039
+ concerns in software this is a place where you can shine you go into the
+
+1612
+01:46:09,039 --> 01:46:13,920
+ bounty bounty theorem dark and then you can get a nice bounty if you find
+
+1613
+01:46:13,920 --> 01:46:20,159
+ something that can clearly and indeed can disrupt the live networks.
+
+1614
+01:46:21,520 --> 01:46:27,279
+ And to get an example of all the public, previous public disclosures that have happened in the past,
+
+1615
+01:46:27,279 --> 01:46:34,399
+ you can go into this repository, which contains actual documented security issues that have
+
+1616
+01:46:34,399 --> 01:46:41,039
+ happened, that have been disclosed, sorry, in the past, but it may not because there was bounty,
+
+1617
+01:46:41,039 --> 01:46:47,359
+ and they were privately disclosed. The main encouragement of this slide is
+
+1618
+01:46:47,359 --> 01:46:52,800
+ do not try to, if you find something that you think got disrupted, go into here you will receive bounty
+
+1619
+01:46:53,439 --> 01:47:01,600
+ and you will not harm the network in any way. So it's like a white hat
+
+1620
+01:47:01,600 --> 01:47:08,960
+ situation. And that's basically it, that's my presentation. If you have any questions
+
+1621
+01:47:08,960 --> 01:47:13,119
+ These are my handles, Twitter, GitHub.
+
+1622
+01:47:13,119 --> 01:47:17,319
+ If you guys are interested in testing, just hit me up.
+
+1623
+01:47:17,319 --> 01:47:19,640
+ I will answer more questions if you have them.
+
+1624
+01:47:19,640 --> 01:47:27,000
+ Thank you so much again, Mario.
+
+1625
+01:47:27,000 --> 01:47:28,239
+ Amazing stuff.
+
+1626
+01:47:28,239 --> 01:47:35,399
+ Yeah, let me check if we have some closing questions,
+
+1627
+01:47:35,399 --> 01:47:38,720
+ but I think we are good, man, because we are like 15 minutes over,
+
+1628
+01:47:38,720 --> 01:47:44,880
+ and you've dedicated a lot of great time to us you you gave us a look man i think people will
+
+1629
+01:47:44,880 --> 01:47:51,360
+ have to also see the presentation again to catch all the details there uh man uh it was intense
+
+1630
+01:47:51,360 --> 01:47:58,880
+ it was long so i really appreciate your time uh it was really great um yeah yeah thank you so much
+
+1631
+01:47:58,880 --> 01:48:10,319
+ I also learned a lot. Maybe if you could point people who want to learn and start contributing
+
+1632
+01:48:10,319 --> 01:48:13,600
+ in some meaningful way, what would be the one place you point them to?
+
+1633
+01:48:15,520 --> 01:48:21,279
+ We need help in any of the repositories that you have seen in this presentation. Whatever
+
+1634
+01:48:21,279 --> 01:48:24,560
+ piques your interest the most, I think that's the best place that you can start with.
+
+1635
+01:48:24,560 --> 01:48:26,520
+ But anything is welcome.
+
+1636
+01:48:27,300 --> 01:48:29,680
+ And you can start also, all the repositories have the,
+
+1637
+01:48:30,220 --> 01:48:35,680
+ normally the publish issues with first good issue tag.
+
+1638
+01:48:35,900 --> 01:48:38,300
+ That's the place to start in each of the repositories.
+
+1639
+01:48:38,300 --> 01:48:41,520
+ I'll make sure to, because we have the execution specters
+
+1640
+01:48:41,520 --> 01:48:45,800
+ that we maintain, I will make sure that after this,
+
+1641
+01:48:45,940 --> 01:48:48,740
+ we will try to think of many first good new issues
+
+1642
+01:48:48,740 --> 01:48:50,580
+ to set them in the execution specters
+
+1643
+01:48:50,580 --> 01:48:52,320
+ if you want to go there, or you have also,
+
+1644
+01:48:52,319 --> 01:48:55,759
+ So I will make sure that something new pops up.
+
+1645
+01:48:57,119 --> 01:48:57,519
+ Amazing.
+
+1646
+01:48:57,859 --> 01:48:58,019
+ Yeah.
+
+1647
+01:48:58,380 --> 01:48:59,599
+ Yeah, thank you so much again.
+
+1648
+01:49:00,219 --> 01:49:04,599
+ It was really great to have, like, Mario Tandem here in the APSG.
+
+1649
+01:49:05,000 --> 01:49:06,699
+ So it was fun.
+
+1650
+01:49:07,299 --> 01:49:09,619
+ And I think, yeah, we will work it up.
+
+1651
+01:49:09,719 --> 01:49:13,619
+ Yeah, also, like, you are in the Discord server.
+
+1652
+01:49:14,019 --> 01:49:18,920
+ So if people bother you there, please excuse.
+
+1653
+01:49:19,099 --> 01:49:21,000
+ But they might have some extra questions, I guess.
+
+1654
+01:49:21,259 --> 01:49:22,139
+ Yeah, thank you so much.
+
+1655
+01:49:22,319 --> 01:49:28,059
+ again. And yeah, thank you so much for all the people who've been following, asking questions.
+
+1656
+01:49:28,380 --> 01:49:35,059
+ It's been it's been an intense one. So I'll see you guys next week. Yeah.
+
+1657
+01:49:36,059 --> 01:49:36,799
+ Ciao. Thank you.
+
+1658
+01:49:37,679 --> 01:49:40,139
+ Have a great day. Thank you so much again. Bye bye.
+
+1659
+01:50:22,319 --> 01:50:48,279
+ Thank you.
+
