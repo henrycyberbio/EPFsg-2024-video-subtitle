@@ -796,7 +796,7 @@
 
 200
 00:19:00,939 --> 00:19:07,419
- yeah the surge is uh gonna have more data availability for roll-offs and i'm
+ yeah the surge is uh gonna have more data availability for rollups and i'm
 
 201
 00:19:07,419 --> 00:19:13,099
@@ -804,7 +804,7 @@
 
 202
 00:19:13,099 --> 00:19:23,099
- So first of all, roll-ups from 10,000 feet, we have to understand what we mean by roll-ups and why Ethereum took a roll-up-centric roadmap.
+ So first of all, rollups from 10,000 feet, we have to understand what we mean by rollups and why Ethereum took a rollup-centric roadmap.
 
 203
 00:19:23,099 --> 00:19:33,099
@@ -816,7 +816,7 @@
 
 205
 00:19:42,099 --> 00:19:53,219
- But it turns out, not only is that very hard to do, but also once we do it, roll-ups are going to be way more mature and ready to scale.
+ But it turns out, not only is that very hard to do, but also once we do it, rollups are going to be way more mature and ready to scale.
 
 206
 00:19:53,859 --> 00:19:57,879
@@ -840,7 +840,7 @@
 
 211
 00:20:30,559 --> 00:20:33,799
- So there's two brands of roll-ups,
+ So there's two brands of rollups,
 
 212
 00:20:34,000 --> 00:20:35,359
@@ -940,7 +940,7 @@
 
 236
 00:21:40,299 --> 00:21:44,740
- And zero-knowledge roll-ups are a little bit more cryptographically involved
+ And zero-knowledge rollups are a little bit more cryptographically involved
 
 237
 00:21:44,740 --> 00:21:47,460
@@ -960,7 +960,7 @@
 
 241
 00:22:05,800 --> 00:22:10,600
- know on optimistic roll-ups you need to be able to have the data to be able to challenge someone
+ know on optimistic rollups you need to be able to have the data to be able to challenge someone
 
 242
 00:22:10,600 --> 00:22:17,440
@@ -1008,7 +1008,7 @@
 
 253
 00:22:51,440 --> 00:22:53,000
- And that's what roll-ups use.
+ And that's what rollups use.
 
 254
 00:22:53,000 --> 00:22:55,480
@@ -1056,7 +1056,7 @@
 
 265
 00:23:29,379 --> 00:23:31,400
- I have a slide about the training wheels on roll-ups.
+ I have a slide about the training wheels on rollups.
 
 266
 00:23:31,400 --> 00:23:37,099
@@ -1064,11 +1064,11 @@
 
 267
 00:23:37,099 --> 00:23:42,920
- in the roll-ups today when you can see all the stuff on l2b.com, like right now
+ in the rollups today when you can see all the stuff on l2b.com, like right now
 
 268
 00:23:42,980 --> 00:23:48,500
- there, we would love to have roll-ups fully immutable and like mature, no,
+ there, we would love to have rollups fully immutable and like mature, no,
 
 269
 00:23:48,500 --> 00:23:51,039
@@ -1080,7 +1080,7 @@
 
 271
 00:23:55,599 --> 00:23:58,440
- The trade-off space is huge for roll-ups,
+ The trade-off space is huge for rollups,
 
 272
 00:23:58,660 --> 00:24:03,319
@@ -1672,7 +1672,7 @@
 
 419
 00:35:40,199 --> 00:35:45,000
- Now with roll-ups, we want to have a more seamless experience
+ Now with rollups, we want to have a more seamless experience
 
 420
 00:35:45,000 --> 00:35:46,179
@@ -1684,7 +1684,7 @@
 
 422
 00:35:49,199 --> 00:35:51,859
- like on based roll-ups and pre-confirmations,
+ like on based rollups and pre-confirmations,
 
 423
 00:35:51,859 --> 00:35:53,339
@@ -2840,7 +2840,7 @@
 
 711
 01:01:10,039 --> 01:01:16,960
- you do the data sampling for further roll-ups that i mentioned above and you verify these proofs
+ you do the data sampling for further rollups that i mentioned above and you verify these proofs
 
 712
 01:01:16,960 --> 01:01:23,840
@@ -3112,7 +3112,7 @@
 
 779
 01:07:33,980 --> 01:07:36,680
- or roll-ups that you care about and stuff like that.
+ or rollups that you care about and stuff like that.
 
 780
 01:07:36,980 --> 01:07:38,840
