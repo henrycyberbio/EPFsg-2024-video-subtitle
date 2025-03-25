@@ -2272,7 +2272,7 @@
 
 569
 00:49:18,660 --> 00:49:24,019
- as like we got the merge we got 4844 and blob space and then vertical trees
+ as like we got the merge we got 4844 and blob space and then Verkle Trees
 
 570
 00:49:24,019 --> 00:49:28,840
@@ -2520,7 +2520,7 @@
 
 631
 00:54:17,840 --> 00:54:29,519
- Um, and yeah, so after that, once we do the transactions to Virgo trees it becomes much
+ Um, and yeah, so after that, once we do the transactions to Verkle Trees it becomes much
 
 632
 00:54:29,519 --> 00:54:33,780
@@ -2784,7 +2784,7 @@
 
 697
 00:59:31,300 --> 00:59:40,740
- again afterwards yeah snarky fire all the things that's the like vertical trees are cool it's a
+ again afterwards yeah snarky fire all the things that's the like Verkle Trees are cool it's a
 
 698
 00:59:40,740 --> 00:59:46,900
@@ -2912,7 +2912,7 @@
 
 729
 01:03:05,559 --> 01:03:10,679
- Which I didn't mention it, but vertical trees with statelessness, you are going to be able
+ Which I didn't mention it, but Verkle Trees with statelessness, you are going to be able
 
 730
 01:03:10,679 --> 01:03:17,319
@@ -3724,7 +3724,7 @@
 
 932
 01:21:07,680 --> 01:21:09,440
- vertical trees, which are hopeful
+ Verkle Trees, which are hopeful
 
 933
 01:21:09,440 --> 01:21:11,520
@@ -4020,7 +4020,7 @@
 
 1006
 01:25:21,640 --> 01:25:22,960
- that we're gonna do vertical trees,
+ that we're gonna do Verkle Trees,
 
 1007
 01:25:22,960 --> 01:25:27,399
