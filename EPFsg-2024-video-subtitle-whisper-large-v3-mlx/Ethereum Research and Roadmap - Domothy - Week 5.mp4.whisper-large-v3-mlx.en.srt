@@ -2464,7 +2464,7 @@
 
 617
 00:52:53,039 --> 00:53:01,059
- So instead, this is very against with the same tree, but now it's a vertical tree.
+ So instead, this is very against with the same tree, but now it's a Verkle tree.
 
 618
 00:53:01,059 --> 00:53:07,940
@@ -2540,7 +2540,7 @@
 
 636
 00:54:54,019 --> 00:55:01,699
- that we have today with the merkle patricia tree state roots and not only that but the vertical
+ that we have today with the merkle patricia tree state roots and not only that but the Verkle
 
 637
 00:55:01,699 --> 00:55:07,299
@@ -2608,7 +2608,7 @@
 
 653
 00:56:13,700 --> 00:56:16,159
- which is basically all the vertical proofs
+ which is basically all the Verkle proofs
 
 654
 00:56:16,159 --> 00:56:18,519
@@ -2820,7 +2820,7 @@
 
 706
 01:00:33,539 --> 01:00:40,179
- snark you you want to snarkify the vertical state access proofs and that would make it even faster
+ snark you you want to snarkify the Verkle state access proofs and that would make it even faster
 
 707
 01:00:40,179 --> 01:00:47,379
@@ -3740,7 +3740,7 @@
 
 936
 01:21:15,539 --> 01:21:17,180
- that we have today into the vertical tree
+ that we have today into the Verkle tree
 
 937
 01:21:17,180 --> 01:21:19,380
